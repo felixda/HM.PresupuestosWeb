@@ -1,0 +1,99 @@
+﻿
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    min-width: 16rem;
+    width: auto;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.16);
+    transition: transform 0.1s ease-out;
+    height: 100%;
+    max-height: 100%;
+    border-bottom-right-radius: 0rem;
+    border-top-right-radius: 0rem;
+    background-color: var(--havas-color-black);
+    color: #FFFFFF;
+}
+
+::deep .menu-item {
+    color: var(--bs-white);
+}
+
+
+
+::deep .dxbl-menu-item-text {
+    white-space: normal !important;
+}
+
+::deep .icon {
+    width: 1rem;
+    height: 1rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-left: 0.5rem;
+    filter: brightness(0) invert(1);
+}
+
+::deep .gestionVersiones {
+    background-image: url("images/menu/gestionVersiones.svg");
+}
+
+::deep .procesos {
+    background-image: url("images/menu/procesos.svg");
+}
+
+::deep .previsiones_acuerdos_icono {
+    background-image: url("images/menu/previsiones_acuerdos_icono.svg");
+}
+
+
+
+::deep .reporteMagnitude {
+    background-image: url("images/menu/reporteMagnitude.svg");
+}
+
+
+#sidebar.expanded ::deep .layout-item {
+    display: block;
+}
+
+
+/*CUSTOMIZED*/
+
+.navMenuContainer {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+::deep .dxbl-treeview {
+    padding-top: 1rem !important;
+}
+
+::deep .menu-item_active .dxbl-treeview-item-text {
+    font-weight: bold !important;
+    text-decoration: underline;
+    letter-spacing:0.05rem;
+}
+
+/*RESPONSIVE*/
+
+@media screen and (min-width: 768px) {
+    #sidebar {
+        min-width: 14rem;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    #sidebar {
+        min-width: 15rem;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    #sidebar {
+        min-width: 16rem;
+    }
+}
+
+/**/

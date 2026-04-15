@@ -1,0 +1,371 @@
+﻿@page "/administracion/impersonacion"
+
+@using HM.Presupuestos.Server.Servicios
+@using Microsoft.AspNetCore.Components.Authorization
+@using HM.Core.Comun.v6.Entidades.Seguridad
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Core.Modelo.v6.Login
+@using System.Security.Claims
+
+@inject IConfiguration _Configuration
+@inject IControlador _SecurityController
+@inject IJwt _Jwt
+@inject NavigationManager _NavigationManager
+@inject ISessionService _SessionService
+@inject ILogAccionesService _LogAccionesService
+@inject ErrorDialogService _ErrorService
+@inject ILayerOverlayService _LayerOverlayService
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IUsuarioServicio _UsuarioService
+
+@inherits ContextProtegido
+
+@attribute [Authorize]
+
+@if (ValidandoPermisos)
+{
+    @* <p>Validando permisos...</p> *@
+}
+else if (!TienePermiso)
+{
+    <p>No autorizado</p>
+}
+
+else
+{
+    <PageTitle>@_pageTitle</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.Impersonacion" Titulo="@_pageTitle" TextoToolTipAyuda="@_textoToolTipAyuda" />
+    <div class="layoutContainer">
+        <DxFormLayout>
+            <DxFormLayoutGroup ColSpanSm="6" ColSpanMd="6" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
+                        <CaptionTemplate>
+                            <div>@T("Pages:Impersonation:Description:label")</div>
+                        </CaptionTemplate>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow="true">
+                        <Template>
+                            <span style="color:red;">@_message</span>
+                        </Template>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
+                        <DxTextBox @bind-Text="@_userNameImpersonation"
+                        NullText="@T("Pages:Impersonation:UserName:label")"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                        </DxTextBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
+                        <DxTextBox @bind-Text="@_passwordImpersonation"
+                        NullText="@T("Pages:Impersonation:Password:label")"
+                        Password="true"
+                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                        </DxTextBox>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow="true">
+                        <div class="d-flex justify-content-center">
+                            <DxButton CssClass="btnCustom"
+                            RenderStyle=ButtonRenderStyle.None
+                            Text="@T("Common:Aceptar:label")"
+                            Click="LoginImpersonation" ClickEventArgs="true" /> @* para que acepte MouseEventArgs *@
+                        </div>
+                    </DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+            <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="8" ColSpanXl="8" ColSpanXxl="8" />
+        </DxFormLayout>
+    </div>
+}
+
+@code {
+
+    private string _pageTitle { get; set; } = string.Empty;
+    private string _textoToolTipAyuda { get; set; } = string.Empty;
+    private string _userNameImpersonation { get; set; } = "";
+    private string _passwordImpersonation { get; set; } = "";
+    private string _message { get; set; } = "";
+    private UsuarioEntidad _userAuthenticated = new UsuarioEntidad();
+
+    #region Page
+
+
+    protected override Task OnPermisoDenegadoAsync()
+    {
+        Console.WriteLine("❌ Permiso denegado");
+        return Task.CompletedTask;
+    }
+
+    protected override async Task OnPermisoValidadoAsync()
+    {
+        try
+        {
+            Console.WriteLine("[Impersonation] 🔄 OnPermisoValidadoAsync iniciando...");
+
+            _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Impersonacion}:label");
+            Console.WriteLine($"[Impersonation] Título de página: {_pageTitle}");
+
+            // _LayerOverlayService.Start($"{GetResourceValue("Common:loading:label")} {_pageTitle}");
+
+            await PageInitialize();
+
+            Console.WriteLine("[Impersonation] ✅ OnPermisoValidadoAsync completado");
+
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Impersonation] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
+            Console.WriteLine($"[Impersonation] StackTrace: {ex.StackTrace}");
+            await LogService.InsertException(nameof(Impersonation), ex);
+
+            await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+        }
+        finally
+        {
+            // _LayerOverlayService.Stop();
+        }
+    }
+
+    // ///<summary>
+    // /// Event razor page
+    // ///</summary>
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender) 
+    //     {
+    //         try
+    //         {
+    //             await InicializarAsync();
+    //             _pageTitle = GetResourceValue($"Menu:Menu_{(int)CodigosMenu.Impersonacion}:label");
+    //             _LayerOverlayService.Start($"{GetResourceValue("Common:loading:label")} {_pageTitle}");
+    //             await PageInitialize();
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+    //             return;
+    //         }
+    //         finally
+    //         {
+    //             _LayerOverlayService.Stop();
+    //         }
+
+    //         if (!_componentInitialized)
+    //         {
+    //             _componentInitialized = true;
+    //             await InvokeAsync(StateHasChanged);
+    //         }
+    //     }
+    // }
+
+
+    /// <summary>
+    /// Initialize page
+    /// </summary>
+    private async Task PageInitialize()
+    {
+        _textoToolTipAyuda = T("Pages:Impersonation:ToolTip:label");
+        // var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // var userSSO = authState.User;
+        // if (userSSO != null && userSSO.Identity != null && userSSO.Identity.Name != null && userSSO.Identity.IsAuthenticated)
+        // {
+        //     _userAuthenticated = await GetUserProfile(userSSO.Identity.Name.ToString(), _Jwt, _SecurityController);
+        // }
+    }
+
+    #endregion
+
+
+    /// <summary>
+    /// Exceute impersonation
+    /// </summary>
+    private async Task LoginImpersonation(MouseEventArgs e)
+    {
+        try
+        {
+            _LayerOverlayService.Start();
+            _message = "";
+            _userNameImpersonation = (_userNameImpersonation!=null)?_userNameImpersonation.Replace(" ", ""):"";
+
+            //Para las pruebas de seguridad en entornos distintos a PRO
+            if (_Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
+            {
+                if (e.CtrlKey && e.AltKey && (Usuario!.CodigoUsuario == 2825 || Usuario!.CodigoUsuario == 1182))
+                {
+                        _userNameImpersonation = "probar.acceso";
+                        _passwordImpersonation = "ccc";
+                }
+            }
+
+            if (!String.IsNullOrEmpty(_userNameImpersonation) && !String.IsNullOrEmpty(_passwordImpersonation))
+            {
+                if (_userAuthenticated.Login != _userNameImpersonation)
+                {
+
+                    var respuesta = await _UsuarioService.CargarUsuarioLoginDesdeServicioExterno(_userNameImpersonation, _passwordImpersonation);
+                    if (respuesta)
+                    {
+                    _NavigationManager.NavigateTo("/home", forceLoad: false);
+                    }
+                    else
+                    {
+                        _message = T("Pages:Impersonation:UsuarioNoAutorizado:label");
+                    }
+
+                }
+                else
+                {
+                    _message = T("Pages:Impersonation:UsuarioImpersonadoIgual:label");
+                }
+            }
+            else
+            {
+                _message = T("Pages:Impersonation:RellenarDatosUsuario:label");
+            }
+        }
+        catch (Exception ex)
+        {
+            await LogService.InsertException(this.GetType().Name, ex);
+        }
+        finally
+        {
+            _LayerOverlayService.Stop();
+        }
+    }
+
+
+    /// <summary>
+    /// Build user profile from internal security
+    /// </summary>
+    /// <param name="username">User name</param>
+    /// <param name="password">User password</param>
+    /// <param name="jwt">IJwt object</param>
+    /// <param name="securityController">IControlador object</param>
+    /// <returns>>Message error</returns>
+    // private async Task<string> BuildImpersonation(string username, string password, IJwt jwt, IControlador securityController)
+    // {
+    //     var msgError = "";
+    //     try
+    //     {
+    //         var userNameImpersonation = _userNameImpersonation.Replace(" ", "");
+            
+    //         UsuarioEntidad user = new UsuarioEntidad();
+    //         _userNameImpersonation = userNameImpersonation.Substring(0, userNameImpersonation.IndexOf("@") > 0 ? userNameImpersonation.IndexOf("@") : userNameImpersonation.Length);
+    //         var applicationCode = _Configuration.GetValue<int>("AppSettings:AppCode");
+    //         RespuestaLogin respuestaLogin = await _SecurityController.ValidarUsuario(applicationCode, _userNameImpersonation, password);
+
+    //         if (respuestaLogin.LoginStatus == LoginStatusEnum.Correcto)
+    //         {
+    //             user = _Jwt.ObtenerDatosUsuarioJwt(respuestaLogin.Jwt);
+
+    //             List<Regla> reglas = new();
+
+    //             foreach (ReglaEntidad reglaEntidad in respuestaLogin.Reglas)
+    //             {
+    //                 Regla regla = new();
+    //                 regla.Id = reglaEntidad.Id;
+    //                 regla.Descripcion = reglaEntidad.Descripcion;
+    //                 regla.Password = reglaEntidad.Password;
+    //                 reglas.Add(regla);
+    //             }
+
+    //             user.Reglas = reglas;
+    //             user.Roles = respuestaLogin.Roles;
+
+    //             user.Jwt = respuestaLogin.Jwt;
+    //             _Jwt.Usuario = user;
+
+    //             List<Claim> claims = new List<Claim>();
+
+    //             foreach (var role in respuestaLogin.Roles)
+    //             {
+    //                 claims.Add(new Claim(ClaimTypes.Role, role));
+    //             }
+
+    //             claims.Add(new Claim(ClaimTypes.Name, user.Login));
+    //             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Login));
+    //             claims.Add(new Claim(ClaimTypesCustom.Jwt, respuestaLogin.Jwt));
+
+    //             await StorageUserProfile(user);
+    //         }
+    //         else
+    //         {
+    //             msgError = GetResourceValue("Pages:Impersonation:UsuarioNoAutorizado:label");
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         msgError = GetResourceValue("Pages:Impersonation:Error:label");
+    //         await _LogService.InsertException(this.GetType().Name, ex);
+    //     }
+    //     return msgError;
+    // }
+
+
+
+    /// <summary>
+    /// Storage user entity data
+    /// </summary>
+    /// <param name="user">UsuarioEntidad object</param>
+    public async Task StorageUserProfile(UsuarioEntidad user)
+    {
+        await _SessionService.EstablecerUsuarioSesion(user);
+    }
+
+
+
+    /// <summary>
+    /// Get user profile from internal security
+    /// </summary>
+    /// <param name="username">User name</param>
+    /// <param name="jwt">IJwt object</param>
+    /// <param name="securityController">IControlador object</param>
+    /// <returns>True when success</returns>
+    public async Task<UsuarioEntidad> GetUserProfile(string username, IJwt jwt, IControlador securityController)
+    {
+        var user = new UsuarioEntidad();
+        try
+        {
+            if (string.IsNullOrEmpty(username)) { return user; }
+
+            var userNameBasic = username.Substring(0, username.IndexOf("@"));
+            var applicationCode = _Configuration.GetValue<int>("AppSettings:AppCode");
+            var tokenInternalAuthentication = _Configuration.GetValue<string>("AppSettings:Session:TokenInternalAuthentication");
+            RespuestaLogin respuestaLogin = await securityController.ValidarUsuario(applicationCode, userNameBasic, tokenInternalAuthentication);
+
+            if (respuestaLogin.LoginStatus == LoginStatusEnum.Correcto)
+            {
+                user = jwt.ObtenerDatosUsuarioJwt(respuestaLogin.Jwt);
+
+                List<Regla> reglas = new();
+
+                foreach (ReglaEntidad reglaEntidad in respuestaLogin.Reglas)
+                {
+                    Regla regla = new();
+                    regla.Id = reglaEntidad.Id;
+                    regla.Descripcion = reglaEntidad.Descripcion;
+                    regla.Password = reglaEntidad.Password;
+                    reglas.Add(regla);
+                }
+                user.CodigoAplicacion = applicationCode;
+                user.Reglas = reglas;
+                user.Roles = respuestaLogin.Roles;
+                user.Jwt = respuestaLogin.Jwt;
+                user.Login = userNameBasic;
+
+             
+            }
+        }
+        catch (Exception ex)
+        {
+            await LogService.InsertException(this.GetType().Name, ex);
+        }
+        return user;
+    }
+
+}

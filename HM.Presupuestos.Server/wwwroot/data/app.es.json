@@ -1,0 +1,840 @@
+﻿{
+"Language": {
+  "ES": { "label": "Español", "code": "es" },
+  "EN": { "label": "Inglés", "code": "en" },
+  "PT": { "label": "Portugués", "code": "pt" }
+},
+  "Menu": {
+    "Menu_0": {
+      "label": "Inicio",
+      "url": "/home",
+      "icono": "fa-solid fa-house",
+      "visible": true,
+      "code": 0
+    },
+    "Menu_1": {
+      "label": "Versiones",
+      "url": "/mantenimiento/versiones",
+      "icono": "fa-solid fa-table-list",
+      "visible": true,
+      "code": 1
+    },
+    "Menu_2": {
+      "label": "Importación Versiones",
+      "url": "/gestion/importacion-versiones",
+      "icono": "fa-solid fa-code-pull-request fa-flip-horizontal",
+      "visible": true,
+      "code": 2
+    },
+    "Menu_3": {
+      "label": "Previsiones",
+      "url": "/gestion/previsiones",
+      "icono": "fa-solid fa-chart-line",
+      "visible": true,
+      "code": 3
+    },
+    "Menu_4": {
+      "label": "Reportes",
+      "url": "",
+      "icono": "",
+      "image": "",
+      "visible": false,
+      "code": 4
+    },
+    "Menu_5": {
+      "label": "Planificación de Condiciones",
+      "url": "/gestion/planificacion-condiciones",
+      "icono": "fa-solid fa-solar-panel",
+      "visible": true,
+      "code": 5
+    },
+    "Menu_7": {
+      "label": "iTracker",
+      "url": "/reportes/itracker",
+      "icono": "fa-solid fa-chart-column",
+      "visible": false,
+      "code": 7
+    },
+    "Menu_8": {
+      "label": "Magnitude",
+      "url": "/reportes/magnitude",
+      "icono": "icon reporteMagnitude",
+      "visible": false,
+      "code": 8
+    },
+    "Menu_9": {
+      "label": "Procesos Automáticos",
+      "url": "",
+      "icono": "",
+      "visible": true,
+      "code": 9
+    },
+    "Menu_10": {
+      "label": "GI a Billings",
+      "url": "/procesos-automaticos/gibillings",
+      "icono": "fa-solid fa-money-bill-transfer",
+      "visible": true,
+      "code": 10
+    },
+    "Menu_11": {
+      "label": "NV y NC de Acuerdos a Previsión",
+      "url": "/copiarinversiones",
+      "icono": "icon procesos",
+      "visible": true,
+      "code": 11
+    },
+    "Menu_12": {
+      "label": "Indicadores",
+      "url": "/mantenimiento/indicadores",
+      "icono": "fa-solid fa-list-ol",
+      "visible": true,
+      "code": 12
+    },
+    "Menu_13": {
+      "label": "Importación Condiciones",
+      "url": "/gestion/importacion-condiciones",
+      "icono": "fa-solid fa-file-import",
+      "visible": true,
+      "code": 13
+    },
+    "Menu_14": {
+      "label": "Sobreprimas",
+      "url": "/gestion/sobreprimas",
+      "icono": "fa-solid fa-scale-balanced",
+      "image": "images/favoritos/sobreprimas.svg",
+      "visible": true,
+      "code": 14
+    },
+    "Menu_15": {
+      "label": "Mantenimientos",
+      "url": "",
+      "icono": "",
+      "visible": true,
+      "code": 15
+    },
+    "Menu_16": {
+      "label": "Importación Sobreprimas",
+      "url": "/gestion/importacion-sobreprimas",
+      "icono": "fa-solid fa-file-import",
+      "visible": true,
+      "code": 16
+    },
+    "Menu_17": {
+      "label": "Gestión",
+      "url": "",
+      "icono": "",
+      "visible": true,
+      "code": 17
+    },
+    "Menu_18": {
+      "label": "Ajustes",
+      "url": "/gestion/ajustes",
+      "icono": "fa-solid fa-gear",
+      "visible": true,
+      "code": 18
+    },
+    "Menu_19": {
+      "label": "Copiar Inversiones",
+      "url": "/procesos-automaticos/copiar-inversiones",
+      "icono": "fa-solid fa-copy",
+      "visible": true,
+      "code": 19
+    },
+    "Menu_20": {
+      "label": "Administración",
+      "url": "",
+      "icono": "",
+      "visible": true,
+      "code": 20
+    },
+    "Menu_21": {
+      "label": "Envío mensajes informativos",
+      "url": "/administracion/avisos",
+      "icono": "fa-solid fa-paper-plane",
+      "visible": true,
+      "code": 21
+    },
+    "Menu_22": {
+      "label": "Impersonación",
+      "url": "/administracion/impersonacion",
+      "icono": "fa-solid fa-users-gear",
+      "visible": true,
+      "code": 22
+    },
+    "Menu_23": {
+      "label": "Meses Bloqueados",
+      "url": "/administracion/meses-bloqueados",
+      "icono": "fa-solid fa-calendar-days",
+      "visible": true,
+      "code": 23
+    },
+    "Menu_24": {
+      "label": "Configuración",
+      "url": "",
+      "icono": "",
+      "visible": true,
+      "code": 24
+    },
+    "Menu_25": {
+      "label": "Año para diario",
+      "url": "/configuracion/anio-diario",
+      "icono": "fa-solid fa-clock",
+      "visible": true,
+      "code": 25
+    }
+  },
+  "Pages": {
+    "ITracker": {
+      "TypeVersionSource": {
+        "Channels": {
+          "label": "Channels",
+          "code": 1
+        },
+        "Publishers": {
+          "label": "Publishers",
+          "code": 2
+        }
+      }
+    },
+    "Login": {
+      "CerrarSesion": {
+        "label": "Cerrar sesión"
+      }
+    },
+    "Editoriales": {
+
+    },
+    "Versiones": {
+      "Indicadores": {
+        "label": "Indicadores"
+      },
+      "Tipo": {
+        "label": "Tipo"
+      },
+      "Versiones": {
+        "label": "Versiones"
+      },
+      "Version": {
+        "label": "Versión"
+      },
+      "LeyendasIndicadores": {
+        "label": "Leyendas Indicadores"
+      },
+      "NombreIndicador": {
+        "label": "Nombre de Indicador"
+      },
+      "Message_VersionDescriptionError": {
+        "label": "La descripción de la Versión {0} coincide con la de otra versión. La descripción no puede duplicarse entre versiones"
+      },
+      "HayDatosRelacionadosConLaVersion": {
+        "label": "La Versión no se puede borrar porque hay datos relacionados con la misma"
+      },
+      "TipoVersion": {
+        "User": {
+          "label": "Usuario",
+          "code": 1
+        },
+        "Monthly": {
+          "label": "Mensual",
+          "code": 2
+        },
+        "Backup": {
+          "label": "Backup",
+          "code": 3
+        }
+      }
+    },
+    "GestionVersiones": {
+      "ToolTip": {
+        "label": "Permite transferir datos de inversión entre versiones, filtrando por grupos de clientes u otros campos del nuevo modelo de datos. Es necesario seleccionar una Versión-Año Origen y una Versión-Año Destino"
+      },
+      "TypeVersionSource": {
+        "Presupuestos": {
+          "label": "Presupuestos",
+          "code": 1
+        },
+        "Inges": {
+          "label": "Real",
+          "code": 2
+        },
+        "Set0": {
+          "label": "Poner A 0",
+          "code": 3
+        }
+      }
+    },
+    "Indicadores": {
+      "ToolTip": {
+        "label": "Mantenimiento de Indicadores de estado para las Versiones"
+      },
+      "VersionUnica": {
+        "label": "Versión única"
+      },
+      "ListaIndicadores": {
+        "label": "Lista de Indicadores"
+      },
+      "Mostrar": {
+        "label": "Mostrar"
+      },
+      "LanguageDataIncompleted": {
+        "label": "Existen campos obligatorios de idioma sin rellenar"
+      }
+    },
+
+    "Index": {
+      "Hola": {
+        "label": "Hola"
+      },
+      "Bienvenida": {
+        "label": "Bienvenido a la aplicación de Presupuestos"
+      }
+    },
+    "SelectorIdioma": {
+
+    },
+    "PlanificacionCondiciones": {
+      "Alcance": {
+        "label": "Alcance"
+      },
+      "Disciplina": {
+        "label": "Disciplina"
+      },
+      "Diversified": {
+        "label": "Diversified"
+      },
+      "Excepciones": {
+        "label": "Excepciones"
+      },
+      "ExcepcionesMedio": {
+        "label": "Excepciones del Medio:"
+      },
+      "Objetivo": {
+        "label": "Objetivo"
+      },
+      "TipoCompra": {
+        "label": "Tipo Compra"
+      },
+      "TipoDisciplina": {
+        "label": "Naturaleza"
+      },
+      "DisciplinaGrupo": {
+        "label": "Disciplina Grupo"
+      },
+      "ToolTip": {
+        "label": "Permite introducir el servicio de agencia y la devolución del grupo seleccionado."
+      },
+      "Jerarquia": {
+        "label": "Jerarquía"
+      },
+      "Condiciones": {
+        "label": "Planificación Condiciones"
+      },
+      "CondicionesAcuerdos": {
+        "label": "Planificación Condiciones Acuerdos"
+      },
+      "CondicionesCodigo": {
+        "Code": 0
+      },
+      "CondicionesAcuerdosCodigo": {
+        "Code": 1
+      },
+      "Vigencias": {
+        "label": "Vigencias"
+      },
+      "ToolTipSagTpc": {
+        "label": "Porcentaje Servicio de Agencia"
+      },
+      "ToolTipManpowerTpc": {
+        "label": "Porcentaje Manpower"
+      },
+      "ToolTipDevolucionTpc": {
+        "label": "Porcentaje Devolución"
+      },
+      "SagTpc": {
+        "label": "% SAG"
+      },
+      "ManpowerTpc": {
+        "label": "% MNP"
+      },
+      "NumExcepciones": {
+        "label": "Nº Excepciones"
+      },
+      "NetoVenta": {
+        "label": "Neto Venta"
+      },
+      "Sobreprima": {
+        "label": "Sobreprima"
+      },
+      "DevolucionTpc": {
+        "label": "% DEV"
+      },
+      "BCDevolucion": {
+        "label": "Base Cálculo DEV."
+      },
+      "NuevaVigencia": {
+        "label": "Nueva Vigencia"
+      },
+      "EditarVigencia": {
+        "label": "Editar Vigencia"
+      },
+      "FiltroPorMedio": {
+        "label": "Filtrar por Medio"
+      },
+      "FiltroExcepciones": {
+        "label": "Filtro Excepciones"
+      },
+      "Mensajes": {
+        "VigenciasSolapadas": {
+          "label": "Las fechas coinciden con otra vigencia, por favor revisar."
+        },
+        "VigenciaConCondiciones": {
+          "label": "La Vigencia seleccionada tiene Condiciones asociadas que se eliminarán. ¿Desea continuar?"
+        },
+        "VigenciaModificada": {
+          "label": "Vigencia modificada"
+        },
+        "VigenciaSinMeses": {
+          "label": "Por favor, seleccione los meses para la vigencia"
+        },
+        "VigenciaValidacion": {
+          "label": "El mes desde no puede ser mayor que es el mes hasta"
+        },
+        "PctDevCondicionSinBC": {
+          "label": "Por favor, al haber introducido un %Devolución en las condiciones tiene que seleccionar una Base de Cálculo"
+        },
+        "PctExcepcionSinPctSAGCondicion": {
+          "label": "Por favor, al haber introducido un % en las excepciones tiene que tener un % en la condicion para el mismo medio"
+        },
+        "PctExcepcionSinPctManPowerCondicion": {
+          "label": "Por favor, al haber introducido un % en las excepciones tiene que tener un % en la condicion para el mismo medio"
+        },
+        "PctExcepcionSinPctDEVCondicion": {
+          "label": "Por favor, al haber introducido un % en las excepciones tiene que tener un % en la condicion para el mismo medio"
+        },
+        "ExcepcionesSinCondiciones": {
+          "label": "No se pueden crear excepciones por medio sin haber condiciones por dicho medio"
+        },
+        "MedioExcepcionConDatosDuplicados": {
+          "label": "El Medio {0} tiene datos duplicados en las excepciones."
+        },
+        "PctEnTodasExcepciones": {
+          "label": "Todas las excepciones deben tener al menos un porcentaje."
+        },
+        "ConceptoNMDEnTodasExcepciones": {
+          "label": "Todas las excepciones deben tener al menos un Concepto NMD seleccionado"
+        },
+        "ExcepcionesConCondicionesEnMedio": {
+          "label": "Todas la excepciones deben tener condiciones para su medio"
+        },
+        "PctDevExcepcionSinBD": {
+          "label": "Por favor, al haber introducido un %Devolución en las excepciones tiene que seleccionar un indicador del BC"
+        },
+        "AlFiltrarExcepcionesConCambios": {
+          "label": "No se puede filtrar por medio por haber cambios en las excepciones de dicho medio sin guardar"
+        },
+        "CancelarCambiosCondiciones": {
+          "label": "Hay cambios sin guardar en las Condiciones. ¿Desea continuar y perder estos cambios?"
+        },
+        "CancelarCambiosExcepciones": {
+          "label": "Hay cambios sin guardar en las Excepciones. ¿Desea continuar y perder estos cambios?"
+        },
+        "BCCondicionSinPctDevolucion": {
+          "label": "Por favor, al haber introducido una Base de Cálculo en las condiciones tiene que introducir un Porcentaje."
+        }
+      }
+    },
+   
+    "Sobreprimas": {
+      "ToolTip": {
+        "label": "Permite cargar sobreprimas en Presupuestos o importar las existentes en MMS."
+      },
+      "Sobreprimas": {
+        "label": "Sobreprimas"
+      },
+      "TypeConcept": {
+        "Default": {
+          "label": "Sobreprima",
+          "code": 1
+        },
+        "SLA": {
+          "label": "Sobreprima SLA",
+          "code": 2
+        },
+        "HVP": {
+          "label": "Sobreprima HVP",
+          "code": 3
+        }
+      }
+    },
+    "Magnitude": {
+
+    },
+    "CopiarInversiones": {
+
+    },
+    "Avisos": {
+      "Titulo": {
+        "label": "Aviso general"
+      },
+      "ToolTip": {
+        "Label": "Utilidad para enviar notificaciones que verán todos los usuarios que estén conectados en este momento a la aplicación"
+      },
+      "Mensaje": {
+        "Label": "Mensaje de aviso:"
+      },
+      "TipoAviso": {
+        "Label": "Tipo de aviso:"
+      }
+    },
+    "Impersonation": {
+      "ToolTip": {
+        "label": "Acceso a la aplicación suplantando a otro usuario"
+      },
+      "UserName": {
+        "label": "Nombre de usuario"
+      },
+      "Password": {
+        "label": "Contraseña de usuario"
+      },
+      "Description": {
+        "label": "Introduzca el nombre de usuario y contraseña a impersonar"
+      },
+      "RellenarDatosUsuario": {
+        "label": "Rellene el nombre de usuario y contraseña"
+      },
+      "Error": {
+        "label": "Ha ocurrido un error y el proceso no se ha completado"
+      },
+      "UsuarioNoAutorizado": {
+        "label": "El usuario no está autorizado para acceder a la aplicación"
+      },
+      "UsuarioImpersonadoIgual": {
+        "label": "El usuario a impersonar debe ser distinto al usuario autenticado"
+      }
+    },
+    "ModalInactividad": {
+      "Titulo": {
+        "label": "Advertencia de inactividad"
+      },
+      "CuentaAtras": {
+        "label": "Vuelta a la pagina de Inicio en:"
+      }
+    },
+    "MesesBloqueados": {
+      "ToolTip": {
+        "label": "Permite seleccionar meses en un año seleccionado para bloquearlos)"
+      },
+      "MesesBloqueados": {
+        "label": "Meses Bloqueados"
+      }
+    },
+    "AnioDiario": {
+      "ToolTip": {
+        "label": "Permite seleccionar año para el Diario de presupuestos"
+      }
+    },
+    "ImportacionCondiciones": {
+      "ToolTip": {
+        "label": "Permite importar las condiciones desde MMS filtrando por unos parámetros dados."
+      },
+      "ImportarCondicionesMMS": {
+        "label": "Importar condiciones de MMS"
+      },
+      "LinkCondiciones": {
+        "label": "Ver Condiciones importadas"
+      },
+      "LinkCondicionesHelp": {
+        "label": "Navegar a página de Condiciones filtrando por importación realizada"
+      }
+    },
+    "ImportacionSobreprimas": {
+
+    }
+  },
+  "Common": {
+    "AppName": {
+      "const": "Presupuestos"
+    },
+    "Http404": {
+      "label": "Página No Encontrada"
+    },
+    "Http403": {
+      "label": "Acceso Prohibido"
+    },
+    "Http400": {
+      "label": "Solicitud Incorrecta"
+    },
+    "Http500": {
+      "label": "Error interno de servidor"
+    },
+    "HttpError": {
+      "label": "Error interno no controlado"
+    },
+    "Aceptar": {
+      "label": "Aceptar"
+    },
+    "AgrupacionComercial": {
+      "label": "Agrupación Comercial"
+    },
+    "Anio": {
+      "label": "Año"
+    },
+    "BackToHome": {
+      "label": "Ir a inicio"
+    },
+    "BitAnd": {
+      "label": "BitAnd"
+    },
+    "Buscar": {
+      "label": "Buscar"
+    },
+    "Cancelar": {
+      "label": "Cancelar"
+    },
+    "Loading": {
+      "label": "Cargando"
+    },
+    "Codigo": {
+      "label": "Código"
+    },
+    "DatosGrabados": {
+      "label": "Datos grabados correctamente"
+    },
+    "Detalle": {
+      "label": "Detalle"
+    },
+    "Descripcion": {
+      "label": "Descripción"
+    },
+    "DescripcionAbreviada": {
+      "label": "Descripción Abreviada"
+    },
+    "DesmarcarFavorito": {
+      "label": "Desmarcar de favoritos"
+    },
+    "Edit": {
+      "label": "Edición"
+    },
+    "EditarRegistro": {
+      "label": "Editar registro"
+    },
+    "Editorial": {
+      "label": "Editorial"
+    },
+    "EliminarRegistro": {
+      "label": "Eliminar registro"
+    },
+    "EscribaTextoBusqueda": {
+      "label": "Escriba el texto de búsqueda..."
+    },
+    "FiltroQuitar": {
+      "label": "Quitar Filtro"
+    },
+    "Filtros": {
+      "label": "Filtros"
+    },
+    "GrupoClientes": {
+      "label": "Grupo de Clientes"
+    },
+    "Idioma": {
+      "label": "Idioma"
+    },
+    "Leyenda": {
+      "label": "Leyenda"
+    },
+    "Limpiar": {
+      "label": "Limpiar"
+    },
+    "MarcarFavorito": {
+      "label": "Marcar en favoritos"
+    },
+    "Medio": {
+      "label": "Medio"
+    },
+    "Medios": {
+      "label": "Medios"
+    },
+    "Mes": {
+      "label": "Mes"
+    },
+    "MesDesde": {
+      "label": "Mes Desde"
+    },
+    "MesHasta": {
+      "label": "Mes Hasta"
+    },
+    "No": {
+      "label": "No"
+    },
+    "Network": {
+      "label": "Network"
+    },
+    "Nuevo": {
+      "label": "Nuevo"
+    },
+    "Orden": {
+      "label": "Orden"
+    },
+    "Parametros": {
+      "label": "Parámetros"
+    },
+    "Save": {
+      "label": "Guardar"
+    },
+    "Si": {
+      "label": "Sí"
+    },
+    "Todos": {
+      "label": "Todos"
+    },
+    "Todo": {
+      "label": "Todo"
+    },
+    "Porcentaje": {
+      "label": "Porcentaje"
+    },
+    "UnauthorizedUser": {
+      "label": "Usuario no autorizado"
+    },
+    "Version": {
+      "label": "Versión"
+    },
+    "Messages": {
+      "UndefinedError": {
+        "label": "Error no definido"
+      }
+    },
+    "LogActions": {
+      "DatosGuardadosCorrectamente": {
+        "label": "Datos guardados correctamente"
+      },
+      "ErrorGuardandoDatos": {
+        "label": "Error al guardar datos "
+      },
+      "AccesoPagina": {
+        "label": "Acceso a página"
+      },
+      "DatosEliminadosCorrectamente": {
+        "label": "Datos eliminados correctamente"
+      },
+      "ErrorEliminandoDatos": {
+        "label": "Error eliminando datos"
+      }
+    }
+  },
+  "Botones": {
+    "Anadir": {
+      "label": "Añadir"
+    },
+    "Cancelar": {
+      "label": "Cancelar"
+    },
+    "Eliminar": {
+      "label": "Eliminar"
+    },
+    "Grabar": {
+      "label": "Guardar"
+    },
+    "Modificar": {
+      "label": "Modificar"
+    },
+    "Enviar": {
+      "label": "Enviar"
+    },
+    "Cerrar": {
+      "label": "Cerrar"
+    }
+  },
+  "Mensajes": {
+    "Cancelar": {
+      "label": "Hay cambios sin guardar. ¿Desea continuar y perder estos cambios?"
+    },
+    "CampoMayorQueCero": {
+      "label": "El campo {0} debe ser mayor que 0"
+    },
+    "CamposObligatorios": {
+      "label": "Por favor, rellene todos los campos indicados como obligatorios."
+    },
+    "ConfirmacionEliminar": {
+      "label": "Va a eliminar el registro seleccionado. ¿Desea continuar?"
+    },
+    "IdiomasDuplicados": {
+      "label": "Existen Idiomas duplicados."
+    },
+    "SinModificaciones": {
+      "label": "No hay modificaciones en el registro actual."
+    },
+    "RegistrosNoEncontrados": {
+      "label": "No se han encontrado registros con los parámetros de búsqueda indicados."
+    },
+    "RegistroEliminado": {
+      "label": "El registro ha sido eliminado con éxito."
+    },
+    "RegistroGrabado": {
+      "label": "El registro ha sido grabado con éxito."
+    },
+    "ErrorGeneral": {
+      "label": "El proceso no se ha realizado con éxito. Por favor, consulte con soporte."
+    },
+    "ErrorAlGrabar": {
+      "label": "El proceso no se ha realizado con éxito. Pruebe a volver a intentar guardar el registro y si el error persiste contacte con soporte."
+    },
+    "ValidarBitAnd": {
+      "label": "El valor introducido para el campo BitAnd no tiene un único 1 en binario ({0})."
+    },
+    "ValorCampoRepetido": {
+      "label": "El valor {1} del campo {0} ya existe."
+    },
+    "AvisoAntesCancelar": {
+      "label": "Hay cambios sin guardar. ¿Desea continuar y perder dichos cambios?"
+    },
+    "IndicadorUnico": {
+      "label": "El indicador {0} solo puede estar seleccionado para una versión."
+    },
+    "SinCambios": {
+      "Label": "No hay cambios para guardar. "
+    },
+    "MandatoryField": {
+      "Label": "Campo obligatorio"
+    },
+    "LongitudCaracteres": {
+      "Label": "Por favor, revise la información introducida, está sobrepasando el límite de caracteres aceptado en el campo "
+    },
+    "ErrorDelete": {
+      "label": "Ha ocurrido un problema y el registro no ha sido eliminado. Por favor, consulte con Soporte"
+    },
+    "CampoVersionObligatorio": {
+      "label": "La Descripción de la Versión es un campo obligatorio"
+    },
+    "PermisosInsuficientes": {
+      "label": "No tiene los permisos necesarios para realizar la operación indicada"
+    },
+    "SobreprimaDuplicated": {
+      "Label": "Sobreprima duplicada. Revisa los datos "
+    },
+    "IndicadorCerradaConIndicadorReal": {
+      "label": "Si la versión tiene el indicador {0} activo, el indicador {1} tiene que estar activo."
+    },
+    "AvisoCambiosPendientes": {
+      "Label": "Hay cambios sin guardar. ¿Desea continuar y perder dichos cambios?"
+    },
+    "ErrorAbriendoPantalla": {
+      "label": "Error inicializando la pantalla. Por favor, consulte con soporte."
+    },
+    "ImportacionCondicionesFinalizada": {
+      "label": "La importación de Condiciones se ha realizado con éxito."
+    },
+    "ErrorDespuesDeGrabar": {
+      "label": "Proceso completado con errores en la actualización de datos en pantalla. Consulte con soporte"
+    },
+    "AvisoImportarCondiciones": {
+      "label": "Va a importar Condiciones con los parámetros indcicados. Las actuales se eliminarán. ¿Desea continuar?"
+    }
+  },
+  "Meses": {
+
+  },
+  "MensajeErrorBD": {
+
+  }
+}

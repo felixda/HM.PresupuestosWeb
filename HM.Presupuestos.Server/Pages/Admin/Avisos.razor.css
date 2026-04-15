@@ -1,0 +1,71 @@
+﻿.textarea-info {
+    border: 2px solid #17a2b8;
+    background-color: #d1ecf1;
+}
+
+.textarea-success {
+    border: 2px solid #28a745;
+    background-color: #d4edda;
+}
+
+.textarea-warning {
+    border: 2px solid #ffc107;
+    background-color: #fff3cd;
+}
+
+.textarea-error {
+    border: 2px solid #dc3545;
+    background-color: #f8d7da;
+}
+
+
+.radio-card {
+    display: flex; /* solo ocupa lo necesario */
+    flex-direction: column; /* row horizontal; column vertical */
+    gap: 20px; /* separación entre radios */
+    padding: 10px 15px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: border-color 0.3s, background-color 0.3s ease;
+    width: fit-content; /* ajusta al contenido */
+    max-width: 100%; /* evita desbordes */
+}
+
+    /* Colores según tipo de aviso */
+    .radio-card-info  {
+        border: 2px solid #17a2b8;
+    }
+
+    .radio-card-success  {
+        border: 2px solid #28a745;
+    }
+
+    .radio-card-warning {
+        border: 2px solid #ffc107;
+    }
+
+    .radio-card-error {
+        border: 2px solid #dc3545;
+    }
+
+    /* Radio seleccionado */
+    .radio-card .form-check input:checked + label {
+        font-weight: bold;
+    }
+
+    .radio-card-info input:checked + label {
+        color: #17a2b8;
+    }
+
+    .radio-card-success input:checked + label {
+        color: #28a745;
+    }
+
+    .radio-card-warning input:checked + label {
+        color: #ffc107;
+    }
+
+    .radio-card-error input:checked + label {
+        color: #dc3545;
+    }

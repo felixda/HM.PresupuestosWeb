@@ -1,0 +1,82 @@
+﻿@using HM.Core.Comun.v6.Entidades.Seguridad
+
+@using HM.Presupuestos.Server.Servicios
+
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject ILogAccionesService _LogAccionesService
+@inject IUsuarioServicio _UsuarioService
+@inject IJSRuntime JS
+
+@inject IResourceService _ResourcesService
+@inject NavigationManager _NavigationManager
+
+@inherits Context
+@attribute [Authorize]
+
+@if (!UsuarioCargado)
+{
+   @*  <p>Comprobando permisos...</p> *@
+}
+else
+{
+    @if (UsuarioLogin != null)
+    {
+        @* MOSTRAR USUARIO LOGIN (IMPERSONADO) *@
+        <DxStackLayout CssClass="h-100 w-100 ch-480" Orientation="Orientation.Horizontal">
+            <Items>
+                @{
+                    var login = UsuarioLogin.Nombre + " " + UsuarioLogin.Apellido1 + " " + UsuarioLogin.Apellido2;
+                    var titleLogin = login + " [" + UsuarioLogin.Login + "]";
+                }
+                <DxStackLayoutItem Length="0.2fr">
+                    <Template>
+                        <div class="stacklayout-item">
+                            <img class="icon-person" src="images/person-fill.svg" title="@titleLogin">
+                        </div>
+                    </Template>
+                </DxStackLayoutItem>
+                <DxStackLayoutItem Length="1fr">
+                    <Template>
+                        <div class="stacklayout-item">
+                            <div title="@titleLogin"><b>@login</b></div>
+                        </div>
+                    </Template>
+                </DxStackLayoutItem>
+                <DxStackLayoutItem Length="auto">
+                    <Template>
+                        <div class="stacklayout-item">
+                            <DxButton CssClass="btn-logout" IconCssClass="icon logout-icon" 
+                                      Text="@T("Pages:Login:CerrarSesion:label")" 
+                                      Click="CerrarSesion" />
+                        </div>
+                    </Template>
+                </DxStackLayoutItem>
+            </Items>
+        </DxStackLayout>
+    }
+  
+}
+
+@code {
+
+  
+
+    protected override async Task OnUsuarioDisponibleAsync()
+    {
+        await base.OnUsuarioDisponibleAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnUsuarioLoginDesconectado()
+    {
+        await base.OnUsuarioLoginDesconectado();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task CerrarSesion()
+    {
+        await _UsuarioService.EliminarUsuarioLoginAsync();
+        _NavigationManager.NavigateTo("/Index");
+    }
+}
+

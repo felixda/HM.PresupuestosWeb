@@ -1,0 +1,72 @@
+﻿@using HM.Core.Comun.v6.Entidades.Configuracion
+@using HM.Core.Comun.v6.Entidades.Seguridad
+@using HM.Presupuestos.Server.Helper
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Presupuestos.Contratos.Comun
+@using HM.Presupuestos.Contratos.Entidades
+@using HM.Presupuestos.Application.Servicios
+@using HM.Presupuestos.Server.Utils
+@using HM.Presupuestos.Contratos
+@using HM.Presupuestos.Server.Services
+
+
+@inherits Context
+
+<DxStackLayout CssClass="h-100 w-100 ch-480" Orientation="Orientation.Horizontal">
+    <Items>
+        <DxStackLayoutItem Length="1r">
+            <Template>
+                @if (UsuarioCargado)
+                {
+                    var claseIcono = _esFavorito ? "icon star-fill" : "icon star";
+                    var tituloBoton = _esFavorito
+                    ? T(AppResources.Common.DesmarcarFavorito)
+                    : T(AppResources.Common.MarcarFavorito);
+
+                    <div class="stacklayout-item">
+                        <button class="btn secondary"
+                                title="@tituloBoton"
+                                @onclick="ClickBotonFavorito">
+                            <i id="iconFavorite" class="@claseIcono"></i>
+                        </button>
+                    </div>
+                }
+            </Template>
+        </DxStackLayoutItem>
+
+        <DxStackLayoutItem Length="11fr">
+            <Template>
+                <div class="stacklayout-item">
+                    <h2>@Titulo</h2>
+                </div>
+            </Template>
+        </DxStackLayoutItem>
+
+        @* Botón temporal solo para usuario Felix.Davilla-ext *@
+        @if (UsuarioCargado && Usuario!.CodigoUsuario == 2825)
+        {
+            <DxStackLayoutItem>
+                <Template>
+                    <div class="stacklayout-item">
+                        <button class="btn secondary"
+                                title="Volver"
+                                @onclick="Volver">
+                            <i id="iconVolver" class="fas fa-reply"></i>
+                        </button>
+                    </div>
+                </Template>
+            </DxStackLayoutItem>
+        }
+
+        <DxStackLayoutItem>
+            <Template>
+                <div class="stacklayout-item">
+                    <button class="btn secondary" title="@TextoToolTipAyuda">
+                        <i id="iconInfo" class="icon info"></i>
+                    </button>
+                </div>
+            </Template>
+        </DxStackLayoutItem>
+    </Items>
+</DxStackLayout>
+

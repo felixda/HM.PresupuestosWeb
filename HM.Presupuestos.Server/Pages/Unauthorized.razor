@@ -1,0 +1,66 @@
+﻿@page "/Unauthorized"
+@layout Layout.EmptyLayout
+
+@using HM.Presupuestos.Server.Pages
+@using HM.Presupuestos.Server.Utils
+
+@inject IJwt _Jwt
+
+@inject IResourceService _ResourceService
+@* @inject IJSRuntime _JSRuntime *@
+
+@inherits Context
+
+@if (_componentInitialized)
+{
+    <PageTitle>@_pageTitle</PageTitle>
+    <div class="layer-container">
+        <div class="layer-image">
+            <img src="images/logo/logo-havas-noir_small.png" />
+        </div>
+        <div class="layer-text">@_htmlMessage</div>
+        <div><a class="layer-link" href="/">@_link</a></div>
+    </div>
+}
+
+@code {
+
+    private bool _componentInitialized = false;
+    private string _pageTitle { get; set; } = string.Empty;
+    private string _link { get; set; } = string.Empty;
+    private MarkupString _htmlMessage;
+
+    /// <summary>
+    /// Component event
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    /// <summary>
+    /// Component event
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            // ResourceServiceWrapper.Initialize(_ResourceService);
+            // _pageTitle = await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:appname:const");
+            // _link = $"{await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:BackToHome:label")}";
+            // var msg = await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:UnauthorizedUser:label");
+
+            _pageTitle = T("common:appname:const");
+            _link = T("common:BackToHome:label");
+            var msg = T("common:UnauthorizedUser:label");
+            _htmlMessage = new MarkupString(msg ?? string.Empty);
+            if (!_componentInitialized)
+            {
+                _componentInitialized = true;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        
+    }
+}

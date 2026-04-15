@@ -1,0 +1,42 @@
+﻿.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,40%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-box {
+    padding: 1.25rem 2rem;
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    font-family: var(--font-family, sans-serif);
+}
+
+.loading-spinner {
+    width: 5rem;
+    height: 5rem;
+    border: 0.5rem solid rgba(var(--havas-color-black-rgb),5%);
+    border-top-color: rgba(var(--havas-color-red-rgb),95%);
+    border-radius: 50%;
+    animation: ls-rot 0.9s linear infinite;
+}
+
+.loading-text {
+    font-size: .95rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    word-break: break-word;
+}
+
+@keyframes ls-rot {
+    to {
+        transform: rotate(360deg);
+    }
+}

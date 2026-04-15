@@ -1,0 +1,128 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+    <UserSecretsId>5a66a105-ee6b-4c9c-aba3-63e96a587ea5</UserSecretsId>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DocumentationFile>\publish\HM.Presupuestos.Server.xml</DocumentationFile>
+    <OutputPath>\publish</OutputPath>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DocumentationFile>\publish\HM.Presupuestos.Server.xml</DocumentationFile>
+    <OutputPath>\publish</OutputPath>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>  
+  
+  <ItemGroup>
+    <Compile Remove="Code\**" />
+    <Compile Remove="Data\**" />
+    <Compile Remove="Pages\Login\**" />
+    <Compile Remove="wwwroot\switcher-resources\**" />
+    <Content Remove="Code\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="Pages\Login\**" />
+    <Content Remove="wwwroot\switcher-resources\**" />
+    <EmbeddedResource Remove="Code\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Pages\Login\**" />
+    <EmbeddedResource Remove="wwwroot\switcher-resources\**" />
+    <None Remove="Code\**" />
+    <None Remove="Data\**" />
+    <None Remove="Pages\Login\**" />
+    <None Remove="wwwroot\switcher-resources\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Controller\AccountController.cs" />
+    <Compile Remove="Pages\Error.cshtml.cs" />
+    <Compile Remove="Security\CookieJwtAuthFilter.cs" />
+    <Compile Remove="Security\FakeDatabase.cs" />
+    <Compile Remove="Security\ICookieJwtAuthFilter.cs" />
+    <Compile Remove="Security\IJwtContext.cs" />
+    <Compile Remove="Security\JwtContext.cs" />
+    <Compile Remove="Security\cs" />
+    <Compile Remove="Security\UserContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Layout\MainLayout_drawer.razor" />
+    <Content Remove="Pages\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Layout\MainLayout_drawer.razor.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="DevExpress.Blazor.es" Version="24.2.5" />
+    <PackageReference Include="HM.Core.Servidor.v6.Pack" Version="0.1.25086.1-unstable" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*-*" />
+    <PackageReference Include="DevExpress.Blazor" Version="24.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.8.4" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.8.4" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.9.0" />
+    <PackageReference Include="NLog" Version="5.3.4" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.13" />
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.Contracts\HM.Presupuestos.Contratos.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings._DEV_.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings._PRE_.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings._PRO_.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings._PRU_.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog._PRO_.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog._DEV_.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog._PRE_.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="nlog._PRU_.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\login.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Layout\Header.razor.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\" />
+    <Folder Include="Pages\Procesos\" />
+    <Folder Include="Security\" />
+  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4data_4app_1es_1json__JsonSchema="https://cdn.sdf.com/schemas/sdf-schema-1.3.json" /></VisualStudio></ProjectExtensions>
+</Project>

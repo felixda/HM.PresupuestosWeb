@@ -1,0 +1,87 @@
+﻿@using DevExpress.Blazor
+@using DevExpress.Blazor.Internal
+@using HM.Presupuestos.Server.Utils
+@using HM.Presupuestos.Server.ThemeSwitcher
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+<div class="card ch-480 overflow-hidden">
+    <div class="card-header p-2 demo-bg-transparent">
+        <DxToolbar>
+            <Items>
+                <DxToolbarItem Attributes="@(DrawerUtils.GetToolbarButtonAttributes(IsNavigationOpen, "Navigation"))"
+                               Click="ToggleNavigation"
+                               IconCssClass="tb-icon icon-hamburger"
+                               Text="Navigation" />
+                <DxToolbarItem Alignment="ToolbarItemAlignment.Right"
+                               Attributes="@(DrawerUtils.GetToolbarButtonAttributes(IsInfoOpen, "Info"))"
+                               BeginGroup="true"
+                               Click="ToggleInfo"
+                               IconCssClass="tb-icon tb-icon-info"
+                               Text="Info" />
+            </Items>
+        </DxToolbar>
+    </div>
+    <div class="card-body p-0">        
+        <DxDrawer CssClass="demo-drawer demo-drawer-overview-left"
+                  @bind-IsOpen="IsNavigationOpen"
+                  PanelWidth="20%">
+            <BodyTemplate>
+                <DxMenu CssClass="demo-drawer-menu w-100"
+                        Orientation="Orientation.Vertical">
+                    <Items>
+                        <DxMenuItem Text="Home" IconCssClass="menu-icon-home menu-icon" />
+                        <DxMenuItem Text="Components" IconCssClass="menu-icon-products menu-icon" />
+                        <DxMenuItem Text="Support" IconCssClass="menu-icon-support menu-icon" />
+                        <DxMenuItem Text="Contacts" IconCssClass="menu-icon-contacts menu-icon" />
+                        <DxMenuItem Text="About" IconCssClass="menu-icon-about menu-icon" />
+                    </Items>
+                </DxMenu>
+            </BodyTemplate>
+            <TargetContent>
+                <DxDrawer CssClass="demo-drawer-overview-right"
+                          @bind-IsOpen="IsInfoOpen"
+                          Mode="DrawerMode.Overlap"
+                          Position="DrawerPosition.Right"
+                          PanelWidth="225px">
+                    <HeaderTemplate>
+                        Header
+                        <DxButton Attributes="GetCloseInfoButtonAttributes()"
+                                  Click="CloseInfo"
+                                  IconCssClass="tb-icon icon-close"
+                                  RenderStyle="ButtonRenderStyle.Link" />
+                    </HeaderTemplate>
+                    <BodyTemplate>
+                        <p>Donec eu nibh fermentum, commodo magna dictum, rhoncus orci. Suspendisse convallis malesuada tortor eget luctus. Donec lobortis porta blandit. In venenatis massa id consectetur ornare. Mauris et sem sem. Etiam at urna id nulla ornare finibus.</p>
+                    </BodyTemplate>
+                    <FooterTemplate>
+                        <DxButton Click="CloseInfo"
+                                  Text="OK" />
+                    </FooterTemplate>
+                    <TargetContent>
+                        <ThemeSwitcher />
+                        @Body
+                    </TargetContent>
+                </DxDrawer>
+            </TargetContent>
+        </DxDrawer>
+    </div>
+</div>
+
+@code {
+    bool IsNavigationOpen { get; set; } = true;
+    bool IsInfoOpen { get; set; } = true;
+    void ToggleNavigation() {
+        IsNavigationOpen = !IsNavigationOpen;
+    }
+    void ToggleInfo() {
+        IsInfoOpen = !IsInfoOpen;
+    }
+    void CloseInfo() {
+        IsInfoOpen = false;
+    }
+    Dictionary<string, object> GetCloseInfoButtonAttributes() {
+        return new Dictionary<string, object> {
+            { A11yAriaAttributeUtils.AriaLabel, "Close Info Drawer" }
+        };
+    }
+}

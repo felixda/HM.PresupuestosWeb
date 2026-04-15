@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectsToDeploy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <!-- SERVIDOR -->
+  <Project Name="HM.Presupuestos.Server_base" Source="\_PublishedWebsites\HM.Presupuestos.Server" Target="\Servidor\Host\">
+        <Includes>
+        <Pattern>*.dll</Pattern>  
+        <Pattern>*.json</Pattern>
+        <Pattern>*.config</Pattern>
+        <Pattern>favicon.ico</Pattern>
+        <Pattern>Dockerfile</Pattern>
+        <Pattern>HM.Presupuestos.Server.xml</Pattern>
+        </Includes>
+        <IncludeExceptions/>
+        <Delete/>
+        <DeleteExceptions/>
+  </Project>
+
+    <Project Name="HM.Presupuestos.Server_runtimes" Source="\_PublishedWebsites\HM.Presupuestos.Server" Target="\Servidor\Host\">
+    <Includes/>
+    <IncludeExceptions/>
+    <InnersFoldersToCopy>
+      <Pattern>runtimes</Pattern>
+      <Pattern>BlazorDebugProxy</Pattern>
+      <Pattern>es</Pattern>
+      <Pattern>Layout</Pattern>
+      <Pattern>wwwroot</Pattern>
+    </InnersFoldersToCopy>
+    <Delete/>     
+    <DeleteExceptions/>
+  </Project> 
+
+</ProjectsToDeploy>

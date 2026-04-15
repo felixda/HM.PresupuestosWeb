@@ -1,0 +1,60 @@
+﻿@page "/configuracion/anio-diario"
+
+@inherits ContextProtegido
+
+@attribute [Authorize]
+
+@if (ValidandoPermisos)
+{
+    @* <p>Validando permisos...</p> *@
+}
+else if (!TienePermiso)
+{
+    <p>No autorizado</p>
+}
+else
+{
+    <PageHeader CodigoMenu="@CodigosMenu.AnioDiario" Titulo="@TituloPagina" TextoToolTipAyuda="@TextoToolTipAyuda" />
+
+    <div class="layoutContainer">
+        <DxFormLayout>
+            <DxFormLayoutGroup Caption="@T(AppResources.Common.Parametros)"
+                               CaptionCssClass="formLayoutGroupCaption">
+
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                  Caption="@T(AppResources.Common.Anio)"
+                                  CaptionPosition="CaptionPosition.Vertical">
+                    <DxComboBox Data="@Anios" Enabled="true"
+                                TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never"
+                                SearchMode="@ListSearchMode.AutoSearch"
+                                SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                ListRenderMode="ListRenderMode.Entire"
+                                @bind-Value="@AnioSeleccionado">
+                        <EditBoxDisplayTemplate Context="contexto">
+                            @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                        </EditBoxDisplayTemplate>
+                    </DxComboBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true">
+                    <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="toolbarButtonCustom"
+                                      RenderStyle=ButtonRenderStyle.None
+                                      Text="@T(AppResources.Botones.Grabar)"
+                                      Click="Grabar_Click"
+                                      IconCssClass="fa-solid fa-save"
+                                      Enabled="@HayCambiosPendientes" />
+                        </div>
+                    </div>
+                </DxFormLayoutItem>
+
+            </DxFormLayoutGroup>
+           
+        </DxFormLayout>
+
+    </div>
+}

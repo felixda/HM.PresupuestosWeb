@@ -1,0 +1,163 @@
+﻿@using HM.Core.Comun.v6.Entidades.Configuracion
+@using HM.Presupuestos.Server.Services
+@using System.Globalization
+
+@inject IResourceService _ResourceService
+@inject NavigationManager _NavigationManager
+@inject ICookieService CookieService
+@inject ILogger<LanguageSwitcher> Logger
+@inject IIdiomaService _IdiomaService
+
+@inherits Context
+
+@attribute [Authorize]
+
+@if (!UsuarioCargado)
+{
+    @* <p>Comprobando permisos...</p> <!-- Se puede mostrar un loading si se quiere --> *@
+}
+else
+{
+    <div class="language-button-container">
+        <DxButton CssClass="language-button" Text="@GetLanguageName(_currentLanguage)" Click="ToggleLanguageSwitcher" />
+        @if (_showLanguageSwitcher)
+        {
+            <div class="language-switcher-drop shadow-sm" @onclick:stopPropagation>
+                @foreach (var language in _ResourceService.ObtenerIdiomas())
+                {
+                    <div class="language-item @GetActiveClass(language.Iso)" @onclick="@(() => ChangeLanguage(language.Iso))">
+                        <span class="language-label">@GetLanguageName(language.Iso)</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private const string LANGUAGE_COOKIE_KEY = "app_language";
+    private const int LANGUAGE_COOKIE_EXPIRE_DAYS = 365;
+
+    private bool _showLanguageSwitcher = false;
+
+
+    private List<string>? _languageCodeList = new List<string>();
+    private string _currentLanguage = "";
+
+    private bool _initialized;
+
+
+    protected override async Task OnUsuarioDisponibleAsync()
+    {
+        _languageCodeList = _ResourceService.ObtenerCodigosIdiomas();
+        _currentLanguage = _IdiomaService.Idioma;
+
+        SetAppCulture(_currentLanguage);
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Set application culture for global and Devexpress
+    /// </summary>
+    /// <param name="culture">String culture code</param>
+    private void SetAppCulture(string culture)
+    {
+        if (!String.IsNullOrEmpty(culture))
+        {
+            var obCultureInfo = new CultureInfo(culture);
+            CultureInfo.DefaultThreadCurrentCulture = obCultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = obCultureInfo;
+        }
+    }
+
+   
+    /// <summary>
+    /// Component event
+    /// </summary>
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         try
+    //         {
+    //             Logger.LogDebug("🔧 Inicializando LanguageSwitcher...");
+
+    //             // await InicializarAsync();
+    //             SelectedLanguageIso = _IdiomaService.Idioma;
+    //             Logger.LogDebug("✅ Idioma actual: {Language}", SelectedLanguageIso);
+
+    //             if (!_componentInitialized)
+    //             {
+    //                 _componentInitialized = true;
+    //                 await InvokeAsync(StateHasChanged);
+    //             }
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             Logger.LogError(ex, "❌ Error en OnAfterRenderAsync");
+    //         }
+    //     }
+    // }
+
+    private void ToggleLanguageSwitcher()
+    {
+        _showLanguageSwitcher = !_showLanguageSwitcher;
+    }
+
+    private async Task ChangeLanguage(string iso)
+    {
+        try
+        {
+            Logger.LogInformation("🌐 Cambiando idioma a: {Language}", iso);
+
+            // Convertir código ISO corto a formato completo
+            // string fullLanguageCode = ConvertirIsoACodigoCompleto(iso);
+            // Logger.LogDebug("🔧 Código idioma completo: {Code}", fullLanguageCode);
+
+            await _IdiomaService.CambiarIdioma(iso);
+
+            // // Verificar que se guardó correctamente
+            // var verificacion = CookieService.GetCookie(LANGUAGE_COOKIE_KEY);
+            // Logger.LogInformation("✅ Cookie verificada: {Value}", verificacion);
+
+            _currentLanguage = iso;
+            _showLanguageSwitcher = false;
+
+            await InvokeAsync(StateHasChanged);
+
+            // Recargar con la nueva cookie
+            //
+            // -    *ººººº-------------------º_NavigationManager.NavigateTo(_NavigationManager.Uri, forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "❌ Error al cambiar idioma");
+        }
+    }
+
+    /// <summary>
+    /// Convertir código ISO corto (es, en, pt) a formato completo (es-ES, en-US, pt-PT)
+    /// </summary>
+    private string ConvertirIsoACodigoCompleto(string iso)
+    {
+        return iso.ToLower() switch
+        {
+            "es" => "es-ES",
+            "en" => "en-US",
+            "pt" => "pt-PT",
+            "fr" => "fr-FR",
+            _ => "es-ES" // Por defecto español
+        };
+    }
+
+    private string GetLanguageName(string iso)
+    {
+        return T($"Language:{iso}:label");
+    }
+
+    private string GetActiveClass(string iso)
+    {
+        return iso == _currentLanguage ? "active" : "";
+    }
+}

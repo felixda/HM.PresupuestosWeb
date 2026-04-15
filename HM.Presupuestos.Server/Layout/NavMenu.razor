@@ -1,0 +1,204 @@
+﻿@using DevExpress.Blazor
+@using DevExpress.Blazor.Internal
+@using HM.Presupuestos.Server.Extensiones
+@using HM.Presupuestos.Server.Services
+@using Core.Comun.v6.Entidades.Seguridad
+@using HM.Presupuestos.Server.Servicios
+
+@inject NavigationManager _NavigationManager
+@inject ILogService _LogService
+@inject ILogAccionesService _LogAccionesService
+@inject IUsuarioServicio _UsuarioService;
+@inject IResourceService _resourceService;
+@inject INavigationService _NavigationService;
+
+@inherits Context
+
+@attribute [Authorize]
+
+<div id="sidebar">
+    @if (!UsuarioCargado)
+    {
+       @*  <p>Comprobando permisos...</p> *@
+    }
+    else
+    {
+        <DxTreeView AfterExpand="OnAfterExpand">
+            <Nodes>
+                <DxTreeViewNode id="menu_0"
+                                @onclick="@(() => NavigateTo(T("menu:menu_0:url"), T("menu:menu_0:label")))"
+
+                Text="@T("menu:menu_0:label")" 
+                CssClass="menu-item"
+                IconCssClass="@T("menu:menu_0:icono")" />
+                
+                @if (_menu != null && _menu.Count > 0)
+                {
+                    @foreach (var item in _menu.OrderBy(o => o.IndiceOrdenacion))
+                    {
+                        @if (item.CodigoMenuPadre == null || item.CodigoMenuPadre <= 0)
+                        {
+                            var labelMenuItem = T("menu:menu_" + item.CodigoMenu + ":label");
+                            var visibleMenuItemStr = T("menu:menu_" + item.CodigoMenu + ":visible");
+                            bool visibleMenuItem = !string.IsNullOrEmpty(visibleMenuItemStr) && 
+                                                   (visibleMenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleMenuItemStr == "1");
+                            
+                            @if (visibleMenuItem && !string.IsNullOrEmpty(labelMenuItem))
+                            {
+                                <DxTreeViewNode id=@($"menu_{item.CodigoMenu}")
+                                                @onclick="@(() => NavigateTo(T("menu:menu_" + item.CodigoMenu + ":url"), labelMenuItem))"
+
+                                                Text="@labelMenuItem"
+                                                IconCssClass="@T("menu:menu_" + item.CodigoMenu + ":icono")" 
+                                                CssClass="menu-item">
+                                    <Nodes>
+                                        @if (item.Submenus != null && item.Submenus.Any())
+                                        {
+                                            @foreach (var submenuItem in item.Submenus.OrderBy(o => o.IndiceOrdenacion))
+                                            {
+                                                var labelSubmenuItem = T("menu:menu_" + submenuItem.CodigoMenu + ":label");
+                                                var visibleSubmenuItemStr = T("menu:menu_" + submenuItem.CodigoMenu + ":visible");
+                                                bool visibleSubmenuItem = !string.IsNullOrEmpty(visibleSubmenuItemStr) && 
+                                                                         (visibleSubmenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleSubmenuItemStr == "1");
+                                                
+                                                @if (visibleSubmenuItem && !string.IsNullOrEmpty(submenuItem.Url))
+                                                { 
+                                                    <DxTreeViewNode id=@($"menu_{submenuItem.CodigoMenu}")
+                                                                    @onclick="@(() => NavigateTo(submenuItem.Url, labelSubmenuItem))"
+
+                                                                    Text="@labelSubmenuItem"
+                                                                    IconCssClass="@T("menu:menu_" + submenuItem.CodigoMenu + ":icono")"
+                                                                    CssClass="menu-item" />
+                                                } 
+                                            }
+                                        }
+                                    </Nodes>
+                                </DxTreeViewNode>
+                            }
+                        }
+                    }
+                }
+            </Nodes>
+        </DxTreeView>
+    }
+</div>
+
+@code {
+    private List<ConfiguracionMenu> _menu = new();
+
+    protected override async Task OnUsuarioDisponibleAsync()
+    {
+        ActualizarMenu(Usuario);
+        await SetMenuActive(0);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void ActualizarMenu(UsuarioEntidad user)
+    {
+        CrearMenu(user);
+
+    }
+
+    /// <summary>
+    /// Build ConfiguracionMenu object from user object
+    /// </summary>
+    private void CrearMenu(UsuarioEntidad user)
+    {
+        _menu = new List<ConfiguracionMenu>();
+
+        List<Menu> menusPadres = user.Menus.Where(c => c.IdPadre == null).ToList();
+        List<Menu> menusHijos = user.Menus.Where(c => c.IdPadre != null).ToList();
+
+        Console.WriteLine($"[NavMenu] 📋 Creando menú - Padres: {menusPadres.Count}, Hijos: {menusHijos.Count}");
+
+        foreach (var opcion in menusPadres)
+        {
+            var menuPadre = new ConfiguracionMenu
+            {
+                CodigoMenu = opcion.Id,
+                CodigoMenuPadre = opcion.IdPadre,
+                DescripcionMenu = opcion.NombreMenu,
+                IndiceOrdenacion = opcion.IndOrdenacion
+            };
+
+            _menu.Add(menuPadre);
+            Console.WriteLine($"[NavMenu] 📁 Menú padre creado: {opcion.Id} - {opcion.NombreMenu}");
+        }
+
+        foreach (var item in menusHijos)
+        {
+            var url = item.Url(_resourceService) ?? "";
+
+            ConfiguracionMenu menuHijo = new ConfiguracionMenu
+            {
+                CodigoMenu = item.Id,
+                CodigoMenuPadre = item.IdPadre,
+                DescripcionMenu = item.NombreMenu,
+                IndiceOrdenacion = item.IndOrdenacion,
+                Url = url
+            };
+
+            var menuPadre = _menu.FirstOrDefault(o => o.CodigoMenu == item.IdPadre);
+
+            if (menuPadre != null)
+            {
+                menuPadre.Submenus.Add(menuHijo);
+                Console.WriteLine($"[NavMenu] ✅ Submenú agregado: {item.Id} - {item.NombreMenu} (Padre: {item.IdPadre}, URL: {url})");
+            }
+            else
+            {
+                Console.WriteLine($"[NavMenu] ⚠️ Padre no encontrado para submenú: {item.Id} - IdPadre: {item.IdPadre}");
+            }
+        }
+
+        // Log final de verificación
+        foreach (var menu in _menu)
+        {
+            Console.WriteLine($"[NavMenu] 🔍 Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenús");
+        }
+    }
+
+    private async void OnAfterExpand(TreeViewNodeEventArgs e)
+    {
+        var urlNormalizada = _NavigationService.ObtenerUrlActualNormalizada();
+
+        if (!string.IsNullOrEmpty(urlNormalizada))
+        {
+            var menuCodeActive = _resourceService.ObtenerCodigoMenu(urlNormalizada);
+
+            if (menuCodeActive > 0)
+            {
+                await SetMenuActive(menuCodeActive);
+            }
+        }
+    }
+
+    private async Task NavigateTo(string url, string menuName)
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(url))
+            {
+
+                string urlActual = _NavigationService.ObtenerUrlActual();
+
+                if (url == urlActual)
+                {
+                    return;
+                }
+
+                // await _LogAccionesService.Insertar(
+                //     _UsuarioService.UsuarioApp!.Usuario.CodigoUsuario, 
+                //     $"{GetType().Name} > {GetResourceValue("Common:LogActions:LogAction_5:label")} {menuName} [{url}]"
+                // );
+                _NavigationManager.NavigateTo(url);
+            }
+        }
+        catch (Exception ex)
+        {
+            await _LogService.InsertException(GetType().Name, ex);
+        }
+    }
+
+
+}

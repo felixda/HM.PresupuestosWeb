@@ -1,0 +1,1395 @@
+﻿@page "/gestion/planificacion-condiciones"
+
+@using HM.Presupuestos.Application.Servicios
+@using HM.Presupuestos.Contratos.Entidades
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Presupuestos.Contratos.Comun
+@using HM.Presupuestos.Server.Services
+@using static HM.Presupuestos.Application.Servicios.VersionesService
+@using HM.Presupuestos.Server.Helper
+@using Version = HM.Presupuestos.Contratos.Entidades.Version
+@using DevExpress.Blazor
+
+@inject IJwt _Jwt
+@inject PresupuestosService _PresupuestosService
+@inject MensajesHelper _MensajesHelper
+@inject CondicionesService _CondicionesService
+@inject ErrorDialogService _ErrorService
+@inject TraduccionesHelper _Traducciones
+@inject ILogAccionesService _LogAccionesService
+@inject ILayerOverlayService _LayerOverlayService
+@inject NavegacionService _NavegacionService
+@inherits Context
+
+
+@attribute [StreamRendering(true)]
+@attribute [Authorize]
+
+
+@if (_componentInitialized)
+{
+    <PageTitle>@PageTitle</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.PlanificacionCondiciones" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+
+    <div class="layoutContainer">
+        @* FILTER *@
+
+        @* FILTER HEADER *@        
+        <div class="filterHeader">
+            <DxFormLayout>
+                <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                                  CaptionPosition="CaptionPosition.Horizontal">
+                    <div class="d-flex justify-content-end">
+                       
+                        <div class="dxradiogroup-container">
+                            <DxRadioGroup Id="radioGroupAcuerdo"
+                                          ItemLabelPosition="LabelPosition.Right"
+                                          ItemAlignment="CheckBoxContentAlignment.Center"
+                                          Items="@_radioGroupAcuerdoButtonList"
+                                          Value="@_radioGroupAcuerdoChecked"
+                                          ValueChanged="@((string val) => RadioGroupAcuerdo_ValueChanged(val))"
+                                          CssClass="dxradiogroup-horizontal" />
+                        </div>
+                    </div>
+                </DxFormLayoutItem>
+
+            </DxFormLayout>
+        </div>
+
+        @* FILTER BODY *@    
+        <DxFormLayout>
+            <DxFormLayoutGroup Visible="true"
+            ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+            Caption="@T("common:filtros:label")"
+            ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+            AnimationType="LayoutAnimationType.Slide">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true"
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
+                        <CaptionTemplate>
+                            <span>@T("common:Network:label")</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_networks" Enabled="true"
+                                        Id="comboBoxNetWorks"
+                                        TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                        ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        ListRenderMode="ListRenderMode.Virtual"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => ComboBoxNetwork_SelectedDataItemChanged(args)"
+                                        @bind-Value="@_networkSeleccionado">
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                  
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="5" ColSpanXl="5" ColSpanXxl="5"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <CaptionTemplate>
+                            <span>@T("Common:GrupoClientes:label")</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_gruposClientes"
+                                        @bind-Value="@_codigoGrupoSeleccionado"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                        TextFieldName="@nameof(CodigoDescripcion.DescripcionConCodigo)"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        ListRenderMode="ListRenderMode.Virtual"
+                                        >
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+
+
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <CaptionTemplate>
+                            <span>@T("common:anio:label")</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_anios" Enabled="true"
+                                        TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                        ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                        @bind-Value="@_anioSeleccionado"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                    ComboAnios_SelectedDataItemChanged(args)" >
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
+                        <CaptionTemplate>
+                            <span>@T("common:Version:label")</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_versiones"
+                                        TextFieldName=@nameof(VersionResumen.Descripcion)
+                                        ValueFieldName=@nameof(VersionResumen.Codigo)
+                                        @bind-Value="_versionSeleccionada"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" >
+                                <ItemDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxItemTemplate(contexto)
+                                </ItemDisplayTemplate>
+
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="btnCustom"
+                                      RenderStyle=ButtonRenderStyle.None
+                                      Text="@T("Common:Buscar:label")"
+                                      IconCssClass="fa-solid fa-search"
+                                      Click="@FiltroBuscar" />
+                        </div>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="1" ColSpanMd="6" ColSpanLg="8" ColSpanXl="8" ColSpanXxl="8"> </DxFormLayoutItem>
+                    <DxFormLayoutItem ColSpanSm="3" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2">
+                        <div class="d-flex justify-content-end">
+                            <DxButton CssClass="btnCustom"
+                            RenderStyle=ButtonRenderStyle.None
+                                      IconCssClass="fa-solid fa-trash"
+                            Text="@T("Common:Limpiar:label")"
+                            Click="FiltroLimpiar" />
+                        </div>
+                    </DxFormLayoutItem>
+
+                </Items>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+        <DxFormLayout>
+            <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+            Visible="true"
+            ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+            AnimationType="LayoutAnimationType.Slide">
+                <CaptionTemplate>
+                    <CaptionGroup LeftText="@LeftCaptionVigencias"
+                    LeftBoldText=""
+                    RightText="@RightCaptionVigencias" />
+                </CaptionTemplate>
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" BeginRow="true"
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
+                        <CaptionTemplate>
+                            <span>@T("Pages:PlanificacionCondiciones:Vigencias:label")</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_vigencias"
+                                        Enabled="!HayCambiosPendientes"
+                                        Id="comboBoxVigencias"
+                                        DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                        TextFieldName=@nameof(Vigencia.Descripcion)
+                                        ValueFieldName=@nameof(Vigencia.Codigo)
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        ListRenderMode="ListRenderMode.Entire"
+                                        @bind-Value="@_vigenciaSeleccionada"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<Vigencia> args) =>
+                                                                             ComboBoxVigencias_SelectedDataItemChanged(args)">
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="2" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="false">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="btnCustom"
+                            Enabled="@(ValidarCamposObligatoriosFiltro() && !HayCambiosPendientes)"
+                            Id="btnAñadirVigencia"
+                            RenderStyle=ButtonRenderStyle.None
+                            Text="@T("Botones:Anadir:label")"
+                            IconCssClass="fa-solid fa-add"
+                            Click="@AñadirVigencia" />
+                        </div>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="2" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="false">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="btnCustom"
+                            Id="btnModificarVigencia"
+                            Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
+                            RenderStyle=ButtonRenderStyle.None
+                            Text="@T("Botones:Modificar:label")"
+                            IconCssClass="fa-solid fa-edit"
+                            Click="@EditarVigencia" />
+                        </div>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="2" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="false">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="btnCustom"
+                            Id="btnEliminarVigencia"
+                            Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
+                            RenderStyle=ButtonRenderStyle.None
+                            Text="@T("Botones:Eliminar:label")"
+                                      IconCssClass="fa-solid fa-trash"
+                            Click="@EliminarVigencia" />
+                        </div>
+                    </DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+
+
+
+            @* POPUP EDIT VIGENCIAS *@
+            <DxPopup Visible="@_popupVigenciaVisible"
+            ShowFooter="true"
+            HeaderText="@_tituloPopupVigencia"
+            ShowCloseButton="false"
+            Width="500px"
+            Height="Auto"
+            CloseOnEscape="false"
+            CloseOnOutsideClick="false"
+            AllowDrag="false"
+            AllowDragByHeaderOnly="false">
+                <BodyContentTemplate Context="popupContext">
+                    <DxFormLayout>
+                        <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                        CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@T("Common:MesDesde:label")</span><span class="mandatory"></span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxComboBox Data="@_meses"
+                                            Id="comboBoxMesDesde"
+                                            @bind-Value="@_mesDesdeVigenciaSeleccionado"
+                                            ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                            TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains">
+                                    <EditBoxDisplayTemplate Context="contexto">
+                                        @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                    </EditBoxDisplayTemplate>
+
+                                </DxComboBox>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                        CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@T("Common:MesHasta:label")</span><span class="mandatory"></span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxComboBox Data="@_meses"
+                                            Id="comboBoxMesHasta"
+                                            @bind-Value="@_mesHastaVigenciaSeleccionado"
+                                            ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                            TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains">
+                                    <EditBoxDisplayTemplate Context="contexto">
+                                        @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                    </EditBoxDisplayTemplate>
+                                </DxComboBox>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                    </DxFormLayout>
+                </BodyContentTemplate>
+                <FooterContentTemplate>
+                    <div class="popupFooter">
+                        <DxButton CssClass="btnCustom"
+                        RenderStyle=ButtonRenderStyle.None
+                        Text="@T("Common:Save:label")"
+                        IconCssClass="fa-solid fa-save"
+                        Click="@GrabarVigencia" />
+
+                        <DxButton CssClass="btnCustom"
+                        RenderStyle=ButtonRenderStyle.None
+                        Text="@T("Common:Cancelar:label")"
+
+                        IconCssClass="fa-solid fa-cancel"
+                        Click="@OcultarPopupVigencia" />
+                    </div>
+                </FooterContentTemplate>
+            </DxPopup>
+
+        </DxFormLayout>
+
+
+        @* GRID CONDICIONES *@
+        <DxFormLayout>
+            <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+            Visible="@(_vigenciaSeleccionada != null ?  true : false)"
+            Caption="Condiciones"
+            ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+            AnimationType="LayoutAnimationType.Slide">
+                <CaptionTemplate>
+                    <CaptionGroup LeftText="@LeftCaptionCondiciones"
+                    RightText="@RightCaptionCondiciones" />
+                </CaptionTemplate>
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
+                        <DxGrid Data="@_condiciones"
+                                @ref="GridCondiciones"
+                        KeyFieldName="Key"
+                        ValidationEnabled="false"
+                        PagerVisible="false"
+                        ShowFilterRow="false"
+                        FocusedRowEnabled="false"
+                        HighlightRowOnHover="true"
+                        SelectionMode="GridSelectionMode.Single"
+                        AllowSelectRowByClick="true"
+                        CustomizeElement="GridCondiciones_CustomizeElement"
+                        AllowColumnReorder="false"
+                        AllowSort = "false"
+                        EditMode="GridEditMode.EditCell">
+
+                            <ToolbarTemplate>
+
+                                <div class="d-flex justify-content-start">
+                                    <DxButton CssClass="toolbarButtonCustom"
+                                    RenderStyle=ButtonRenderStyle.None
+                                    Text="@T("Botones:Cancelar:label")"
+                                    Click="CancelarCambiosCondiciones"
+                                    IconCssClass="fa-solid fa-cancel"
+                                    Enabled="@(_condicionesNoGuardados.Count > 0)" />
+                                </div>
+                            </ToolbarTemplate>
+                            <Columns>
+
+                                <DxGridDataColumn FieldName="DescripcionMedio" 
+                                Caption="@T("Pages:PlanificacionCondiciones:Medio:label")" 
+                                ReadOnly="true"
+                                Width="35%"
+                                CaptionAlignment="GridTextAlignment.Center"
+                                DataRowEditorVisible="false"
+                                TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var dataItem = (CondicionDto)context.DataItem;
+                                            string toolTip = dataItem.MedioAccesible ? "" : "Medio no accesible para el NetWork seleccinado";
+                                        }
+                                        <span class="dxgrid-readonly-cell" title="@toolTip">@context.DisplayText</span>
+                                    </CellDisplayTemplate>
+
+
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn DisplayFormat="{0:N2} %" 
+                                                  FieldName="@nameof(CondicionDto.PctSAG)" 
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:SagTpc:label")"
+                                                  Width="10%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Right" >
+
+                                    <HeaderCaptionTemplate>
+                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipSagTpc:label")">@T("Pages:PlanificacionCondiciones:SagTpc:label")</span>
+                                    </HeaderCaptionTemplate>
+
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is CondicionDto item)
+                                        {
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            if (item.PctSAG.HasValue)
+                                            {
+                                                string clase = "";
+                                                if (HaCambiadoValorConceptoCondiciones(item, ConceptosCondiciones.Sag))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@($"{clase} {classCSSReadonly}")">@context.DisplayText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="@($"{classCSSReadonly}")"></span>
+                                            }
+                                        }
+                                    </CellDisplayTemplate>
+
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = ((CondicionDto)context.EditModel);
+                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            <DxSpinEdit value="@editItem.PctSAG"
+                                                        ShowSpinButtons="false"
+                                                        CssClass="dxgrid-previsiones-cell"
+                                                        MaxValue="100" 
+                                                        MinValue="0"
+                                                        ReadOnly="@soloLectura"
+                                                        ValueChanged="@((decimal? v) => Condicion_SetPct(editItem,dataItem, ConceptosCondiciones.Sag, v))">
+                                            </DxSpinEdit>
+                                        }
+
+                                    </CellEditTemplate>
+
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn DisplayFormat="{0:N2} %" 
+                                                  FieldName="@nameof(CondicionDto.PctManPower)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")"
+                                                  Width="10%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Right" >
+
+                                    <HeaderCaptionTemplate>
+                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipManpowerTpc:label")">@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")</span>
+                                    </HeaderCaptionTemplate>
+
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is CondicionDto item)
+                                        {
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            if (item.PctManPower.HasValue)
+                                            {
+                                                string clase = "";
+                                                if (HaCambiadoValorConceptoCondiciones(item, ConceptosCondiciones.Manpower))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@($"{clase} {classCSSReadonly}")">@context.DisplayText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="@($"{classCSSReadonly}")"></span>
+                                            }
+                                        }
+                                    </CellDisplayTemplate>
+
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = ((CondicionDto)context.EditModel);
+                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            <DxSpinEdit value="@editItem.PctManPower"
+                                                        ShowSpinButtons="false"
+                                                        CssClass="dxgrid-previsiones-cell"
+                                                        MaxValue="100" 
+                                                        MinValue="0"
+                                                        ReadOnly="@soloLectura"
+                                                        ValueChanged="@((decimal? v) => Condicion_SetPct(editItem, dataItem, ConceptosCondiciones.Manpower, v))">
+                                            </DxSpinEdit>
+                                        }
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+
+                                <DxGridDataColumn FieldName="@nameof(CondicionDto.IndicadorCalculoDevolucion)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:BCDevolucion:label")"
+                                                  Width="13%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                    <CellDisplayTemplate>
+
+                                        @{
+                                            var item = (CondicionDto)context.DataItem;
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            var descripcion = _indicadoresDevolucion.FirstOrDefault(o => o.Codigo == item.IndicadorCalculoDevolucion)?.Descripcion ?? "";
+
+                                            string clase = "";
+                                            if (HaCambiadoValorConceptoCondiciones(item, ConceptosCondiciones.BaseCalculoDevolucion))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+
+                                    </CellDisplayTemplate>
+
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (CondicionDto)context.EditModel;
+                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.IndicadorCalculoDevolucion != dataItem.IndicadorCalculoDevolucion ? "grid-modified-cell" : "";
+                                        }
+                                        <DxComboBox Data="@_indicadoresDevolucion"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.IndicadorCalculoDevolucion"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    ValueChanged="@((int? v) => Condicion_SetDev(editItem,dataItem, v))"  />
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(CondicionDto.PctDevolucion)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")"
+                                                  Width="10%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
+
+                                    <HeaderCaptionTemplate>
+                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipDevolucionTpc:label")">@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")</span>
+                                    </HeaderCaptionTemplate>
+
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is CondicionDto item)
+                                        {
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            if (item.PctDevolucion.HasValue)
+                                            {
+                                                string clase = "";
+                                                if (HaCambiadoValorConceptoCondiciones(item, ConceptosCondiciones.Devolucion))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@($"{clase} {classCSSReadonly}")">@context.DisplayText</span>
+                                               
+                                            }
+                                            else
+                                            {
+                                                <span class="@($"{classCSSReadonly}")"></span>
+                                            }
+                                        }
+                                    </CellDisplayTemplate>
+
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = ((CondicionDto)context.EditModel);
+                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            <DxSpinEdit value="@editItem.PctDevolucion"
+                                                        ShowSpinButtons="false"
+                                                        CssClass="dxgrid-previsiones-cell"
+                                                        MaxValue="100" 
+                                                        MinValue="0"
+                                                        ReadOnly="@soloLectura"
+                                                        ValueChanged="@((decimal? v) => Condicion_SetPct(editItem,dataItem, ConceptosCondiciones.Devolucion, v))">
+                                            </DxSpinEdit>
+                                        }
+                                    </CellEditTemplate>
+
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(CondicionDto.NumeroExcepciones)"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:NumExcepciones:label")"
+                                                  ReadOnly="true"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  DataRowEditorVisible="false"
+                                                  TextAlignment="GridTextAlignment.Center">
+
+                                    <CellDisplayTemplate>
+                                        <span class="dxgrid-readonly-cell">@context.DisplayText</span>
+                                    </CellDisplayTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridCommandColumn Width="11%" NewButtonVisible="false" 
+                                                    Caption="@T("Pages:PlanificacionCondiciones:FiltroExcepciones:label")"
+                                                    CaptionAlignment="GridTextAlignment.Center">
+                                    <FilterRowCellTemplate>
+                                    </FilterRowCellTemplate>
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (CondicionDto)context.DataItem;
+                                            var isSelected = _codigoMedioleccionadoParaFiltro == item.CodigoMedio; 
+                                            var clase = isSelected ? "valor-filtrado" : "";
+                                            string toolTip = isSelected ? T("Common:FiltroQuitar:label") : T("Pages:PlanificacionCondiciones:FiltroPorMedio:label");
+                                        }
+                                        <div class="grid-cell-align-center">
+                                            <DxButton IconCssClass="fas fa-filter"
+                                                      RenderStyle="ButtonRenderStyle.Link"
+                                                      aria-label="Filtrar"
+                                                      class="@clase"
+                                                      title="@toolTip"
+                                                      Click="@(() => FiltrarExcepcionesPorMedio(item))" />
+                                        </div>
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        <div class="grid-cell-align-center">
+                                            <DxButton Enabled="false"
+                                                      aria-label="Filtrar"
+                                                      CssClass="grid-disabled-button"
+                                                      IconCssClass="fas fa-filter"
+                                                      RenderStyle="ButtonRenderStyle.Link" />
+                                        </div>
+                                    </CellEditTemplate>
+                                </DxGridCommandColumn>
+                            </Columns>
+                        </DxGrid>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+        @* GRID MEDIOS EXCEPCIONES *@
+        <DxFormLayout>
+            <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                                Visible="@(_vigenciaSeleccionada != null ?  true : false)"
+                               Caption="@(_tituloGridExcepciones)"
+                                ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                                AnimationType="LayoutAnimationType.Slide">
+                <ChildContent>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
+                        <DxGrid Data="@_excepciones"
+                                @ref="GridExcepciones"
+                                KeyFieldName="Key" 
+                                ValidationEnabled="false"
+                                PagerVisible="false"
+                                ShowFilterRow="false"
+                                FocusedRowEnabled="false"
+                                HighlightRowOnHover="true"
+                                SelectionMode="GridSelectionMode.Single"
+                                AllowSelectRowByClick="true"
+                                CustomizeElement="GridMediosExcepciones_CustomizeElement"
+                                AllowColumnReorder = "false"
+                                AllowSort="false"
+                                EditMode="GridEditMode.EditCell">
+                            <ToolbarTemplate>
+                                <div class="d-flex justify-content-start">
+                                    <DxButton CssClass="toolbarButtonCustom"
+                                            RenderStyle=ButtonRenderStyle.None
+                                            Text="@T("common:Nuevo:label")"
+                                            Click="AñadirExcepcion"
+                                              Enabled=@ActivarBotonNuevaExcepcion 
+                                            IconCssClass="fa-solid fa-plus" />
+                                </div>
+
+                                <div class="d-flex justify-content-start">
+                                    <DxButton CssClass="toolbarButtonCustom"
+                                              RenderStyle=ButtonRenderStyle.None
+                                              Text="@T("Botones:Cancelar:label")"
+                                              Click="CancelarCambiosExcepciones"
+                                              IconCssClass="fa-solid fa-cancel"
+                                              Enabled="@(ExcepcionesNoGuardadas.Count > 0)" />
+                                </div>
+                            </ToolbarTemplate>
+
+                            <Columns>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.Jerarquia)"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:Jerarquia:label")"
+                                                  ReadOnly="true"
+                                                  Width="8%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Center">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            if (item.MedioAccesible)
+                                            {
+                                                if (item.Jerarquia != 1)
+                                                {
+                                                    <i class="fas fa-arrow-up icono-accion"
+                                                        title="Subir"
+                                                       @onclick="() => MoverJerarquia(item, AccionJerarquias.Subir)">
+                                                    </i>
+                                                }
+
+                                                int max = _excepciones.Where(c => c.CodigoMedio == item.CodigoMedio).Max(c=> c.Jerarquia);
+                                                if (item.Jerarquia < max)
+                                                {
+                                                    <i class="fas fa-arrow-down icono-accion"
+                                                       title="Bajar"
+                                                       @onclick="() => MoverJerarquia(item, AccionJerarquias.Bajar)">
+                                                    </i>
+                                                }
+
+                                       
+                                                string clase = "";
+                                                if (HaCambiadoValorJerarquia(item))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@clase">@context.DisplayText</span>
+                                            }
+                                        }
+                                      
+                                    </CellDisplayTemplate>
+                                        
+                                    <CellEditTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            if (item.MedioAccesible)
+                                            {
+                                                if (item.Jerarquia != 1)
+                                                {
+                                                    <i class="fas fa-arrow-up icono-accion"
+                                                    title="Subir"
+                                                    @onclick="() => MoverJerarquia(item, AccionJerarquias.Subir)">
+                                                    </i>
+                                                }
+
+                                                int max = _excepciones.Where(c => c.CodigoMedio == item.CodigoMedio).Max(c=> c.Jerarquia);
+                                                if (item.Jerarquia < max)
+                                                {
+                                                    <i class="fas fa-arrow-down icono-accion"
+                                                       title="Bajar"
+                                                       @onclick="() => MoverJerarquia(item, AccionJerarquias.Bajar)">
+                                                    </i>
+                                                }
+
+                                                string clase = "";
+                                                if (HaCambiadoValorJerarquia(item))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@clase">@context.DisplayText</span>
+                                            }
+                                        }
+                                   
+
+                                    </CellEditTemplate>
+
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.DescripcionMedio)"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:Medio:label")"
+                                                  ReadOnly="true"
+                                                  Width="13%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                    <CellDisplayTemplate>
+                                        <span class="dxgrid-readonly-cell">@context.DisplayText</span>
+                                    </CellDisplayTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionDto.PctSAG)"
+                                                  FilterRowEditorVisible="true"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:SagTpc:label")"
+                                                  Width="8%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Right">
+                                    <HeaderCaptionTemplate>
+                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipSagTpc:label")">@T("Pages:PlanificacionCondiciones:SagTpc:label")</span>
+                                    </HeaderCaptionTemplate>
+
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is ExcepcionDto item)
+                                        {
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            if (item.PctSAG.HasValue)
+                                            {
+                                                string clase = "";
+                                                if (HaCambiadoValorExcepciones(item, ConceptosCondiciones.Sag))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@($"{clase} {classCSSReadonly}")">@context.DisplayText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="@($"{classCSSReadonly}")"></span>
+                                            }
+                                        }
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = ((ExcepcionDto)context.EditModel);
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            <DxSpinEdit value="@editItem.PctSAG"
+                                                        ShowSpinButtons="false"
+                                                        CssClass="dxgrid-previsiones-cell"
+                                                        MaxValue="100"
+                                                        MinValue="0"
+                                                        ReadOnly="@soloLectura"
+                                                        ValueChanged="@((decimal? v) => MedioCondicionExcepcion_SetPct(editItem,dataItem, ConceptosCondiciones.Sag, v))" >
+                                                        >
+                                            </DxSpinEdit>
+                                        }
+
+                                    </CellEditTemplate>
+
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctManPower)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")"
+                                                  Width="8%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
+
+                                    <HeaderCaptionTemplate>
+                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipManpowerTpc:label")">@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")</span>
+                                    </HeaderCaptionTemplate>
+
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is ExcepcionDto item)
+                                        {
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            if (item.PctManPower.HasValue)
+                                            {
+                                                string clase = "";
+                                                if (HaCambiadoValorExcepciones(item, ConceptosCondiciones.Manpower))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@($"{clase} {classCSSReadonly}")">@context.DisplayText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="@($"{classCSSReadonly}")"></span>
+                                            }
+                                        }
+                                    </CellDisplayTemplate>
+
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = ((ExcepcionDto)context.EditModel);
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            <DxSpinEdit value="@editItem.PctManPower"
+                                                        ShowSpinButtons="false"
+                                                        CssClass="dxgrid-previsiones-cell"
+                                                        MaxValue="100"
+                                                        MinValue="0"
+                                                        ReadOnly="@soloLectura"
+                                                        ValueChanged="@((decimal? v) => MedioCondicionExcepcion_SetPct(editItem, dataItem, ConceptosCondiciones.Manpower, v))" >
+                                                        >
+                                            </DxSpinEdit>
+                                        }
+
+                                    </CellEditTemplate>
+
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctDevolucion)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")"
+                                                  Width="8%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
+
+                                    <HeaderCaptionTemplate>
+                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipDevolucionTpc:label")">@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")</span>
+                                    </HeaderCaptionTemplate>
+
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is ExcepcionDto item)
+                                        {
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            if (item.PctDevolucion.HasValue)
+                                            {
+                                                string clase = "";
+                                                if (HaCambiadoValorExcepciones(item, ConceptosCondiciones.Devolucion))
+                                                {
+                                                    clase = "grid-modified-cell";
+                                                }
+                                                <span class="@($"{clase} {classCSSReadonly}")">@context.DisplayText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="@($"{classCSSReadonly}")"></span>
+                                            }
+                                        }
+                                    </CellDisplayTemplate>
+
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = ((ExcepcionDto)context.EditModel);
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            <DxSpinEdit value="@editItem.PctDevolucion"
+                                                        ShowSpinButtons="false"
+                                                        CssClass="dxgrid-previsiones-cell"
+                                                        MaxValue="100"
+                                                        MinValue="0"
+                                                        ReadOnly="@soloLectura"
+                                                        ValueChanged="@((decimal? v) => MedioCondicionExcepcion_SetPct(editItem, dataItem, ConceptosCondiciones.Devolucion, v))">
+                                            </DxSpinEdit>
+                                        }
+
+                                    </CellEditTemplate>
+                                  
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoAlcance)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:Alcance:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            var descripcion = _alcances.FirstOrDefault(o => o.Codigo == item.CodigoAlcance)?.Descripcion ?? "";
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.Alcance))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        
+                                            <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+                                        }
+
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var css = editItem.CodigoAlcance != dataItem.CodigoAlcance ? "grid-modified-cell" : "";
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                         }
+                                        <DxComboBox Data="@_alcances"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoAlcance"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.Alcance, v))" />
+
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoDisciplina)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:TipoDisciplina:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            // var descripcion = TiposDisciplina.FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
+                                            var descripcion = (item.TiposDisciplinaDisponibles ?? _tiposDisciplina).FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
+
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.TipoDisciplina))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.CodigoTipoDisciplina != dataItem.CodigoTipoDisciplina ? "grid-modified-cell" : "";
+                                            var opcionesDisponibles = dataItem.TiposDisciplinaDisponibles ?? _tiposDisciplina;
+                                        }
+                                        <DxComboBox Data="@opcionesDisponibles"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoTipoDisciplina"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.TipoDisciplina)"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.TipoDisciplina, v))" />
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplinaGrupo)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:DisciplinaGrupo:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            //var descripcion = _disciplinasGrupo.FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
+                                            var descripcion = (item.DisciplinasGrupoDisponibles ?? _disciplinasGrupo).FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.DisciplinaGrupo))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.CodigoDisciplinaGrupo != dataItem.CodigoDisciplinaGrupo ? "grid-modified-cell" : "";
+                                            var opcionesDisponibles = dataItem.DisciplinasGrupoDisponibles ?? _disciplinasGrupo;
+                                        }
+                                        <DxComboBox Data="@opcionesDisponibles"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoDisciplinaGrupo"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.DisciplinaGrupo)"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.DisciplinaGrupo, v))" />
+
+
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplina)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:Disciplina:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            var descripcion = (item.DisciplinasDisponibles ?? _disciplinas).FirstOrDefault(o => o.Codigo == item.CodigoDisciplina)?.Descripcion ?? "";
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.Disciplina))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.CodigoDisciplina != dataItem.CodigoDisciplina ? "grid-modified-cell" : "";
+                                            var opcionesDisponibles = dataItem.DisciplinasDisponibles ?? _disciplinas;
+                                        }
+                                        <DxComboBox Data="@opcionesDisponibles"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoDisciplina"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.Disciplina)"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem, dataItem, ConceptosCondicionesNMD.Disciplina, v))" />
+
+                                    </CellEditTemplate>
+
+                                </DxGridDataColumn>
+
+                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDiversified)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:Diversified:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            var descripcion = _diversifieds.FirstOrDefault(o => o.Codigo == item.CodigoDiversified)?.Descripcion ?? "";
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.Diversified))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                       
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.CodigoDiversified != dataItem.CodigoDiversified ? "grid-modified-cell" : "";
+                                        }
+                                        <DxComboBox Data="@_diversifieds"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoDiversified"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.Diversified, v))" />
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoObjetivo)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:Objetivo:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            //var descripcion = _objetivos.FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
+                                            var descripcion = (item.ObjetivosDisponibles ?? _objetivos).FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.Objetivo))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.CodigoObjetivo != dataItem.CodigoObjetivo ? "grid-modified-cell" : "";
+                                            var opcionesDisponibles = dataItem.ObjetivosDisponibles ?? _objetivos;
+                                        }
+                                        <DxComboBox Data="@opcionesDisponibles"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoObjetivo"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.Objetivo)"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.Objetivo, v))" />
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoCompra)"
+                                                  FilterRowEditorVisible="false"
+                                                  Caption="@T("Pages:PlanificacionCondiciones:TipoCompra:label")"
+                                                  Width="11%"
+                                                  CaptionAlignment="GridTextAlignment.Center"
+                                                  TextAlignment="GridTextAlignment.Left">
+
+                                    <CellDisplayTemplate>
+                                        @{
+                                            var item = (ExcepcionDto)context.DataItem;
+                                            //var descripcion = _tiposCompra.FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
+                                            var descripcion = (item.TiposCompraDisponibles ?? _tiposCompra).FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
+                                            string classCSSReadonly = "";
+                                            if (!item.MedioAccesible)
+                                            {
+                                                classCSSReadonly = "dxgrid-readonly-cell";
+                                            }
+                                            string clase = "";
+                                            if (HaCambiadoValorExcepciones(item, ConceptosCondicionesNMD.TipoCompra))
+                                            {
+                                                clase = "grid-modified-cell";
+                                            }
+                                        }
+                                        <span class="@($"{clase} {classCSSReadonly}")">@descripcion</span>
+
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        @{
+                                            var editItem = (ExcepcionDto)context.EditModel;
+                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            bool soloLectura = !dataItem.MedioAccesible;
+                                            var css = editItem.CodigoTipoCompra != dataItem.CodigoTipoCompra ? "grid-modified-cell" : "";
+                                            var opcionesDisponibles = dataItem.TiposCompraDisponibles ?? _tiposCompra;
+                                        }
+                                        <DxComboBox Data="@opcionesDisponibles"
+                                                    TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                                    ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                                    Value="editItem.CodigoTipoCompra"
+                                                    CssClass="@css"
+                                                    ReadOnly="@soloLectura"
+                                                    @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.TipoCompra)"
+                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.TipoCompra, v))" />
+                                    </CellEditTemplate>
+                                </DxGridDataColumn>
+
+                                <DxGridCommandColumn Width="5%" NewButtonVisible="false">
+                                    <FilterRowCellTemplate>
+                                    </FilterRowCellTemplate>
+                                    <CellDisplayTemplate>
+                                        <div class="grid-cell-align-center">
+                                            <DxButton IconCssClass="fas fa-trash"
+                                                      RenderStyle="ButtonRenderStyle.Link"
+                                                      aria-label="Delete"
+                                                      title="@T("common:EliminarRegistro:label")"
+                                                      Click="@(() => EliminarExcepcion(context.DataItem))" />
+                                        </div>
+                                    </CellDisplayTemplate>
+                                    <CellEditTemplate>
+                                        <div class="grid-cell-align-center">
+                                            <DxButton Enabled="false"
+                                                      aria-label="Delete"
+                                                      CssClass="grid-disabled-button"
+                                                      IconCssClass="fas fa-trash"
+                                                      RenderStyle="ButtonRenderStyle.Link" />
+                                        </div>
+                                    </CellEditTemplate>
+                                </DxGridCommandColumn>
+                            </Columns>
+                        </DxGrid>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+
+                </ChildContent>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+
+        @if (_vigenciaSeleccionada != null)
+        {
+            <DxFormLayout  >
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true">
+                    <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="btnCustom"
+                                      RenderStyle=ButtonRenderStyle.None
+                                      Text="@T("common:Save:label")"
+                                      Click="Grabar"
+                                      IconCssClass="fa-solid fa-save"
+                                      Enabled="@HayCambiosPendientes" />
+                        </div>
+                    </div>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="6" ColSpanLg="8" ColSpanXl="8" ColSpanXxl="8"> </DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="false">
+                    <div class="d-flex justify-content-end">
+                        <DxButton CssClass="btnCustom"
+                                  RenderStyle=ButtonRenderStyle.None
+                                  Text="@T("common:Cancelar:label")"
+                                  Click="CancelarCambios"
+                                  IconCssClass="fa-solid fa-cancel"
+                                  Enabled="@HayCambiosPendientes" />
+                    </div>
+                </DxFormLayoutItem>
+             </DxFormLayout>
+        }
+
+        @* POPUP EDIT MEDIOS *@
+        <DxPopup Visible="@_popupMediosVisible"
+                 ShowFooter="true"
+                 HeaderText="Selección de medios para nueva Excepción"
+                 ShowCloseButton="false"
+                 Width="500px"
+                 Height="Auto"
+                 CloseOnEscape="false"
+                 CloseOnOutsideClick="false"
+                 AllowDrag="false"
+                 AllowDragByHeaderOnly="false">
+            <BodyContentTemplate Context="popupContext">
+                <DxFormLayout>
+                    <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <CaptionTemplate>
+                            <span>@T("Common:Medios:label")</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_mediosMaster"
+                                        Id="comboBoxMedios"
+                                        @bind-Value="@_medioSeleccionadoDesdePopup"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+                </DxFormLayout>
+            </BodyContentTemplate>
+            <FooterContentTemplate>
+                <div class="popupFooter">
+                    <DxButton CssClass="btnCustom"
+                              RenderStyle=ButtonRenderStyle.None
+                              Text="@T("Common:aceptar:label")"
+                              IconCssClass="fa-solid fa-save"
+                              Enabled="@(_medioSeleccionadoDesdePopup != null)"
+                              Click="@AñadirExcepcionDesdePopup" />
+
+                    <DxButton CssClass="btnCustom"
+                              RenderStyle=ButtonRenderStyle.None
+                              Text="@T("Common:Cancelar:label")"
+                              IconCssClass="fa-solid fa-cancel"
+                              Click="@OcultarPopupMedios" />
+                </div>
+            </FooterContentTemplate>
+        </DxPopup>
+
+    
+    </div>
+
+}
+
+

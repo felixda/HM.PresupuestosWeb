@@ -1,0 +1,214 @@
+﻿@page "/"
+@layout Layout.EmptyLayout
+
+@using HM.Core.Comun.v6.Entidades.Configuracion
+@using HM.Core.Comun.v6.Entidades.Seguridad
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Core.Modelo.v6.Login
+@using System.Security.Claims
+@using HM.Presupuestos.Application.Servicios
+@using HM.Presupuestos.Contratos
+@using HM.Presupuestos.Contratos.Helper;
+@using HM.Presupuestos.Server.Servicios
+@using Microsoft.AspNetCore.Components.Authorization
+@using HM.Presupuestos.Server.Utils
+@using HM.Presupuestos.Server.Services
+@using HM.Presupuestos.Server.Helper
+
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IControlador _Controlador
+@inject IJwt _Jwt
+@inject NavigationManager _NavigationManager
+@inject IConfiguration _Configuration
+@* @inject IResourceService _ResourceService *@
+@inject ILogService _LogService
+@inject ISessionService _SessionService
+@inject ILogAccionesService _LogAccionesService
+@inject IUsuarioServicio _UsuarioService
+@inject ICookieService CookieService
+
+@attribute [Authorize]
+
+
+@if (_componentInitialized)
+{
+    <div class="spinner-container">
+        <div class="spinner-image">
+            <img src="images/logo/logo-havas-rouge_small.png" />
+        </div>
+        <div class="spinner"></div>
+    </div>
+}
+
+@code {
+
+    private const string IDIOMA_COOKIE_KEY = "app_idioma";
+    private const int IDIOMA_COOKIE_EXPIRE_DAYS = 365;
+    private const string IDIOMA_POR_DEFECTO = "es";
+
+    private bool _componentInitialized = false;
+    private UsuarioEntidad _user = new UsuarioEntidad();
+
+    /// <summary>
+    /// Component event
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+      //  ResourceServiceWrapper.Initialize(_ResourceService);
+       
+
+        // ✅ Manejar cookie de idioma al inicio
+        InicializarIdiomaDesdeoCookie();
+    }
+
+    /// <summary>
+    /// Inicializar idioma desde cookie o establecer valor por defecto
+    /// </summary>
+    private void InicializarIdiomaDesdeoCookie()
+    {
+        try
+        {
+            // Intentar leer cookie de idioma
+            var languageCode = CookieService.GetCookie(IDIOMA_COOKIE_KEY);
+
+            if (string.IsNullOrEmpty(languageCode))
+            {
+                // Si no existe, establecer idioma por defecto
+                languageCode = IDIOMA_POR_DEFECTO;
+                CookieService.SetCookie(IDIOMA_COOKIE_KEY, languageCode, IDIOMA_COOKIE_EXPIRE_DAYS);
+                Console.WriteLine($"[Init] Cookie de idioma creada con valor por defecto: {languageCode}");
+            }
+            else
+            {
+                Console.WriteLine($"[Init] Cookie de idioma leída: {languageCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Init] Error al inicializar idioma desde cookie: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Component event
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            if (!_componentInitialized)
+            {
+                _componentInitialized = true;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        else
+        {
+            var authorized = false;
+
+            try
+            {
+                // ✅ DEBUGGING: Verificar el tipo de proveedor
+                Console.WriteLine($"[Init] Tipo de AuthenticationStateProvider: {_AuthenticationStateProvider.GetType().Name}");
+
+                var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+                // ✅ DEBUGGING: Verificar estado de autenticación
+                Console.WriteLine($"[Init] authState es null: {authState == null}");
+                Console.WriteLine($"[Init] authState.User es null: {authState?.User == null}");
+                Console.WriteLine($"[Init] authState.User.Identity es null: {authState?.User?.Identity == null}");
+                Console.WriteLine($"[Init] IsAuthenticated: {authState?.User?.Identity?.IsAuthenticated}");
+                Console.WriteLine($"[Init] Name: {authState?.User?.Identity?.Name}");
+
+                var userSSO = authState.User;
+
+                // ✅ CAMBIO: Añadir validación null-safe
+                if (authState != null && 
+                    userSSO != null && 
+                    userSSO.Identity != null && 
+                    !string.IsNullOrEmpty(userSSO.Identity.Name) && 
+                    userSSO.Identity.IsAuthenticated)
+                {
+                    Console.WriteLine($"[Init] Usuario autenticado: {userSSO.Identity.Name}");
+                    authorized = await CrearPerfilUsuario(userSSO.Identity.Name.ToString(), _Jwt, _Controlador);
+
+                   // await _SessionService.EstablecerUsuarioSesion(_user);
+                }
+                else
+                {
+                    Console.WriteLine("[Init] ❌ Usuario NO autenticado o datos incompletos");
+                }
+
+                if (authorized)
+                {
+                    _NavigationManager.NavigateTo("/home", forceLoad: false);
+                }
+                else
+                {
+                    _NavigationManager.NavigateTo("/Unauthorized", forceLoad: false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Init] ❌ Exception: {ex.Message}");
+                _NavigationManager.NavigateTo("/Unauthorized", true);
+                await _LogService.InsertException(this.GetType().Name, ex);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Build user profile from internal security
+    /// </summary>
+    /// <param name="username">User name</param>
+    /// <param name="jwt">IJwt object</param>
+    /// <param name="securityController">IControlador object</param>
+    /// <returns>True when success</returns>
+    public async Task<bool> CrearPerfilUsuario(string username,  IJwt jwt, IControlador securityController)
+    {
+        var authorized = false;
+        try
+        {
+            // if (string.IsNullOrEmpty(username)) { return false; }
+
+            // var userNameBasic = username.Substring(0, username.IndexOf("@"));
+            // var applicationCode = _Configuration.GetValue<int>("AppSettings:AppCode");
+            // var tokenInternalAuthentication = _Configuration.GetValue<string>("AppSettings:Session:TokenInternalAuthentication");
+            // RespuestaLogin respuestaLogin = await securityController.ValidarUsuario(applicationCode, userNameBasic, tokenInternalAuthentication);
+
+
+            var usuarioSSO = await _UsuarioService.CargarUsuarioSSODesdeServicioExterno();
+
+            if (usuarioSSO != null)
+            {
+                _user = usuarioSSO;
+                jwt.Usuario = _user;
+             
+
+               // await _SessionService.EstablecerUsuarioSesionSSO(usuarioSSO);
+                authorized = true;
+            }
+
+           
+        }
+        catch (Exception ex)
+        {
+            await _LogService.InsertException(this.GetType().Name, ex);
+        }
+        return authorized;
+    }
+
+
+
+    /// <summary>
+    /// Storage user entity data 
+    /// </summary>
+    /// <param name="user">UsuarioEntidad object</param>
+    public async Task StorageUserProfile(UsuarioEntidad user)
+    {
+        await _SessionService.EstablecerUsuarioSesion(user);
+    }
+}

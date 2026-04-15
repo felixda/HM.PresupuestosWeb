@@ -1,0 +1,64 @@
+﻿@page "/administracion/avisos"
+
+@using HM.Presupuestos.Contratos.Comun
+@using Microsoft.AspNetCore.Components.Authorization
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Presupuestos.Application.Servicios
+@using HM.Presupuestos.Server.Helper
+@using HM.Presupuestos.Server.Services
+@using static HM.Presupuestos.Application.Servicios.IndicadoresService
+@using System.Text.Json
+
+@inject IAvisosService AvisosService
+@inject ILogAccionesService _LogAccionesService
+@inject ErrorDialogService _ErrorService
+@inject ILayerOverlayService _LayerOverlayService
+
+@inherits Context
+
+@attribute [Authorize]
+
+@if (_componentInitialized)
+{
+    <PageTitle>@T($"Menu:Menu_{(int)CodigosMenu.Avisos}:label")</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.Avisos" Titulo="@T("Menu:Menu_21:label")" TextoToolTipAyuda="@T("Pages:Avisos:ToolTip:label")" />
+
+    <div class="layoutContainer">
+        <div class="mb-3">
+            <label for="mensaje" class="form-label">@T("Pages:Avisos:Mensaje:label")</label>
+            <textarea id="mensaje" class="@ClseTextArea" rows="5" @bind="_mensaje"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label d-block">@T("Pages:Avisos:TipoAviso:label")</label>
+
+            <div class="radio-card @ClaseMarco">
+                <InputRadioGroup @bind-Value="TipoAviso">
+                    <div class="form-check">
+                        <InputRadio class="form-check-input" Value="TiposDeAviso.Info" id="avisoInfo" />
+                        <label class="form-check-label" for="avisoInfo">Info</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio class="form-check-input" Value="TiposDeAviso.Warning" id="avisoAdvertencia" />
+                        <label class="form-check-label" for="avisoAdvertencia">Advertencia</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio class="form-check-input" Value="TiposDeAviso.Error" id="avisoError" />
+                        <label class="form-check-label" for="avisoError">Error</label>
+                    </div>
+                </InputRadioGroup>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <div class="alert alert-danger">@_error</div>
+        }
+
+        <DxButton CssClass="btnCustom"
+            RenderStyle=ButtonRenderStyle.None
+            IconCssClass="fa-solid fa-paper-plane"
+            Text="@T("Botones:Enviar:label")"
+            Click="EnviarAviso" />
+    </div>
+}

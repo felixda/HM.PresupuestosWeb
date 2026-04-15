@@ -1,0 +1,56 @@
+﻿@using HM.Core.Comun.v6.Entidades.Seguridad
+@using HM.Presupuestos.Server.Servicios
+
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject ILogAccionesService _LogAccionesService
+@inject IUsuarioServicio _UsuarioService
+@inject IJSRuntime JS
+
+@inject IResourceService _ResourcesService
+@inject NavigationManager _NavigationManager
+
+@inherits Context
+@attribute [Authorize]
+
+@if (!UsuarioCargado)
+{
+   @*  <p>Comprobando permisos...</p> *@
+}
+else
+{
+   
+    @* MOSTRAR USUARIO SSO (REAL) *@
+    <DxStackLayout CssClass="h-100 w-100 ch-480" Orientation="Orientation.Horizontal">
+        <Items>
+            @{
+                var login = UsuarioSSO.Nombre + " " + UsuarioSSO.Apellido1 + " " + UsuarioSSO.Apellido2;
+                var titleLogin = login + " [" + UsuarioSSO.Login + "]";
+            }
+            <DxStackLayoutItem Length="0.2fr">
+                <Template>
+                    <div class="stacklayout-item">
+                        <img class="icon-person" src="images/person-fill.svg" title="@titleLogin">
+                    </div>
+                </Template>
+            </DxStackLayoutItem>
+            <DxStackLayoutItem Length="1fr">
+                <Template>
+                    <div class="stacklayout-item">
+                        <div title="@titleLogin"><b>@login</b></div>
+                    </div>
+                </Template>
+            </DxStackLayoutItem>
+        </Items>
+    </DxStackLayout>
+    
+}
+
+@code {
+
+    protected override async Task OnUsuarioDisponibleAsync()
+    {
+        await base.OnUsuarioDisponibleAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+}
+
