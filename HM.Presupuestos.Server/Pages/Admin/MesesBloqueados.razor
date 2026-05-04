@@ -1,18 +1,5 @@
 ﻿@page "/administracion/meses-bloqueados"
 
-
-@inject IJwt _Jwt
-@inject AdminService AdminService
-@inject VersionesService VersionesService
-@inject IResourceService _resourceService
-@inject TraduccionesHelper Traducciones
-@inject IJSRuntime JSRuntime
-@inject ILogService _LogService
-@inject MensajesHelper _MensajesHelper
-@inject ErrorDialogService _ErrorService
-@inject ILogAccionesService _LogAccionesService
-@inject ILayerOverlayService _LayerOverlayService
-
 @inherits Context
 
 @attribute [Authorize]
@@ -26,11 +13,11 @@
         @* FILTER *@
         <DxFormLayout>
             <DxFormLayoutGroup CssClass="filterContainer"
-                               Caption="@T("common:filtros:label")"
+                               Caption="@T(AppResources.Common.Filtros)"
                                ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                                AnimationType="LayoutAnimationType.Slide">
                 <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                  Caption="@($"{T("Common:Anio:label")}")"
+                                  Caption="@($"{T(AppResources.Common.Anio)}")"
                                   CaptionPosition="CaptionPosition.Vertical">
                     <DxComboBox Data="@Anios" Enabled="true"
                                 TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -51,7 +38,7 @@
 
         <DxFormLayout>
            
-            <DxFormLayoutGroup Caption="@T("Pages:MesesBloqueados:MesesBloqueados:label")"
+            <DxFormLayoutGroup Caption="@T(AppResources.Pages.MesesBloqueados.Titulo)"
                                 CaptionCssClass="formLayoutGroupCaption">
                 @* GRID MESES *@
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" Context="formLayout">
@@ -70,8 +57,9 @@
                            
                         <Columns>
                             <DxGridSelectionColumn Width="5%" CaptionAlignment="GridTextAlignment.Center" TextAlignment="GridTextAlignment.Center" />
-                            <DxGridDataColumn FieldName="@nameof(CodigoDescripcion.Descripcion)" Caption="@T("Common:Mes:label")"
+                            <DxGridDataColumn FieldName="@nameof(CodigoDescripcion.Descripcion)" Caption="@T(AppResources.Common.Mes)"
                                                 Width="95%" DataRowEditorVisible="false" ReadOnly="true" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left">
+
                                 <CellDisplayTemplate>
                                     <span class="dxgrid-readonly-cell"><b>@context.DisplayText</b></span>
                                 </CellDisplayTemplate>
@@ -89,7 +77,7 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="toolbarButtonCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@T("botones:Grabar:label")"
+                                      Text="@T(AppResources.Botones.Grabar)"
                                       Click="Grabar_Click"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayAnioSeleccionado" />

@@ -154,7 +154,7 @@
             {
                 Console.WriteLine($"[Init] ❌ Exception: {ex.Message}");
                 _NavigationManager.NavigateTo("/Unauthorized", true);
-                await _LogService.InsertException(this.GetType().Name, ex);
+                await _LogService.InsertException(ex);
             }
         }
     }
@@ -196,7 +196,7 @@
         }
         catch (Exception ex)
         {
-            await _LogService.InsertException(this.GetType().Name, ex);
+            await _LogService.InsertException(ex);
         }
         return authorized;
     }

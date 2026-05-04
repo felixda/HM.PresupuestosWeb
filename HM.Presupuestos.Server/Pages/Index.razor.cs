@@ -39,7 +39,7 @@ namespace HM.Presupuestos.Server.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"[Index] ❌ Error en OnUsuarioDisponibleAsync: {ex.Message}");
-                await _logService.InsertException(nameof(Index), ex);
+                await _logService.InsertException(ex);
                 await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
             }
             finally
@@ -60,7 +60,7 @@ namespace HM.Presupuestos.Server.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"[Index] ❌ Error en OnUsuarioLoginDesconectado: {ex.Message}");
-                await _logService.InsertException(nameof(Index), ex);
+                await _logService.InsertException(ex);
                 await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
             }
             finally

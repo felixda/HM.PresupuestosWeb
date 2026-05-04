@@ -1,85 +1,205 @@
-﻿
-namespace HM.Presupuestos.Server.Helper
+﻿public abstract class ContextProtegido : Context
 {
-    public class ContextProtegido : Context, IDisposable
+    #region Servicios de Seguridad
+
+    [Inject] protected IPermisosService PermisosService { get; set; } = default!;
+    [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+
+    [Inject] protected NavigationManager? NavigationManager { get; set; }
+
+    [Inject] protected INavigationService NavigationService { get; set; } = default!;
+
+
+
+    #endregion
+
+    #region Propiedades para UI
+
+    /// <summary>
+    /// Indica si se está validando los permisos del usuario
+    /// Útil para mostrar spinner/mensaje de carga en UI
+    /// </summary>
+    protected bool ValidandoPermisos { get; private set; } = true;
+
+    /// <summary>
+    /// Indica si el usuario tiene permiso para acceder a la página
+    /// Se actualiza después de validar permisos
+    /// </summary>
+    protected bool? TienePermiso { get; private set; } = null;
+
+
+    /// <summary>
+    /// ⭐ Título de la página obtenido automáticamente desde recursos
+    /// Disponible en páginas .razor y .razor.cs sin necesidad de calcularlo manualmente
+    /// </summary>
+    protected string TituloPagina { get; private set; } = string.Empty;
+
+    #endregion
+
+    #region Propiedades Abstractas
+
+    /// <summary>
+    /// Código del menú asociado a la página (para validación de permisos)
+    /// </summary>
+    protected abstract CodigosMenu CodigoMenuPermiso { get; }
+
+    #endregion
+
+    #region Ciclo de Vida con Validación de Permisos
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        await base.OnAfterRenderAsync(firstRender);
+
+    //        // Validar permisos cuando el usuario esté disponible
+    //        //if (UsuarioCargado)
+    //        //{
+    //        //    await ValidarPermisosAsync();
+    //        //}
+    //    }
+    //}
+
+    protected override async Task OnUsuarioDisponibleAsync()
     {
-        [Inject] protected NavigationManager? NavigationManager { get; set; } = default!;
+        await base.OnUsuarioDisponibleAsync();
 
-        [Inject] protected IPermisosService PermisosService { get; set; } = default!;
+        Console.WriteLine($"[ContextProtegido] 📊 OnUsuarioDisponibleAsync - Usuario: {Usuario?.Login ?? "NULL"}, UsuarioCargado: {UsuarioCargado}");
 
-        [Inject] protected INavigationService NavigationService { get; set; } = default!;
-
-
-
-        protected bool TienePermiso { get; private set; } = false;
-        protected bool ValidandoPermisos { get; private set; } = true;
-
-        // ✅ Constructor: D
-        public ContextProtegido()
+        // ✅ Verificación estricta: Usuario DEBE existir
+        if (UsuarioApp == null || Usuario == null || !UsuarioCargado)
         {
-        }
+            Console.WriteLine($"[ContextProtegido] ⚠️ Usuario no disponible, esperando...");
 
-        protected override async Task OnUsuarioDisponibleAsync()
-        {
-            UsuarioApp = UsuarioService.UsuarioApp!;
-            if (UsuarioApp is not null)
+            // Intentar esperar un poco y reintentar (solo una vez)
+            await Task.Delay(100);
+
+            if (UsuarioApp == null || Usuario == null)
             {
-                PermisosService.EstablecerMenus(UsuarioApp);
-
-                string url = NavigationManager!.ToBaseRelativePath(NavigationManager.Uri);
-                var urlNormalizada = NavigationService.NormalizarUrl(url);
-
-                TienePermiso = PermisosService.TienePermiso(urlNormalizada);
-                ValidandoPermisos = false;
-
-                if (TienePermiso)
-                {
-                    await OnPermisoValidadoAsync();
-                }
-                else
-                {
-                    await RegistrarAccesoNoAutorizado(url);
-                    await OnPermisoDenegadoAsync();
-                }
+                Console.WriteLine($"[ContextProtegido] ❌ Usuario sigue NULL después de esperar");
+                return;
             }
         }
 
-
-        /// <summary>
-        /// Registrar intento de acceso no autorizado
-        /// </summary>
-        private async Task RegistrarAccesoNoAutorizado(string url)
-        {
-            try
-            {
-                var logAccion = CrearLogAccion(
-                    codigoUsuario: UsuarioApp!.Usuario.CodigoUsuario,
-                    nombreMetodoLlamador: nameof(RegistrarAccesoNoAutorizado),
-                    accion: AccionesLog.IntentoAccesoNoAutorizado,
-                    objetoConParametros: new
-                    {
-                        Url = url,
-                        Usuario = UsuarioApp.Usuario.Login,
-                        FechaHora = DateTime.Now
-                    }
-                );
-
-                await LogService.RegistrarAccesoNoAutorizado(logAccion);
-
-                Console.WriteLine($"[MainLayout] ⚠️ Acceso denegado registrado: {UsuarioApp.Usuario.Login} -> ({url})");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[MainLayout] ❌ Error al registrar acceso no autorizado: {ex.Message}");
-                await LogService.InsertException(nameof(ContextProtegido), ex);
-            }
-        }
-
-        /// <summary>
-        /// Sobrescribir este método en las páginas que heredan para cargar datos si el usuario tiene permiso
-        /// </summary>
-        protected virtual Task OnPermisoValidadoAsync() => Task.CompletedTask;
-        protected virtual Task OnPermisoDenegadoAsync() => Task.CompletedTask;
-
+        await ValidarPermisosAsync();
     }
+
+    /// <summary>
+    /// Valida si el usuario tiene permisos para acceder a la página
+    /// </summary>
+    private async Task ValidarPermisosAsync()
+    {
+        // ✅ Verificación adicional de seguridad
+        if (UsuarioApp == null || Usuario == null)
+        {
+            Console.WriteLine($"[ContextProtegido] ⚠️ Abortando ValidarPermisosAsync - Usuario NULL");
+            TienePermiso = false;
+            ValidandoPermisos = false;
+            await InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        ValidandoPermisos = true;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            // ⭐ Calcular título ANTES de validar permisos (para logs y mensajes de error)
+            TituloPagina = ObtenerTituloPagina();
+
+            string url = NavigationManager!.ToBaseRelativePath(NavigationManager.Uri);
+            var urlNormalizada = NavigationService.NormalizarUrl(url);
+
+            TienePermiso = PermisosService.TienePermiso(urlNormalizada);
+
+            // Validar permiso según código de menú
+           // TienePermiso = await PermisosService.TienePermiso((int)CodigoMenuPermiso);
+
+            if ((bool)TienePermiso)
+            {
+                await OnPermisoValidadoAsync();
+            }
+            else
+            {
+                await OnPermisoDenegadoAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            await LogService.InsertException(ex);
+            TienePermiso = false;
+        }
+        finally
+        {
+            ValidandoPermisos = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    #endregion
+
+    #region Template Methods - Ciclo de Vida con Permisos
+
+    /// <summary>
+    /// ⭐ Método plantilla que encapsula el patrón completo de inicialización
+    /// Maneja automáticamente: título, overlay, logging, errores
+    /// ❗ NO sobrescribir en páginas hijas, usar InicializarPaginaAsync() en su lugar
+    /// </summary>
+    protected virtual async Task OnPermisoValidadoAsync()
+    {
+        try
+        {
+            // 1. Mostrar overlay con mensaje de carga
+            MostrarOverlayCarga(TituloPagina);
+
+            // 2. Ejecutar inicialización específica de la página (hook point)
+            await InicializarPaginaAsync();
+
+            // 3. Notificar cambio de estado
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            await LogService.InsertException(ex);
+            await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
+        }
+        finally
+        {
+            LayerOverlayService.Stop();
+        }
+    }
+
+    /// <summary>
+    /// Obtiene el título de la página desde los recursos
+    /// </summary>
+    /// <returns>Título traducido según idioma actual</returns>
+    protected virtual string ObtenerTituloPagina()
+    {
+        return T(AppResources.Menu.ObtenerEtiqueta((int)CodigoMenuPermiso));
+    }
+
+    /// <summary>
+    /// Muestra el overlay con mensaje de carga personalizado
+    /// </summary>
+    /// <param name="tituloPagina">Título de la página</param>
+    protected virtual void MostrarOverlayCarga(string tituloPagina)
+    {
+        var mensajeCarga = $"{T(AppResources.Common.Loading)} {tituloPagina}";
+        LayerOverlayService.Start(mensajeCarga);
+    }
+
+    /// <summary>
+    /// ⭐ HOOK METHOD: Implementar en cada página para su inicialización específica
+    /// Se ejecuta automáticamente con gestión de errores y overlay
+    /// </summary>
+    /// <returns>Task de inicialización</returns>
+    protected abstract Task InicializarPaginaAsync();
+
+    /// <summary>
+    /// Se ejecuta cuando el usuario no tiene permisos (hook opcional)
+    /// </summary>
+    protected abstract Task OnPermisoDenegadoAsync();
+
+    #endregion
 }

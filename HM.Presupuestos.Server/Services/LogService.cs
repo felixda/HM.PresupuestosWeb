@@ -3,6 +3,7 @@ using HM.Presupuestos.Contratos;
 using HM.Presupuestos.Server.Servicios;
 using NLog;
 using NLog.Targets;
+using System.Runtime.CompilerServices;
 
 namespace HM.Presupuestos.Server.Services
 {
@@ -21,7 +22,7 @@ namespace HM.Presupuestos.Server.Services
     {
        Task InsertLog(string category, string message, string? stackTrace, string comments, LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task InsertException(string category, Exception exception, string comments = "", LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true);
-
+        Task InsertException(Exception exception, string comments = "", LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true, [CallerFilePath] string callerFilePath = "", [CallerMemberName] string callerMemberName = "");
         Task GrabarAccesoAPagina( string tituloPagina);
 
         Task RegistrarAccesoNoAutorizado( LogAccion logAccion);
@@ -86,27 +87,72 @@ namespace HM.Presupuestos.Server.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ❌ Error al registrar acceso no autorizado: {ex.Message}");
-                await InsertException(nameof(ContextProtegido), ex);
+                await InsertException(ex);
             }
         }
 
         /// <summary>
         /// Insert exception in database and file
         /// </summary>
-        /// <param name="category">Category entry</param>
         /// <param name="exception">Exception object</param>
         /// <param name="comments">Comments</param>
         /// <param name="logLevel">Log level</param>
         /// <param name="insertDBLog">Add entry to database</param>
-        /// <param name="insertFileLog">Add entry to file log</param> 
-        public async Task InsertException(string category, Exception exception, string comments="", LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true)
+        /// <param name="insertFileLog">Add entry to file log</param>
+        /// <param name="callerFilePath"></param>
+        /// <param name="callerMemberName"></param> 
+        public async Task InsertException(
+            Exception exception, 
+            string comments = "", 
+            LogLevel logLevel = LogLevel.Error, 
+            bool insertDBLog = true, 
+            bool insertFileLog = true, 
+            [CallerFilePath] string callerFilePath = "", 
+            [CallerMemberName] string callerMemberName = "")
         {
-            if (insertDBLog || insertFileLog)
-            {
-                var stackTrace = String.IsNullOrEmpty(exception.StackTrace) ? "" : exception.StackTrace;
-                string mensaje = ExcepcionesHelper.ObtenerMensajeCompletoExcepcion(exception);
-                await InsertLog(category, mensaje, stackTrace, comments, logLevel, insertDBLog, insertFileLog);
-            }
+            // Extraer nombre de la clase desde el FilePath
+            var category = ExtraerNombreClaseDesdeFilePath(callerFilePath);
+            // Llamar al método original
+            await InsertException(category, exception, comments, logLevel, insertDBLog, insertFileLog);
+        }
+
+        /// <summary>
+        /// Extrae el nombre de la clase desde el CallerFilePath
+        /// </summary>
+        /// <param name="filePath">Ruta completa del archivo (ej: C:\Proyectos\...\MainLayout.razor.cs)</param>
+        /// <returns>Nombre de la clase (ej: MainLayout)</returns>
+        private static string ExtraerNombreClaseDesdeFilePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return "Unknown";
+
+            // Obtener nombre del archivo sin extensión
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+
+            // Si termina en .razor (archivos .razor.cs), eliminar ese sufijo
+            if (fileName.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
+                fileName = fileName[..^6]; // Eliminar ".razor"
+
+            return fileName;
+        }
+
+
+        public async Task InsertException(
+            string category, 
+            Exception exception, 
+            string comments="", 
+            LogLevel logLevel = 
+            LogLevel.Error, 
+            bool insertDBLog = true, 
+            bool insertFileLog = true)
+        {
+            if (!insertDBLog && !insertFileLog)
+                return;
+
+            var stackTrace = exception.StackTrace ?? string.Empty;
+            var mensaje = ExcepcionesHelper.ObtenerMensajeCompletoExcepcion(exception);
+
+            await InsertLog(category, mensaje, stackTrace, comments, logLevel, insertDBLog, insertFileLog);
         }
 
 
@@ -120,57 +166,29 @@ namespace HM.Presupuestos.Server.Services
         /// <param name="logLevel">Log level</param>
         /// <param name="insertDBLog">Add entry to database</param>
         /// <param name="insertFileLog">Add entry to file log</param> 
-        public async Task InsertLog(string category, string message, string? stackTrace, string comments, LogLevel logLevel=LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true)
+        public async Task InsertLog(
+            string category, 
+            string message, 
+            string? stackTrace, 
+            string comments, 
+            LogLevel logLevel=LogLevel.Error,
+            bool insertDBLog = true, 
+            bool insertFileLog = true)
         {
-            if (insertDBLog || insertFileLog)
+            if (!insertDBLog && !insertFileLog)
+                return;
+
+            var usuario =  _usuarioServicio.UsuarioApp!.Usuario;
+            var stackTraceText = stackTrace ?? string.Empty;
+
+            if (insertDBLog)
             {
+                await InsertarLogEnBaseDatos(category, message, stackTraceText, comments, usuario);
+            }
 
-                var usuario =  _usuarioServicio.UsuarioApp!.Usuario;
-
-                var stackTraceText = String.IsNullOrEmpty(stackTrace) ? "" : stackTrace;
-                if (insertDBLog)
-                {
-                    var data = new DatosPeticionLogData();
-                    data.CodigoAplicacion = usuario.CodigoAplicacion;
-                    data.CodigoPais = usuario.CodigoPais;
-                    data.CodigoCompania = usuario.CodigoCompania;                   
-                    data.UserName = usuario.Login;                    
-                    data.Fecha = DateTime.Now;
-                    data.Categoria = category;
-                    data.Mensaje = message.Length > 1500 ? message[..1500] : message ?? string.Empty;
-                    data.StackTrace = stackTraceText;
-                    data.Observaciones = comments;
-                    data.DominioAplicacion = _configuration.GetValue<string>("AppSettings:AppDomain");
-
-                    await ApiCoreCli.SaveLog(usuario.Jwt, data);
-                }
-                if (insertFileLog)
-                {
-                    switch (logLevel)
-                    {
-                        case LogLevel.Info:
-                            AddInfo(usuario.Login, category, message ?? string.Empty, stackTraceText, comments);
-                            break;
-                        case LogLevel.Message:
-                            AddMessage(usuario.Login, category, message ?? string.Empty, stackTraceText, comments);
-                            break;
-                        case LogLevel.Warning:
-                            AddWarning(usuario.Login, category, message ?? string.Empty, stackTraceText, comments);
-                            break;
-                        case LogLevel.Debug:
-                            AddDebug(usuario.Login, category, message ?? string.Empty, stackTraceText, comments);
-                            break;
-                        case LogLevel.Error:
-                            AddError(usuario.Login, category, message ?? string.Empty, stackTraceText, comments);
-                            break;
-                        case LogLevel.Trace:
-                            AddTrace(usuario.Login, category, message ?? string.Empty, stackTraceText, comments);
-                            break;
-                        default:
-                            break;
-                    }
-                    
-                }
+            if (insertFileLog)
+            {
+                InsertarLogEnArchivo(logLevel, usuario.Login, category, message, stackTraceText, comments);
             }
         }
 
@@ -179,6 +197,63 @@ namespace HM.Presupuestos.Server.Services
 
 
         #region Private Methods
+
+
+        /// <summary>
+        /// Inserta log en la base de datos
+        /// </summary>
+        private async Task InsertarLogEnBaseDatos(string category, string message, string stackTraceText, string comments, UsuarioEntidad usuario)
+        {
+            const int MaxMensajeLength = 1500;
+
+            var data = new DatosPeticionLogData
+            {
+                CodigoAplicacion = usuario.CodigoAplicacion,
+                CodigoPais = usuario.CodigoPais,
+                CodigoCompania = usuario.CodigoCompania,
+                UserName = usuario.Login,
+                Fecha = DateTime.Now,
+                Categoria = category,
+                Mensaje = message.Length > MaxMensajeLength
+                    ? message[..MaxMensajeLength]
+                    : message,
+                StackTrace = stackTraceText,
+                Observaciones = comments,
+                DominioAplicacion = _configuration.GetValue<string>("AppSettings:AppDomain")
+            };
+
+            await ApiCoreCli.SaveLog(usuario.Jwt, data);
+        }
+
+
+        /// <summary>
+        /// Inserta log en archivo según nivel
+        /// </summary>
+        private void InsertarLogEnArchivo(LogLevel logLevel, string userName, string category, string message, string stackTraceText, string comments)
+        {
+            switch (logLevel)
+            {
+                case LogLevel.Info:
+                    AddInfo(userName, category, message, stackTraceText, comments);
+                    break;
+                case LogLevel.Message:
+                    AddMessage(userName, category, message, stackTraceText, comments);
+                    break;
+                case LogLevel.Warning:
+                    AddWarning(userName, category, message, stackTraceText, comments);
+                    break;
+                case LogLevel.Debug:
+                    AddDebug(userName, category, message, stackTraceText, comments);
+                    break;
+                case LogLevel.Error:
+                    AddError(userName, category, message, stackTraceText, comments);
+                    break;
+                case LogLevel.Trace:
+                    AddTrace(userName, category, message, stackTraceText, comments);
+                    break;
+            }
+        }
+
 
         /// <summary>
         /// Get Logger object 

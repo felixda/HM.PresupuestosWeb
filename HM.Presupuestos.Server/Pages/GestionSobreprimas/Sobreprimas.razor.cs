@@ -28,6 +28,9 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         private string CaptionIzquierda { get; set; } = string.Empty;
         private string CaptionDerecha { get; set; } = string.Empty;
 
+
+        protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Sobreprimas;
+
         #endregion
 
         #region Filtro
@@ -144,37 +147,13 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
-        /// Inicializa la página y carga los datos necesarios
-        /// </summary>
-        protected override async Task OnPermisoValidadoAsync()
+
+        protected override async Task InicializarPaginaAsync()
         {
-            try
-            {
-                TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
-                LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+            TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
+            LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
 
-                await InicializarPaginaAsync();
 
-                await InvokeAsync(StateHasChanged);
-            }
-            catch (Exception ex)
-            {
-                await LogService.InsertException(nameof(Sobreprimas), ex);
-                await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
-        }
-
-        /// <summary>
-        /// Inicializa la página cargando datos maestros
-        /// </summary>
-        private async Task InicializarPaginaAsync()
-        {
             CaptionIzquierda = T(AppResources.Pages.Sobreprimas.Titulo);
 
             AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
@@ -194,6 +173,57 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
             await ManajarRequest();
         }
+
+        /// <summary>
+        /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
+        /// Inicializa la página y carga los datos necesarios
+        /// </summary>
+        //protected override async Task OnPermisoValidadoAsync()
+        //{
+        //    try
+        //    {
+        //        TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
+        //        LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+
+        //        await InicializarPaginaAsync();
+
+        //        await InvokeAsync(StateHasChanged);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await LogService.InsertException(ex);
+        //        await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
+        //    }
+        //    finally
+        //    {
+        //        LayerOverlayService.Stop();
+        //    }
+        //}
+
+        /// <summary>
+        /// Inicializa la página cargando datos maestros
+        /// </summary>
+        //private async Task InicializarPaginaAsync()
+        //{
+        //    CaptionIzquierda = T(AppResources.Pages.Sobreprimas.Titulo);
+
+        //    AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
+        //    NetworksMaestros = await PresupuestosService.ObtenerNetworks();
+
+        //    string codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
+        //    _mediosMaestros = await PresupuestosService.ObtenerMediosPorNetWork(codigosNetwork);
+
+        //    MediosFiltrados = DatosHelper.ClonarObjeto(_mediosMaestros);
+        //    string codigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+
+        //    AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
+
+        //    FiltroEditoriales filtro = new();
+        //    filtro.CodigosMedios = codigosMedios;
+        //    EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
+
+        //    await ManajarRequest();
+        //}
 
         #endregion
 
@@ -232,7 +262,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     }
                     catch (Exception ex)
                     {
-                        await LogService.InsertException(this.GetType().Name, ex);
+                        await LogService.InsertException(ex);
                         await MensajesHelper.MostrarMensajeError(TituloPagina);
                     }
                     finally
@@ -255,7 +285,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -273,7 +303,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -326,7 +356,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -365,7 +395,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -483,7 +513,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(this.GetType().Name, ex);
+                    await LogService.InsertException(ex);
                     await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
@@ -561,7 +591,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -597,7 +627,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -643,7 +673,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -699,7 +729,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -729,7 +759,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.ErrorDelete));
             }
             finally
@@ -785,7 +815,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -813,7 +843,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     }
                     catch (Exception ex)
                     {
-                        await LogService.InsertException(this.GetType().Name, ex);
+                        await LogService.InsertException(ex);
                         await MensajesHelper.MostrarMensajeError(TituloPagina);
                     }
                     finally
@@ -846,7 +876,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     }
                     catch (Exception ex)
                     {
-                        await LogService.InsertException(this.GetType().Name, ex);
+                        await LogService.InsertException(ex);
                         await MensajesHelper.MostrarMensajeError(TituloPagina);
                     }
                     finally
@@ -1118,7 +1148,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
 
                 if (grabacionExitosa)
                 {
@@ -1337,7 +1367,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Common.Messages.UndefinedError));
             }
         }

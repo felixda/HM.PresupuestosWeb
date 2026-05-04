@@ -10,17 +10,7 @@
 @using Version = HM.Presupuestos.Contratos.Entidades.Version
 @using DevExpress.Blazor
 
-@inject IJwt _Jwt
-@inject PresupuestosService _PresupuestosService
-@inject MensajesHelper _MensajesHelper
-@inject CondicionesService _CondicionesService
-@inject ErrorDialogService _ErrorService
-@inject TraduccionesHelper _Traducciones
-@inject ILogAccionesService _LogAccionesService
-@inject ILayerOverlayService _LayerOverlayService
-@inject NavegacionService _NavegacionService
 @inherits Context
-
 
 @attribute [StreamRendering(true)]
 @attribute [Authorize]
@@ -60,14 +50,14 @@
         <DxFormLayout>
             <DxFormLayoutGroup Visible="true"
             ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
-            Caption="@T("common:filtros:label")"
+            Caption="@T(AppResources.Common.Filtros)"
             ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
             AnimationType="LayoutAnimationType.Slide">
                 <Items>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@T("common:Network:label")</span><span class="mandatory"></span>
+                            <span>@T(AppResources.Common.Network)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_networks" Enabled="true"
@@ -92,7 +82,7 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="5" ColSpanXl="5" ColSpanXxl="5"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@T("Common:GrupoClientes:label")</span><span class="mandatory"></span>
+                            <span>@T(AppResources.Common.GrupoClientes)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_gruposClientes"
@@ -117,7 +107,7 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@T("common:anio:label")</span><span class="mandatory"></span>
+                            <span>@T(AppResources.Common.Anio)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_anios" Enabled="true"
@@ -139,7 +129,7 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@T("common:Version:label")</span><span class="mandatory"></span>
+                            <span>@T(AppResources.Common.Version)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_versiones"
@@ -167,7 +157,7 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@T("Common:Buscar:label")"
+                                      Text="@T(AppResources.Common.Buscar)"
                                       IconCssClass="fa-solid fa-search"
                                       Click="@FiltroBuscar" />
                         </div>
@@ -179,7 +169,7 @@
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
                                       IconCssClass="fa-solid fa-trash"
-                            Text="@T("Common:Limpiar:label")"
+                            Text="@T(AppResources.Common.Limpiar)"
                             Click="FiltroLimpiar" />
                         </div>
                     </DxFormLayoutItem>
@@ -202,7 +192,7 @@
                     <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@T("Pages:PlanificacionCondiciones:Vigencias:label")</span><span class="mandatory"></span>
+                            <span>@T(AppResources.Pages.PlanificacionCondiciones.Vigencias)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_vigencias"
@@ -229,7 +219,7 @@
                             Enabled="@(ValidarCamposObligatoriosFiltro() && !HayCambiosPendientes)"
                             Id="btnAñadirVigencia"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@T("Botones:Anadir:label")"
+                            Text="@T(AppResources.Botones.Anadir)"
                             IconCssClass="fa-solid fa-add"
                             Click="@AñadirVigencia" />
                         </div>
@@ -241,7 +231,7 @@
                             Id="btnModificarVigencia"
                             Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@T("Botones:Modificar:label")"
+                            Text="@T(AppResources.Botones.Modificar)"
                             IconCssClass="fa-solid fa-edit"
                             Click="@EditarVigencia" />
                         </div>
@@ -253,7 +243,7 @@
                             Id="btnEliminarVigencia"
                             Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@T("Botones:Eliminar:label")"
+                            Text="@T(AppResources.Botones.Eliminar)"
                                       IconCssClass="fa-solid fa-trash"
                             Click="@EliminarVigencia" />
                         </div>
@@ -279,7 +269,7 @@
                         <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                         CaptionPosition="CaptionPosition.Vertical">
                             <CaptionTemplate>
-                                <span>@T("Common:MesDesde:label")</span><span class="mandatory"></span>
+                                <span>@T(AppResources.Common.MesDesde)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
                                 <DxComboBox Data="@_meses"
@@ -301,7 +291,7 @@
                         <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                         CaptionPosition="CaptionPosition.Vertical">
                             <CaptionTemplate>
-                                <span>@T("Common:MesHasta:label")</span><span class="mandatory"></span>
+                                <span>@T(AppResources.Common.MesHasta)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
                                 <DxComboBox Data="@_meses"
@@ -325,13 +315,13 @@
                     <div class="popupFooter">
                         <DxButton CssClass="btnCustom"
                         RenderStyle=ButtonRenderStyle.None
-                        Text="@T("Common:Save:label")"
+                        Text="@T(AppResources.Common.Save)"
                         IconCssClass="fa-solid fa-save"
                         Click="@GrabarVigencia" />
 
                         <DxButton CssClass="btnCustom"
                         RenderStyle=ButtonRenderStyle.None
-                        Text="@T("Common:Cancelar:label")"
+                        Text="@T(AppResources.Botones.Cancelar)"
 
                         IconCssClass="fa-solid fa-cancel"
                         Click="@OcultarPopupVigencia" />
@@ -375,7 +365,7 @@
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                     RenderStyle=ButtonRenderStyle.None
-                                    Text="@T("Botones:Cancelar:label")"
+                                    Text="@T(AppResources.Botones.Cancelar)"
                                     Click="CancelarCambiosCondiciones"
                                     IconCssClass="fa-solid fa-cancel"
                                     Enabled="@(_condicionesNoGuardados.Count > 0)" />
@@ -405,13 +395,13 @@
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
                                                   FieldName="@nameof(CondicionDto.PctSAG)" 
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:SagTpc:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" >
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipSagTpc:label")">@T("Pages:PlanificacionCondiciones:SagTpc:label")</span>
+                                        <span title="@T(AppResources.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@T(AppResources.Pages.PlanificacionCondiciones.SagTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -460,13 +450,13 @@
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
                                                   FieldName="@nameof(CondicionDto.PctManPower)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" >
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipManpowerTpc:label")">@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")</span>
+                                        <span title="@T(AppResources.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@T(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -513,7 +503,7 @@
 
                                 <DxGridDataColumn FieldName="@nameof(CondicionDto.IndicadorCalculoDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:BCDevolucion:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.BCDevolucion)"
                                                   Width="13%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -557,13 +547,13 @@
 
                                 <DxGridDataColumn FieldName="@nameof(CondicionDto.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipDevolucionTpc:label")">@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")</span>
+                                        <span title="@T(AppResources.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@T(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -610,7 +600,7 @@
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn FieldName="@nameof(CondicionDto.NumeroExcepciones)"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:NumExcepciones:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.NumExcepciones)"
                                                   ReadOnly="true"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -623,7 +613,7 @@
                                 </DxGridDataColumn>
 
                                 <DxGridCommandColumn Width="11%" NewButtonVisible="false" 
-                                                    Caption="@T("Pages:PlanificacionCondiciones:FiltroExcepciones:label")"
+                                                    Caption="@T(AppResources.Pages.PlanificacionCondiciones.FiltroExcepciones)"
                                                     CaptionAlignment="GridTextAlignment.Center">
                                     <FilterRowCellTemplate>
                                     </FilterRowCellTemplate>
@@ -632,7 +622,7 @@
                                             var item = (CondicionDto)context.DataItem;
                                             var isSelected = _codigoMedioleccionadoParaFiltro == item.CodigoMedio; 
                                             var clase = isSelected ? "valor-filtrado" : "";
-                                            string toolTip = isSelected ? T("Common:FiltroQuitar:label") : T("Pages:PlanificacionCondiciones:FiltroPorMedio:label");
+                                            string toolTip = isSelected ? T(AppResources.Common.FiltroQuitar) : T(AppResources.Pages.PlanificacionCondiciones.FiltroPorMedio);
                                         }
                                         <div class="grid-cell-align-center">
                                             <DxButton IconCssClass="fas fa-filter"
@@ -688,7 +678,7 @@
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                             RenderStyle=ButtonRenderStyle.None
-                                            Text="@T("common:Nuevo:label")"
+                                            Text="@T(AppResources.Common.Nuevo)"
                                             Click="AñadirExcepcion"
                                               Enabled=@ActivarBotonNuevaExcepcion 
                                             IconCssClass="fa-solid fa-plus" />
@@ -697,7 +687,7 @@
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                               RenderStyle=ButtonRenderStyle.None
-                                              Text="@T("Botones:Cancelar:label")"
+                                              Text="@T(AppResources.Botones.Cancelar)"
                                               Click="CancelarCambiosExcepciones"
                                               IconCssClass="fa-solid fa-cancel"
                                               Enabled="@(ExcepcionesNoGuardadas.Count > 0)" />
@@ -707,7 +697,7 @@
                             <Columns>
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.Jerarquia)"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:Jerarquia:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.Jerarquia)"
                                                   ReadOnly="true"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -796,12 +786,12 @@
 
                                 <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionDto.PctSAG)"
                                                   FilterRowEditorVisible="true"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:SagTpc:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right">
                                     <HeaderCaptionTemplate>
-                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipSagTpc:label")">@T("Pages:PlanificacionCondiciones:SagTpc:label")</span>
+                                        <span title="@T(AppResources.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@T(AppResources.Pages.PlanificacionCondiciones.SagTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -849,13 +839,13 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctManPower)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipManpowerTpc:label")">@T("Pages:PlanificacionCondiciones:ManpowerTpc:label")</span>
+                                        <span title="@T(AppResources.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@T(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -904,13 +894,13 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@T("Pages:PlanificacionCondiciones:ToolTipDevolucionTpc:label")">@T("Pages:PlanificacionCondiciones:DevolucionTpc:label")</span>
+                                        <span title="@T(AppResources.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@T(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -958,7 +948,7 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoAlcance)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:Alcance:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.Alcance)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1002,7 +992,7 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoDisciplina)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:TipoDisciplina:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.TipoDisciplina)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1049,7 +1039,7 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplinaGrupo)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:DisciplinaGrupo:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.DisciplinaGrupo)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1096,7 +1086,7 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplina)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:Disciplina:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.Disciplina)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1141,7 +1131,7 @@
 
                                  <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDiversified)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:Diversified:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.Diversified)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1183,7 +1173,7 @@
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoObjetivo)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:Objetivo:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.Objetivo)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1227,7 +1217,7 @@
 
                                  <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoCompra)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@T("Pages:PlanificacionCondiciones:TipoCompra:label")"
+                                                  Caption="@T(AppResources.Pages.PlanificacionCondiciones.TipoCompra)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1278,7 +1268,7 @@
                                             <DxButton IconCssClass="fas fa-trash"
                                                       RenderStyle="ButtonRenderStyle.Link"
                                                       aria-label="Delete"
-                                                      title="@T("common:EliminarRegistro:label")"
+                                                      title="@T(AppResources.Common.EliminarRegistro)"
                                                       Click="@(() => EliminarExcepcion(context.DataItem))" />
                                         </div>
                                     </CellDisplayTemplate>
@@ -1311,7 +1301,7 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@T("common:Save:label")"
+                                      Text="@T(AppResources.Common.Save)"
                                       Click="Grabar"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayCambiosPendientes" />
@@ -1325,7 +1315,7 @@
                     <div class="d-flex justify-content-end">
                         <DxButton CssClass="btnCustom"
                                   RenderStyle=ButtonRenderStyle.None
-                                  Text="@T("common:Cancelar:label")"
+                                  Text="@T(AppResources.Botones.Cancelar)"
                                   Click="CancelarCambios"
                                   IconCssClass="fa-solid fa-cancel"
                                   Enabled="@HayCambiosPendientes" />
@@ -1350,7 +1340,7 @@
                     <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@T("Common:Medios:label")</span><span class="mandatory"></span>
+                            <span>@T(AppResources.Common.Medios)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_mediosMaster"
@@ -1373,14 +1363,14 @@
                 <div class="popupFooter">
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None
-                              Text="@T("Common:aceptar:label")"
+                              Text="@T(AppResources.Common.Aceptar)"
                               IconCssClass="fa-solid fa-save"
                               Enabled="@(_medioSeleccionadoDesdePopup != null)"
                               Click="@AñadirExcepcionDesdePopup" />
 
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None
-                              Text="@T("Common:Cancelar:label")"
+                              Text="@T(AppResources.Botones.Cancelar)"
                               IconCssClass="fa-solid fa-cancel"
                               Click="@OcultarPopupMedios" />
                 </div>

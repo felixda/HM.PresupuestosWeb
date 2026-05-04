@@ -1,10 +1,21 @@
-﻿
-
+﻿using HM.Core.Comun.v6.Seguridad.Interfaces;
 
 namespace HM.Presupuestos.Server.Pages.Condiciones
 {
     public partial class ImportacionCondiciones
     {
+        #region Inyecci�n de Dependencias
+
+        [Inject] protected IJwt Jwt { get; set; } = default!;
+        [Inject] protected IPresupuestosService PresupuestosService { get; set; } = default!;
+        [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
+        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
+        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
+        [Inject] protected NavigationManager Navigation { get; set; } = default!;
+        [Inject] protected NavegacionService NavegacionService { get; set; } = default!;
+
+        #endregion
         #region Propiedades privadas
 
         #region Page
@@ -69,17 +80,17 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 try
                 {
                     PageTitle = T($"Menu:Menu_{(int)CodigosMenu.ImportacionCondiciones}:label");
-                    _LayerOverlayService.Start($"{T("Common:loading:label")} {PageTitle}");
+                    LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {PageTitle}");
                     await PageInitialize();
                 }
                 catch (Exception ex)
                 {
-                    await _ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
+                    await ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
                     return;
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
 
                 if (!_componentInitialized)
@@ -92,11 +103,11 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
         private async Task PageInitialize()
         {
-            TextoToolTipAyuda = T("Pages:ImportacionCondiciones:ToolTip:label");
-         //   _Jwt.Usuario = Usuario;
+            TextoToolTipAyuda = T(AppResources.Pages.ImportacionCondiciones.ToolTip);
+         //   Jwt.Usuario = Usuario;
 
-            _networks = await _PresupuestosService.ObtenerNetworks();
-            _anios = await _VersionesService.ObtenerAniosConVersiones();
+            _networks = await PresupuestosService.ObtenerNetworks();
+            _anios = await VersionesService.ObtenerAniosConVersiones();
 
             FilterInit();
         }
@@ -123,21 +134,21 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
             try
             {
-                _LayerOverlayService.Start();
+                LayerOverlayService.Start();
                 if (values.Any())
                 {
                     string codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
-                    _gruposClientes = await _PresupuestosService.ObtenerGruposClientePorNetworks(codigosNetwork);
+                    _gruposClientes = await PresupuestosService.ObtenerGruposClientePorNetworks(codigosNetwork);
                 }
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(PageTitle);
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
             dropDownBox.EndUpdate();
             if (esSingle)
@@ -154,17 +165,17 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 int anioSeleccionado = e.DataItem.Codigo;
                 try
                 {
-                    _LayerOverlayService.Start();
+                    LayerOverlayService.Start();
                     _versiones = await ObtenerVersionesPorPermisos(anioSeleccionado);
                 }
                 catch (Exception ex)
                 {
-                    await _LogService.InsertException(this.GetType().Name, ex);
-                    await _MensajesHelper.MostrarMensajeError(PageTitle);
+                    await LogService.InsertException(ex);
+                    await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
             }
         }
@@ -173,17 +184,17 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         {
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await _MensajesHelper.MostrarMensajeInfo(PageTitle, T("mensajes:CamposObligatorios:label"));
+                await MensajesHelper.MostrarMensajeInfo(PageTitle, T(AppResources.Mensajes.CamposObligatorios));
                 return;
             }
             try
             {
                 
-                bool confirmacion = await _MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, T("mensajes:AvisoImportarCondiciones:label"));
+                bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, T(AppResources.Mensajes.AvisoImportarCondiciones));
                 if (!confirmacion) return;
 
 
-                _LayerOverlayService.Start();
+                LayerOverlayService.Start();
 
                 _filtro = new CondicionImportarFiltro()
                 {
@@ -197,9 +208,9 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                     CodigoVersion = _versionSeleccionada!.Codigo
                 };
 
-                await _CondicionesService.ImportarCondicionesMMS(_filtro);
+                await CondicionesService.ImportarCondicionesMMS(_filtro);
 
-                await _MensajesHelper.MostrarMensajeExito(PageTitle, T("mensajes:ImportacionCondicionesFinalizada:label"));
+                await MensajesHelper.MostrarMensajeExito(PageTitle, T(AppResources.Mensajes.ImportacionCondicionesFinalizada));
 
                 ImportacionRealizada = true;
             }
@@ -210,13 +221,13 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(PageTitle);
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(PageTitle);
                 ImportacionRealizada = false;
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
         }
 
@@ -243,8 +254,8 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(PageTitle);
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
 

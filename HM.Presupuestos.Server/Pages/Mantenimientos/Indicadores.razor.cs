@@ -10,13 +10,12 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         #region Inyección de Dependencias
 
         [Inject] protected IIndicadoresService IndicadoresService { get; set; } = default!;
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
 
         #endregion
 
         #region Propiedades para Data Binding 
 
-        private string TituloPagina { get; set; } = string.Empty;
+        //private string TituloPagina { get; set; } = string.Empty;
 
         private DxGrid GridIndicadores { get; set; } = new DxGrid();
 
@@ -43,6 +42,9 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// </summary>
         private IEnumerable<Idioma> Idiomas { get; set; } = [];
 
+
+
+        protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
         #endregion
 
 
@@ -57,41 +59,65 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             return Task.CompletedTask;
         }
 
+
+        protected override async Task InicializarPaginaAsync()
+        {
+            Idiomas = ResourceService.ObtenerIdiomas();
+            DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
+
+            if (DatosIndicadores.Count == 0)
+            {
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistrosNoEncontrados));
+            }
+
+        }
+
+
+        /// <summary>
+        /// ✅ Sobrescribir si necesitas lógica personalizada de título
+        /// </summary>
+        //protected override string ObtenerTituloPagina()
+        //{
+        //    // Ejemplo: combinar título del menú con año actual
+        //    var tituloBase = base.ObtenerTituloPagina();
+        //    return $"{tituloBase} - {DateTime.Now.Year}";
+        //}
+
         /// <summary>
         /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
         /// Inicializa la página y carga los datos necesarios
         /// </summary>
-        protected override async Task OnPermisoValidadoAsync()
-        {
-            try
-            {
-                Console.WriteLine("[Indicadores] 🔄 OnPermisoValidadoAsync iniciando...");
+        //protected override async Task OnPermisoValidadoAsync()
+        //{
+        //    try
+        //    {
+        //        Console.WriteLine("[Indicadores] 🔄 OnPermisoValidadoAsync iniciando...");
 
-                TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Indicadores));
+        //        TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Indicadores));
 
-                Console.WriteLine($"[Indicadores] Título de página: {TituloPagina}");
+        //        Console.WriteLine($"[Indicadores] Título de página: {TituloPagina}");
 
-                LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+        //        LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
 
-                await InicializarPaginaAsync();
+        //        await InicializarPaginaAsync();
 
-                Console.WriteLine("[Indicadores] ✅ OnPermisoValidadoAsync completado");
+        //        Console.WriteLine("[Indicadores] ✅ OnPermisoValidadoAsync completado");
 
-                await InvokeAsync(StateHasChanged);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Indicadores] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
-                Console.WriteLine($"[Indicadores] StackTrace: {ex.StackTrace}");
-                await LogService.InsertException(nameof(Indicadores), ex);
+        //        await InvokeAsync(StateHasChanged);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"[Indicadores] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
+        //        Console.WriteLine($"[Indicadores] StackTrace: {ex.StackTrace}");
+        //        await LogService.InsertException(ex);
 
-                await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
-        }
+        //        await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
+        //    }
+        //    finally
+        //    {
+        //        LayerOverlayService.Stop();
+        //    }
+        //}
 
         /// <summary>
         /// Se ejecuta cuando el usuario cierra sesión o se desconecta
@@ -105,34 +131,34 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// <summary>
         /// Inicializa la página cargando los datos maestros necesarios
         /// </summary>
-        private async Task InicializarPaginaAsync()
-        {
-            try
-            {
-                Idiomas = ResourceService.ObtenerIdiomas();
+        //private async Task InicializarPaginaAsync()
+        //{
+        //    try
+        //    {
+        //        Idiomas = ResourceService.ObtenerIdiomas();
 
-                if (Idiomas == null || !Idiomas.Any())
-                {
-                    Console.WriteLine("[Indicadores] ⚠️ No se cargaron idiomas, usando lista vacía");
-                    Idiomas = [];
-                }
+        //        if (Idiomas == null || !Idiomas.Any())
+        //        {
+        //            Console.WriteLine("[Indicadores] ⚠️ No se cargaron idiomas, usando lista vacía");
+        //            Idiomas = [];
+        //        }
 
-                DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
+        //        DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
                 
-                if (DatosIndicadores.Count == 0)
-                {
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistrosNoEncontrados));
-                }
+        //        if (DatosIndicadores.Count == 0)
+        //        {
+        //            await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistrosNoEncontrados));
+        //        }
 
-                Console.WriteLine($"[Indicadores] ✅ Página inicializada correctamente");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Indicadores] ❌ Error en InicializarPaginaAsync: {ex.Message}");
-                await LogService.InsertException(nameof(Indicadores), ex);
-                throw;
-            }
-        }
+        //        Console.WriteLine($"[Indicadores] ✅ Página inicializada correctamente");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"[Indicadores] ❌ Error en InicializarPaginaAsync: {ex.Message}");
+        //        await LogService.InsertException(ex);
+        //        throw;
+        //    }
+        //}
 
         #endregion
 
@@ -162,10 +188,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// Calcula automáticamente BitAnd (siguiente potencia de 2) y Orden (último + 10)
         /// </summary>
         private async Task NuevoIndicadorAsync()
-        {
-            try
-            {
-                LayerOverlayService.Start();
+        { 
+            await EjecutarAsync(async () =>{
                 IndicadorEnEdicion = new();
 
                 int ultimoBitand = await IndicadoresService.ObtenerUltimoBitAnd();
@@ -176,16 +200,31 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                 IndicadorEnEdicion.Estado = EstadoEntidad.Nuevo;
                 EsPopupEdicionVisible = true;
-            }
-            catch (Exception ex)
-            {
-                await LogService.InsertException(this.GetType().Name, ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            }, TituloPagina);
+
+            //try
+            //{
+            //    LayerOverlayService.Start();
+            //    IndicadorEnEdicion = new();
+
+            //    int ultimoBitand = await IndicadoresService.ObtenerUltimoBitAnd();
+            //    IndicadorEnEdicion.BitAnd = ultimoBitand * 2;
+
+            //    int ultimoOrden = await IndicadoresService.ObtenerUltimoOrden();
+            //    IndicadorEnEdicion.Orden = ultimoOrden + 10;
+
+            //    IndicadorEnEdicion.Estado = EstadoEntidad.Nuevo;
+            //    EsPopupEdicionVisible = true;
+            //}
+            //catch (Exception ex)
+            //{
+            //    await LogService.InsertException(this.GetType().Name, ex);
+            //    await MensajesHelper.MostrarMensajeError(TituloPagina);
+            //}
+            //finally
+            //{
+            //    LayerOverlayService.Stop();
+            //}
         }
 
         /// <summary>
@@ -203,7 +242,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -214,7 +253,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// <param name="indicador">Indicador a eliminar</param>
         private async Task EliminarIndicadorAsync(Indicador indicador)
         {
-            try
+            await EjecutarAsync(async () =>
             {
                 bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
                     TituloPagina,
@@ -230,16 +269,22 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 GridIndicadores.Reload();
 
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistroEliminado));
-            }
-            catch (Exception ex)
-            {
-                await LogService.InsertException(this.GetType().Name, ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.ErrorDelete));
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+
+            }, TituloPagina, T(AppResources.Mensajes.ErrorDelete));
+        
+            //try
+            //{
+                
+            //}
+            //catch (Exception ex)
+            //{
+            //    await LogService.InsertException(ex);
+            //    await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.ErrorDelete));
+            //}
+            //finally
+            //{
+            //    LayerOverlayService.Stop();
+            //}
         }
 
         #endregion
@@ -323,7 +368,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -438,7 +483,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -466,7 +511,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// </summary>
         private async Task CancelarEdicionIndicadorAsync()
         {
-            try
+            await EjecutarAsync(async () =>
             {
                 if (TieneCambios())
                 {
@@ -483,12 +528,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 {
                     CerrarPopupEdicion();
                 }
-            }
-            catch (Exception ex)
-            {
-                await LogService.InsertException(this.GetType().Name, ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
+
+            }, TituloPagina);
         }
 
         /// <summary>

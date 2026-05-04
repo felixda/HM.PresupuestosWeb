@@ -19,6 +19,7 @@ using HM.Presupuestos.Server.Servicios;
 using HM.Presupuestos.Server.ThemeSwitcher;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
@@ -28,6 +29,7 @@ using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddUserSecrets<Program>(optional: true)
     .Build();
 
 var urlBaseCore = configuration.GetValue<string>("ServicioCore:Core");
@@ -54,6 +56,7 @@ builder.WebHost.UseConfiguration(configuration);
 
 
 // SSO authentication - ESTE ORDEN ES CRÍTICO
+builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AppSettings:AzureAd"));
 
@@ -252,6 +255,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 // Definimos los endpoints de la aplicación, o puntos
 // en los que se procesarán peticiones:
+app.MapControllers(); // Mapea los controladores API
 app.MapRazorComponents<App>()  // Mapea Blazor en toda la aplicación
 .AddInteractiveServerRenderMode(); // Habilita la interactividad en Blazor Server
 

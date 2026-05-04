@@ -77,7 +77,7 @@ namespace HM.Presupuestos.Server.Helper
         public static bool SonIguales(object obj1, object obj2)
         {
             var diferencias = ObtenerPropiedadesDiferentes(obj1, obj2);
-            return !diferencias.Any();
+            return diferencias.Count == 0;
         }
 
 

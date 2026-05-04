@@ -44,6 +44,9 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
             AnioSeleccionado is not null && 
             AnioSeleccionado.Codigo != AnioOriginal?.Codigo;
 
+
+        protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.AnioDiario;
+
         #endregion
 
         #region Ciclo de Vida del Componente
@@ -61,65 +64,91 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
         /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
         /// Inicializa la página y carga los datos necesarios
         /// </summary>
-        protected override async Task OnPermisoValidadoAsync()
+        //protected override async Task OnPermisoValidadoAsync()
+        //{
+        //    try
+        //    {
+        //        TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.AnioDiario));
+        //        LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+
+        //        await InicializarPaginaAsync();
+
+        //        Console.WriteLine("[AnioDiario] ✅ OnPermisoValidadoAsync completado");
+
+        //        await InvokeAsync(StateHasChanged);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"[AnioDiario] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
+        //        Console.WriteLine($"[AnioDiario] StackTrace: {ex.StackTrace}");
+        //        await LogService.InsertException(ex);
+
+        //        await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
+        //    }
+        //    finally
+        //    {
+        //        LayerOverlayService.Stop();
+        //    }
+        //}
+
+
+        /// <summary>
+        /// ✅ Solo implementas la lógica específica de inicialización
+        /// El try-catch-finally, overlay y logging se manejan automáticamente
+        /// </summary>
+        protected override async Task InicializarPaginaAsync()
         {
-            try
+            TextoToolTipAyuda = T(AppResources.Pages.AnioDiario.ToolTip);
+
+            // Generar lista de años: año anterior, actual y posterior
+            int añoActual = DateTime.Now.Year;
+            Anios.Add(CrearAnio(añoActual + 1));
+            Anios.Add(CrearAnio(añoActual));
+            Anios.Add(CrearAnio(añoActual - 1));
+
+            // Cargar año guardado en configuración
+            AnioOriginal = await ConfiguracionService.ObtenerAnioDiario();
+
+            // Seleccionar el año original por defecto
+            if (Anios.Count > 0)
             {
-                TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.AnioDiario));
-                LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
-
-                await InicializarPaginaAsync();
-
-                Console.WriteLine("[AnioDiario] ✅ OnPermisoValidadoAsync completado");
-
-                await InvokeAsync(StateHasChanged);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[AnioDiario] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
-                Console.WriteLine($"[AnioDiario] StackTrace: {ex.StackTrace}");
-                await LogService.InsertException(nameof(AnioDiario), ex);
-
-                await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
+                AnioSeleccionado = Anios.Find(c => c.Codigo == AnioOriginal?.Codigo);
             }
         }
+
 
         /// <summary>
         /// Inicializa la página cargando el año actual desde la configuración
         /// y generando la lista de años disponibles (anterior, actual, posterior)
         /// </summary>      
-        private async Task InicializarPaginaAsync()
-        {
-            try
-            {
-                TextoToolTipAyuda = T(AppResources.Pages.AnioDiario.ToolTip);
+        //private async Task InicializarPaginaAsync()
+        //{
+        //    try
+        //    {
+        //        TextoToolTipAyuda = T(AppResources.Pages.AnioDiario.ToolTip);
 
-                // Generar lista de años: año anterior, actual y posterior
-                int añoActual = DateTime.Now.Year;
-                Anios.Add(CrearAnio(añoActual + 1));
-                Anios.Add(CrearAnio(añoActual));
-                Anios.Add(CrearAnio(añoActual - 1));
+        //        // Generar lista de años: año anterior, actual y posterior
+        //        int añoActual = DateTime.Now.Year;
+        //        Anios.Add(CrearAnio(añoActual + 1));
+        //        Anios.Add(CrearAnio(añoActual));
+        //        Anios.Add(CrearAnio(añoActual - 1));
 
-                // Cargar año guardado en configuración
-                AnioOriginal = await ConfiguracionService.ObtenerAnioDiario();
+        //        // Cargar año guardado en configuración
+        //        AnioOriginal = await ConfiguracionService.ObtenerAnioDiario();
 
-                // Seleccionar el año original por defecto
-                if (Anios.Count > 0)
-                {
-                    AnioSeleccionado = Anios.Find(c => c.Codigo == AnioOriginal?.Codigo);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[AnioDiario] ❌ Error en InicializarPaginaAsync: {ex.Message}");
-                await LogService.InsertException(nameof(AnioDiario), ex);
-                throw;
-            }
-        }
+        //        // Seleccionar el año original por defecto
+        //        if (Anios.Count > 0)
+        //        {
+        //            AnioSeleccionado = Anios.Find(c => c.Codigo == AnioOriginal?.Codigo);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"[AnioDiario] ❌ Error en InicializarPaginaAsync: {ex.Message}");
+        //        await LogService.InsertException(ex);
+        //        throw;
+        //    }
+        //}
 
         /// <summary>
         /// Crea un objeto CodigoDescripcion para un año específico
@@ -158,7 +187,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(this.GetType().Name, ex);
+                await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally

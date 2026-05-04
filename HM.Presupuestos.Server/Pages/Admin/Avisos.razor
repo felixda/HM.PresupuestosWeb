@@ -9,11 +9,6 @@
 @using static HM.Presupuestos.Application.Servicios.IndicadoresService
 @using System.Text.Json
 
-@inject IAvisosService AvisosService
-@inject ILogAccionesService _LogAccionesService
-@inject ErrorDialogService _ErrorService
-@inject ILayerOverlayService _LayerOverlayService
-
 @inherits Context
 
 @attribute [Authorize]
@@ -21,16 +16,16 @@
 @if (_componentInitialized)
 {
     <PageTitle>@T($"Menu:Menu_{(int)CodigosMenu.Avisos}:label")</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.Avisos" Titulo="@T("Menu:Menu_21:label")" TextoToolTipAyuda="@T("Pages:Avisos:ToolTip:label")" />
+    <PageHeader CodigoMenu="@CodigosMenu.Avisos" Titulo="@T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Avisos))" TextoToolTipAyuda="@T(AppResources.Pages.Avisos.ToolTip)" />
 
     <div class="layoutContainer">
         <div class="mb-3">
-            <label for="mensaje" class="form-label">@T("Pages:Avisos:Mensaje:label")</label>
+            <label for="mensaje" class="form-label">@T(AppResources.Pages.Avisos.Mensaje)</label>
             <textarea id="mensaje" class="@ClseTextArea" rows="5" @bind="_mensaje"></textarea>
         </div>
 
         <div class="mb-3">
-            <label class="form-label d-block">@T("Pages:Avisos:TipoAviso:label")</label>
+            <label class="form-label d-block">@T(AppResources.Pages.Avisos.TipoAviso)</label>
 
             <div class="radio-card @ClaseMarco">
                 <InputRadioGroup @bind-Value="TipoAviso">
@@ -58,7 +53,7 @@
         <DxButton CssClass="btnCustom"
             RenderStyle=ButtonRenderStyle.None
             IconCssClass="fa-solid fa-paper-plane"
-            Text="@T("Botones:Enviar:label")"
+            Text="@T(AppResources.Botones.Enviar)"
             Click="EnviarAviso" />
     </div>
 }

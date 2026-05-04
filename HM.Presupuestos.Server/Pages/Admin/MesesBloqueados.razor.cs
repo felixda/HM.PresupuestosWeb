@@ -1,13 +1,31 @@
 ﻿using DevExpress.Blazor;
+using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Presupuestos.Application.Servicios;
 using HM.Presupuestos.Contratos.Comun;
 using HM.Presupuestos.Contratos.Entidades;
-
+using HM.Presupuestos.Server.Services;
 
 namespace HM.Presupuestos.Server.Pages.Admin
 {
     public partial class MesesBloqueados
     {
+        #region Inyección de Dependencias
+
+        [Inject] protected IJwt Jwt { get; set; } = default!;
+        [Inject] protected AdminService AdminService { get; set; } = default!;
+        [Inject] protected IVersionesService VersionesService { get; set; } = default!;
+        [Inject] protected IResourceService ResourceService { get; set; } = default!;
+        [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
+        [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
+        [Inject] protected ILogService LogService { get; set; } = default!;
+        [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
+        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
+        [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
+
+        #endregion
+
+
         #region Private Properties
 
         private bool _componentInitialized = false;
@@ -38,17 +56,17 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 {
                     //await InicializarAsync();
                     PageTitle = T($"Menu:Menu_{(int)CodigosMenu.MesesBloqueados}:label");
-                    _LayerOverlayService.Start($"{T("Common:loading:label")} {PageTitle}");
+                    LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {PageTitle}");
                     await PageInitialize();
                 }
                 catch (Exception ex)
                 {
-                    await _ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
+                    await ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
                     return;
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
 
                 if (!_componentInitialized)
@@ -64,7 +82,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
             try
             {
                // _Jwt.Usuario = User;
-                TextoToolTipAyuda = T("Pages:MesesBloqueados:ToolTip:label");
+                TextoToolTipAyuda = T(AppResources.Pages.MesesBloqueados.ToolTip);
 
                 Meses = await Traducciones.ObtenerMeses();
                 Anios = await VersionesService.ObtenerAniosConVersiones(true);
@@ -79,8 +97,8 @@ namespace HM.Presupuestos.Server.Pages.Admin
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(PageTitle, T("Common:Messages:UndefinedError:label"));
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(PageTitle, T(AppResources.Common.Messages.UndefinedError));
             }
         }
        
@@ -95,7 +113,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 int anioSeleccionado = e.DataItem.Codigo;
                 try
                 {
-                    _LayerOverlayService.Start();
+                    LayerOverlayService.Start();
                     List<int> mesesBloqueado = await AdminService.ObtenerMesesBloqueados(anioSeleccionado);
                     MesesSeleccionados = Meses
                        .Where(m => mesesBloqueado.Contains(m.Codigo))
@@ -103,12 +121,12 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 }
                 catch (Exception ex)
                 {
-                    await _LogService.InsertException(this.GetType().Name, ex);
-                    await _MensajesHelper.MostrarMensajeError(PageTitle);
+                    await LogService.InsertException(ex);
+                    await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
             }
             else
@@ -121,23 +139,23 @@ namespace HM.Presupuestos.Server.Pages.Admin
         {
             try
             {
-                _LayerOverlayService.Start();
+                LayerOverlayService.Start();
                 List<int> mesesSeleccionados = [
                         .. (MesesSeleccionados?.Cast<CodigoDescripcion>()
                                               .Select(x => x.Codigo) ?? [])
                     ];
 
                 await AdminService.InsertarMesesBloqueado(AnioSeleccionado!.Codigo, mesesSeleccionados);
-                await _MensajesHelper.MostrarMensajeInfo(PageTitle, T("common:DatosGrabados:label"));
+                await MensajesHelper.MostrarMensajeInfo(PageTitle, T(AppResources.Common.DatosGrabados));
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(PageTitle);
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
         }
 

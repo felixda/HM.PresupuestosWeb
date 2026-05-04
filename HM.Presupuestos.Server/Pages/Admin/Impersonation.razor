@@ -26,7 +26,7 @@
 {
     @* <p>Validando permisos...</p> *@
 }
-else if (!TienePermiso)
+else if (TienePermiso == false)
 {
     <p>No autorizado</p>
 }
@@ -42,7 +42,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <div>@T("Pages:Impersonation:Description:label")</div>
+                            <div>@T(AppResources.Pages.Impersonation.Description)</div>
                         </CaptionTemplate>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
@@ -54,14 +54,14 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
                         <DxTextBox @bind-Text="@_userNameImpersonation"
-                        NullText="@T("Pages:Impersonation:UserName:label")"
+                        NullText="@T(AppResources.Pages.Impersonation.UserName)"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
                         <DxTextBox @bind-Text="@_passwordImpersonation"
-                        NullText="@T("Pages:Impersonation:Password:label")"
+                        NullText="@T(AppResources.Pages.Impersonation.Password)"
                         Password="true"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
@@ -71,7 +71,7 @@ else
                         <div class="d-flex justify-content-center">
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@T("Common:Aceptar:label")"
+                            Text="@T(AppResources.Common.Aceptar)"
                             Click="LoginImpersonation" ClickEventArgs="true" /> @* para que acepte MouseEventArgs *@
                         </div>
                     </DxFormLayoutItem>
@@ -92,7 +92,7 @@ else
     private UsuarioEntidad _userAuthenticated = new UsuarioEntidad();
 
     #region Page
-
+    protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
 
     protected override Task OnPermisoDenegadoAsync()
     {
@@ -100,36 +100,39 @@ else
         return Task.CompletedTask;
     }
 
-    protected override async Task OnPermisoValidadoAsync()
+    protected override async Task InicializarPaginaAsync()
     {
-        try
-        {
-            Console.WriteLine("[Impersonation] 🔄 OnPermisoValidadoAsync iniciando...");
-
-            _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Impersonacion}:label");
-            Console.WriteLine($"[Impersonation] Título de página: {_pageTitle}");
-
-            // _LayerOverlayService.Start($"{GetResourceValue("Common:loading:label")} {_pageTitle}");
-
-            await PageInitialize();
-
-            Console.WriteLine("[Impersonation] ✅ OnPermisoValidadoAsync completado");
-
-            await InvokeAsync(StateHasChanged);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[Impersonation] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
-            Console.WriteLine($"[Impersonation] StackTrace: {ex.StackTrace}");
-            await LogService.InsertException(nameof(Impersonation), ex);
-
-            await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
-        }
-        finally
-        {
-            // _LayerOverlayService.Stop();
-        }
+        _textoToolTipAyuda = T(AppResources.Pages.Impersonation.ToolTip);
     }
+
+    // protected override async Task OnPermisoValidadoAsync()
+    // {
+    //     try
+    //     {
+    //         Console.WriteLine("[Impersonation] 🔄 OnPermisoValidadoAsync iniciando...");
+
+    //         _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Impersonacion}:label");
+    //         Console.WriteLine($"[Impersonation] Título de página: {_pageTitle}");
+
+    //         await PageInitialize();
+
+    //         Console.WriteLine("[Impersonation] ✅ OnPermisoValidadoAsync completado");
+
+    //         await InvokeAsync(StateHasChanged);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"[Impersonation] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
+    //         Console.WriteLine($"[Impersonation] StackTrace: {ex.StackTrace}");
+    //         await LogService.InsertException(ex);
+
+    //         await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+    //     }
+    //     finally
+    //     {
+    //         // _LayerOverlayService.Stop();
+    //     }
+    // }
 
     // ///<summary>
     // /// Event razor page
@@ -169,7 +172,7 @@ else
     /// </summary>
     private async Task PageInitialize()
     {
-        _textoToolTipAyuda = T("Pages:Impersonation:ToolTip:label");
+        _textoToolTipAyuda = T(AppResources.Pages.Impersonation.ToolTip);
         // var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
         // var userSSO = authState.User;
         // if (userSSO != null && userSSO.Identity != null && userSSO.Identity.Name != null && userSSO.Identity.IsAuthenticated)
@@ -214,23 +217,23 @@ else
                     }
                     else
                     {
-                        _message = T("Pages:Impersonation:UsuarioNoAutorizado:label");
+                        _message = T(AppResources.Pages.Impersonation.UsuarioNoAutorizado);
                     }
 
                 }
                 else
                 {
-                    _message = T("Pages:Impersonation:UsuarioImpersonadoIgual:label");
+                    _message = T(AppResources.Pages.Impersonation.UsuarioImpersonadoIgual);
                 }
             }
             else
             {
-                _message = T("Pages:Impersonation:RellenarDatosUsuario:label");
+                _message = T(AppResources.Pages.Impersonation.RellenarDatosUsuario);
             }
         }
         catch (Exception ex)
         {
-            await LogService.InsertException(this.GetType().Name, ex);
+            await LogService.InsertException(ex);
         }
         finally
         {
@@ -301,7 +304,7 @@ else
     //     catch (Exception ex)
     //     {
     //         msgError = GetResourceValue("Pages:Impersonation:Error:label");
-    //         await _LogService.InsertException(this.GetType().Name, ex);
+    //         await _LogService.InsertException(ex);
     //     }
     //     return msgError;
     // }
@@ -363,7 +366,7 @@ else
         }
         catch (Exception ex)
         {
-            await LogService.InsertException(this.GetType().Name, ex);
+            await LogService.InsertException(ex);
         }
         return user;
     }

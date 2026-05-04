@@ -1,7 +1,9 @@
 ﻿using HM.Presupuestos.Contratos.Helper;
 using HM.Presupuestos.Server.Modelos;
 using HM.Presupuestos.Server.Servicios;
+using System.ComponentModel.Design;
 using System.Text.Json;
+using IResourceService = HM.Presupuestos.Server.Services.IResourceService;
 
 
 namespace HM.Presupuestos.Server.Helper
@@ -71,6 +73,7 @@ namespace HM.Presupuestos.Server.Helper
                             await OnUsuarioLoginDesconectado();
                         }
 
+                        // ✅ Aquí se llama cuando el usuario está disponible
                         await OnUsuarioDisponibleAsync();
                         await InvokeAsync(StateHasChanged);
                     }
@@ -110,15 +113,18 @@ namespace HM.Presupuestos.Server.Helper
 
 
 
+    
+        //public string T(string elementExpression)
+        //{
+        //    return ResourceService.T(elementExpression);
+        //}
+
         /// <summary>
-        /// Get resource value by expression
+        /// Obtiene el valor traducido de una clave de recurso
         /// </summary>
-        /// <param name="elementExpression">Element expression</param>
-        /// <returns>Language code</returns>
-        public string T(string elementExpression)
-        {
-            return ResourceService.T(elementExpression);
-        }
+        /// <param name="key">Clave del recurso (ej: "Common:Aceptar:label")</param>
+        /// <returns>Texto traducido según el idioma actual</returns>
+        protected string T(string key) => ResourceService.T(key);
 
 
         public async Task SetMenuActive(int code)
@@ -177,7 +183,7 @@ namespace HM.Presupuestos.Server.Helper
             string cadena = GetValoresSeleccionados(listaObjetos, selector, separador);
 
             if (string.IsNullOrWhiteSpace(cadena))
-                return new List<int>();
+                return [];
 
             return [.. cadena
                 .Split(separador, StringSplitOptions.RemoveEmptyEntries)
@@ -249,7 +255,7 @@ namespace HM.Presupuestos.Server.Helper
             if (!esErrorControlado || enviarErrorLogWatcher)
             {
                 var excepcion = new Exception(ex.Message);
-                await LogService.InsertException(GetType().Name, excepcion);
+                await LogService.InsertException(excepcion);
             }
 
             await MensajesHelper.MostrarMensajeError(titulo, mensaje);
@@ -260,5 +266,137 @@ namespace HM.Presupuestos.Server.Helper
         {
             return ResourceService.ExisteValue(elementExpression);
         }
+
+
+        #region Ejecución (disponible para TODOS los componentes)
+
+        /// <summary>
+        /// Ejecuta una acción con gestión automática de overlay, logging y manejo de errores
+        /// ✅ Disponible en TODOS los componentes (protegidos o no)
+        /// </summary>
+        /// <param name="action">Acción asíncrona a ejecutar</param>
+        /// <param name="TituloPagina">Título de la página para mensajes de error (opcional)</param>
+        /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
+        /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
+        /// <example>
+        /// <code>
+        /// await EjecutarAsync(async () =>
+        /// {
+        ///     var data = await Service.LoadData();
+        ///     Items = data;
+        /// }, TituloPagina);
+        /// </code>
+        /// </example>
+        protected async Task EjecutarAsync(
+            Func<Task> action,
+            string TituloPagina,
+            string? customErrorMessage = null,
+            bool showOverlay = true
+            )
+        {
+            try
+            {
+                if (showOverlay)
+                {
+                    LayerOverlayService.Start();
+                }
+
+                await action();
+            }
+            catch (Exception ex)
+            {
+                // Log de la excepción
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
+            }
+            finally
+            {
+                if (showOverlay)
+                {
+                    LayerOverlayService.Stop();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ejecuta una función con gestión automática y retorna el resultado
+        /// ✅ Retorna el valor por defecto si ocurre un error
+        /// </summary>
+        /// <typeparam name="TResult">Tipo de resultado</typeparam>
+        /// <param name="func">Función asíncrona a ejecutar</param>
+        /// <param name="defaultValue">Valor por defecto en caso de error</param>
+        /// <param name="TituloPagina">Título de la página para mensajes de error (opcional)</param>
+        /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
+        /// <returns>Resultado de la función o valor por defecto</returns>
+        /// <example>
+        /// <code>
+        /// var items = await EjecutarAsync(
+        ///     async () => await Service.GetItems(),
+        ///     defaultValue: new List&lt;Item&gt;(),
+        ///     pageTitle: TituloPagina
+        /// ) ?? [];
+        /// </code>
+        /// </example>
+        protected async Task<TResult?> EjecutarAsync<TResult>(
+            Func<Task<TResult>> func,
+            string? TituloPagina = null,
+            TResult? defaultValue = default,
+            string? customErrorMessage = null,
+            bool showOverlay = true)
+        {
+            try
+            {
+                if (showOverlay)
+                {
+                    LayerOverlayService.Start();
+                }
+
+                return await func();
+            }
+            catch (Exception ex)
+            {
+                await LogService.InsertException(ex);
+
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
+
+                return defaultValue;
+            }
+            finally
+            {
+                if (showOverlay)
+                {
+                    LayerOverlayService.Stop();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ejecuta una acción síncrona con gestión automática
+        /// </summary>
+        /// <param name="action">Acción síncrona a ejecutar</param>
+        /// <param name="TituloPagina">Título de la página para mensajes de error</param>
+        /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
+        /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
+        protected async Task EjecutarAsync(
+            Action action,
+            string TituloPagina,
+            string? customErrorMessage = null,
+            bool showOverlay = true)
+        {
+            await EjecutarAsync(
+                () =>
+                {
+                    action();
+                    return Task.CompletedTask;
+                },
+                TituloPagina,
+                customErrorMessage,
+                showOverlay);
+        }
+
+        #endregion
+
+
     }
 }

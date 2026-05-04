@@ -4,11 +4,11 @@ using System.ComponentModel;
 namespace HM.Presupuestos.Contratos.Comun
 {
     public enum TiposCambiosdeDatos
-    { 
+    {
         SinCambios,
-        Modificados, 
-        Añadidos, 
-        Eliminados 
+        Modificados,
+        Añadidos,
+        Eliminados
     }
 
     public enum TiposCambiosdeDatosPrevisiones
@@ -27,7 +27,7 @@ namespace HM.Presupuestos.Contratos.Comun
         PlanificacionCondiciones = 5,
         Indicadores = 12,
         ImportacionCondiciones = 13,
-        CargarSobreprimas = 14,
+        Sobreprimas = 14,
         ImportacionSobreprimas = 16,
         CopiarInversiones = 19,
         Administracion = 20,
@@ -46,7 +46,7 @@ namespace HM.Presupuestos.Contratos.Comun
         /// <summary>
         /// Tambien denominada Real
         /// </summary>
-        Inges = 2, 
+        Inges = 2,
         PonerA0 = 3
     }
 
@@ -72,8 +72,8 @@ namespace HM.Presupuestos.Contratos.Comun
         Descripcion,
         Orden,
         BitAnd
-   }
-  
+    }
+
 
 
     public enum ConceptosSobreprimas
@@ -116,26 +116,26 @@ namespace HM.Presupuestos.Contratos.Comun
     public enum TiposDeAviso
     {
         Warning = 1,
-        Info = 2, 
+        Info = 2,
         Success = 3,
         Error = 4
     }
 
-     
-public enum ReglasUsuario
+
+    public enum ReglasUsuario
     {
         Administrador = 47,
         VerAjuste = 48
     }
 
-    public enum  AccionesLog
+    public enum AccionesLog
     {
         [Description("Impersonación de Usuario")]
         ImpersonacionUsuario,
         [Description("Impersonación de Usuario inválida")]
         ImpersonacionUsuarioInvalida,
         [Description("Bloquear meses del año")]
-        BloquearMesesAño ,
+        BloquearMesesAño,
         [Description("Modificar Vigencia")]
         ModificarVigencia,
         [Description("Eliminar Vigencia")]
@@ -189,5 +189,5 @@ public enum ReglasUsuario
         SSO = 1,
         Login = 2
     }
-   
-}                                 
+
+}

@@ -19,14 +19,14 @@
 {
     @* <p>Validando permisos...</p> *@
 }
-else if (!TienePermiso)
+else if (TienePermiso == false)
 {
     <p>No autorizado</p>
 }
 else
 {
     <PageTitle>@TituloPagina</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.CargarSobreprimas" Titulo="@TituloPagina" TextoToolTipAyuda="@T(AppResources.Pages.Sobreprimas.ToolTip)" />
+    <PageHeader CodigoMenu="@CodigosMenu.Sobreprimas" Titulo="@TituloPagina" TextoToolTipAyuda="@T(AppResources.Pages.Sobreprimas.ToolTip)" />
 
     <div class="layoutContainer">
 

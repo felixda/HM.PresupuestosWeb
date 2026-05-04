@@ -1,21 +1,21 @@
-﻿
-
-using DevExpress.Blazor;
-using DevExpress.Blazor.Internal;
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
-using HM.Presupuestos.Server.Helper;
-using Microsoft.Graph;
+﻿using DevExpress.Blazor.Internal;
+using HM.Core.Comun.v6.Seguridad.Interfaces;
 using System.Text.Json;
-
-using HM.Presupuestos.Server.Servicios;
 using Version = HM.Presupuestos.Contratos.Entidades.Version;
-
 
 namespace HM.Presupuestos.Server.Pages.Mantenimientos
 {
     public partial class Versiones
     {
+        #region Inyecci�n de Dependencias
+
+        [Inject] protected IJwt Jwt { get; set; } = default!;
+        [Inject] protected IIndicadoresService IndicadoresService { get; set; } = default!;
+        [Inject] protected TraduccionesHelper TraduccionesHelper { get; set; } = default!;
+        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
+        [Inject] protected NavigationManager Navigation { get; set; } = default!;
+
+        #endregion
 
         #region Private Properties
 
@@ -52,50 +52,71 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
         private IGrid? _GridLeyendas { get; set; }
 
-        #endregion
+		#endregion
 
-        #endregion
+		#endregion
+		protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Versiones;
 
+		#region Page
 
-        #region Page
-
-        protected override Task OnPermisoDenegadoAsync()
+		protected override Task OnPermisoDenegadoAsync()
         {
-            Console.WriteLine("❌ Permiso denegado");
+            Console.WriteLine("? Permiso denegado");
             return Task.CompletedTask;
         }
 
-        protected override async Task OnPermisoValidadoAsync()
-        {
-            try
-            {
-                Console.WriteLine("[Versiones] 🔄 OnPermisoValidadoAsync iniciando...");
+		/// <summary>
+		/// ? Solo la l�gica espec�fica de inicializaci�n
+		/// </summary>
+		protected override async Task InicializarPaginaAsync()
+		{
+			_listYear = await VersionesService.ObtenerAniosConVersiones(true);
 
-                _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Versiones}:label");
-                _textoToolTipAyuda = T("Pages:GestionVersiones:ToolTip:label");
-                Console.WriteLine($"[Versiones] Título de página: {_pageTitle}");
+			if (_listYear.Any())
+			{
+				_itemYearSelected = _listYear[1];
+			}
+			string currentLanguageCode = IdiomaService.Idioma;
+			var obLanguageList = ResourceService.ObtenerIdiomas();
+			_listTipoVersion = ObtenerTiposVersion();
+			_listMonth = await TraduccionesHelper.ObtenerMeses();
+			_listMasterIndicador = await IndicadoresService.ObtenerIndicadoresConIdiomas();
+			Idioma language = obLanguageList.First(c => c.Iso == currentLanguageCode);
+			_listMasterIndicador.ForEach(c => c.CodigoIdioma = language.CodigoIdioma);
 
-                _LayerOverlayService.Start($"{T("Common:loading:label")} {_pageTitle}");
+		}
 
-                await PageInitialize();
+		//protected override async Task OnPermisoValidadoAsync()
+  //      {
+  //          try
+  //          {
+  //              Console.WriteLine("[Versiones] ?? OnPermisoValidadoAsync iniciando...");
 
-                Console.WriteLine("[Versiones] ✅ OnPermisoValidadoAsync completado");
+  //              _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Versiones}:label");
+  //              _textoToolTipAyuda = T(AppResources.Pages.GestionVersiones.ToolTip);
+  //              Console.WriteLine($"[Versiones] T�tulo de p�gina: {_pageTitle}");
 
-                await InvokeAsync(StateHasChanged);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Versiones] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
-                Console.WriteLine($"[Versiones] StackTrace: {ex.StackTrace}");
-                await _LogService.InsertException(nameof(Indicadores), ex);
+  //              LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
 
-                await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
-            }
-            finally
-            {
-                _LayerOverlayService.Stop();
-            }
-        }
+  //              await PageInitialize();
+
+  //              Console.WriteLine("[Versiones] ? OnPermisoValidadoAsync completado");
+
+  //              await InvokeAsync(StateHasChanged);
+  //          }
+  //          catch (Exception ex)
+  //          {
+  //              Console.WriteLine($"[Versiones] ? Error en OnPermisoValidadoAsync: {ex.Message}");
+  //              Console.WriteLine($"[Versiones] StackTrace: {ex.StackTrace}");
+  //              await LogService.InsertException(ex);
+
+  //              await ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+  //          }
+  //          finally
+  //          {
+  //              LayerOverlayService.Stop();
+  //          }
+  //      }
 
         protected override async Task OnUsuarioLoginDesconectado()
         {
@@ -106,24 +127,24 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
 
         
-        private async Task PageInitialize()
-        {
-            _listYear = await _VersionesService.ObtenerAniosConVersiones(true);
+        //private async Task PageInitialize()
+        //{
+        //    _listYear = await VersionesService.ObtenerAniosConVersiones(true);
 
-            if (_listYear.Any())
-            {
-                _itemYearSelected = _listYear[1];
-            }
-            string currentLanguageCode = IdiomaService.Idioma;
-            var obLanguageList = ResourceService.ObtenerIdiomas();
-            _listTipoVersion = ObtenerTiposVersion();
-            _listMonth = await _TraduccionesHelper.ObtenerMeses();
-            _listMasterIndicador = await _IndicadoresService.ObtenerIndicadoresConIdiomas();
-            Idioma language = obLanguageList.First(c => c.Iso == currentLanguageCode);
-            _listMasterIndicador.ForEach(c => c.CodigoIdioma = language.CodigoIdioma);
+        //    if (_listYear.Any())
+        //    {
+        //        _itemYearSelected = _listYear[1];
+        //    }
+        //    string currentLanguageCode = IdiomaService.Idioma;
+        //    var obLanguageList = ResourceService.ObtenerIdiomas();
+        //    _listTipoVersion = ObtenerTiposVersion();
+        //    _listMonth = await TraduccionesHelper.ObtenerMeses();
+        //    _listMasterIndicador = await IndicadoresService.ObtenerIndicadoresConIdiomas();
+        //    Idioma language = obLanguageList.First(c => c.Iso == currentLanguageCode);
+        //    _listMasterIndicador.ForEach(c => c.CodigoIdioma = language.CodigoIdioma);
 
 
-        }
+        //}
 
         public List<CodigoDescripcion> ObtenerTiposVersion()
         {
@@ -131,20 +152,20 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
             listTiposVersion.Add(new CodigoDescripcion
             {
-                Codigo = Convert.ToInt32(T("Pages:Versiones:TipoVersion:User:code")),
-                Descripcion = T("Pages:Versiones:TipoVersion:User:label")
+                Codigo = Convert.ToInt32(T(AppResources.Pages.Versiones.TipoVersion.User_Code)),
+                Descripcion = T(AppResources.Pages.Versiones.TipoVersion.User)
             });
 
             listTiposVersion.Add(new CodigoDescripcion
             {
-                Codigo = Convert.ToInt32(T("Pages:Versiones:TipoVersion:Monthly:code")),
-                Descripcion = T("Pages:Versiones:TipoVersion:Monthly:label")
+                Codigo = Convert.ToInt32(T(AppResources.Pages.Versiones.TipoVersion.Monthly_Code)),
+                Descripcion = T(AppResources.Pages.Versiones.TipoVersion.Monthly)
             });
 
             listTiposVersion.Add(new CodigoDescripcion
             {
-                Codigo = Convert.ToInt32(T("Pages:Versiones:TipoVersion:Backup:code")),
-                Descripcion = T("Pages:Versiones:TipoVersion:Backup:label")
+                Codigo = Convert.ToInt32(T(AppResources.Pages.Versiones.TipoVersion.Backup_Code)),
+                Descripcion = T(AppResources.Pages.Versiones.TipoVersion.Backup)
             });
 
             return listTiposVersion;
@@ -166,9 +187,9 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             {
                 try
                 {
-                    _LayerOverlayService.Start();
+                    LayerOverlayService.Start();
                     int anioSeleccionado = e.DataItem.Codigo;
-                    _listVersion = await _VersionesService.ObtenerVersiones(anioSeleccionado);
+                    _listVersion = await VersionesService.ObtenerVersiones(anioSeleccionado);
 
                     _listOriginVersion = new List<Version>();
                     if (_listVersion != null)
@@ -178,12 +199,12 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await _LogService.InsertException(this.GetType().Name, ex);
-                    await _MensajesHelper.MostrarMensajeError(_pageTitle);
+                    await LogService.InsertException(ex);
+                    await MensajesHelper.MostrarMensajeError(_pageTitle);
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
             }
             else
@@ -243,7 +264,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                         if (itemIndicadorReal.Estado)
                         {
                             itemIndicador.Estado = true;
-                            //await _MensajesHelper.MostrarMensajeInfo(_pageTitle, "Si la versión tiene el indicador de Real el indicador de Cerrada tiene que estar acivo");
+                            //await MensajesHelper.MostrarMensajeInfo(_pageTitle, "Si la versi�n tiene el indicador de Real el indicador de Cerrada tiene que estar acivo");
 
                             string descripcionIndicadorReal = "Real";
                             var indicadorReal = _listMasterIndicador.Find(c => c.Codigo == Constantes.CodigosIndicadores.REAL);
@@ -259,7 +280,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                                 descripcionIndicadorCerrada = indicadorCerrada.DescripcionTraducida;
                             }
 
-                            await _MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T("Mensajes:IndicadorCerradaConIndicadorReal:label"), descripcionIndicadorReal, descripcionIndicadorCerrada), MessageBoxRenderStyle.Warning);
+                            await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T(AppResources.Mensajes.IndicadorCerradaConIndicadorReal), descripcionIndicadorReal, descripcionIndicadorCerrada), MessageBoxRenderStyle.Warning);
                         }
                     }
                 }
@@ -280,8 +301,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(_pageTitle);
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(_pageTitle);
             }
         }
 
@@ -322,8 +343,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await _LogService.InsertException(this.GetType().Name, ex);
-                    await _MensajesHelper.MostrarMensajeError(_pageTitle);
+                    await LogService.InsertException(ex);
+                    await MensajesHelper.MostrarMensajeError(_pageTitle);
                 }
             }
         }
@@ -395,8 +416,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await _LogService.InsertException(this.GetType().Name, ex);
-                    await _MensajesHelper.MostrarMensajeError(_pageTitle);
+                    await LogService.InsertException(ex);
+                    await MensajesHelper.MostrarMensajeError(_pageTitle);
                 }
             }
         }
@@ -431,35 +452,35 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             {
                 try
                 {
-                    if (!await _MensajesHelper.MostrarMensajeParaConfirmacion(_pageTitle, T("Mensajes:ConfirmacionEliminar:label")))
+                    if (!await MensajesHelper.MostrarMensajeParaConfirmacion(_pageTitle, T(AppResources.Mensajes.ConfirmacionEliminar)))
                     {
                         return;
                     }
-                    _LayerOverlayService.Start();
-                    var result = await _VersionesService.EliminarVersion(version);
+                    LayerOverlayService.Start();
+                    var result = await VersionesService.EliminarVersion(version);
                     if (result)
                     {
-                        _listVersion = await _VersionesService.ObtenerVersiones(_itemYearSelected!.Codigo);
+                        _listVersion = await VersionesService.ObtenerVersiones(_itemYearSelected!.Codigo);
                         _listOriginVersion = new List<Version>();
                         if (_listVersion != null && _listVersion.Count > 0)
                         {
                             _listOriginVersion = DatosHelper.ClonarObjeto(_listVersion);
                         }
-                        await _MensajesHelper.MostrarMensajeExito(_pageTitle, T("mensajes:RegistroEliminado:label"));
+                        await MensajesHelper.MostrarMensajeExito(_pageTitle, T(AppResources.Mensajes.RegistroEliminado));
                     }
                     else
                     {
-                        await _MensajesHelper.MostrarMensajeError(_pageTitle, T("mensajes:ErrorDelete:label"));
+                        await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorDelete));
                     }
                 }
                 catch (Exception ex)
                 {
-                    await _LogService.InsertException(this.GetType().Name, ex);
-                    await _MensajesHelper.MostrarMensajeError(_pageTitle, T("mensajes:ErrorDelete:label"));
+                    await LogService.InsertException(ex);
+                    await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorDelete));
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
             }
             else
@@ -478,14 +499,14 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             //Cuando es nueva la vesion, la descripcion no la valida automaticamente
             if (_listVersion.Any(o => o.Descripcion.Trim().Length == 0))
             {
-                await _MensajesHelper.MostrarMensajeInfo(_pageTitle, T("Mensajes:CampoVersionObligatorio:label"));
+                await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Mensajes.CampoVersionObligatorio));
                 return false;
             }
 
             //Validate text size
             if (_listVersion.Any(o => o.Descripcion.Length > 50))
             {
-                await _MensajesHelper.MostrarMensajeInfo(_pageTitle, T("Mensajes:LongitudCaracteres:label") + "`" + T("Common:Descripcion:label") + "`");
+                await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Mensajes.LongitudCaracteres) + "`" + T(AppResources.Common.Descripcion) + "`");
                 return false;
             }
 
@@ -509,7 +530,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             if (itemIndicadorUniqueDuplicated != null)
             {
-                await _MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T("Mensajes:IndicadorUnico:label"), itemIndicadorUniqueDuplicated.DescripcionTraducida), MessageBoxRenderStyle.Warning);
+                await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T(AppResources.Mensajes.IndicadorUnico), itemIndicadorUniqueDuplicated.DescripcionTraducida), MessageBoxRenderStyle.Warning);
                 return false;
             }
 
@@ -525,7 +546,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             if (itemVersionDescriptionDuplicated != null)
             {
-                await _MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T("Pages:Versiones:Message_VersionDescriptionError:label"), itemVersionDescriptionDuplicated.Descripcion), MessageBoxRenderStyle.Warning);
+                await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T(AppResources.Pages.Versiones.Message_VersionDescriptionError), itemVersionDescriptionDuplicated.Descripcion), MessageBoxRenderStyle.Warning);
                 return false;
             }
 
@@ -569,7 +590,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             {
                 if (!await UsuarioTienePermisos()) return;
 
-                _LayerOverlayService.Start();
+                LayerOverlayService.Start();
                 if (await ValidateData())
                 {
 
@@ -599,7 +620,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                     if (newVersionList.Count > 0 || updateVersionList.Count > 0)
                     {
-                        var result = await _VersionesService.GrabarVersiones(newVersionList, updateVersionList, _UsuarioService.UsuarioApp!.Usuario!.CodigoPais);
+                        var result = await VersionesService.GrabarVersiones(newVersionList, updateVersionList, UsuarioService.UsuarioApp!.Usuario!.CodigoPais);
 
                         if (result)
                         {
@@ -607,29 +628,29 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                             if (_listVersion != null && _listVersion.Count > 0)
                                 _listOriginVersion = DatosHelper.ClonarObjeto(_listVersion);
 
-                            await _MensajesHelper.MostrarMensajeInfo(_pageTitle, T("common:DatosGrabados:label"));
+                            await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Common.DatosGrabados));
                             await MarcarCambios(false);
                             LimpiarCambios();
                         }
                         else
                         {
-                            await _MensajesHelper.MostrarMensajeError(_pageTitle, T("mensajes:ErrorAlGrabar:label"));
+                            await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorAlGrabar));
                         }
                     }
                     else
                     {
-                        await _MensajesHelper.MostrarMensajeInfo(_pageTitle, T("Mensajes:SinCambios:label"));
+                        await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Mensajes.SinModificaciones));
                     }
                 }
             }
             catch (Exception ex)
             {
-                await _LogService.InsertException(this.GetType().Name, ex);
-                await _MensajesHelper.MostrarMensajeError(_pageTitle, T("common:ErrorAlGrabar:label"));
+                await LogService.InsertException(ex);
+                await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
         }
 
@@ -658,7 +679,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         {
             if (!UsuarioEsAdmin)
             {
-                await _MensajesHelper.MostrarMensajeError(_pageTitle, T("mensajes:PermisosInsuficientes:label"));
+                await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.PermisosInsuficientes));
                 return false;
             }
             return true;

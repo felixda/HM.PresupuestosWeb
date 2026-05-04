@@ -129,10 +129,8 @@ namespace HM.Presupuestos.Server.Servicios
 
                 await _sessionservice.EstablecerUsuarioSesionLogin(usuario);
 
-                if (UsuarioApp != null)
-                {
-                    UsuarioApp.AsociarUsuarioLogin(usuario);
-                }
+                UsuarioApp ??= new UsuarioApp();
+                UsuarioApp.AsociarUsuarioLogin(usuario);
 
                 // Disparar evento de forma asíncrona SIN esperar (fire-and-forget)
                 // Esto permite que el método retorne inmediatamente sin bloquearse
@@ -204,10 +202,7 @@ namespace HM.Presupuestos.Server.Servicios
 
                 await _sessionservice.EstablecerUsuarioSesionSSO(usuario);
 
-                if (UsuarioApp == null)
-                {
-                    UsuarioApp = new UsuarioApp();
-                }
+                UsuarioApp ??= new UsuarioApp();
                 UsuarioApp!.AsociarUsuarioSSO(usuario);
 
                 return usuario;

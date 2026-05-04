@@ -1,14 +1,31 @@
 ﻿using HM.Presupuestos.Contratos.Comun;
+using HM.Presupuestos.Application.Servicios;
+using HM.Presupuestos.Server.Services;
 
 namespace HM.Presupuestos.Server.Pages.Admin
 {
     public partial class Avisos
     {
+        #region Inyección de Dependencias
+
+        [Inject] protected IAvisosService AvisosService { get; set; } = default!;
+        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
+        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+      
+
+        #endregion
+
+        #region Propiedades Privadas
+
         private bool _componentInitialized = false;
         private string _pageTitle { get; set; } = string.Empty;
         private string _mensaje = "";
         private string _error = "";
         private TiposDeAviso TipoAviso { get; set; } = TiposDeAviso.Warning;
+
+        #endregion
+
+        #region Ciclo de Vida
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -18,16 +35,16 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 {
                    // await InicializarAsync();
                     _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Avisos}:label");
-                    _LayerOverlayService.Start($"{T("Common:loading:label")} {_pageTitle}");
+                    LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
                 }
                 catch (Exception ex)
                 {
-                    await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+                    await ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
                     return;
                 }
                 finally
                 {
-                    _LayerOverlayService.Stop();
+                    LayerOverlayService.Stop();
                 }
 
                 if (!_componentInitialized)
@@ -38,24 +55,32 @@ namespace HM.Presupuestos.Server.Pages.Admin
             }
         }
 
+        #endregion
+
+        #region Métodos Privados
+
         private async Task EnviarAviso()
         {
             try
             {
-                _LayerOverlayService.Start();
+                LayerOverlayService.Start();
                 await AvisosService.ActivarAvisosAsync(_mensaje, TipoAviso);
-                await _LogAccionesService.Insertar(this.GetType().Name + " > " + T("Common:LogActions:LogAction_3:label"));
+                await LogAccionesService.Insertar(this.GetType().Name + " > " + T("Common:LogActions:LogAction_3:label"));
             }
             catch (Exception ex)
             {
-                await _LogAccionesService.Insertar(this.GetType().Name + " > " + T("Common:LogActions:LogAction_4:label"));
+                await LogAccionesService.Insertar(this.GetType().Name + " > " + T("Common:LogActions:LogAction_4:label"));
                 _error = "Error al enviar el aviso: " + ex.Message;
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
         }
+
+        #endregion
+
+        #region Propiedades Calculadas
 
         private string ClaseAviso => TipoAviso switch
         {
@@ -76,5 +101,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
             TiposDeAviso.Error => "radio-card-error",
             _ => "radio-card-warning"
         };
+
+        #endregion
     }
 }

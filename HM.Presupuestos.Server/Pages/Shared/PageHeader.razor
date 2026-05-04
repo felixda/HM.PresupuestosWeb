@@ -36,9 +36,12 @@
 
         <DxStackLayoutItem Length="11fr">
             <Template>
-                <div class="stacklayout-item">
-                    <h2>@Titulo</h2>
-                </div>
+                @if (UsuarioCargado)
+                {
+                    <div class="stacklayout-item">
+                        <h2>@Titulo</h2>
+                    </div>
+                }
             </Template>
         </DxStackLayoutItem>
 
@@ -60,11 +63,14 @@
 
         <DxStackLayoutItem>
             <Template>
-                <div class="stacklayout-item">
-                    <button class="btn secondary" title="@TextoToolTipAyuda">
-                        <i id="iconInfo" class="icon info"></i>
-                    </button>
-                </div>
+                @if (UsuarioCargado)
+                {
+                    <div class="stacklayout-item">
+                        <button class="btn secondary" title="@TextoToolTipAyuda">
+                            <i id="iconInfo" class="icon info"></i>
+                        </button>
+                    </div>
+                }
             </Template>
         </DxStackLayoutItem>
     </Items>

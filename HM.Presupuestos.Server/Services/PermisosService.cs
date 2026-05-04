@@ -84,6 +84,8 @@ namespace HM.Presupuestos.Server.Services
 
         public bool TienePermiso(string url)
         {
+            EstablecerMenus(_UsuarioService.UsuarioApp!);
+
             return _urlsPermitidas.Contains(url.ToLower());
         }
     }
