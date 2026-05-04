@@ -79,13 +79,7 @@
     <ProjectReference Include="..\HM.Presupuestos.Contracts\HM.Presupuestos.Contratos.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="appsettings._DEV_.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="appsettings._PRE_.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="appsettings._PRO_.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="appsettings._PRU_.json">
