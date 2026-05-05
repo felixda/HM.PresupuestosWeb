@@ -8,13 +8,15 @@ using HM.Core.Servidor.v6.Entidades.Configuracion;
 using HM.Core.Servidor.v6.Pack.Entidades.Configuracion;
 using HM.Core.Servidor.v6.Pack.UserProviders;
 using HM.Core.Servidor.v6.UserProviders.Interfaces;
-using HM.Presupuestos.Application.Repositorios;
 using HM.Presupuestos.Application.Servicios;
-using HM.Presupuestos.Contratos;
+using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Infraestructure.Repositorios;
+//using HM.Presupuestos.Infraestructure;
 using HM.Presupuestos.Server;
-using HM.Presupuestos.Server.Helper;
-using HM.Presupuestos.Server.Pages.Shared;
-using HM.Presupuestos.Server.Services;
+//using HM.Presupuestos.Server.Helper;
+//using HM.Presupuestos.Server.Pages.Shared;
+//using HM.Presupuestos.Server.Services;
 using HM.Presupuestos.Server.Servicios;
 using HM.Presupuestos.Server.ThemeSwitcher;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -26,6 +28,7 @@ using Microsoft.Identity.Web.UI;
 using System.Globalization;
 using System.Net;
 using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
+using HM.Presupuestos.Infraestructure;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -165,6 +168,7 @@ builder.Services.AddScoped<IIndicadoresService, IndicadoresService>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<ILogAccionesService, LogAccionesService>();
+builder.Services.AddScoped<ICoreLoggerService, CoreLoggerService>();
 
 
 

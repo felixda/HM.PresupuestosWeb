@@ -33,6 +33,8 @@ namespace HM.Presupuestos.Domain.Puertos
 
         Task ActualizarIdiomaIndicador(IdiomaIndicador idiomaIndicador);
 
+        ITransaccion ObtenerTransaccion();
+
         Task EliminarIdiomaIndicador(int codigo);
 
         Task<int> ObtenerBitAndIndicador(int codigoIndicador);

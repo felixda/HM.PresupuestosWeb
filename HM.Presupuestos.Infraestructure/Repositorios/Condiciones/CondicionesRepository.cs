@@ -753,8 +753,10 @@ namespace HM.Presupuestos.Infraestructure.Repositorios
 
                 throw new ExcepcionBaseDatos(codigoResultado, mensajeResultado);
             }
-           
+
         }
+
+        public ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
 
     }
 }

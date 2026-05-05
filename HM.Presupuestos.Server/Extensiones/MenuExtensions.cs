@@ -1,5 +1,5 @@
-﻿using HM.Core.Comun.v6.Entidades.Seguridad;
-using HM.Presupuestos.Contratos.Comun;
+using HM.Core.Comun.v6.Entidades.Seguridad;
+using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Server.Services;
 
 

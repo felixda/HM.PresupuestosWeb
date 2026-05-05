@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.Presupuestos.Contratos", "HM.Presupuestos.Contracts\HM.Presupuestos.Contratos.csproj", "{97EA84E8-B100-47B9-B38E-163F52849A16}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.Presupuestos.Application", "HM.Presupuestos.Application\HM.Presupuestos.Application.csproj", "{1CB198A0-D973-46A2-BEEF-ECD1E20D7CFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HM.Presupuestos.Server", "HM.Presupuestos.Server\HM.Presupuestos.Server.csproj", "{9FD92015-8075-4262-97DA-33849CBCBA93}"
@@ -23,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{97EA84E8-B100-47B9-B38E-163F52849A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97EA84E8-B100-47B9-B38E-163F52849A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97EA84E8-B100-47B9-B38E-163F52849A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97EA84E8-B100-47B9-B38E-163F52849A16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1CB198A0-D973-46A2-BEEF-ECD1E20D7CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1CB198A0-D973-46A2-BEEF-ECD1E20D7CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CB198A0-D973-46A2-BEEF-ECD1E20D7CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU

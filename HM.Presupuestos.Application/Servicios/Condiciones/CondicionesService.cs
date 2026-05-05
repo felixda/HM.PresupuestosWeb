@@ -1,6 +1,6 @@
-﻿using HM.Presupuestos.Application.Repositorios;
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
+﻿using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Entidades;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 

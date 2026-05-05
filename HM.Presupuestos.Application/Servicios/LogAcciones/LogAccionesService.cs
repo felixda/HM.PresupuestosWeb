@@ -1,13 +1,10 @@
 ﻿using HM.Core.Comun.v6.Seguridad.Interfaces;
-using HM.Core.Comun.v6.Entidades.Logger;
 using HM.Core.Comun.v6.Loggers.Interfaces;
-using HM.Presupuestos.Application.Repositorios;
-using HM.Presupuestos.Contratos;
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
-using HM.Presupuestos.Contratos.Helper;
-using System;
+using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Entidades;
 using System.Runtime.CompilerServices;
+using HM.Presupuestos.Domain.Helper;
 
 namespace HM.Presupuestos.Application.Servicios
 {
@@ -20,11 +17,12 @@ namespace HM.Presupuestos.Application.Servicios
     }
 
 
-    public class LogAccionesService(ILogger logger, IJwt jwt, ILogAccionesRepository logAccionesRepository) : ILogAccionesService
+    public class LogAccionesService(ILogger logger, IJwt jwt, ILogAccionesRepository logAccionesRepository, ICoreLoggerService coreLoggerService) : ILogAccionesService
     {
         private readonly ILogger _logger = logger;
         private readonly IJwt _jwt = jwt;
         private readonly ILogAccionesRepository _logAccionesRepository = logAccionesRepository;
+        private readonly ICoreLoggerService _coreLoggerService = coreLoggerService;
 
         private int CodigoUsuario => _jwt.Usuario.CodigoUsuario;
 
@@ -95,25 +93,20 @@ namespace HM.Presupuestos.Application.Servicios
         }
 
 
-        private async Task InsertErrorLog(string methodName,Exception exception,int codigoUsuario)
+        private async Task InsertErrorLog(string methodName, Exception exception, int codigoUsuario)
         {
-            var message= exception.Message.Length > 1500 ? exception.Message.Substring(0, 1500) : exception.Message ?? string.Empty;
-            var stackTrace = String.IsNullOrEmpty(exception.StackTrace) ? "" : exception.StackTrace;
-            var data = new DatosPeticionLogData
+            var message = exception.Message.Length > 1500 ? exception.Message.Substring(0, 1500) : exception.Message ?? string.Empty;
+            var stackTrace = string.IsNullOrEmpty(exception.StackTrace) ? "" : exception.StackTrace;
+
+            var data = new ErrorLogData
             {
-                CodigoAplicacion = 0,
-                CodigoPais = 0,
-                CodigoCompania = 0,
                 UserName = codigoUsuario.ToString(),
                 Fecha = DateTime.Now,
-                Categoria = "",
                 Mensaje = methodName + " > " + message,
-                StackTrace = stackTrace,
-                Observaciones = "",
-                DominioAplicacion = ""
+                StackTrace = stackTrace
             };
 
-            await ApiCoreCli.SaveLog("", data);
+            await _coreLoggerService.SaveLog("", data);
         }
     }
 }

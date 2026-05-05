@@ -1,5 +1,5 @@
-ï»¿using HM.Core.Comun.v6.Entidades.Seguridad;
-using HM.Presupuestos.Contratos.Comun;
+using HM.Core.Comun.v6.Entidades.Seguridad;
+using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Server.Helper;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Logging;
@@ -30,14 +30,14 @@ namespace HM.Presupuestos.Server.Services
     }
 
     /// <summary>
-    /// Servicio para gestionar la sesiÃ³n del usuario usando ProtectedSessionStorage.
+    /// Servicio para gestionar la sesión del usuario usando ProtectedSessionStorage.
     /// 
     /// VENTAJAS vs IMemoryCache:
-    /// âœ… Persiste con F5 (NO se pierde al recargar)
-    /// âœ… MÃ¡s simple (menos cÃ³digo)
-    /// âœ… Cifrado automÃ¡tico
-    /// âœ… Bajo consumo de memoria
-    /// âœ… Escala mejor
+    /// ? Persiste con F5 (NO se pierde al recargar)
+    /// ? Más simple (menos código)
+    /// ? Cifrado automático
+    /// ? Bajo consumo de memoria
+    /// ? Escala mejor
     /// </summary>
     public class SessionService : ISessionService
     {
@@ -53,7 +53,7 @@ namespace HM.Presupuestos.Server.Services
         }
 
         /// <summary>
-        /// Guarda el usuario con cifrado automÃ¡tico.
+        /// Guarda el usuario con cifrado automático.
         /// Persiste entre recargas (F5) pero se limpia al cerrar navegador.
         /// </summary>
         public async Task EstablecerUsuarioSesion(UsuarioEntidad userEntity)
@@ -73,12 +73,12 @@ namespace HM.Presupuestos.Server.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al guardar sesiÃ³n");
+                _logger.LogError(ex, "Error al guardar sesión");
             }
         }
 
         /// <summary>
-        /// Recupera el usuario con descifrado automÃ¡tico.
+        /// Recupera el usuario con descifrado automático.
         /// </summary>
         public async Task<UsuarioEntidad> ObtenerUsuarioSesion()
         {
@@ -96,7 +96,7 @@ namespace HM.Presupuestos.Server.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al recuperar sesiÃ³n");
+                _logger.LogError(ex, "Error al recuperar sesión");
                 return new UsuarioEntidad();
             }
         }
@@ -109,12 +109,12 @@ namespace HM.Presupuestos.Server.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar sesiÃ³n");
+                _logger.LogError(ex, "Error al eliminar sesión");
             }
         }
 
         /// <summary>
-        /// Guarda el cÃ³digo de idioma del usuario con cifrado automÃ¡tico.
+        /// Guarda el código de idioma del usuario con cifrado automático.
         /// Persiste entre recargas (F5) pero se limpia al cerrar navegador.
         /// </summary>
         public async Task EstablecerCodigoIdioma(string languageCode)
@@ -123,7 +123,7 @@ namespace HM.Presupuestos.Server.Services
             {
                 if (string.IsNullOrEmpty(languageCode))
                 {
-                    _logger.LogWarning("Intento de guardar idioma vacÃ­o");
+                    _logger.LogWarning("Intento de guardar idioma vacío");
                     return;
                 }
 
@@ -138,7 +138,7 @@ namespace HM.Presupuestos.Server.Services
         }
 
         /// <summary>
-        /// Recupera el cÃ³digo de idioma del usuario con descifrado automÃ¡tico.
+        /// Recupera el código de idioma del usuario con descifrado automático.
         /// </summary>
         public async Task<string> ObtenerCodigoIdimoa()
         {
@@ -148,7 +148,7 @@ namespace HM.Presupuestos.Server.Services
 
                 if (!result.Success || string.IsNullOrEmpty(result.Value))
                 {
-                    _logger.LogDebug("No se encontrÃ³ idioma en sesiÃ³n");
+                    _logger.LogDebug("No se encontró idioma en sesión");
                     return string.Empty;
                 }
 
@@ -189,7 +189,7 @@ namespace HM.Presupuestos.Server.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener usuario SSO de sesiÃ³n");
+                _logger.LogError(ex, "Error al obtener usuario SSO de sesión");
             }
             return result;
         }

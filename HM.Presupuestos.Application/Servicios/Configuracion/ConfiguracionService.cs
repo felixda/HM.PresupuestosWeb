@@ -1,6 +1,6 @@
 ﻿using HM.Core.Comun.v6.Loggers.Interfaces;
-using HM.Presupuestos.Application.Repositorios;
-using HM.Presupuestos.Contratos.Entidades;
+using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Domain.Entidades;
 
 
 namespace HM.Presupuestos.Application.Servicios

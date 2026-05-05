@@ -1,5 +1,5 @@
-ï»¿
-using HM.Presupuestos.Contratos.Entidades;
+
+using HM.Presupuestos.Domain.Entidades;
 using System.Collections;
 
 namespace HM.Presupuestos.Server.Helper
@@ -75,7 +75,7 @@ namespace HM.Presupuestos.Server.Helper
             if (item is IConCodigo ic && TryParseObjectToInt(ic.Codigo, out int parsedFromIcono))
                 return parsedFromIcono;
 
-            //// DictionaryEntry (no genÃ©rico)
+            //// DictionaryEntry (no genérico)
             //if (item is DictionaryEntry de)
             //{
             //    var fromValue = ExtractCodigoInt(de.Value);
@@ -104,7 +104,7 @@ namespace HM.Presupuestos.Server.Helper
             //    }
             //}
 
-            // Intentar propiedades comunes por reflexiÃ³n
+            // Intentar propiedades comunes por reflexión
             var t = item.GetType();
             string[] propNames = new[] { "Codigo", "Id", "Key", "Value" };
             foreach (var name in propNames)
@@ -136,7 +136,7 @@ namespace HM.Presupuestos.Server.Helper
                 return result;
             }
 
-            // Caso: una colecciÃ³n
+            // Caso: una colección
             if (value is IEnumerable enumerable && !(value is string))
             {
                 foreach (var element in enumerable)
@@ -156,7 +156,7 @@ namespace HM.Presupuestos.Server.Helper
             result = 0;
             if (obj == null) return false;
 
-            // Tratar objetos de tipos numÃ©ricos y string
+            // Tratar objetos de tipos numéricos y string
             if (obj is int i) { result = i; return true; }
             if (obj is long l && l >= int.MinValue && l <= int.MaxValue) { result = (int)l; return true; }
             if (obj is short s) { result = s; return true; }
@@ -164,7 +164,7 @@ namespace HM.Presupuestos.Server.Helper
             if (obj is uint ui && ui <= int.MaxValue) { result = (int)ui; return true; }
             if (obj is ulong || obj is double || obj is float || obj is decimal)
             {
-                // Intentar convertir numÃ©ricos no enteros sÃ³lo si representan un entero exacto y estÃ¡n en rango
+                // Intentar convertir numéricos no enteros sólo si representan un entero exacto y están en rango
                 try
                 {
                     var dec = Convert.ToDecimal(obj);
@@ -183,7 +183,7 @@ namespace HM.Presupuestos.Server.Helper
                 return true;
             }
 
-            // Ãºltimo recurso: intentar parsear ToString()
+            // último recurso: intentar parsear ToString()
             var asString = obj.ToString();
             if (!string.IsNullOrEmpty(asString) && int.TryParse(asString, out int parsedFromToString))
             {

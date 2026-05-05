@@ -44,6 +44,8 @@ namespace HM.Presupuestos.Domain.Puertos
 
         Task ImportarCondicionesMMS(CondicionImportarFiltro param);
 
+        ITransaccion ObtenerTransaccion();
+
     }
 
 

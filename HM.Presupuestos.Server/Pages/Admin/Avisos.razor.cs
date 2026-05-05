@@ -1,4 +1,4 @@
-ï»¿using HM.Presupuestos.Contratos.Comun;
+using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Application.Servicios;
 using HM.Presupuestos.Server.Services;
 
@@ -6,7 +6,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
 {
     public partial class Avisos
     {
-        #region InyecciÃ³n de Dependencias
+        #region Inyección de Dependencias
 
         [Inject] protected IAvisosService AvisosService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
@@ -57,7 +57,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
 
         #endregion
 
-        #region MÃ©todos Privados
+        #region Métodos Privados
 
         private async Task EnviarAviso()
         {

@@ -1,5 +1,5 @@
-﻿
-using HM.Presupuestos.Contratos.Entidades;
+
+using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Server.Modelos;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -41,7 +41,7 @@ namespace HM.Presupuestos.Server.Services
             _config = config;
             _cookieService = cookieservice;
 
-            // ✅ Inicializar idioma desde cookie al crear el servicio
+            // ? Inicializar idioma desde cookie al crear el servicio
             var idiomaEncookie = _cookieService.GetCookie(IDIOMA_COOKIE_KEY);
 
             if (idiomaEncookie == null)
@@ -54,24 +54,24 @@ namespace HM.Presupuestos.Server.Services
                 Idioma = idiomaEncookie;
             }
 
-            Console.WriteLine($"[IdiomaService] ✅ Servicio creado con idioma: {Idioma}");
+            Console.WriteLine($"[IdiomaService] ? Servicio creado con idioma: {Idioma}");
         }
         #endregion
 
 
-        #region Métodos
+        #region M�todos
 
         /// <summary>
         /// Cambia el idioma actual y notifica a los suscriptores
         /// </summary>
-        /// <param name="nuevoIdioma">Código ISO del nuevo idioma (es, en, pt)</param>
+        /// <param name="nuevoIdioma">C�digo ISO del nuevo idioma (es, en, pt)</param>
         public async Task CambiarIdioma(string nuevoIdioma)
         {
             if (Idioma != nuevoIdioma)
             {
                 await _cookieService.SetCookieAsync(IDIOMA_COOKIE_KEY, nuevoIdioma, IDIOMA_COOKIE_EXPIRE_DAYS);
                 Idioma = nuevoIdioma;
-                Console.WriteLine($"[IdiomaService] 🔄 Idioma cambiado a: {nuevoIdioma}");
+                Console.WriteLine($"[IdiomaService] ?? Idioma cambiado a: {nuevoIdioma}");
 
                 if (OnIdiomaCambiado != null)
                 {

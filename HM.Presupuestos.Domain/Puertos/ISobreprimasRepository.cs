@@ -13,6 +13,7 @@ namespace HM.Presupuestos.Domain.Puertos
 
         Task ActualizarSobreprima(Sobreprima item);
 
+        ITransaccion ObtenerTransaccion();
 
         Task<bool> ExistenSobreprimas(SobreprimaFiltro filterSobreprima, string? codigosSobreprima = null);
 

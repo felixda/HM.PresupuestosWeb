@@ -76,7 +76,8 @@ namespace HM.Presupuestos.Infraestructure.Repositorios
             dah.AddParameter("Anio", anio);
 
             await Task.Run(() => dah.ExecuteNonQuery());
-        }
+          }
 
-    }
-}
+          public ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
+      }
+  }

@@ -1,5 +1,5 @@
 ﻿using HM.Core.Comun.v6.Loggers.Interfaces;
-using HM.Presupuestos.Application.Repositorios;
+using HM.Presupuestos.Domain.Puertos;
 
 namespace HM.Presupuestos.Application.Servicios
 {

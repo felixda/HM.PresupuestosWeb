@@ -1,8 +1,8 @@
-﻿using HM.Presupuestos.Application.Repositorios;
-using HM.Presupuestos.Contratos.Entidades;
+﻿using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Domain.Entidades;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using Version = HM.Presupuestos.Contratos.Entidades.Version;
+using Version = HM.Presupuestos.Domain.Entidades.Version;
 
 namespace HM.Presupuestos.Application.Servicios
 {

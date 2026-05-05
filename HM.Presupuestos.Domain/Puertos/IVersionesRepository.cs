@@ -44,6 +44,8 @@ namespace HM.Presupuestos.Domain.Puertos
 
 
         Task<bool> IsDataLinked(int codigoVersion);
+
+        ITransaccion ObtenerTransaccion();
     }
 }
 

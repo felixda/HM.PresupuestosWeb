@@ -1,5 +1,5 @@
-using HM.Presupuestos.Contratos.Entidades;
-using Version = HM.Presupuestos.Contratos.Entidades.Version;
+using HM.Presupuestos.Domain.Entidades;
+using Version = HM.Presupuestos.Domain.Entidades.Version;
 
 namespace HM.Presupuestos.Application.Servicios
 {

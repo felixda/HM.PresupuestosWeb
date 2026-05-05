@@ -1,7 +1,7 @@
 ﻿using HM.Core.Comun.v6.Loggers.Interfaces;
-using HM.Presupuestos.Application.Repositorios;
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
+using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Entidades;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
@@ -160,6 +160,7 @@ namespace HM.Presupuestos.Application.Servicios
             using var transaction = _sobreprimasRepository.ObtenerTransaccion();
             try
             {
+
                 foreach (var item in items)
                 {
                     // Caso 1: Nueva sobreprima (sin código y con porcentaje)

@@ -1,13 +1,13 @@
-﻿using DevExpress.Blazor.Internal;
+using DevExpress.Blazor.Internal;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using System.Text.Json;
-using Version = HM.Presupuestos.Contratos.Entidades.Version;
+using Version = HM.Presupuestos.Domain.Entidades.Version;
 
 namespace HM.Presupuestos.Server.Pages.Mantenimientos
 {
     public partial class Versiones
     {
-        #region Inyecci�n de Dependencias
+        #region Inyecci?n de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IIndicadoresService IndicadoresService { get; set; } = default!;
@@ -66,7 +66,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         }
 
 		/// <summary>
-		/// ? Solo la l�gica espec�fica de inicializaci�n
+		/// ? Solo la l?gica espec?fica de inicializaci?n
 		/// </summary>
 		protected override async Task InicializarPaginaAsync()
 		{
@@ -94,7 +94,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
   //              _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Versiones}:label");
   //              _textoToolTipAyuda = T(AppResources.Pages.GestionVersiones.ToolTip);
-  //              Console.WriteLine($"[Versiones] T�tulo de p�gina: {_pageTitle}");
+  //              Console.WriteLine($"[Versiones] T?tulo de p?gina: {_pageTitle}");
 
   //              LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
 
@@ -264,7 +264,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                         if (itemIndicadorReal.Estado)
                         {
                             itemIndicador.Estado = true;
-                            //await MensajesHelper.MostrarMensajeInfo(_pageTitle, "Si la versi�n tiene el indicador de Real el indicador de Cerrada tiene que estar acivo");
+                            //await MensajesHelper.MostrarMensajeInfo(_pageTitle, "Si la versi?n tiene el indicador de Real el indicador de Cerrada tiene que estar acivo");
 
                             string descripcionIndicadorReal = "Real";
                             var indicadorReal = _listMasterIndicador.Find(c => c.Codigo == Constantes.CodigosIndicadores.REAL);
@@ -383,7 +383,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 try
                 {
                     var column = (IGridDataColumn)ea.Column;
-                    var version = (Contratos.Entidades.Version)_GridVersiones!.GetDataItem(ea.VisibleIndex);
+                    var version = (Version)_GridVersiones!.GetDataItem(ea.VisibleIndex);
                     if (version != null)
                     {
                         var itemVersionOrigin = _listOriginVersion.Find(x => x.Codigo == version.Codigo);
@@ -429,7 +429,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         ///</summary>
         private async void GridVersiones_EditModelSaving(GridEditModelSavingEventArgs e)
         {
-            var editVersion = (Contratos.Entidades.Version)e.EditModel;
+            var editVersion = (Version)e.EditModel;
             var indexVersion = _listVersion.FindIndex(x => x.Codigo == editVersion.Codigo);
             if (indexVersion != -1)
             {

@@ -11,8 +11,8 @@ global using HM.Presupuestos.Application.Servicios;
 
 global using HM.Presupuestos.Server.Services;
 global using HM.Presupuestos.Server.Helper;
-global using HM.Presupuestos.Contratos.Comun;
-global using HM.Presupuestos.Contratos.Entidades;
+global using HM.Presupuestos.Domain.Comun;
+global using HM.Presupuestos.Domain.Entidades;
 global using HM.Presupuestos.Server.Pages.Shared;
 
 global using System.ComponentModel;

@@ -1,6 +1,6 @@
-﻿
 
-using HM.Presupuestos.Contratos.Comun;
+
+using HM.Presupuestos.Domain.Comun;
 
 namespace HM.Presupuestos.Server.Services
 {

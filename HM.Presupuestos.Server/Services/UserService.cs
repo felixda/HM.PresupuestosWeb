@@ -1,11 +1,11 @@
-﻿using HM.Core.Comun.v6.Entidades.Seguridad;
+using HM.Core.Comun.v6.Entidades.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Modelo.v6.Login;
 using HM.Presupuestos.Application.Servicios;
-using HM.Presupuestos.Contratos;
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
-using HM.Presupuestos.Contratos.Helper;
+using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Entidades;
+using HM.Presupuestos.Domain.Helper;
 using HM.Presupuestos.Server.Helper;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Text.Json;
@@ -72,18 +72,18 @@ namespace HM.Presupuestos.Server.Services
                 return _usuario;
             }
 
-            // Evitar múltiples inicializaciones concurrentes
+            // Evitar m�ltiples inicializaciones concurrentes
             if (_isInitializing)
             {
-                Console.WriteLine("[UserService] ⏳ Inicialización en progreso, esperando...");
-                // Esperar a que termine la inicialización en curso
-                var maxWait = 50; // 5 segundos máximo
+                Console.WriteLine("[UserService] ? Inicializaci�n en progreso, esperando...");
+                // Esperar a que termine la inicializaci�n en curso
+                var maxWait = 50; // 5 segundos m�ximo
                 for (int i = 0; i < maxWait && _isInitializing; i++)
                 {
                     await Task.Delay(100);
                 }
 
-                // Si ya terminó, devolver usuario
+                // Si ya termin�, devolver usuario
                 if (_usuario != null && !string.IsNullOrEmpty(_usuario.Login))
                 {
                     return _usuario;
@@ -100,11 +100,11 @@ namespace HM.Presupuestos.Server.Services
 
                 if (_usuario != null && !string.IsNullOrEmpty(_usuario.Login))
                 {
-                    _logger.LogInformation("✅ Usuario cargado desde servicio externo: {Login}", _usuario.Login);
+                    _logger.LogInformation("? Usuario cargado desde servicio externo: {Login}", _usuario.Login);
                     return _usuario;
                 }
 
-                _logger.LogWarning("⚠️ No se pudo cargar el usuario");
+                _logger.LogWarning("?? No se pudo cargar el usuario");
                 return new UsuarioEntidad();
             }
             finally

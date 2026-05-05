@@ -1,10 +1,10 @@
-﻿using DevExpress.Blazor;
+using DevExpress.Blazor;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Components;
 using System;
 
-using HM.Presupuestos.Contratos.Entidades;
+using HM.Presupuestos.Domain.Entidades;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace HM.Presupuestos.Server.Helper

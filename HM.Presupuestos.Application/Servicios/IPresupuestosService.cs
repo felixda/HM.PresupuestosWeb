@@ -1,5 +1,5 @@
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
+using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Entidades;
 
 namespace HM.Presupuestos.Application.Servicios
 {

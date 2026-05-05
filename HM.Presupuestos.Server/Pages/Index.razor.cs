@@ -1,5 +1,5 @@
-﻿using HM.Core.Comun.v6.Entidades.Seguridad;
-using HM.Presupuestos.Contratos.Comun;
+using HM.Core.Comun.v6.Entidades.Seguridad;
+using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Server.Helper;
 using HM.Presupuestos.Server.Services;
 using Microsoft.AspNetCore.Components;
@@ -30,7 +30,7 @@ namespace HM.Presupuestos.Server.Pages
         {
             try
             {
-                // ✅ Usar AppResources para el mensaje de carga
+                // ? Usar AppResources para el mensaje de carga
                 _LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
                 
                 ActualizarMenu(Usuario);
@@ -38,7 +38,7 @@ namespace HM.Presupuestos.Server.Pages
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Index] ❌ Error en OnUsuarioDisponibleAsync: {ex.Message}");
+                Console.WriteLine($"[Index] ? Error en OnUsuarioDisponibleAsync: {ex.Message}");
                 await _logService.InsertException(ex);
                 await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
             }
@@ -59,7 +59,7 @@ namespace HM.Presupuestos.Server.Pages
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Index] ❌ Error en OnUsuarioLoginDesconectado: {ex.Message}");
+                Console.WriteLine($"[Index] ? Error en OnUsuarioLoginDesconectado: {ex.Message}");
                 await _logService.InsertException(ex);
                 await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
             }
@@ -71,10 +71,10 @@ namespace HM.Presupuestos.Server.Pages
 
         #endregion
 
-        #region Métodos Privados
+        #region M�todos Privados
 
         /// <summary>
-        /// Actualiza los menús favoritos del usuario
+        /// Actualiza los men�s favoritos del usuario
         /// </summary>
         private void ActualizarMenu(UsuarioEntidad user)
         {

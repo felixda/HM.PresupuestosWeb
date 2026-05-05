@@ -1,4 +1,4 @@
-Ôªøusing HM.Presupuestos.Contratos.Helper;
+using HM.Presupuestos.Domain.Helper;
 using HM.Presupuestos.Server.Modelos;
 using HM.Presupuestos.Server.Servicios;
 using System.ComponentModel.Design;
@@ -67,13 +67,13 @@ namespace HM.Presupuestos.Server.Helper
                     {
                         UsuarioCargado = true;
 
-                        // Verificar si se desconect√≥ el usuario login
+                        // Verificar si se desconectÛ el usuario login
                         if (UsuarioApp.ObtenerUsuarioLogin() == null)
                         {
                             await OnUsuarioLoginDesconectado();
                         }
 
-                        // ‚úÖ Aqu√≠ se llama cuando el usuario est√° disponible
+                        // ? AquÌ se llama cuando el usuario est· disponible
                         await OnUsuarioDisponibleAsync();
                         await InvokeAsync(StateHasChanged);
                     }
@@ -123,7 +123,7 @@ namespace HM.Presupuestos.Server.Helper
         /// Obtiene el valor traducido de una clave de recurso
         /// </summary>
         /// <param name="key">Clave del recurso (ej: "Common:Aceptar:label")</param>
-        /// <returns>Texto traducido seg√∫n el idioma actual</returns>
+        /// <returns>Texto traducido seg˙n el idioma actual</returns>
         protected string T(string key) => ResourceService.T(key);
 
 
@@ -268,14 +268,14 @@ namespace HM.Presupuestos.Server.Helper
         }
 
 
-        #region Ejecuci√≥n (disponible para TODOS los componentes)
+        #region EjecuciÛn (disponible para TODOS los componentes)
 
         /// <summary>
-        /// Ejecuta una acci√≥n con gesti√≥n autom√°tica de overlay, logging y manejo de errores
-        /// ‚úÖ Disponible en TODOS los componentes (protegidos o no)
+        /// Ejecuta una acciÛn con gestiÛn autom·tica de overlay, logging y manejo de errores
+        /// ? Disponible en TODOS los componentes (protegidos o no)
         /// </summary>
-        /// <param name="action">Acci√≥n as√≠ncrona a ejecutar</param>
-        /// <param name="TituloPagina">T√≠tulo de la p√°gina para mensajes de error (opcional)</param>
+        /// <param name="action">AcciÛn asÌncrona a ejecutar</param>
+        /// <param name="TituloPagina">TÌtulo de la p·gina para mensajes de error (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <example>
@@ -305,7 +305,7 @@ namespace HM.Presupuestos.Server.Helper
             }
             catch (Exception ex)
             {
-                // Log de la excepci√≥n
+                // Log de la excepciÛn
                 await LogService.InsertException(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
             }
@@ -319,15 +319,15 @@ namespace HM.Presupuestos.Server.Helper
         }
 
         /// <summary>
-        /// Ejecuta una funci√≥n con gesti√≥n autom√°tica y retorna el resultado
-        /// ‚úÖ Retorna el valor por defecto si ocurre un error
+        /// Ejecuta una funciÛn con gestiÛn autom·tica y retorna el resultado
+        /// ? Retorna el valor por defecto si ocurre un error
         /// </summary>
         /// <typeparam name="TResult">Tipo de resultado</typeparam>
-        /// <param name="func">Funci√≥n as√≠ncrona a ejecutar</param>
+        /// <param name="func">FunciÛn asÌncrona a ejecutar</param>
         /// <param name="defaultValue">Valor por defecto en caso de error</param>
-        /// <param name="TituloPagina">T√≠tulo de la p√°gina para mensajes de error (opcional)</param>
+        /// <param name="TituloPagina">TÌtulo de la p·gina para mensajes de error (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
-        /// <returns>Resultado de la funci√≥n o valor por defecto</returns>
+        /// <returns>Resultado de la funciÛn o valor por defecto</returns>
         /// <example>
         /// <code>
         /// var items = await EjecutarAsync(
@@ -372,10 +372,10 @@ namespace HM.Presupuestos.Server.Helper
         }
 
         /// <summary>
-        /// Ejecuta una acci√≥n s√≠ncrona con gesti√≥n autom√°tica
+        /// Ejecuta una acciÛn sÌncrona con gestiÛn autom·tica
         /// </summary>
-        /// <param name="action">Acci√≥n s√≠ncrona a ejecutar</param>
-        /// <param name="TituloPagina">T√≠tulo de la p√°gina para mensajes de error</param>
+        /// <param name="action">AcciÛn sÌncrona a ejecutar</param>
+        /// <param name="TituloPagina">TÌtulo de la p·gina para mensajes de error</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         protected async Task EjecutarAsync(

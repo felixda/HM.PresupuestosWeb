@@ -1,7 +1,7 @@
-Ôªø
+
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Modelo.v6.Login;
-using HM.Presupuestos.Contratos.Helper;
+using HM.Presupuestos.Domain.Helper;
 using HM.Presupuestos.Server.Modelos;
 using System.Text.Json;
 
@@ -121,7 +121,7 @@ namespace HM.Presupuestos.Server.Servicios
 
                 if (respuestaLogin.LoginStatus != LoginStatusEnum.Correcto)
                 {
-                    _logger.LogWarning("Validaci√≥n de usuario fall√≥: {Status}", respuestaLogin.LoginStatus);
+                    _logger.LogWarning("ValidaciÛn de usuario fallÛ: {Status}", respuestaLogin.LoginStatus);
                     return false;
                 }
 
@@ -132,8 +132,8 @@ namespace HM.Presupuestos.Server.Servicios
                 UsuarioApp ??= new UsuarioApp();
                 UsuarioApp.AsociarUsuarioLogin(usuario);
 
-                // Disparar evento de forma as√≠ncrona SIN esperar (fire-and-forget)
-                // Esto permite que el m√©todo retorne inmediatamente sin bloquearse
+                // Disparar evento de forma asÌncrona SIN esperar (fire-and-forget)
+                // Esto permite que el mÈtodo retorne inmediatamente sin bloquearse
                 if (OnUsuarioCargado != null)
                 {
                     _ = Task.Run(async () =>
@@ -194,7 +194,7 @@ namespace HM.Presupuestos.Server.Servicios
 
                 if (respuestaLogin.LoginStatus != LoginStatusEnum.Correcto)
                 {
-                    _logger.LogWarning("Validaci√≥n de usuario fall√≥: {Status}", respuestaLogin.LoginStatus);
+                    _logger.LogWarning("ValidaciÛn de usuario fallÛ: {Status}", respuestaLogin.LoginStatus);
                     return null;
                 }
 
@@ -218,7 +218,7 @@ namespace HM.Presupuestos.Server.Servicios
         {
             if (UsuarioApp == null)
             {
-                Console.WriteLine("[UsuarioServicio] ‚ö†Ô∏è Usuario no cargado, no se puede eliminar");
+                Console.WriteLine("[UsuarioServicio] ?? Usuario no cargado, no se puede eliminar");
                 return;
             }
 
@@ -237,14 +237,14 @@ namespace HM.Presupuestos.Server.Servicios
 
             await _logAccionesService.Insertar(logAccionLogin);
 
-            _logger.LogInformation("‚úÖ Usuario {UserName} descargado exitosamente ", usuarioLogin.Nombre);
+            _logger.LogInformation("? Usuario {UserName} descargado exitosamente ", usuarioLogin.Nombre);
 
 
             var usuarioCopiaSSO = UsuarioApp.Usuario;
             LogAccion logAccionSSO = CrearLogAccionDesdeUsuario(usuarioCopiaSSO, AccionesLog.VolverEntrarEnPresupuestosWebSSO);
             await _logAccionesService.Insertar(logAccionSSO);
 
-            _logger.LogInformation("‚úÖ Usuario SSO {UserName} cargado de nuevo exitosamente ", usuarioCopiaSSO.Nombre);
+            _logger.LogInformation("? Usuario SSO {UserName} cargado de nuevo exitosamente ", usuarioCopiaSSO.Nombre);
 
 
             if (OnUsuarioCargado != null)
@@ -259,7 +259,7 @@ namespace HM.Presupuestos.Server.Servicios
         /// Crea un LogAccion basado en una copia segura del usuario (sin JWT ni Token)
         /// </summary>
         /// <param name="usuario">Usuario original</param>
-        /// <param name="accion">Acci√≥n del log</param>
+        /// <param name="accion">AcciÛn del log</param>
         /// <returns>LogAccion configurado y listo para insertar</returns>
         private LogAccion CrearLogAccionDesdeUsuario(UsuarioEntidad usuario, AccionesLog accion)
         {
@@ -299,10 +299,10 @@ namespace HM.Presupuestos.Server.Servicios
             usuario.Jwt = respuestaLogin.Jwt;
             usuario.Login = nombreUsuario;
 
-            // TODO: Eliminar esta l√≠nea cuando ya no sea necesario
+            // TODO: Eliminar esta lÌnea cuando ya no sea necesario
             usuario.Menus.RemoveAll(m => m.Id == 1);
 
-            // ‚úÖ VALIDAR Y FILTRAR MEN√öS CON URLs INV√ÅLIDAS
+            // ? VALIDAR Y FILTRAR MEN⁄S CON URLs INV¡LIDAS
             await ValidarYFiltrarMenus(usuario);
 
             //string descripcionAccion = (origen, F5) switch
@@ -313,24 +313,24 @@ namespace HM.Presupuestos.Server.Servicios
             //    (OrigenValidacionUsuario.Login, false) => AccionesLog.EntrarEnPresupuestosWebImpersonacion.ObtenerDescripcion(),
             //    _ => AccionesLog.EntrarEnPresupuestosWebSSO.ObtenerDescripcion()
             //};
-            // ‚úÖ Determinar la descripci√≥n de la acci√≥n del log seg√∫n el origen de validaci√≥n y si es una recuperaci√≥n de sesi√≥n (F5)
-            // Este switch utiliza pattern matching con tuplas (caracter√≠stica de C# 8.0+)
-            // Eval√∫a la combinaci√≥n de dos valores: 'origen' (enum) y 'F5' (bool)
+            // ? Determinar la descripciÛn de la acciÛn del log seg˙n el origen de validaciÛn y si es una recuperaciÛn de sesiÛn (F5)
+            // Este switch utiliza pattern matching con tuplas (caracterÌstica de C# 8.0+)
+            // Eval˙a la combinaciÛn de dos valores: 'origen' (enum) y 'F5' (bool)
             AccionesLog accionLog = (origen, F5) switch
             {
-                // Caso 1: Usuario autenticado por SSO que recarga la p√°gina (F5)
+                // Caso 1: Usuario autenticado por SSO que recarga la p·gina (F5)
                 (OrigenValidacionUsuario.SSO, true) => AccionesLog.RecuperarSesionDespuesDeF5SSO,
 
                 // Caso 2: Usuario autenticado por SSO que entra por primera vez
                 (OrigenValidacionUsuario.SSO, false) => AccionesLog.EntrarEnPresupuestosWebSSO,
 
-                // Caso 3: Usuario con login manual (impersonaci√≥n) que recarga la p√°gina (F5)
+                // Caso 3: Usuario con login manual (impersonaciÛn) que recarga la p·gina (F5)
                 (OrigenValidacionUsuario.Login, true) => AccionesLog.RecuperarSesionDespuesDeF5Impersonacion,
 
-                // Caso 4: Usuario con login manual (impersonaci√≥n) que entra por primera vez
+                // Caso 4: Usuario con login manual (impersonaciÛn) que entra por primera vez
                 (OrigenValidacionUsuario.Login, false) => AccionesLog.EntrarEnPresupuestosWebImpersonacion,
 
-                // Caso por defecto: Si no coincide ninguna combinaci√≥n, usar SSO como predeterminado
+                // Caso por defecto: Si no coincide ninguna combinaciÛn, usar SSO como predeterminado
                 _ => AccionesLog.EntrarEnPresupuestosWebSSO
             };
 
@@ -339,7 +339,7 @@ namespace HM.Presupuestos.Server.Servicios
 
             await _logAccionesService.Insertar(logAccion);
 
-            _logger.LogInformation("‚úÖ Usuario {UserName} cargado exitosamente desde servicio externo", nombreUsuario);
+            _logger.LogInformation("? Usuario {UserName} cargado exitosamente desde servicio externo", nombreUsuario);
 
             return usuario;
         }
@@ -347,7 +347,7 @@ namespace HM.Presupuestos.Server.Servicios
 
 
         /// <summary>
-        /// Valida y filtra los men√∫s del usuario, dejando solo aquellos cuya URL existe como p√°gina Blazor
+        /// Valida y filtra los men˙s del usuario, dejando solo aquellos cuya URL existe como p·gina Blazor
         /// </summary>
         /// <param name="usuario">Usuario a validar</param>
         private async Task ValidarYFiltrarMenus(UsuarioEntidad usuario)
@@ -356,21 +356,21 @@ namespace HM.Presupuestos.Server.Servicios
             {
                 if (usuario?.Menus == null || !usuario.Menus.Any())
                 {
-                    _logger.LogWarning("[UsuarioServicio] Usuario sin men√∫s para validar");
+                    _logger.LogWarning("[UsuarioServicio] Usuario sin men˙s para validar");
                     return;
                 }
 
                 var totalMenusOriginales = usuario.Menus.Count;
                 var menusHijosOriginales = usuario.Menus.Count(m => m.IdPadre != null);
 
-                _logger.LogDebug("[UsuarioServicio] üîç Iniciando validaci√≥n de men√∫s para usuario {Login}", usuario.Login);
-                _logger.LogDebug("[UsuarioServicio] Total men√∫s: {Total}, Men√∫s hijos: {Hijos}",
+                _logger.LogDebug("[UsuarioServicio] ?? Iniciando validaciÛn de men˙s para usuario {Login}", usuario.Login);
+                _logger.LogDebug("[UsuarioServicio] Total men˙s: {Total}, Men˙s hijos: {Hijos}",
                     totalMenusOriginales, menusHijosOriginales);
 
-                // Validar men√∫s hijos (los que tienen URL)
+                // Validar men˙s hijos (los que tienen URL)
                 var resultadosValidacion = await _MenuValidationService.ValidarMenusHijosUsuario(usuario);
 
-                // Obtener IDs de men√∫s inv√°lidos
+                // Obtener IDs de men˙s inv·lidos
                 var menusInvalidosIds = resultadosValidacion
                     .Where(r => !r.Existe)
                     .Select(r => r.CodigoMenu)
@@ -378,33 +378,33 @@ namespace HM.Presupuestos.Server.Servicios
 
                 if (menusInvalidosIds.Count != 0)
                 {
-                    _logger.LogWarning("[UsuarioServicio] ‚ö†Ô∏è Se encontraron {Count} men√∫s con URLs inv√°lidas que ser√°n eliminados:",
+                    _logger.LogWarning("[UsuarioServicio] ?? Se encontraron {Count} men˙s con URLs inv·lidas que ser·n eliminados:",
                         menusInvalidosIds.Count);
 
-                    // Loggear men√∫s que ser√°n eliminados
+                    // Loggear men˙s que ser·n eliminados
                     foreach (var resultado in resultadosValidacion.Where(r => !r.Existe))
                     {
-                        _logger.LogWarning("[UsuarioServicio]   ‚ùå Men√∫ ID: {Id}, Nombre: {Nombre}, URL: {Url}",
+                        _logger.LogWarning("[UsuarioServicio]   ? Men˙ ID: {Id}, Nombre: {Nombre}, URL: {Url}",
                             resultado.CodigoMenu,
                             resultado.NombreMenu,
                             resultado.UrlOriginal);
 
                         if (resultado.UrlsSimilares.Count != 0)
                         {
-                            _logger.LogInformation("[UsuarioServicio]      üí° Sugerencias: {Similares}",
+                            _logger.LogInformation("[UsuarioServicio]      ?? Sugerencias: {Similares}",
                                 string.Join(", ", resultado.UrlsSimilares));
                         }
                     }
 
-                    // Eliminar men√∫s inv√°lidos de la colecci√≥n
+                    // Eliminar men˙s inv·lidos de la colecciÛn
                     var menusEliminados = usuario.Menus.RemoveAll(m => menusInvalidosIds.Contains(m.Id));
 
-                    _logger.LogWarning("[UsuarioServicio] üóëÔ∏è Se eliminaron {Count} men√∫s inv√°lidos", menusEliminados);
-                    _logger.LogInformation("[UsuarioServicio] ‚úÖ Men√∫s restantes: {Total} (Hijos: {Hijos})",
+                    _logger.LogWarning("[UsuarioServicio] ??? Se eliminaron {Count} men˙s inv·lidos", menusEliminados);
+                    _logger.LogInformation("[UsuarioServicio] ? Men˙s restantes: {Total} (Hijos: {Hijos})",
                         usuario.Menus.Count,
                         usuario.Menus.Count(m => m.IdPadre != null));
 
-                    // Tambi√©n eliminar men√∫s padres que se quedaron sin hijos
+                    // TambiÈn eliminar men˙s padres que se quedaron sin hijos
                     var menusPadresIdsConHijos = usuario.Menus
                         .Where(m => m.IdPadre != null)
                         .Select(m => m.IdPadre)
@@ -419,23 +419,23 @@ namespace HM.Presupuestos.Server.Servicios
                     if (menusPadresSinHijos.Count != 0)
                     {
                         var padresEliminados = usuario.Menus.RemoveAll(m => menusPadresSinHijos.Contains(m.Id));
-                        _logger.LogWarning("[UsuarioServicio] üóëÔ∏è Se eliminaron {Count} men√∫s padres sin hijos: {Ids}",
+                        _logger.LogWarning("[UsuarioServicio] ??? Se eliminaron {Count} men˙s padres sin hijos: {Ids}",
                             padresEliminados,
                             string.Join(", ", menusPadresSinHijos));
                     }
                 }
                 else
                 {
-                    _logger.LogInformation("[UsuarioServicio] ‚úÖ Todos los men√∫s ({Count}) tienen URLs v√°lidas",
+                    _logger.LogInformation("[UsuarioServicio] ? Todos los men˙s ({Count}) tienen URLs v·lidas",
                         menusHijosOriginales);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "[UsuarioServicio] ‚ùå Error al validar y filtrar men√∫s del usuario {Login}",
+                _logger.LogError(ex, "[UsuarioServicio] ? Error al validar y filtrar men˙s del usuario {Login}",
                     usuario.Login);
-                // No lanzamos la excepci√≥n para no bloquear el login, solo registramos el error
-                // El usuario seguir√° con sus men√∫s originales si hay error en la validaci√≥n
+                // No lanzamos la excepciÛn para no bloquear el login, solo registramos el error
+                // El usuario seguir· con sus men˙s originales si hay error en la validaciÛn
             }
         }
 

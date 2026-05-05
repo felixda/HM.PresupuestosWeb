@@ -1,5 +1,5 @@
-﻿using HM.Core.Comun.v6.Entidades.Logger;
-using HM.Presupuestos.Contratos;
+using HM.Core.Comun.v6.Entidades.Logger;
+using HM.Presupuestos.Infraestructure;
 using HM.Presupuestos.Server.Servicios;
 using NLog;
 using NLog.Targets;
@@ -62,7 +62,7 @@ namespace HM.Presupuestos.Server.Services
         public async Task GrabarAccesoAPagina(string tituloPagina)
         {
             var urlActual = _navigationService.ObtenerUrlActual();
-            var accion = $"Acceso a página {tituloPagina} [{urlActual}]";
+            var accion = $"Acceso a p�gina {tituloPagina} [{urlActual}]";
             await _logAccionesService.Insertar(accion);
         }
 
@@ -82,11 +82,11 @@ namespace HM.Presupuestos.Server.Services
 
                 await _logAccionesService.Insertar(logAccion);
 
-                Console.WriteLine($"[MainLayout] ⚠️ Acceso denegado registrado: {usuario.Login} -> ({logAccion.Parametros!.ToString()})");
+                Console.WriteLine($"[MainLayout] ?? Acceso denegado registrado: {usuario.Login} -> ({logAccion.Parametros!.ToString()})");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MainLayout] ❌ Error al registrar acceso no autorizado: {ex.Message}");
+                Console.WriteLine($"[MainLayout] ? Error al registrar acceso no autorizado: {ex.Message}");
                 await InsertException(ex);
             }
         }
@@ -112,7 +112,7 @@ namespace HM.Presupuestos.Server.Services
         {
             // Extraer nombre de la clase desde el FilePath
             var category = ExtraerNombreClaseDesdeFilePath(callerFilePath);
-            // Llamar al método original
+            // Llamar al m�todo original
             await InsertException(category, exception, comments, logLevel, insertDBLog, insertFileLog);
         }
 
@@ -126,7 +126,7 @@ namespace HM.Presupuestos.Server.Services
             if (string.IsNullOrEmpty(filePath))
                 return "Unknown";
 
-            // Obtener nombre del archivo sin extensión
+            // Obtener nombre del archivo sin extensi�n
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 
             // Si termina en .razor (archivos .razor.cs), eliminar ese sufijo
@@ -227,7 +227,7 @@ namespace HM.Presupuestos.Server.Services
 
 
         /// <summary>
-        /// Inserta log en archivo según nivel
+        /// Inserta log en archivo seg�n nivel
         /// </summary>
         private void InsertarLogEnArchivo(LogLevel logLevel, string userName, string category, string message, string stackTraceText, string comments)
         {

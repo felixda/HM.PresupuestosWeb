@@ -1,8 +1,8 @@
-Ôªø@* @using HM.Core.Comun.v6.Seguridad.Interfaces
+@* @using HM.Core.Comun.v6.Seguridad.Interfaces
 @using HM.Core.Comun.v6.Entidades.Seguridad
 @using DevExpress.Blazor
 @using DevExpress.Blazor.Internal
-@using HM.Presupuestos.Contratos
+@using HM.Presupuestos.Infraestructure
 @using HM.Presupuestos.Server.Servicios
 @using HM.Presupuestos.Server.Utils
 @using HM.Presupuestos.Server.ThemeSwitcher
@@ -36,7 +36,7 @@
 @* Componente modal para confirmar cambios *@
 <ModalControlCambios @ref="ConfirmModalControlCambios" />
 
-@* Para controlar los eventos de navegaci√≥n *@
+@* Para controlar los eventos de navegaciÛn *@
 <NavigationLock OnBeforeInternalNavigation="@OnBeforeInternalNavigation"></NavigationLock>
 
 @* Modal de advertencia de inactividad *@
@@ -55,7 +55,7 @@
     </ChildContent>
 </DxPopup>
 
-@* Modal de error en inicializaci√≥n *@
+@* Modal de error en inicializaciÛn *@
 <DxPopup @ref="ErrorPopup"
          HeaderText="@TituloVentanaError"
          Width="400px"
@@ -121,9 +121,9 @@
     <LayerOverlay />
 </div>
 
-@* Para mostrar los di√°logos para los mensajes *@
+@* Para mostrar los di·logos para los mensajes *@
 <DxDialogProvider />
 
 @code {
-    // C√≥digo-behind en MainLayout.razor.cs
+    // CÛdigo-behind en MainLayout.razor.cs
 }

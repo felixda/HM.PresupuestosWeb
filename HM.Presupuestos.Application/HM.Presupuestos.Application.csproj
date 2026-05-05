@@ -8,16 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Repositorios\NewFolder\**" />
-    <Compile Remove="Repositorios\Utilidades\**" />
     <Compile Remove="Servicios\Utilidades\**" />
     <Compile Remove="Util\**" />
-    <EmbeddedResource Remove="Repositorios\NewFolder\**" />
-    <EmbeddedResource Remove="Repositorios\Utilidades\**" />
     <EmbeddedResource Remove="Servicios\Utilidades\**" />
     <EmbeddedResource Remove="Util\**" />
-    <None Remove="Repositorios\NewFolder\**" />
-    <None Remove="Repositorios\Utilidades\**" />
     <None Remove="Servicios\Utilidades\**" />
     <None Remove="Util\**" />
   </ItemGroup>
@@ -25,10 +19,11 @@
   <ItemGroup>
     <PackageReference Include="HM.Core" Version="6.4.24157.1-unstable" />
     <PackageReference Include="HM.Core.Comun.v6.Pack" Version="0.1.25086.1-unstable" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HM.Presupuestos.Contracts\HM.Presupuestos.Contratos.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj" />
   </ItemGroup>
 
 </Project>

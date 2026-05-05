@@ -560,6 +560,8 @@ namespace HM.Presupuestos.Infraestructure.Repositorios
             return result;
         }
 
+        public ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
+
     }
 }
 

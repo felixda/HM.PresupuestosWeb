@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @layout Layout.EmptyLayout
 
 @using HM.Core.Comun.v6.Entidades.Configuracion
@@ -7,8 +7,8 @@
 @using HM.Core.Modelo.v6.Login
 @using System.Security.Claims
 @using HM.Presupuestos.Application.Servicios
-@using HM.Presupuestos.Contratos
-@using HM.Presupuestos.Contratos.Helper;
+@using HM.Presupuestos.Infraestructure
+@using HM.Presupuestos.Domain.Helper;
 @using HM.Presupuestos.Server.Servicios
 @using Microsoft.AspNetCore.Components.Authorization
 @using HM.Presupuestos.Server.Utils
@@ -58,7 +58,7 @@
       //  ResourceServiceWrapper.Initialize(_ResourceService);
        
 
-        // ✅ Manejar cookie de idioma al inicio
+        // ? Manejar cookie de idioma al inicio
         InicializarIdiomaDesdeoCookie();
     }
 
@@ -81,7 +81,7 @@
             }
             else
             {
-                Console.WriteLine($"[Init] Cookie de idioma leída: {languageCode}");
+                Console.WriteLine($"[Init] Cookie de idioma le�da: {languageCode}");
             }
         }
         catch (Exception ex)
@@ -110,12 +110,12 @@
 
             try
             {
-                // ✅ DEBUGGING: Verificar el tipo de proveedor
+                // ? DEBUGGING: Verificar el tipo de proveedor
                 Console.WriteLine($"[Init] Tipo de AuthenticationStateProvider: {_AuthenticationStateProvider.GetType().Name}");
 
                 var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-                // ✅ DEBUGGING: Verificar estado de autenticación
+                // ? DEBUGGING: Verificar estado de autenticaci�n
                 Console.WriteLine($"[Init] authState es null: {authState == null}");
                 Console.WriteLine($"[Init] authState.User es null: {authState?.User == null}");
                 Console.WriteLine($"[Init] authState.User.Identity es null: {authState?.User?.Identity == null}");
@@ -124,7 +124,7 @@
 
                 var userSSO = authState.User;
 
-                // ✅ CAMBIO: Añadir validación null-safe
+                // ? CAMBIO: A�adir validaci�n null-safe
                 if (authState != null && 
                     userSSO != null && 
                     userSSO.Identity != null && 
@@ -138,7 +138,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("[Init] ❌ Usuario NO autenticado o datos incompletos");
+                    Console.WriteLine("[Init] ? Usuario NO autenticado o datos incompletos");
                 }
 
                 if (authorized)
@@ -152,7 +152,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Init] ❌ Exception: {ex.Message}");
+                Console.WriteLine($"[Init] ? Exception: {ex.Message}");
                 _NavigationManager.NavigateTo("/Unauthorized", true);
                 await _LogService.InsertException(ex);
             }

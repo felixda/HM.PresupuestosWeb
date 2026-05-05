@@ -1,9 +1,8 @@
-﻿using HM.Presupuestos.Application.Repositorios;
-using HM.Presupuestos.Contratos.Entidades;
+﻿using HM.Presupuestos.Domain.Puertos;
+using HM.Presupuestos.Domain.Entidades;
 using HM.Core.Comun.v6.Loggers.Interfaces;
-using HM.Presupuestos.Contratos.Comun;
-using System.Runtime.CompilerServices;
-using HM.Core.Comun.v6.Entidades.Seguridad;
+using HM.Presupuestos.Domain.Comun;
+
 
 namespace HM.Presupuestos.Application.Servicios
 {

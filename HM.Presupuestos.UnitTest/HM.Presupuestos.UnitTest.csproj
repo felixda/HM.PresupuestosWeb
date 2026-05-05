@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
-    <ProjectReference Include="..\HM.Presupuestos.Contracts\HM.Presupuestos.Contratos.csproj" />
     <ProjectReference Include="..\HM.Presupuestos.Server\HM.Presupuestos.Server.csproj" />
   </ItemGroup>
 

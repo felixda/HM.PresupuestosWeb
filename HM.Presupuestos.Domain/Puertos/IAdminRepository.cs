@@ -11,7 +11,8 @@ namespace HM.Presupuestos.Domain.Puertos
 
       
         Task EliminarMesesBloqueados(int anio);
-      
+
+        ITransaccion ObtenerTransaccion();
 
     }
 

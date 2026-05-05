@@ -1,15 +1,15 @@
-﻿using DevExpress.Blazor;
+using DevExpress.Blazor;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Presupuestos.Application.Servicios;
-using HM.Presupuestos.Contratos.Comun;
-using HM.Presupuestos.Contratos.Entidades;
+using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Server.Services;
 
 namespace HM.Presupuestos.Server.Pages.Admin
 {
     public partial class MesesBloqueados
     {
-        #region Inyección de Dependencias
+        #region Inyecci�n de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected AdminService AdminService { get; set; } = default!;

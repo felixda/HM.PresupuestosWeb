@@ -1,4 +1,4 @@
-﻿using HM.Presupuestos.Contratos.Entidades;
+﻿using HM.Presupuestos.Domain.Entidades;
 
 namespace HM.Presupuestos.Application.Servicios
 {
