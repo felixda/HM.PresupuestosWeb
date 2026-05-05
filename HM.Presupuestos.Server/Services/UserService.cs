@@ -2,7 +2,7 @@ using HM.Core.Comun.v6.Entidades.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Modelo.v6.Login;
 using HM.Presupuestos.Application.Servicios;
-using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Infrastructure;
 using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Helper;

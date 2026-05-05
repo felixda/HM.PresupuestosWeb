@@ -7,7 +7,7 @@ using System.Data;
 using System.Text;
 using System.Text.Json;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     public class CondicionesRepository(
         IDataAccessHelperSecure dah,

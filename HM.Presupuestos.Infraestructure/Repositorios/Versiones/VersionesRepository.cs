@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.Json;
 using Version = HM.Presupuestos.Domain.Entidades.Version;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     public class VersionesRepository(
         IJwt jwt, 

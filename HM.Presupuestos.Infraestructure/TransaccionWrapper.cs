@@ -1,6 +1,6 @@
 using HM.Presupuestos.Domain.Puertos;
 
-namespace HM.Presupuestos.Infraestructure
+namespace HM.Presupuestos.Infrastructure
 {
     /// <summary>
     /// Envuelve el objeto de transacción de HM.Core en la abstracción ITransaccion del dominio.

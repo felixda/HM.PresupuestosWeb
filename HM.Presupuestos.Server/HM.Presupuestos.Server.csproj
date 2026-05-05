@@ -77,7 +77,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
     <ProjectReference Include="..\HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj" />
-    <ProjectReference Include="..\HM.Presupuestos.Infraestructure\HM.Presupuestos.Infraestructure.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.Infraestructure\HM.Presupuestos.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings._PRE_.json">

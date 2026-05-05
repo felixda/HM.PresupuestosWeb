@@ -6,7 +6,7 @@ using HM.Presupuestos.Domain.Puertos;
 using System.Data;
 using System.Text;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     public class IndicadoresRepository(
         IJwt jwt,

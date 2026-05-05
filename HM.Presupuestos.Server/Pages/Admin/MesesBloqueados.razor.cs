@@ -12,7 +12,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
         #region Inyección de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
-        [Inject] protected AdminService AdminService { get; set; } = default!;
+        [Inject] protected IAdminService AdminService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
         [Inject] protected IResourceService ResourceService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;

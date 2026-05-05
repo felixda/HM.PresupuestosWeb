@@ -5,7 +5,7 @@ using HM.Core.Comun.v6.Entidades.Logger;
 using HM.Core.Comun.v6.Entidades.Configuracion;
 using HM.Core.Comun.v6.Loggers.Interfaces;
 
-namespace HM.Presupuestos.Infraestructure
+namespace HM.Presupuestos.Infrastructure
 {
     public static class ApiCoreCli
     {

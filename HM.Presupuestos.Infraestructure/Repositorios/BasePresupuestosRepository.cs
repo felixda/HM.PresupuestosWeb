@@ -2,7 +2,7 @@
 using HM.Core.Servidor.v6.DAL;
 using HM.Core.Servidor.v6.DAL.Interfaces;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     /// <summary>
     /// Clase base para repositorios de Presupuestos que proporciona funcionalidad común

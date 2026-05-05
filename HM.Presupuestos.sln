@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HM.Presupuestos.UnitTest", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HM.Presupuestos.Domain", "HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj", "{EB6888CE-487E-4B63-BF26-DFA9CF8EDEFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HM.Presupuestos.Infraestructure", "HM.Presupuestos.Infraestructure\HM.Presupuestos.Infraestructure.csproj", "{DEC6ED31-7AFF-48B6-BBEF-41466A2D3DC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HM.Presupuestos.Infrastructure", "HM.Presupuestos.Infraestructure\HM.Presupuestos.Infrastructure.csproj", "{DEC6ED31-7AFF-48B6-BBEF-41466A2D3DC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

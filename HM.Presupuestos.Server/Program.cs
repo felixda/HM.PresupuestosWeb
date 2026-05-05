@@ -10,9 +10,9 @@ using HM.Core.Servidor.v6.Pack.UserProviders;
 using HM.Core.Servidor.v6.UserProviders.Interfaces;
 using HM.Presupuestos.Application.Servicios;
 using HM.Presupuestos.Domain.Puertos;
-using HM.Presupuestos.Infraestructure;
-using HM.Presupuestos.Infraestructure.Repositorios;
-//using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Infrastructure;
+using HM.Presupuestos.Infrastructure.Repositorios;
+//using HM.Presupuestos.Infrastructure;
 using HM.Presupuestos.Server;
 //using HM.Presupuestos.Server.Helper;
 //using HM.Presupuestos.Server.Pages.Shared;
@@ -28,7 +28,7 @@ using Microsoft.Identity.Web.UI;
 using System.Globalization;
 using System.Net;
 using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
-using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Infrastructure;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -144,7 +144,7 @@ builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<MensajesHelper>();
 builder.Services.AddScoped<TraduccionesHelper>();
-builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ErrorDialogService>();
 builder.Services.AddScoped<NavegacionService>();
 builder.Services.AddScoped<InactividadService>();

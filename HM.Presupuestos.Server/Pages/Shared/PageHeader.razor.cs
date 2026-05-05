@@ -1,5 +1,5 @@
 using HM.Core.Comun.v6.Entidades.Configuracion;
-using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Infrastructure;
 using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Server.Services;
 using Microsoft.AspNetCore.Components;

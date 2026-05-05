@@ -5,7 +5,7 @@ using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Comun;
 using HM.Presupuestos.Domain.Puertos;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     /// <summary>
     /// Constructor del repositorio de presupuestos

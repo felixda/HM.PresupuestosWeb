@@ -5,7 +5,7 @@ using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Puertos;
 using System.Text;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     public class LogAccionesRepository(
         IJwt jwt,

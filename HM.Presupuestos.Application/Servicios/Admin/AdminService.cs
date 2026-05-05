@@ -3,7 +3,7 @@ using HM.Presupuestos.Domain.Puertos;
 
 namespace HM.Presupuestos.Application.Servicios
 {
-    public class AdminService(ILogger logger, IAdminRepository adminRepository)
+    public class AdminService(ILogger logger, IAdminRepository adminRepository) : IAdminService
     {
 
         #region Meses bloqueados

@@ -2,7 +2,7 @@
 using HM.Core.Servidor.v6.DAL.Interfaces;
 using HM.Presupuestos.Domain.Puertos;
 
-namespace HM.Presupuestos.Infraestructure.Repositorios
+namespace HM.Presupuestos.Infrastructure.Repositorios
 {
     public class AdminRepository(
         IJwt jwt, 

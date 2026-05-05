@@ -1,5 +1,5 @@
 using HM.Core.Comun.v6.Entidades.Logger;
-using HM.Presupuestos.Infraestructure;
+using HM.Presupuestos.Infrastructure;
 using HM.Presupuestos.Server.Servicios;
 using NLog;
 using NLog.Targets;
