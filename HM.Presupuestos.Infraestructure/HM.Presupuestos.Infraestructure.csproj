@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HM.Core" Version="6.4.24157.1-unstable" />
+    <PackageReference Include="HM.Core.Comun.v6.Pack" Version="0.1.25086.1-unstable" />
+    <PackageReference Include="HM.Core.Servidor.v6.Pack" Version="0.1.25086.1-unstable" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

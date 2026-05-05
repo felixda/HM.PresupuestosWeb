@@ -1,7 +1,6 @@
-﻿using HM.Presupuestos.Domain.Comun;
-using HM.Presupuestos.Domain.Entidades;
+﻿using HM.Presupuestos.Domain.Entidades;
 
-namespace HM.Presupuestos.Application.Repositorios
+namespace HM.Presupuestos.Domain.Puertos
 {
     public interface IConfiguracionRepository
     {

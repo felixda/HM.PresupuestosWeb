@@ -1,7 +1,7 @@
 ﻿using HM.Presupuestos.Domain.Entidades;
 using Version = HM.Presupuestos.Domain.Entidades.Version;
 
-namespace HM.Presupuestos.Application.Repositorios
+namespace HM.Presupuestos.Domain.Puertos
 {
     public interface IVersionesRepository 
     {

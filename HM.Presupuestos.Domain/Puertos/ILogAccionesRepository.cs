@@ -1,7 +1,7 @@
 ﻿using HM.Presupuestos.Domain.Entidades;
 
 
-namespace HM.Presupuestos.Application.Repositorios
+namespace HM.Presupuestos.Domain.Puertos
 {
     public interface ILogAccionesRepository
     {
