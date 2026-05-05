@@ -22,9 +22,4 @@
     <PackageReference Include="HM.Core.Servidor.v6.Pack" Version="0.1.25086.1-unstable" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>
