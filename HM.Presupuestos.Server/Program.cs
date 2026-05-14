@@ -132,14 +132,13 @@ builder.Services.AddHttpContextAccessor();
 
 // ===== SERVICIOS DE APLICACIÓN =====
 builder.Services.AddScoped<ThemeService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<PresupuestosService>();
 builder.Services.AddScoped<VersionesService>();
 builder.Services.AddScoped<SobreprimasService>();
 builder.Services.AddScoped<CondicionesService>();
 builder.Services.AddScoped<IndicadoresService>();
-builder.Services.AddScoped<IResourceService, ResourceService>();
-builder.Services.AddScoped<IIdiomaService, IdiomaService>();
+builder.Services.AddScoped<ITraductorRecursos, TraductorRecursos>();
+builder.Services.AddScoped<IGestorIdioma, GestorIdioma>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<ILogService, LogService>();
 builder.Services.AddScoped<MensajesHelper>();
@@ -158,7 +157,7 @@ builder.Services.AddScoped<ICookieService, CookieService>();
 builder.Services.AddScoped<IUsuarioServicio, UsuarioServicio>();
 builder.Services.AddScoped<IPermisosService, PermisosService>();
 builder.Services.AddScoped<INavigationService, NavigationService>();
-builder.Services.AddScoped<IMenuValidationService, MenuValidationService>();
+builder.Services.AddScoped<IValidadorMenusUsuario, ValidadorMenusUsuario>();
 
 
 // ===== SERVICIOS DATOS =====

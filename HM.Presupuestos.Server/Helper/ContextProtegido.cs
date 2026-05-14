@@ -111,10 +111,7 @@
             string url = NavigationManager!.ToBaseRelativePath(NavigationManager.Uri);
             var urlNormalizada = NavigationService.NormalizarUrl(url);
 
-            TienePermiso = PermisosService.TienePermiso(urlNormalizada);
-
-            // Validar permiso según código de menú
-           // TienePermiso = await PermisosService.TienePermiso((int)CodigoMenuPermiso);
+            TienePermiso = PermisosService.PuedeAccederA(urlNormalizada);
 
             if ((bool)TienePermiso)
             {
@@ -176,7 +173,7 @@
     /// <returns>Título traducido según idioma actual</returns>
     protected virtual string ObtenerTituloPagina()
     {
-        return T(AppResources.Menu.ObtenerEtiqueta((int)CodigoMenuPermiso));
+        return ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigoMenuPermiso));
     }
 
     /// <summary>
@@ -185,7 +182,7 @@
     /// <param name="tituloPagina">Título de la página</param>
     protected virtual void MostrarOverlayCarga(string tituloPagina)
     {
-        var mensajeCarga = $"{T(AppResources.Common.Loading)} {tituloPagina}";
+        var mensajeCarga = $"{ObtenerTexto(AppResources.Common.Loading)} {tituloPagina}";
         LayerOverlayService.Start(mensajeCarga);
     }
 

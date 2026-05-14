@@ -98,7 +98,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
         /// </summary>
         protected override async Task InicializarPaginaAsync()
         {
-            TextoToolTipAyuda = T(AppResources.Pages.AnioDiario.ToolTip);
+            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.AnioDiario.ToolTip);
 
             // Generar lista de años: año anterior, actual y posterior
             int añoActual = DateTime.Now.Year;
@@ -183,7 +183,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
                 // Actualizar año original después del guardado exitoso
                 AnioOriginal = AnioSeleccionado;
                 
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Common.DatosGrabados));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
             }
             catch (Exception ex)
             {

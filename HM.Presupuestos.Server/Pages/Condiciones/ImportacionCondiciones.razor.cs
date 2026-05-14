@@ -79,8 +79,8 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 await base.OnAfterRenderAsync(firstRender);
                 try
                 {
-                    PageTitle = T($"Menu:Menu_{(int)CodigosMenu.ImportacionCondiciones}:label");
-                    LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {PageTitle}");
+                    PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.ImportacionCondiciones}:label");
+                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {PageTitle}");
                     await PageInitialize();
                 }
                 catch (Exception ex)
@@ -103,7 +103,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
         private async Task PageInitialize()
         {
-            TextoToolTipAyuda = T(AppResources.Pages.ImportacionCondiciones.ToolTip);
+            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.ImportacionCondiciones.ToolTip);
          //   Jwt.Usuario = Usuario;
 
             _networks = await PresupuestosService.ObtenerNetworks();
@@ -137,7 +137,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 LayerOverlayService.Start();
                 if (values.Any())
                 {
-                    string codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
+                    string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
                     _gruposClientes = await PresupuestosService.ObtenerGruposClientePorNetworks(codigosNetwork);
                 }
             }
@@ -184,13 +184,13 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         {
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, T(AppResources.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
                 return;
             }
             try
             {
                 
-                bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, T(AppResources.Mensajes.AvisoImportarCondiciones));
+                bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.AvisoImportarCondiciones));
                 if (!confirmacion) return;
 
 
@@ -210,7 +210,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
                 await CondicionesService.ImportarCondicionesMMS(_filtro);
 
-                await MensajesHelper.MostrarMensajeExito(PageTitle, T(AppResources.Mensajes.ImportacionCondicionesFinalizada));
+                await MensajesHelper.MostrarMensajeExito(PageTitle, ObtenerTexto(AppResources.Mensajes.ImportacionCondicionesFinalizada));
 
                 ImportacionRealizada = true;
             }

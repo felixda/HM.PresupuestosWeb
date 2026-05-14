@@ -1,4 +1,3 @@
-
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Modelo.v6.Login;
 using HM.Presupuestos.Domain.Helper;
@@ -11,34 +10,27 @@ namespace HM.Presupuestos.Server.Servicios
     {
         UsuarioApp? UsuarioApp { get; }
 
-        event Func<Task>? OnUsuarioCargado;
+        event Func<Task>? UsuarioCargado;
 
-        Task CargarUsuarioLoginAsync(UsuarioEntidad usuarioLogin);
         Task CargarUsuarioAsync();
         Task EliminarUsuarioLoginAsync();
-        //Task<bool> ValidarAccesoPaginaAsync(string? url = null);
-
         Task<UsuarioEntidad?> CargarUsuarioSSODesdeServicioExterno(bool F5 = false);
         Task<bool> CargarUsuarioLoginDesdeServicioExterno(string login, string password, bool F5 = false);
     }
 
     public class UsuarioServicio : IUsuarioServicio
     {
-        private readonly ISessionService _sessionservice;
-        private readonly AuthenticationStateProvider _authStateProvider;
-        private readonly ILogger<UserService> _logger;
+        private readonly ISessionService _session;
+        private readonly AuthenticationStateProvider AuthStateProvider;
+        private readonly ILogger<UsuarioServicio> _logger;
         private readonly IConfiguration _configuration;
         private readonly IControlador _controlador;
         private readonly ILogAccionesService _logAccionesService;
         private readonly IJwt _jwt;
-        //private readonly NavigationManager _NavigationManager;
-        //private readonly IResourceService _ResourceService;
-        //private readonly INavigationService _NavigationService;
-        private readonly IMenuValidationService _MenuValidationService;
-
+        private readonly IValidadorMenusUsuario _validadorMenusUsuario;
  
 
-        public event Func<Task>? OnUsuarioCargado;
+        public event Func<Task>? UsuarioCargado;
 
         public UsuarioApp? UsuarioApp { get; private set; }
 
@@ -50,33 +42,17 @@ namespace HM.Presupuestos.Server.Servicios
             IConfiguration configuration,
             AuthenticationStateProvider authStateProvider,
             ILogAccionesService logAccionesService,
-            ILogger<UserService> logger,
-            IMenuValidationService menuValidationService    )
+            ILogger<UsuarioServicio> logger,
+            IValidadorMenusUsuario menuValidationService    )
         {
-            _sessionservice = sessionService;
+            _session = sessionService;
             _logAccionesService = logAccionesService;
-            _authStateProvider = authStateProvider;
+            AuthStateProvider = authStateProvider;
             _logger = logger;
             _controlador = controlador;
             _jwt = jwt;
             _configuration = configuration;
-            _MenuValidationService = menuValidationService;
-        }
-
-        public async Task CargarUsuarioLoginAsync(UsuarioEntidad usuarioLogin)
-        {
-            if (UsuarioApp == null)
-            {
-                _logger.LogWarning("[UsuarioServicio] UsuarioApp es null, no se puede asociar usuario login");
-                return;
-            }
-
-            UsuarioApp.AsociarUsuarioLogin(usuarioLogin);
-
-            if (OnUsuarioCargado != null)
-            {
-                await OnUsuarioCargado.Invoke();
-            }
+            _validadorMenusUsuario = menuValidationService;
         }
 
         public async Task CargarUsuarioAsync()
@@ -88,8 +64,8 @@ namespace HM.Presupuestos.Server.Servicios
 
             var usuario = new UsuarioApp();
 
-            UsuarioEntidad usuarioSSO = await _sessionservice.ObtenerUsuarioSesionSSO(); 
-            UsuarioEntidad? usuarioLogin = await _sessionservice.ObtenerUsuarioSesionLogin();
+            UsuarioEntidad usuarioSSO = await _session.ObtenerUsuarioSesionSSO(); 
+            UsuarioEntidad? usuarioLogin = await _session.ObtenerUsuarioSesionLogin();
 
             usuario.AsociarUsuarioSSO(usuarioSSO);
             usuario.AsociarUsuarioLogin(usuarioLogin);
@@ -97,9 +73,9 @@ namespace HM.Presupuestos.Server.Servicios
             UsuarioApp = usuario;
             _jwt.Usuario = UsuarioApp.Usuario;
 
-            if (OnUsuarioCargado != null)
+            if (UsuarioCargado != null)
             {
-                await OnUsuarioCargado.Invoke();
+                await UsuarioCargado.Invoke();
             }
         }
 
@@ -110,7 +86,7 @@ namespace HM.Presupuestos.Server.Servicios
             {
                 var userNameClean = login.Replace(" ", "");
                 var usuarioName = userNameClean.Contains("@")
-                    ? userNameClean[..userNameClean.IndexOf("@")]
+                    ? userNameClean[..userNameClean.IndexOf('@')]
                     : userNameClean;
 
                 _logger.LogDebug("Validando usuario Login {UserName} con servicio externo...", usuarioName);
@@ -118,7 +94,6 @@ namespace HM.Presupuestos.Server.Servicios
                 var applicationCode = _configuration.GetValue<int>("AppSettings:AppCode");
 
                 RespuestaLogin respuestaLogin = await _controlador.ValidarUsuario(applicationCode, usuarioName, password);
-
                 if (respuestaLogin.LoginStatus != LoginStatusEnum.Correcto)
                 {
                     _logger.LogWarning("Validación de usuario falló: {Status}", respuestaLogin.LoginStatus);
@@ -127,20 +102,20 @@ namespace HM.Presupuestos.Server.Servicios
 
                 UsuarioEntidad usuario = await CrearUsuarioDesdeRespuestaServicioExterno(respuestaLogin, applicationCode, usuarioName, OrigenValidacionUsuario.Login, F5);
 
-                await _sessionservice.EstablecerUsuarioSesionLogin(usuario);
+                await _session.EstablecerUsuarioSesionLogin(usuario);
 
                 UsuarioApp ??= new UsuarioApp();
                 UsuarioApp.AsociarUsuarioLogin(usuario);
 
                 // Disparar evento de forma asíncrona SIN esperar (fire-and-forget)
                 // Esto permite que el método retorne inmediatamente sin bloquearse
-                if (OnUsuarioCargado != null)
+                if (UsuarioCargado != null)
                 {
                     _ = Task.Run(async () =>
                     {
                         try
                         {
-                            await OnUsuarioCargado.Invoke();
+                            await UsuarioCargado.Invoke();
                         }
                         catch (Exception ex)
                         {
@@ -163,7 +138,7 @@ namespace HM.Presupuestos.Server.Servicios
             try
             {
                 // Obtener usuario autenticado desde Azure AD/Windows
-                var authState = await _authStateProvider.GetAuthenticationStateAsync();
+                var authState = await AuthStateProvider.GetAuthenticationStateAsync();
                 var userSSO = authState?.User;
 
                 if (authState == null ||
@@ -178,7 +153,7 @@ namespace HM.Presupuestos.Server.Servicios
 
                 var username = userSSO.Identity.Name;
                 var userNameBasic = username.Contains("@")
-                    ? username[..username.IndexOf("@")]
+                    ? username[..username.IndexOf('@')]
                     : username;
 
                 _logger.LogDebug("Validando usuario {UserName} con servicio externo...", userNameBasic);
@@ -200,7 +175,7 @@ namespace HM.Presupuestos.Server.Servicios
 
                 UsuarioEntidad usuario = await CrearUsuarioDesdeRespuestaServicioExterno(respuestaLogin, applicationCode, userNameBasic, OrigenValidacionUsuario.SSO, F5);
 
-                await _sessionservice.EstablecerUsuarioSesionSSO(usuario);
+                await _session.EstablecerUsuarioSesionSSO(usuario);
 
                 UsuarioApp ??= new UsuarioApp();
                 UsuarioApp!.AsociarUsuarioSSO(usuario);
@@ -232,7 +207,7 @@ namespace HM.Presupuestos.Server.Servicios
 
             LogAccion logAccionLogin = CrearLogAccionDesdeUsuario(usuarioLogin, AccionesLog.CerrarSesionUsuarioLogin);
 
-            await _sessionservice.EliminarUsuarioSesionLogin(); // Borra los datos del usuario
+            await _session.EliminarUsuarioSesionLogin(); // Borra los datos del usuario
             UsuarioApp.DesconectarUsuarioLogin();
 
             await _logAccionesService.Insertar(logAccionLogin);
@@ -247,9 +222,9 @@ namespace HM.Presupuestos.Server.Servicios
             _logger.LogInformation("? Usuario SSO {UserName} cargado de nuevo exitosamente ", usuarioCopiaSSO.Nombre);
 
 
-            if (OnUsuarioCargado != null)
+            if (UsuarioCargado != null)
             {
-                await OnUsuarioCargado.Invoke();
+                await UsuarioCargado.Invoke();
             }
         }
 
@@ -368,7 +343,7 @@ namespace HM.Presupuestos.Server.Servicios
                     totalMenusOriginales, menusHijosOriginales);
 
                 // Validar menús hijos (los que tienen URL)
-                var resultadosValidacion = await _MenuValidationService.ValidarMenusHijosUsuario(usuario);
+                var resultadosValidacion = await _validadorMenusUsuario.ValidarSubmenusDe(usuario);
 
                 // Obtener IDs de menús inválidos
                 var menusInvalidosIds = resultadosValidacion

@@ -3,16 +3,16 @@ using System.Globalization;
 
 namespace HM.Presupuestos.Server.Helper
 {
-    public class TraduccionesHelper(IResourceService resourceService, IIdiomaService idiomaService)
+    public class TraduccionesHelper(ITraductorRecursos resourceService, IGestorIdioma idiomaService)
     {
 
-        private readonly IResourceService _resourceService = resourceService;
-        private readonly IIdiomaService _idiomaService = idiomaService;
+        private readonly ITraductorRecursos _resourceService = resourceService;
+        private readonly IGestorIdioma _idiomaService = idiomaService;
 
         public async Task<string> GetResourceValue(string elementExpression)
         {
-            var idioma = _idiomaService.Idioma;
-            var result = _resourceService.T(elementExpression, idioma);
+            var idioma = _idiomaService.IdiomaActual;
+            var result = _resourceService.ObtenerTexto(elementExpression, idioma);
 
             return result;
         }
@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Server.Helper
         /// <returns></returns>
         public async Task<List<CodigoDescripcion>> ObtenerMeses()
         {
-            var idioma = _idiomaService.Idioma; 
+            var idioma = _idiomaService.IdiomaActual; 
             List<CodigoDescripcion> meses = [];
             var culture = new CultureInfo(idioma);
             var dateTimeFormat = culture.DateTimeFormat;
@@ -54,7 +54,7 @@ namespace HM.Presupuestos.Server.Helper
         public async Task TraducirMesesVigencias( List<Vigencia> vigencias)
         {
             List<Vigencia> resultado = [];
-            var idioma = _idiomaService.Idioma;
+            var idioma = _idiomaService.IdiomaActual;
             var culture = new CultureInfo(idioma);
             var dateTimeFormat = culture.DateTimeFormat;
             string[] nombresMeses = dateTimeFormat.MonthNames;

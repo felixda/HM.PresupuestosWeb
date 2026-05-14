@@ -172,6 +172,9 @@
             /// <summary>Porcentaje</summary>
             public const string Porcentaje = "Common:Porcentaje:label";
 
+            /// <summary>Prueba</summary>
+            public const string Prueba = "Common:Prueba:label";
+
             /// <summary>Guardar</summary>
             public const string Save = "Common:Save:label";
 
@@ -942,6 +945,9 @@
             {
                 /// <summary>Existen campos obligatorios de idioma sin rellenar</summary>
                 public const string LanguageDataIncompleted = "Pages:Indicadores:LanguageDataIncompleted:label";
+
+                /// <summary>Grabar</summary>
+                public const string Grabar = "Pages:Indicadores:Grabar:label";
 
                 /// <summary>Lista de Indicadores</summary>
                 public const string ListaIndicadores = "Pages:Indicadores:ListaIndicadores:label";

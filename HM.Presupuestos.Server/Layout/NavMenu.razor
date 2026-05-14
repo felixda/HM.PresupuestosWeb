@@ -2,19 +2,17 @@
 @using DevExpress.Blazor.Internal
 @using HM.Presupuestos.Server.Extensiones
 @using HM.Presupuestos.Server.Services
-@using Core.Comun.v6.Entidades.Seguridad
+@* @using Core.Comun.v6.Entidades.Seguridad *@
 @using HM.Presupuestos.Server.Servicios
 
 @inject NavigationManager _NavigationManager
 @inject ILogService _LogService
 @inject ILogAccionesService _LogAccionesService
 @inject IUsuarioServicio _UsuarioService;
-@inject IResourceService _resourceService;
+@inject ITraductorRecursos _resourceService;
 @inject INavigationService _NavigationService;
 
 @inherits Context
-
-@attribute [Authorize]
 
 <div id="sidebar">
     @if (!UsuarioCargado)
@@ -89,7 +87,7 @@
     protected override async Task OnUsuarioDisponibleAsync()
     {
         ActualizarMenu(Usuario);
-        await SetMenuActive(0);
+        await EstablecerMenuActivo(0);
         await InvokeAsync(StateHasChanged);
     }
 
@@ -164,11 +162,11 @@
 
         if (!string.IsNullOrEmpty(urlNormalizada))
         {
-            var menuCodeActive = _resourceService.ObtenerCodigoMenu(urlNormalizada);
+            var menuCodeActive = _resourceService.ObtenerCodigoMenuPorUrl(urlNormalizada);
 
             if (menuCodeActive > 0)
             {
-                await SetMenuActive(menuCodeActive);
+                await EstablecerMenuActivo(menuCodeActive);
             }
         }
     }

@@ -1,34 +1,34 @@
-﻿using System.Reflection;
-////using HM.Core.Comun.v6.Entidades.Seguridad;
+﻿using HM.Presupuestos.Server.Extensiones;
+using System.Reflection;
 
 namespace HM.Presupuestos.Server.Services
 {
-    public interface IMenuValidationService
+    public interface IValidadorMenusUsuario
     {
-        Task<List<MenuValidationResult>> ValidarMenusHijosUsuario(UsuarioEntidad usuario);
-        List<string> ObtenerTodasLasPaginasBlazor();
+        Task<List<ResultadoValidacionSubmenu>> ValidarSubmenusDe(UsuarioEntidad usuario);
+        List<string> ObtenerRutasDisponibles();
     }
 
-    public class MenuValidationService : IMenuValidationService
+    public class ValidadorMenusUsuario : IValidadorMenusUsuario
     {
-        private readonly ILogger<MenuValidationService> _logger;
-        private readonly IResourceService _resourceService;
-        private readonly Dictionary<string, string> _paginasBlazorCache;
+        private readonly ILogger<ValidadorMenusUsuario> _logger;
+        private readonly ITraductorRecursos _traductorRecursos;
+        private readonly Dictionary<string, string> _rutasBlazor;
 
-        public MenuValidationService(
-            ILogger<MenuValidationService> logger,
-            IResourceService resourceService)
+        public ValidadorMenusUsuario(
+            ILogger<ValidadorMenusUsuario> logger,
+            ITraductorRecursos traductorRecursos    )
         {
             _logger = logger;
-            _resourceService = resourceService;
-            _paginasBlazorCache = [];
-            CargarPaginasBlazor();
+            _traductorRecursos = traductorRecursos;
+            _rutasBlazor = [];
+            DescubrirRutasBlazor();
         }
 
         /// <summary>
-        /// Carga todas las páginas Blazor del ensamblado actual
+        /// Descubre todas las rutas Blazor del ensamblado actual
         /// </summary>
-        private void CargarPaginasBlazor()
+        private void DescubrirRutasBlazor()
         {
             try
             {
@@ -43,15 +43,15 @@ namespace HM.Presupuestos.Server.Services
                     foreach (var routeAttr in routeAttributes)
                     {
                         var rutaNormalizada = NormalizarRuta(routeAttr.Template);
-                        if (!_paginasBlazorCache.ContainsKey(rutaNormalizada))
+                        if (!_rutasBlazor.ContainsKey(rutaNormalizada))
                         {
-                            _paginasBlazorCache.Add(rutaNormalizada, tipo.FullName ?? tipo.Name);
+                            _rutasBlazor.Add(rutaNormalizada, tipo.FullName ?? tipo.Name);
                             _logger.LogDebug($"[MenuValidation] Página encontrada: {rutaNormalizada} -> {tipo.Name}");
                         }
                     }
                 }
 
-                _logger.LogInformation($"[MenuValidation] ✅ Se encontraron {_paginasBlazorCache.Count} páginas Blazor");
+                _logger.LogInformation($"[MenuValidation] ✅ Se encontraron {_rutasBlazor.Count} páginas Blazor");
             }
             catch (Exception ex)
             {
@@ -62,7 +62,7 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Normaliza una ruta eliminando parámetros y caracteres especiales
         /// </summary>
-        private string NormalizarRuta(string ruta)
+        private static string NormalizarRuta(string ruta)
         {
             if (string.IsNullOrWhiteSpace(ruta))
                 return string.Empty;
@@ -88,20 +88,20 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Valida SOLO los menús hijos (submenús) con IdPadre != 0
         /// </summary>
-        public async Task<List<MenuValidationResult>> ValidarMenusHijosUsuario(UsuarioEntidad usuario)
+        public async Task<List<ResultadoValidacionSubmenu>> ValidarSubmenusDe(UsuarioEntidad usuario)
         {
-            var resultados = new List<MenuValidationResult>();
+            var resultados = new List<ResultadoValidacionSubmenu>();
 
-            if (usuario?.Menus == null || !usuario.Menus.Any())
+            if (usuario?.Menus == null || usuario.Menus.Count == 0)
             {
                 _logger.LogWarning("[MenuValidation] ⚠️ Usuario sin menús para validar");
                 return resultados;
             }
 
-            // Filtrar SOLO menús hijos (IdPadre != null)
-            var menusHijos = usuario.Menus.Where(m => m.IdPadre != null).ToList();
+            // Filtrar SOLO menús hijos
+            var menusHijos = usuario.Menus.Where(m => m.TienePadre()).ToList();
 
-            if (!menusHijos.Any())
+            if (menusHijos.Count == 0)
             {
                 _logger.LogWarning($"[MenuValidation] ⚠️ Usuario {usuario.Login} no tiene menús hijos");
                 return resultados;
@@ -111,7 +111,7 @@ namespace HM.Presupuestos.Server.Services
 
             foreach (var menu in menusHijos)
             {
-                var resultado = new MenuValidationResult
+                var resultado = new ResultadoValidacionSubmenu
                 {
                     CodigoMenu = menu.Id,
                     NombreMenu = menu.NombreMenu,
@@ -120,18 +120,14 @@ namespace HM.Presupuestos.Server.Services
 
                 try
                 {
-                    // ✅ OPCIÓN 1: Usar helper dinámico (más flexible)
                     var urlKey = AppResources.Menu.ObtenerUrl(menu.Id);
-                    var url = _resourceService.T(urlKey);
-
-                    // ✅ OPCIÓN 2: Usar constante específica (más seguro en compilación)
-                    // var url = _resourceService.T(AppResources.Menu.Menu_12_Url);
+                    var url = _traductorRecursos.ObtenerTexto(urlKey);
 
                     resultado.UrlOriginal = url;
 
                     // También puedes obtener otros datos del menú
-                    var label = _resourceService.T(AppResources.Menu.ObtenerEtiqueta(menu.Id));
-                    var icono = _resourceService.T(AppResources.Menu.ObtenerIcono(menu.Id));
+                    //var label = _resourceService.T(AppResources.Menu.ObtenerEtiqueta(menu.Id));
+                    //var icono = _resourceService.T(AppResources.Menu.ObtenerIcono(menu.Id));
 
                     if (string.IsNullOrWhiteSpace(url))
                     {
@@ -146,7 +142,7 @@ namespace HM.Presupuestos.Server.Services
                         resultado.UrlNormalizada = urlNormalizada;
 
                         // Verificar si existe la página
-                        if (_paginasBlazorCache.TryGetValue(urlNormalizada, out string? value))
+                        if (_rutasBlazor.TryGetValue(urlNormalizada, out string? value))
                         {
                             resultado.Existe = true;
                             resultado.ComponenteBlazor = value;
@@ -203,16 +199,16 @@ namespace HM.Presupuestos.Server.Services
         /// </summary>
         private List<string> BuscarUrlsSimilares(string url)
         {
-            return [.. _paginasBlazorCache.Keys
-                .Where(k => CalcularSimilitud(k, url) > 0.6)
-                .OrderByDescending(k => CalcularSimilitud(k, url))
+            return [.. _rutasBlazor.Keys
+                .Where(k => CalcularSimilitudEntreRutas(k, url) > 0.6)
+                .OrderByDescending(k => CalcularSimilitudEntreRutas(k, url))
                 .Take(3)];
         }
 
         /// <summary>
         /// Calcula similitud entre dos strings (0-1)
         /// </summary>
-        private double CalcularSimilitud(string s1, string s2)
+        private double CalcularSimilitudEntreRutas(string s1, string s2)
         {
             if (string.IsNullOrEmpty(s1) || string.IsNullOrEmpty(s2))
                 return 0;
@@ -254,16 +250,16 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Obtiene todas las páginas Blazor registradas
         /// </summary>
-        public List<string> ObtenerTodasLasPaginasBlazor()
+        public List<string> ObtenerRutasDisponibles()
         {
-            return [.. _paginasBlazorCache.Keys.OrderBy(k => k)];
+            return [.. _rutasBlazor.Keys.OrderBy(k => k)];
         }
     }
 
     /// <summary>
     /// Resultado de la validación de un menú hijo
     /// </summary>
-    public class MenuValidationResult
+    public class ResultadoValidacionSubmenu
     {
         public int CodigoMenu { get; set; }
         public int? CodigoMenuPadre { get; set; }

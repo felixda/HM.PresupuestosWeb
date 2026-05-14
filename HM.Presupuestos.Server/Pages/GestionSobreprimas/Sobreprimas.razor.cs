@@ -63,7 +63,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 if (_networksSeleccionados != value)
                 {
                     _networksSeleccionados = value;
-                    var codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(value, x => x.Codigo);
+                    var codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(value, x => x.Codigo);
 
                     if (string.IsNullOrEmpty(codigosNetwork))
                     {
@@ -150,20 +150,20 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
         protected override async Task InicializarPaginaAsync()
         {
-            TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
-            LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+            TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
+            LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
 
 
-            CaptionIzquierda = T(AppResources.Pages.Sobreprimas.Titulo);
+            CaptionIzquierda = ObtenerTexto(AppResources.Pages.Sobreprimas.Titulo);
 
             AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
             NetworksMaestros = await PresupuestosService.ObtenerNetworks();
 
-            string codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
+            string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
             _mediosMaestros = await PresupuestosService.ObtenerMediosPorNetWork(codigosNetwork);
 
             MediosFiltrados = DatosHelper.ClonarObjeto(_mediosMaestros);
-            string codigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+            string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
 
             AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
 
@@ -313,7 +313,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         /// </summary>
         private async Task ActualizarEditorialesCuandoQuitamosMedios()
         {
-            string codigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+            string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
             AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
             await ComprobarAgrupacionesYEditoriales(codigosMedios);
         }
@@ -326,11 +326,11 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             FiltroEditoriales filtro = new();
             if (_mediosSeleccionados != null)
             {
-                filtro.CodigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
+                filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
             }
             else
             {
-                filtro.CodigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+                filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
             }
 
             EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
@@ -386,7 +386,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 else
                 {
                     LayerOverlayService.Start();
-                    string codigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
+                    string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
 
                     // Obtener las agrupaciones en función de los medios seleccionados
                     AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
@@ -434,7 +434,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 }
                 StateHasChanged();
 
-                filtro.CodigosAgrupacionesComerciales = GetValoresSeleccionados<CodigoDescripcion, int>(
+                filtro.CodigosAgrupacionesComerciales = ObtenerValoresSeleccionados<CodigoDescripcion, int>(
                     AgrupacionesComercialesSeleccionadas, 
                     x => x.Codigo, 
                     ","
@@ -491,7 +491,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 if (_mediosSeleccionados != null)
                 {
                     FiltroEditoriales filtro = new();
-                    filtro.CodigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
+                    filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
                     EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
                 }
                 else
@@ -505,8 +505,8 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 {
                     LayerOverlayService.Start();
                     FiltroEditoriales filtro = new();
-                    filtro.CodigosAgrupacionesComerciales = GetValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
-                    filtro.CodigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
+                    filtro.CodigosAgrupacionesComerciales = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
+                    filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
 
                     EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
                     EditorialesSeleccionadas = null;
@@ -556,7 +556,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         {
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
                 return;
             }
             try
@@ -566,10 +566,10 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
                 _filtroSobreprima.Anio = AñoSeleccionado!.Codigo;
                 _filtroSobreprima.CodigoVersion = VersionSeleccionada!.Codigo;
-                _filtroSobreprima.CodigoNetworkList = GetValoresSeleccionados<CodigoDescripcion, int>(_networksSeleccionados, x => x.Codigo, ",");
-                _filtroSobreprima.CodigoMedioList = GetValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
-                _filtroSobreprima.CodigoAgrupacionComercialList = GetValoresSeleccionados<CodigoDescripcion, int>(_agrupacionesComercialesSeleccionadas, x => x.Codigo, ",");
-                _filtroSobreprima.CodigoEditorialList = GetValoresSeleccionados<CodigoDescripcion, int>(EditorialesSeleccionadas, x => x.Codigo, ",");
+                _filtroSobreprima.CodigoNetworkList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_networksSeleccionados, x => x.Codigo, ",");
+                _filtroSobreprima.CodigoMedioList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
+                _filtroSobreprima.CodigoAgrupacionComercialList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_agrupacionesComercialesSeleccionadas, x => x.Codigo, ",");
+                _filtroSobreprima.CodigoEditorialList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(EditorialesSeleccionadas, x => x.Codigo, ",");
 
                 var listaSobreprimas = await SobreprimasService.ObtenerSobreprimas(_filtroSobreprima);
 
@@ -577,7 +577,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 {
                     if (!_desdePaginaImportarMMS)
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistrosNoEncontrados));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
                     }
                     GridSobreprimas.SetFocusedRowIndex(-1);
                 }
@@ -723,8 +723,8 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 if (_popupSobreprimas != null)
                 {
                     _tituloPopupEdicion = modoOperacion == ModoOperacion.Insertar
-                        ? T(AppResources.Common.Nuevo)
-                        : T(AppResources.Common.Edit);
+                        ? ObtenerTexto(AppResources.Common.Nuevo)
+                        : ObtenerTexto(AppResources.Common.Edit);
                 }
             }
             catch (Exception ex)
@@ -745,7 +745,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         {
             if (sobreprima == null) return;
 
-            if (!await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, T(AppResources.Mensajes.ConfirmacionEliminar)))
+            if (!await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar)))
             {
                 return;
             }
@@ -755,12 +755,12 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 LayerOverlayService.Start();
                 await SobreprimasService.EliminarSobreprimas(sobreprima);
                 SobreprimasGrid.Remove(sobreprima);
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistroEliminado));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
             }
             catch (Exception ex)
             {
                 await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.ErrorDelete));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
             }
             finally
             {
@@ -1007,7 +1007,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
                 if (noHayCambios)
                 {
-                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, T(AppResources.Mensajes.SinCambios));
+                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(AppResources.Mensajes.SinCambios));
                     return;
                 }
 
@@ -1028,14 +1028,14 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
                 var campoError = validaciones
                     .Where(v => v.Condicion)
-                    .Select(v => T(v.ResourceKey))
+                    .Select(v => ObtenerTexto(v.ResourceKey))
                     .FirstOrDefault();
 
                 if (!string.IsNullOrEmpty(campoError))
                 {
                     await MensajesHelper.MostrarMensajeError(
                         TituloPagina,
-                        $"{T(AppResources.Mensajes.MandatoryField)}: {campoError}"
+                        $"{ObtenerTexto(AppResources.Mensajes.MandatoryField)}: {campoError}"
                     );
                     return;
                 }
@@ -1044,7 +1044,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 if (_sobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
                     && SobreprimasGrid.Find(x => x.KeyGrid == _sobreprimaEnEdicion.KeyGrid) != null)
                 {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.SobreprimaDuplicated));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.SobreprimaDuplicated));
                     return;
                 }
 
@@ -1053,14 +1053,14 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     && SobreprimasGrid.Find(x => x.KeyGrid == _sobreprimaEnEdicion.KeyGrid
                                                 && x.Codigo != _sobreprimaEnEdicion.Codigo) != null)
                 {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.SobreprimaDuplicated));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.SobreprimaDuplicated));
                     return;
                 }
 
                 // Validar duplicados en base de datos
                 if (await SobreprimaEstaDuplicada(_sobreprimaEnEdicion))
                 {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.SobreprimaDuplicated));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.SobreprimaDuplicated));
                     return;
                 }
 
@@ -1116,7 +1116,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
                     SobreprimasGrid.Insert(0, _sobreprimaEnEdicion);
                     GridSobreprimas.SetFocusedRowIndex(0);
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Common.DatosGrabados));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
                 }
                 else
                 {
@@ -1140,7 +1140,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                         }
                     }
 
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Common.DatosGrabados));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
                     GridSobreprimas.Reload();
                 }
 
@@ -1153,7 +1153,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 if (grabacionExitosa)
                 {
                     // Error después de grabar: mensaje especial y recargar
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.ErrorDespuesDeGrabar));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDespuesDeGrabar));
                     OcultarPopupEdicion();
                     await AplicarFiltro();
                 }
@@ -1161,7 +1161,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 {
                     // Error antes de grabar: mensaje normal
                     OcultarPopupEdicion();
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.ErrorAlGrabar));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
                 }
             }
             finally
@@ -1368,7 +1368,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             catch (Exception ex)
             {
                 await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Common.Messages.UndefinedError));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
             }
         }
         #endregion

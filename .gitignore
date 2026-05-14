@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Sesion E2E Tests - contiene cookies SSO
+sesion_auth.json

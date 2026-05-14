@@ -14,7 +14,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IAdminService AdminService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-        [Inject] protected IResourceService ResourceService { get; set; } = default!;
+        [Inject] protected ITraductorRecursos ResourceService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] protected ILogService LogService { get; set; } = default!;
@@ -55,8 +55,8 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 try
                 {
                     //await InicializarAsync();
-                    PageTitle = T($"Menu:Menu_{(int)CodigosMenu.MesesBloqueados}:label");
-                    LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {PageTitle}");
+                    PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.MesesBloqueados}:label");
+                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {PageTitle}");
                     await PageInitialize();
                 }
                 catch (Exception ex)
@@ -82,7 +82,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
             try
             {
                // _Jwt.Usuario = User;
-                TextoToolTipAyuda = T(AppResources.Pages.MesesBloqueados.ToolTip);
+                TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.MesesBloqueados.ToolTip);
 
                 Meses = await Traducciones.ObtenerMeses();
                 Anios = await VersionesService.ObtenerAniosConVersiones(true);
@@ -98,7 +98,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
             catch (Exception ex)
             {
                 await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, T(AppResources.Common.Messages.UndefinedError));
+                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
             }
         }
        
@@ -146,7 +146,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
                     ];
 
                 await AdminService.InsertarMesesBloqueado(AnioSeleccionado!.Codigo, mesesSeleccionados);
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, T(AppResources.Common.DatosGrabados));
+                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Common.DatosGrabados));
             }
             catch (Exception ex)
             {

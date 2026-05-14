@@ -50,6 +50,7 @@
     <Compile Remove="Security\JwtContext.cs" />
     <Compile Remove="Security\cs" />
     <Compile Remove="Security\UserContext.cs" />
+    <Compile Remove="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="Layout\MainLayout_drawer.razor" />

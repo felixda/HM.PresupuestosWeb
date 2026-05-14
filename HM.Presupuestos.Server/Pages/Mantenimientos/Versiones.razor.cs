@@ -76,8 +76,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 			{
 				_itemYearSelected = _listYear[1];
 			}
-			string currentLanguageCode = IdiomaService.Idioma;
-			var obLanguageList = ResourceService.ObtenerIdiomas();
+			string currentLanguageCode = GestorIdioma.IdiomaActual;
+			var obLanguageList = TraductorRecursos.ObtenerIdiomas();
 			_listTipoVersion = ObtenerTiposVersion();
 			_listMonth = await TraduccionesHelper.ObtenerMeses();
 			_listMasterIndicador = await IndicadoresService.ObtenerIndicadoresConIdiomas();
@@ -152,20 +152,20 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
             listTiposVersion.Add(new CodigoDescripcion
             {
-                Codigo = Convert.ToInt32(T(AppResources.Pages.Versiones.TipoVersion.User_Code)),
-                Descripcion = T(AppResources.Pages.Versiones.TipoVersion.User)
+                Codigo = Convert.ToInt32(ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.User_Code)),
+                Descripcion = ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.User)
             });
 
             listTiposVersion.Add(new CodigoDescripcion
             {
-                Codigo = Convert.ToInt32(T(AppResources.Pages.Versiones.TipoVersion.Monthly_Code)),
-                Descripcion = T(AppResources.Pages.Versiones.TipoVersion.Monthly)
+                Codigo = Convert.ToInt32(ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.Monthly_Code)),
+                Descripcion = ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.Monthly)
             });
 
             listTiposVersion.Add(new CodigoDescripcion
             {
-                Codigo = Convert.ToInt32(T(AppResources.Pages.Versiones.TipoVersion.Backup_Code)),
-                Descripcion = T(AppResources.Pages.Versiones.TipoVersion.Backup)
+                Codigo = Convert.ToInt32(ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.Backup_Code)),
+                Descripcion = ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.Backup)
             });
 
             return listTiposVersion;
@@ -280,7 +280,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                                 descripcionIndicadorCerrada = indicadorCerrada.DescripcionTraducida;
                             }
 
-                            await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T(AppResources.Mensajes.IndicadorCerradaConIndicadorReal), descripcionIndicadorReal, descripcionIndicadorCerrada), MessageBoxRenderStyle.Warning);
+                            await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(ObtenerTexto(AppResources.Mensajes.IndicadorCerradaConIndicadorReal), descripcionIndicadorReal, descripcionIndicadorCerrada), MessageBoxRenderStyle.Warning);
                         }
                     }
                 }
@@ -452,7 +452,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             {
                 try
                 {
-                    if (!await MensajesHelper.MostrarMensajeParaConfirmacion(_pageTitle, T(AppResources.Mensajes.ConfirmacionEliminar)))
+                    if (!await MensajesHelper.MostrarMensajeParaConfirmacion(_pageTitle, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar)))
                     {
                         return;
                     }
@@ -466,17 +466,17 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                         {
                             _listOriginVersion = DatosHelper.ClonarObjeto(_listVersion);
                         }
-                        await MensajesHelper.MostrarMensajeExito(_pageTitle, T(AppResources.Mensajes.RegistroEliminado));
+                        await MensajesHelper.MostrarMensajeExito(_pageTitle, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
                     }
                     else
                     {
-                        await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorDelete));
+                        await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
                     }
                 }
                 catch (Exception ex)
                 {
                     await LogService.InsertException(ex);
-                    await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorDelete));
+                    await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
                 }
                 finally
                 {
@@ -499,14 +499,14 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             //Cuando es nueva la vesion, la descripcion no la valida automaticamente
             if (_listVersion.Any(o => o.Descripcion.Trim().Length == 0))
             {
-                await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Mensajes.CampoVersionObligatorio));
+                await MensajesHelper.MostrarMensajeInfo(_pageTitle, ObtenerTexto(AppResources.Mensajes.CampoVersionObligatorio));
                 return false;
             }
 
             //Validate text size
             if (_listVersion.Any(o => o.Descripcion.Length > 50))
             {
-                await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Mensajes.LongitudCaracteres) + "`" + T(AppResources.Common.Descripcion) + "`");
+                await MensajesHelper.MostrarMensajeInfo(_pageTitle, ObtenerTexto(AppResources.Mensajes.LongitudCaracteres) + "`" + ObtenerTexto(AppResources.Common.Descripcion) + "`");
                 return false;
             }
 
@@ -530,7 +530,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             if (itemIndicadorUniqueDuplicated != null)
             {
-                await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T(AppResources.Mensajes.IndicadorUnico), itemIndicadorUniqueDuplicated.DescripcionTraducida), MessageBoxRenderStyle.Warning);
+                await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(ObtenerTexto(AppResources.Mensajes.IndicadorUnico), itemIndicadorUniqueDuplicated.DescripcionTraducida), MessageBoxRenderStyle.Warning);
                 return false;
             }
 
@@ -546,7 +546,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             if (itemVersionDescriptionDuplicated != null)
             {
-                await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(T(AppResources.Pages.Versiones.Message_VersionDescriptionError), itemVersionDescriptionDuplicated.Descripcion), MessageBoxRenderStyle.Warning);
+                await MensajesHelper.MostrarMensajeGeneral(_pageTitle, string.Format(ObtenerTexto(AppResources.Pages.Versiones.Message_VersionDescriptionError), itemVersionDescriptionDuplicated.Descripcion), MessageBoxRenderStyle.Warning);
                 return false;
             }
 
@@ -628,25 +628,25 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                             if (_listVersion != null && _listVersion.Count > 0)
                                 _listOriginVersion = DatosHelper.ClonarObjeto(_listVersion);
 
-                            await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Common.DatosGrabados));
+                            await MensajesHelper.MostrarMensajeInfo(_pageTitle, ObtenerTexto(AppResources.Common.DatosGrabados));
                             await MarcarCambios(false);
                             LimpiarCambios();
                         }
                         else
                         {
-                            await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorAlGrabar));
+                            await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
                         }
                     }
                     else
                     {
-                        await MensajesHelper.MostrarMensajeInfo(_pageTitle, T(AppResources.Mensajes.SinModificaciones));
+                        await MensajesHelper.MostrarMensajeInfo(_pageTitle, ObtenerTexto(AppResources.Mensajes.SinModificaciones));
                     }
                 }
             }
             catch (Exception ex)
             {
                 await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally
             {
@@ -679,7 +679,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         {
             if (!UsuarioEsAdmin)
             {
-                await MensajesHelper.MostrarMensajeError(_pageTitle, T(AppResources.Mensajes.PermisosInsuficientes));
+                await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.PermisosInsuficientes));
                 return false;
             }
             return true;

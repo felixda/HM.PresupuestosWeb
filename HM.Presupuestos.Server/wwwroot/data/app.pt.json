@@ -287,7 +287,10 @@
                                                   },
                                       "LanguageDataIncompleted":  {
                                                                       "label":  "Existem campos obrigatórios de idioma sem preenchimento"
-                                                                  }
+                                                                  },
+                                      "Grabar":  {
+                                                     "label":  "Gravar"
+                                                 }
                                   },
                  
                   "Index":  {
@@ -699,7 +702,10 @@
                    "Porcentaje":  {
                                       "label":  "Percentagem"
                                   },
-                   "UnauthorizedUser":  {
+                   "Prueba":  {
+                                  "label":  "Teste"
+                              },
+                   "UnauthorizedUser":{
                                             "label":  "Usuário NÁ£o Autorizado"
                                         },
                    "Version":  {

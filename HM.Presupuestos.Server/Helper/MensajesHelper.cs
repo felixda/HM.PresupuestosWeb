@@ -3,11 +3,11 @@ using HM.Presupuestos.Server.Services;
 
 namespace HM.Presupuestos.Server.Helper;
 
-public class MensajesHelper(IDialogService dialogService, IResourceService resourceService, ILayerOverlayService layerOverlayService)
+public class MensajesHelper(IDialogService dialogService, ITraductorRecursos resourceService, ILayerOverlayService layerOverlayService)
 {
 
     private readonly IDialogService _dialogService = dialogService;
-    private readonly IResourceService _resourceService = resourceService;
+    private readonly ITraductorRecursos _resourceService = resourceService;
     private readonly ILayerOverlayService _LayerOverlayService = layerOverlayService;
 
 
@@ -38,7 +38,7 @@ public class MensajesHelper(IDialogService dialogService, IResourceService resou
         _LayerOverlayService.Stop();
         if (string.IsNullOrEmpty(mensaje))
         {
-            mensaje = _resourceService.T("mensajes:ErrorGeneral:label");
+            mensaje = _resourceService.ObtenerTexto("mensajes:ErrorGeneral:label");
         }
         await MostrarMensajeGeneral(titulo, mensaje, MessageBoxRenderStyle.Danger);
     }
@@ -65,8 +65,8 @@ public class MensajesHelper(IDialogService dialogService, IResourceService resou
         {
             Title = titulo,
             Text = mensaje,
-            OkButtonText = _resourceService.T("Common:Si:label"),
-            CancelButtonText = _resourceService.T("Common:No:label"), 
+            OkButtonText = _resourceService.ObtenerTexto("Common:Si:label"),
+            CancelButtonText = _resourceService.ObtenerTexto("Common:No:label"), 
             ShowIcon = true,
             ShowCloseButton = false,
             ThemeMode = MessageBoxThemeMode.Light,

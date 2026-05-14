@@ -59,65 +59,17 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             return Task.CompletedTask;
         }
 
-
         protected override async Task InicializarPaginaAsync()
         {
-            Idiomas = ResourceService.ObtenerIdiomas();
+            Idiomas = TraductorRecursos.ObtenerIdiomas();
             DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
 
             if (DatosIndicadores.Count == 0)
             {
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistrosNoEncontrados));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
             }
-
         }
 
-
-        /// <summary>
-        /// ✅ Sobrescribir si necesitas lógica personalizada de título
-        /// </summary>
-        //protected override string ObtenerTituloPagina()
-        //{
-        //    // Ejemplo: combinar título del menú con año actual
-        //    var tituloBase = base.ObtenerTituloPagina();
-        //    return $"{tituloBase} - {DateTime.Now.Year}";
-        //}
-
-        /// <summary>
-        /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
-        /// Inicializa la página y carga los datos necesarios
-        /// </summary>
-        //protected override async Task OnPermisoValidadoAsync()
-        //{
-        //    try
-        //    {
-        //        Console.WriteLine("[Indicadores] 🔄 OnPermisoValidadoAsync iniciando...");
-
-        //        TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Indicadores));
-
-        //        Console.WriteLine($"[Indicadores] Título de página: {TituloPagina}");
-
-        //        LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
-
-        //        await InicializarPaginaAsync();
-
-        //        Console.WriteLine("[Indicadores] ✅ OnPermisoValidadoAsync completado");
-
-        //        await InvokeAsync(StateHasChanged);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"[Indicadores] ❌ Error en OnPermisoValidadoAsync: {ex.Message}");
-        //        Console.WriteLine($"[Indicadores] StackTrace: {ex.StackTrace}");
-        //        await LogService.InsertException(ex);
-
-        //        await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
-        //    }
-        //    finally
-        //    {
-        //        LayerOverlayService.Stop();
-        //    }
-        //}
 
         /// <summary>
         /// Se ejecuta cuando el usuario cierra sesión o se desconecta
@@ -128,37 +80,6 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             await InvokeAsync(StateHasChanged);
         }
 
-        /// <summary>
-        /// Inicializa la página cargando los datos maestros necesarios
-        /// </summary>
-        //private async Task InicializarPaginaAsync()
-        //{
-        //    try
-        //    {
-        //        Idiomas = ResourceService.ObtenerIdiomas();
-
-        //        if (Idiomas == null || !Idiomas.Any())
-        //        {
-        //            Console.WriteLine("[Indicadores] ⚠️ No se cargaron idiomas, usando lista vacía");
-        //            Idiomas = [];
-        //        }
-
-        //        DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
-                
-        //        if (DatosIndicadores.Count == 0)
-        //        {
-        //            await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistrosNoEncontrados));
-        //        }
-
-        //        Console.WriteLine($"[Indicadores] ✅ Página inicializada correctamente");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"[Indicadores] ❌ Error en InicializarPaginaAsync: {ex.Message}");
-        //        await LogService.InsertException(ex);
-        //        throw;
-        //    }
-        //}
 
         #endregion
 
@@ -202,29 +123,6 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 EsPopupEdicionVisible = true;
             }, TituloPagina);
 
-            //try
-            //{
-            //    LayerOverlayService.Start();
-            //    IndicadorEnEdicion = new();
-
-            //    int ultimoBitand = await IndicadoresService.ObtenerUltimoBitAnd();
-            //    IndicadorEnEdicion.BitAnd = ultimoBitand * 2;
-
-            //    int ultimoOrden = await IndicadoresService.ObtenerUltimoOrden();
-            //    IndicadorEnEdicion.Orden = ultimoOrden + 10;
-
-            //    IndicadorEnEdicion.Estado = EstadoEntidad.Nuevo;
-            //    EsPopupEdicionVisible = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    await LogService.InsertException(this.GetType().Name, ex);
-            //    await MensajesHelper.MostrarMensajeError(TituloPagina);
-            //}
-            //finally
-            //{
-            //    LayerOverlayService.Stop();
-            //}
         }
 
         /// <summary>
@@ -257,20 +155,20 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             {
                 bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
                     TituloPagina,
-                    T(AppResources.Mensajes.ConfirmacionEliminar));
+                    ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
 
                 if (!confirmado) return;
 
-                LayerOverlayService.Start();
+                //LayerOverlayService.Start();
 
                 await IndicadoresService.Eliminar(indicador);
 
                 DatosIndicadores.Remove(indicador);
                 GridIndicadores.Reload();
 
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.RegistroEliminado));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
 
-            }, TituloPagina, T(AppResources.Mensajes.ErrorDelete));
+            }, TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
         
             //try
             //{
@@ -340,19 +238,19 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 var comparadores = new Dictionary<string, Func<(object? original, object? actual)>>()
                 {
                     {
-                        T(AppResources.Common.Idioma),
+                        ObtenerTexto(AppResources.Common.Idioma),
                         () => (originIdioma.CodigoIdioma, itemIdiomaEdit.CodigoIdioma)
                     },
                     {
-                        T(AppResources.Common.Descripcion),
+                        ObtenerTexto(AppResources.Common.Descripcion),
                         () => (originIdioma.Descripcion, itemIdiomaEdit.Descripcion)
                     },
                     {
-                        T(AppResources.Common.DescripcionAbreviada),
+                        ObtenerTexto(AppResources.Common.DescripcionAbreviada),
                         () => (originIdioma.DescripcionAbreviada, itemIdiomaEdit.DescripcionAbreviada)
                     },
                     {
-                        T(AppResources.Common.Leyenda),
+                        ObtenerTexto(AppResources.Common.Leyenda),
                         () => (originIdioma.Leyenda, itemIdiomaEdit.Leyenda)
                     }
                 };
@@ -416,7 +314,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// Valida y guarda el indicador editado
         /// Realiza validaciones completas antes de persistir
         /// </summary>
-        private async Task GuardarEdicionIndicadorAsync()
+        private async Task OnGuardarIndicadorAsync()
         {
             try
             {
@@ -428,45 +326,45 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                     if (!string.IsNullOrEmpty(descripcionCampoInvalido))
                     {
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                            T(AppResources.Mensajes.LongitudCaracteres) + " " + descripcionCampoInvalido);
+                            ObtenerTexto(AppResources.Mensajes.LongitudCaracteres) + " " + descripcionCampoInvalido);
                         return;
                     }
 
                     if (!ValidarCamposRequeridos())
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.CamposObligatorios));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
                         return;
                     }
 
                     if (IndicadorEnEdicion.Orden <= 0)
                     {
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                            string.Format(T(AppResources.Mensajes.CampoMayorQueCero), T(AppResources.Common.Orden)));
+                            string.Format(ObtenerTexto(AppResources.Mensajes.CampoMayorQueCero), ObtenerTexto(AppResources.Common.Orden)));
                         return;
                     }
 
                     if (IndicadorEnEdicion.BitAnd <= 0)
                     {
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                            string.Format(T(AppResources.Mensajes.CampoMayorQueCero), T(AppResources.Common.BitAnd)));
+                            string.Format(ObtenerTexto(AppResources.Mensajes.CampoMayorQueCero), ObtenerTexto(AppResources.Common.BitAnd)));
                         return;
                     }
 
                     if (!EsBitAndValido())
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.ValidarBitAnd));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.ValidarBitAnd));
                         return;
                     }
 
                     if (TieneIdiomasDuplicados())
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, T(AppResources.Mensajes.IdiomasDuplicados));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.IdiomasDuplicados));
                         return;
                     }
 
                     if (TieneDatosIdiomaIncompletos())
                     {
-                        await MensajesHelper.MostrarMensajeAviso(TituloPagina, T(AppResources.Pages.Indicadores.LanguageDataIncompleted));
+                        await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(AppResources.Pages.Indicadores.LanguageDataIncompleted));
                         return;
                     }
 
@@ -474,7 +372,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 else
                 {
-                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, T(AppResources.Mensajes.SinModificaciones));
+                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(AppResources.Mensajes.SinModificaciones));
                 }
             }
             catch (ValidacionException exv)
@@ -500,8 +398,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// <returns>Mensaje formateado con el nombre del campo y valor</returns>
         private string ObtenerMensajeValidacion(CampoErrorValidacion campo, string valor)
         {
-            string nombreCampo = T($"Common:{campo}:label");
-            return string.Format(T(AppResources.Mensajes.ValorCampoRepetido), nombreCampo, valor);
+            string nombreCampo = ObtenerTexto($"Common:{campo}:label");
+            return string.Format(ObtenerTexto(AppResources.Mensajes.ValorCampoRepetido), nombreCampo, valor);
         }
 
         /// <summary>
@@ -517,7 +415,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 {
                     bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
                         TituloPagina,
-                        T(AppResources.Mensajes.AvisoAntesCancelar));
+                        ObtenerTexto(AppResources.Mensajes.AvisoAntesCancelar));
 
                     if (confirmado)
                     {
@@ -583,22 +481,22 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         {
             if (IndicadorEnEdicion.Descripcion.Length > 50)
             {
-                return T(AppResources.Common.Descripcion);
+                return ObtenerTexto(AppResources.Common.Descripcion);
             }
 
             if (IndicadorEnEdicion.Idiomas.Any(o => o.Descripcion.Length > 50))
             {
-                return T(AppResources.Common.Descripcion);
+                return ObtenerTexto(AppResources.Common.Descripcion);
             }
 
             if (IndicadorEnEdicion.Idiomas.Any(o => o.DescripcionAbreviada.Length > 10))
             {
-                return T(AppResources.Common.DescripcionAbreviada);
+                return ObtenerTexto(AppResources.Common.DescripcionAbreviada);
             }
 
             if (IndicadorEnEdicion.Idiomas.Any(o => o.Leyenda.Length > 100))
             {
-                return T(AppResources.Common.Leyenda);
+                return ObtenerTexto(AppResources.Common.Leyenda);
             }
 
             return string.Empty;
@@ -654,64 +552,110 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         #region Persistencia de Datos
 
         /// <summary>
-        /// Persiste los cambios del indicador en base de datos
-        /// Detecta automáticamente qué idiomas son nuevos, modificados o eliminados
+        /// Persiste los cambios del indicador en base de datos.
+        /// Delega en el método correspondiente según el estado del indicador.
         /// </summary>
         private async Task GuardarDatosAsync()
         {
-            var nuevosIdiomas = new List<IdiomaIndicador>();
-            var idiomasAEliminar = new List<IdiomaIndicador>();
-            var idiomasAActualizar = new List<IdiomaIndicador>();
-
-            var indicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
-
             if (IndicadorEnEdicion.Estado == EstadoEntidad.Nuevo)
             {
-                nuevosIdiomas = IndicadorEnEdicion.Idiomas;
+                await GuardarIndicadorNuevoAsync();
             }
             else if (IndicadorEnEdicion.Estado == EstadoEntidad.Modificado)
             {
-                var indicadorOriginal = indicadores.FirstOrDefault(x => x.Codigo == IndicadorEnEdicion.Codigo);
-                if (indicadorOriginal != null)
-                {
-                    nuevosIdiomas = [.. IndicadorEnEdicion.Idiomas.Where(newItem => newItem.Codigo == null)];
-
-                    idiomasAEliminar = [.. indicadorOriginal.Idiomas.Where(removeItem => !IndicadorEnEdicion.Idiomas.Any(orig => orig.Codigo == removeItem.Codigo))];
-
-                    idiomasAActualizar = [.. IndicadorEnEdicion.Idiomas
-                        .Where(updateItem => indicadorOriginal.Idiomas.Any(orig =>
-                            orig.Codigo == updateItem.Codigo &&
-                            (orig.CodigoIdioma != updateItem.CodigoIdioma ||
-                             orig.Descripcion != updateItem.Descripcion ||
-                             orig.DescripcionAbreviada != updateItem.DescripcionAbreviada ||
-                             orig.Leyenda != updateItem.Leyenda)))];
-                }
-            }
-
-            await IndicadoresService.Grabar(
-                IndicadorEnEdicion, 
-                nuevosIdiomas, 
-                idiomasAActualizar, 
-                idiomasAEliminar);
-
-            CerrarPopupEdicion();
-
-            if (IndicadorEnEdicion.Estado == EstadoEntidad.Nuevo)
-            {
-                DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
-                GridIndicadores.SetFocusedRowIndex(IndicadorEnEdicion.Indice);
-            }
-            else
-            {
-                int indice = DatosIndicadores.FindIndex(c => c.Codigo == IndicadorEnEdicion.Codigo);
-                if (indice != -1)
-                {
-                    DatosIndicadores[indice] = IndicadorEnEdicion;
-                }
+                await GuardarIndicadorModificadoAsync();
             }
 
             GridIndicadores.Reload();
-            await MensajesHelper.MostrarMensajeExito(TituloPagina, T(AppResources.Mensajes.RegistroGrabado));
+            await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroGrabado));
+        }
+
+        /// <summary>
+        /// Persiste un indicador nuevo junto con todos sus idiomas.
+        /// Tras guardar, recarga la lista completa y posiciona el foco en el nuevo registro.
+        /// </summary>
+        private async Task GuardarIndicadorNuevoAsync()
+        {
+            var nuevosIdiomas = IndicadorEnEdicion.Idiomas;
+
+            await IndicadoresService.Grabar(
+                IndicadorEnEdicion,
+                nuevosIdiomas,
+                idiomasActualizar: [],
+                idiomasEliminar: []);
+
+            DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
+            GridIndicadores.SetFocusedRowIndex(IndicadorEnEdicion.Indice);
+
+            CerrarPopupEdicion();
+        }
+
+        /// <summary>
+        /// Persiste los cambios de un indicador existente.
+        /// Detecta qué idiomas son nuevos, han sido modificados o deben eliminarse
+        /// comparando con el estado actual en base de datos.
+        /// </summary>
+        private async Task GuardarIndicadorModificadoAsync()
+        {
+            var indicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
+            var indicadorOriginal = indicadores.FirstOrDefault(x => x.Codigo == IndicadorEnEdicion.Codigo);
+
+            var (nuevosIdiomas, idiomasActualizar, idiomasEliminar) = ObtenerCambiosIdiomas(indicadorOriginal);
+
+            await IndicadoresService.Grabar(
+                IndicadorEnEdicion,
+                nuevosIdiomas,
+                idiomasActualizar,
+                idiomasEliminar);
+
+            ActualizarIndicadorEnListaLocal();
+
+            CerrarPopupEdicion();
+        }
+
+        /// <summary>
+        /// Calcula las listas de idiomas nuevos, modificados y a eliminar
+        /// comparando el indicador en edición con su versión original en base de datos.
+        /// </summary>
+        /// <param name="indicadorOriginal">Versión original del indicador obtenida de base de datos, o null si no existe.</param>
+        /// <returns>Tupla con las tres listas de cambios de idiomas.</returns>
+        private (List<IdiomaIndicador> nuevos, List<IdiomaIndicador> actualizados, List<IdiomaIndicador> aEliminar)
+            ObtenerCambiosIdiomas(Indicador? indicadorOriginal)
+        {
+            if (indicadorOriginal == null)
+                return ([], [], []);
+
+            var nuevos = IndicadorEnEdicion.Idiomas
+                .Where(i => i.Codigo == null)
+                .ToList();
+
+            var aEliminar = indicadorOriginal.Idiomas
+                .Where(orig => !IndicadorEnEdicion.Idiomas.Any(i => i.Codigo == orig.Codigo))
+                .ToList();
+
+            var actualizados = IndicadorEnEdicion.Idiomas
+                .Where(i => indicadorOriginal.Idiomas.Any(orig =>
+                    orig.Codigo == i.Codigo &&
+                    (orig.CodigoIdioma != i.CodigoIdioma ||
+                     orig.Descripcion != i.Descripcion ||
+                     orig.DescripcionAbreviada != i.DescripcionAbreviada ||
+                     orig.Leyenda != i.Leyenda)))
+                .ToList();
+
+            return (nuevos, actualizados, aEliminar);
+        }
+
+        /// <summary>
+        /// Reemplaza el indicador modificado en la lista local para reflejar los cambios
+        /// sin necesidad de recargar todos los datos desde base de datos.
+        /// </summary>
+        private void ActualizarIndicadorEnListaLocal()
+        {
+            int indice = DatosIndicadores.FindIndex(c => c.Codigo == IndicadorEnEdicion.Codigo);
+            if (indice != -1)
+            {
+                DatosIndicadores[indice] = IndicadorEnEdicion;
+            }
         }
 
         #endregion

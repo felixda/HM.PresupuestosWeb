@@ -1,4 +1,12 @@
-﻿.user.header {
+﻿::deep .language-combo {
+    align-self: center;
+}
+
+::deep .language-combo .dxbl-edit-box {
+    align-items: center;
+}
+
+.user.header {
     display: flex;
     padding: 2.5rem 1.5rem 1.5rem 1.5rem;
     flex-direction: column;

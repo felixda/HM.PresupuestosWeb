@@ -34,8 +34,8 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 try
                 {
                    // await InicializarAsync();
-                    _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Avisos}:label");
-                    LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
+                    _pageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Avisos}:label");
+                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
                 }
                 catch (Exception ex)
                 {
@@ -65,11 +65,11 @@ namespace HM.Presupuestos.Server.Pages.Admin
             {
                 LayerOverlayService.Start();
                 await AvisosService.ActivarAvisosAsync(_mensaje, TipoAviso);
-                await LogAccionesService.Insertar(this.GetType().Name + " > " + T("Common:LogActions:LogAction_3:label"));
+                await LogAccionesService.Insertar(this.GetType().Name + " > " + ObtenerTexto("Common:LogActions:LogAction_3:label"));
             }
             catch (Exception ex)
             {
-                await LogAccionesService.Insertar(this.GetType().Name + " > " + T("Common:LogActions:LogAction_4:label"));
+                await LogAccionesService.Insertar(this.GetType().Name + " > " + ObtenerTexto("Common:LogActions:LogAction_4:label"));
                 _error = "Error al enviar el aviso: " + ex.Message;
             }
             finally

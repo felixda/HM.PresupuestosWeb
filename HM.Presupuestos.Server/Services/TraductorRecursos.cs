@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -7,54 +6,53 @@ using HM.Presupuestos.Domain.Entidades;
 
 namespace HM.Presupuestos.Server.Services
 {
-    public interface IResourceService
+    public interface ITraductorRecursos
     {
-        string T(string elementExpression, string? codigoIdioma = null);
-        bool ExisteValue(string elementExpression, string? codigoIdioma = null);
+        string ObtenerTexto(string claveRecurso, string? codigoIdioma = null);
+        bool ExisteRecurso(string claveRecurso, string? codigoIdioma = null);
 
-        string? BuscarUrlMenuPorCodeMenuEnJson(int codigoBuscado);
+        string? ObtenerUrlMenu(int codigoBuscado);
 
-        int ObtenerCodigoMenu(string url);
+        int ObtenerCodigoMenuPorUrl(string url);
 
         List<string> ObtenerCodigosIdiomas();
 
         List<Idioma> ObtenerIdiomas();
     }
 
-    public class ResourceService: IResourceService
+    public class TraductorRecursos : ITraductorRecursos
     {
 
         #region Propiedades privadas
-        private readonly IConfiguration _config;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IIdiomaService _idiomaService;
-        //private Dictionary<string, JsonDocument> _dictionaryLanguage;
+        private readonly IConfiguration _configuracion;
+        private readonly IWebHostEnvironment _entornoWeb;
+        private readonly IGestorIdioma _gestorIdiomas;
         private readonly IServiceScopeFactory _scopeFactory;
 
         // ? Caché nivel 1: JsonDocument por idioma
-        private readonly ConcurrentDictionary<string, JsonDocument> _dictionaryLanguage = new();
+        private readonly ConcurrentDictionary<string, JsonDocument> _recursosPorIdioma = new();
 
         // ? Caché nivel 2: Valores resueltos por clave compuesta (idioma:expresión)
         private readonly ConcurrentDictionary<string, string> _cacheValoresResueltos = new();
 
         // ? Cache de idioma por defecto
-        private string _idiomaPorDefecto;
+        private readonly string _idiomaPorDefecto;
 
         #endregion
 
         #region Constructor
-        public ResourceService(IConfiguration config, IWebHostEnvironment webHostEnvironment, 
-            IIdiomaService idiomaService, IServiceScopeFactory scopeFactory)
+        public TraductorRecursos(IConfiguration configuracion, IWebHostEnvironment entornoWeb, 
+            IGestorIdioma idiomaService, IServiceScopeFactory scopeFactory)
         {
-            _config = config;
-            _webHostEnvironment = webHostEnvironment;
-            _idiomaService = idiomaService;
+            _configuracion = configuracion;
+            _entornoWeb = entornoWeb;
+            _gestorIdiomas = idiomaService;
             _scopeFactory = scopeFactory;
 
-            _idiomaPorDefecto = _config.GetValue<string>("AppSettings:DefaultLanguage") ?? "es";
+            _idiomaPorDefecto = _configuracion.GetValue<string>("AppSettings:DefaultLanguage") ?? "es";
 
             // Suscribirse al cambio de idioma para limpiar caché de valores resueltos
-            _idiomaService.OnIdiomaCambiado += () =>
+            _gestorIdiomas.IdiomaCambiado += () =>
             {
                 Console.WriteLine("[ResourceService] ?? Idioma cambiado, limpiando caché de valores...");
                 // Solo limpiar caché de valores, mantener JsonDocuments cargados
@@ -74,20 +72,20 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Cargar un idioma específico en memoria (versión síncrona para constructor)
         /// </summary>
-        private void CargarRecursosIdiomaEnMemoriaSync(string codigoIdioma)
+        private void CargarRecursosDeIdioma(string codigoIdioma)
         {
             try
             {
                 var languageCode = codigoIdioma.ToLower();
 
                 // ? Si ya está cargado, no hacer nada
-                if (_dictionaryLanguage.ContainsKey(languageCode))
+                if (_recursosPorIdioma.ContainsKey(languageCode))
                 {
                     Console.WriteLine($"[ResourceService] ?? Idioma ya en memoria: {languageCode}");
                     return;
                 }
 
-                var obLanguagesSectionConfig = _config.GetSection("AppSettings:Languages").AsEnumerable().ToList();
+                var obLanguagesSectionConfig = _configuracion.GetSection("AppSettings:Languages").AsEnumerable().ToList();
 
                 // Buscar configuración del idioma
                 var languageConfigKey = obLanguagesSectionConfig
@@ -109,7 +107,7 @@ namespace HM.Presupuestos.Server.Services
                     return;
                 }
 
-                string fullPathJsonFile = Path.Combine(_webHostEnvironment.WebRootPath, pathJsonFile);
+                string fullPathJsonFile = Path.Combine(_entornoWeb.WebRootPath, pathJsonFile);
 
                 if (!File.Exists(fullPathJsonFile))
                 {
@@ -120,14 +118,14 @@ namespace HM.Presupuestos.Server.Services
                 string fileJsonContent = File.ReadAllText(fullPathJsonFile, Encoding.UTF8);
                 var jsonDoc = JsonDocument.Parse(fileJsonContent);
 
-                _dictionaryLanguage.TryAdd(languageCode, jsonDoc);
+                _recursosPorIdioma.TryAdd(languageCode, jsonDoc);
 
                 Console.WriteLine($"[ResourceService] ? Idioma cargado en memoria: {languageCode}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ResourceService] ? Error cargando idioma {codigoIdioma}: {ex.Message}");
-                InsertException($"{GetType().Name}.CargarIdiomaEnMemoriaSync", ex);
+                RegistrarExcepcion($"{GetType().Name}.CargarIdiomaEnMemoriaSync", ex);
             }
         }
 
@@ -136,23 +134,23 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Generar clave única para caché de valores resueltos
         /// </summary>
-        private string GenerarClaveCacheValor(string idioma, string elementExpression)
+        private string GenerarClaveCache(string idioma, string claveRecurso)
         {
-            return $"{idioma.ToLower()}:{elementExpression.ToLower().Replace(" ", "")}";
+            return $"{idioma.ToLower()}:{claveRecurso.ToLower().Replace(" ", "")}";
         }
 
 
-        public string T(string elementExpression, string? codigoIdioma = null)
+        public string ObtenerTexto(string claveRecurso, string? codigoIdioma = null)
         {
             try
             {
                 // ? 1. Obtener idioma
-                var languageCode = codigoIdioma ?? _idiomaService.Idioma ?? _idiomaPorDefecto;
+                var languageCode = codigoIdioma ?? _gestorIdiomas.IdiomaActual ?? _idiomaPorDefecto;
                 var cleanLanguageCode = languageCode.Trim('"', '\\', ' ');
                 var resourceLanguageCode = cleanLanguageCode.Split('-')[0].ToLower();
 
                 // ? 2. Generar clave de caché
-                var cacheKey = GenerarClaveCacheValor(resourceLanguageCode, elementExpression);
+                var cacheKey = GenerarClaveCache(resourceLanguageCode, claveRecurso);
 
                 // ? 3. INTENTAR OBTENER DEL CACHÉ PRIMERO
                 if (_cacheValoresResueltos.TryGetValue(cacheKey, out var valorCacheado))
@@ -162,22 +160,22 @@ namespace HM.Presupuestos.Server.Services
                 }
 
 
-                if (!_dictionaryLanguage.ContainsKey(resourceLanguageCode))
+                if (!_recursosPorIdioma.ContainsKey(resourceLanguageCode))
                 {
-                    CargarRecursosIdiomaEnMemoriaSync(resourceLanguageCode);
+                    CargarRecursosDeIdioma(resourceLanguageCode);
                 }
 
                 // ? 4. No está en caché, cargar idioma si es necesario
-                if (!_dictionaryLanguage.TryGetValue(resourceLanguageCode, out var obJsonDocument))
+                if (!_recursosPorIdioma.TryGetValue(resourceLanguageCode, out var obJsonDocument))
                 {
                     Console.WriteLine($"[ResourceService] ? No se pudo cargar idioma: {resourceLanguageCode}");
-                    return $"Error label -> {elementExpression} (idioma no disponible)";
+                    return $"Error label -> {claveRecurso} (idioma no disponible)";
                 }
 
                 var obJsonElement = obJsonDocument.RootElement;
 
                 // Navegar por la expresión
-                var obElementExpressionList = elementExpression.Replace(" ", "").Split(":");
+                var obElementExpressionList = claveRecurso.Replace(" ", "").Split(":");
                 foreach (var element in obElementExpressionList)
                 {
                     if (obJsonElement.ValueKind == JsonValueKind.Array)
@@ -185,7 +183,7 @@ namespace HM.Presupuestos.Server.Services
 
                     if (!TryGetPropertyCaseInsensitive(obJsonElement, element, out obJsonElement))
                     {
-                        return $"Error label -> {elementExpression}";
+                        return $"Error label -> {claveRecurso}";
                     }
                 }
 
@@ -205,41 +203,41 @@ namespace HM.Presupuestos.Server.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ResourceService] ? Error en GetValue('{elementExpression}'): {ex.Message}");
-                InsertException($"{GetType().Name}.GetValue", ex);
-                return $"Error label -> {elementExpression}";
+                Console.WriteLine($"[ResourceService] ? Error en GetValue('{claveRecurso}'): {ex.Message}");
+                RegistrarExcepcion($"{GetType().Name}.GetValue", ex);
+                return $"Error label -> {claveRecurso}";
             }
         }
 
 
-        public bool ExisteValue(string elementExpression,  string? codigoIdioma = null)
+        public bool ExisteRecurso(string elementExpression,  string? codigoIdioma = null)
         {
 
             try
             {
-                var languageCode = codigoIdioma ?? _idiomaService.Idioma ?? _idiomaPorDefecto;
+                var languageCode = codigoIdioma ?? _gestorIdiomas.IdiomaActual ?? _idiomaPorDefecto;
                 var cleanLanguageCode = languageCode.Trim('"', '\\', ' ');
                 var resourceLanguageCode = cleanLanguageCode.Split('-')[0].ToLower();
 
 
                 // ? Verificar en caché primero
-                var cacheKey = GenerarClaveCacheValor(resourceLanguageCode, elementExpression);
+                var cacheKey = GenerarClaveCache(resourceLanguageCode, elementExpression);
                 if (_cacheValoresResueltos.ContainsKey(cacheKey))
                 {
                     return true; // Si está en caché, existe
                 }
 
                 // ? Cargar idioma si no está en memoria
-                if (!_dictionaryLanguage.ContainsKey(resourceLanguageCode))
+                if (!_recursosPorIdioma.ContainsKey(resourceLanguageCode))
                 {
-                    CargarRecursosIdiomaEnMemoriaSync(resourceLanguageCode);
+                    CargarRecursosDeIdioma(resourceLanguageCode);
                 }
 
-                return TryGetJsonElement(elementExpression, resourceLanguageCode, out _);
+                return IntentarObtenerElementoJson(elementExpression, resourceLanguageCode, out _);
             }
             catch (Exception ex)
             {
-                InsertException($"{GetType().Name}.ExisteValue", ex);
+                RegistrarExcepcion($"{GetType().Name}.ExisteValue", ex);
                 return false;
             }
         }
@@ -275,7 +273,7 @@ namespace HM.Presupuestos.Server.Services
             return false;
         }
 
-        private bool TryGetJsonElement(string elementExpression, string languageCode, out JsonElement obJsonElement)
+        private bool IntentarObtenerElementoJson(string elementExpression, string languageCode, out JsonElement obJsonElement)
         {
             obJsonElement = default;
 
@@ -284,7 +282,7 @@ namespace HM.Presupuestos.Server.Services
 
             var resourceLanguageCode = languageCode.Split('-')[0];
 
-            if (!_dictionaryLanguage.TryGetValue(resourceLanguageCode, out var jsonDoc))
+            if (!_recursosPorIdioma.TryGetValue(resourceLanguageCode, out var jsonDoc))
                 return false;
 
             obJsonElement = jsonDoc.RootElement;
@@ -306,20 +304,20 @@ namespace HM.Presupuestos.Server.Services
 
 
 
-        public string? BuscarUrlMenuPorCodeMenuEnJson(int codigoBuscado)
+        public string? ObtenerUrlMenu(int codigoBuscado)
         {
             try
             {
                 // ? Obtener idioma actual
-                var idioma = _idiomaService.Idioma.ToLower() ?? _idiomaPorDefecto;
+                var idioma = _gestorIdiomas.IdiomaActual.ToLower() ?? _idiomaPorDefecto;
 
                 // ? Cargar si no está en memoria
-                if (!_dictionaryLanguage.ContainsKey(idioma))
+                if (!_recursosPorIdioma.ContainsKey(idioma))
                 {
-                    CargarRecursosIdiomaEnMemoriaSync(idioma);
+                    CargarRecursosDeIdioma(idioma);
                 }
 
-                if (!_dictionaryLanguage.TryGetValue(idioma, out var obJsonDocument))
+                if (!_recursosPorIdioma.TryGetValue(idioma, out var obJsonDocument))
                 {
                     Console.WriteLine($"[ResourceService] ?? Idioma no disponible para buscar menú: {idioma}");
                     return null;
@@ -349,20 +347,20 @@ namespace HM.Presupuestos.Server.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"[ResourceService] ? Error buscando URL menú {codigoBuscado}: {ex.Message}");
-                InsertException($"{GetType().Name}.BuscarUrlMenuPorCodeMenuEnJson", ex);
+                RegistrarExcepcion($"{GetType().Name}.BuscarUrlMenuPorCodeMenuEnJson", ex);
                 return null;
             }
         }
 
 
 
-        public int ObtenerCodigoMenu(string url)
+        public int ObtenerCodigoMenuPorUrl(string url)
         {
             var result = -1;
 
             try
             {
-                var jsonMenu = T("menu");
+                var jsonMenu = ObtenerTexto("menu");
 
                 if (string.IsNullOrEmpty(jsonMenu))
                 {
@@ -404,7 +402,7 @@ namespace HM.Presupuestos.Server.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"[ResourceService] ? Error en ObtenerCodigoMenu: {ex.Message}");
-                InsertException($"{GetType().Name}.ObtenerCodigoMenu", ex);
+                RegistrarExcepcion($"{GetType().Name}.ObtenerCodigoMenu", ex);
             }
 
             return result;
@@ -422,15 +420,15 @@ namespace HM.Presupuestos.Server.Services
             try
             {
                 // Obtener el idioma actual
-                var idioma = _idiomaService.Idioma.ToLower() ?? _idiomaPorDefecto;
+                var idioma = _gestorIdiomas.IdiomaActual.ToLower() ?? _idiomaPorDefecto;
 
                 // Cargar si no está en memoria
-                if (!_dictionaryLanguage.ContainsKey(idioma))
+                if (!_recursosPorIdioma.ContainsKey(idioma))
                 {
-                    CargarRecursosIdiomaEnMemoriaSync(idioma);
+                    CargarRecursosDeIdioma(idioma);
                 }
 
-                if (!_dictionaryLanguage.TryGetValue(idioma, out var jsonDoc))
+                if (!_recursosPorIdioma.TryGetValue(idioma, out var jsonDoc))
                 {
                     Console.WriteLine($"[ResourceService] ?? No se pudo cargar idioma para obtener códigos: {idioma}");
                     return result;
@@ -459,7 +457,7 @@ namespace HM.Presupuestos.Server.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"[ResourceService] ? Error obteniendo códigos de idiomas: {ex.Message}");
-                InsertException($"{GetType().Name}.ObtenerCodigosIdiomas", ex);
+                RegistrarExcepcion($"{GetType().Name}.ObtenerCodigosIdiomas", ex);
             }
 
             return result;
@@ -476,7 +474,7 @@ namespace HM.Presupuestos.Server.Services
 
             try
             {
-                var obLanguageSection = _config.GetSection("AppSettings:Languages");
+                var obLanguageSection = _configuracion.GetSection("AppSettings:Languages");
                 var languageCodeList = ObtenerCodigosIdiomas();
 
                 foreach (var languageCode in languageCodeList)
@@ -520,7 +518,7 @@ namespace HM.Presupuestos.Server.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"[ResourceService] ? Error obteniendo idiomas: {ex.Message}");
-                InsertException($"{GetType().Name}.ObtenerIdiomas", ex);
+                RegistrarExcepcion($"{GetType().Name}.ObtenerIdiomas", ex);
             }
 
             return result;
@@ -539,7 +537,7 @@ namespace HM.Presupuestos.Server.Services
                 var resourceKey = $"Language:{languageKey}:label";
 
                 // Usar el método T() existente para obtener la traducción
-                var descripcion = T(resourceKey, codigoIdioma);
+                var descripcion = ObtenerTexto(resourceKey, codigoIdioma);
 
                 // Si no se encuentra o devuelve la misma clave, usar el código como fallback
                 if (string.IsNullOrEmpty(descripcion) || descripcion == resourceKey)
@@ -563,7 +561,7 @@ namespace HM.Presupuestos.Server.Services
         /// </summary>
         /// <param name="exception">Exception object</param>
         /// <param name="methodName">Method name from exception</param>
-        private void InsertException(string methodName, Exception exception)
+        private void RegistrarExcepcion(string methodName, Exception exception)
         {
             try
             {

@@ -97,7 +97,7 @@ namespace HM.Presupuestos.Server.Layout
                 // Para indicar la función que se mostrará al cambiar de páginas en la navegación y se ha indicado que hay cambios
                 _ControlCambiosService.RegistrarConfirmador(ShowModalConfirmacion);
 
-                _IdiomaService.OnIdiomaCambiado += async () =>
+                _IdiomaService.IdiomaCambiado += async () =>
                 {
                     await InvokeAsync(StateHasChanged);
                 };
@@ -121,8 +121,8 @@ namespace HM.Presupuestos.Server.Layout
                 {
                     await _UsuarioService.CargarUsuarioAsync();
 
-                    TituloModalAdvertencia = _resourceService.T("Pages:ModalInactividad:Titulo:label");
-                    TextoCuentaAtras = _resourceService.T("Pages:ModalInactividad:CuentaAtras:label");
+                    TituloModalAdvertencia = TraductorRecursos.ObtenerTexto("Pages:ModalInactividad:Titulo:label");
+                    TextoCuentaAtras = TraductorRecursos.ObtenerTexto("Pages:ModalInactividad:CuentaAtras:label");
 
                     await ManejarSubscripciones();
                 }
@@ -226,12 +226,12 @@ namespace HM.Presupuestos.Server.Layout
                 }
 
                 // Obtener código de menú para la URL
-                int menuCode = _resourceService.ObtenerCodigoMenu(urlNormalizada);
+                int menuCode = TraductorRecursos.ObtenerCodigoMenuPorUrl(urlNormalizada);
 
                 string tituloParaLog;
                 if (menuCode > 0)
                 {
-                    tituloParaLog = _resourceService.T($"Menu:Menu_{menuCode}:label");
+                    tituloParaLog = TraductorRecursos.ObtenerTexto($"Menu:Menu_{menuCode}:label");
                 }
                 else
                 {

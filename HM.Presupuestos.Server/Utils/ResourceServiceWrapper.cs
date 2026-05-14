@@ -5,9 +5,9 @@ namespace HM.Presupuestos.Server.Utils
 {
     public static class ResourceServiceWrapper
     {
-        private static IResourceService? _service;
+        private static ITraductorRecursos? _service;
 
-        public static void Initialize(IResourceService service)
+        public static void Initialize(ITraductorRecursos service)
         {
             _service = service;
         }
@@ -18,7 +18,7 @@ namespace HM.Presupuestos.Server.Utils
             var result = "";
             if (_service != null)
             {
-                result= _service.T(elementExpression, languageCode);
+                result= _service.ObtenerTexto(elementExpression, languageCode);
             }
             return result;
         }

@@ -31,7 +31,7 @@ namespace HM.Presupuestos.Server.Pages
             try
             {
                 // ? Usar AppResources para el mensaje de carga
-                _LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
+                _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
                 
                 ActualizarMenu(Usuario);
                 await InvokeAsync(StateHasChanged);
@@ -52,7 +52,7 @@ namespace HM.Presupuestos.Server.Pages
         {
             try
             {
-                _LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
+                _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
                 await base.OnUsuarioLoginDesconectado();
                 ActualizarMenu(Usuario);
                 await InvokeAsync(StateHasChanged);

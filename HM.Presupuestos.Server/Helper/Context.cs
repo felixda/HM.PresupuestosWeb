@@ -3,7 +3,7 @@ using HM.Presupuestos.Server.Modelos;
 using HM.Presupuestos.Server.Servicios;
 using System.ComponentModel.Design;
 using System.Text.Json;
-using IResourceService = HM.Presupuestos.Server.Services.IResourceService;
+using ITraductorRecursos = HM.Presupuestos.Server.Services.ITraductorRecursos;
 
 
 namespace HM.Presupuestos.Server.Helper
@@ -13,8 +13,8 @@ namespace HM.Presupuestos.Server.Helper
     {
         [Inject] protected ControlCambiosService ControlCambios { get; set; } = default!;
         [Inject] protected IUsuarioServicio UsuarioService { get; set; } = default!;
-        [Inject] protected IResourceService ResourceService { get; set; } = default!;
-        [Inject] protected IIdiomaService IdiomaService { get; set; } = default!;
+        [Inject] protected ITraductorRecursos TraductorRecursos { get; set; } = default!;
+        [Inject] protected IGestorIdioma GestorIdioma { get; set; } = default!;
 
         [Inject] protected ILogService LogService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
@@ -56,10 +56,10 @@ namespace HM.Presupuestos.Server.Helper
         {
             if (firstRender)
             {
-                IdiomaService.OnIdiomaCambiado += ActualizarIdioma;
+                GestorIdioma.IdiomaCambiado += ActualizarIdioma;
 
 
-                UsuarioService.OnUsuarioCargado += async () =>
+                UsuarioService.UsuarioCargado += async () =>
                 {
                     UsuarioApp = UsuarioService.UsuarioApp!;
 
@@ -108,26 +108,21 @@ namespace HM.Presupuestos.Server.Helper
 
         public virtual void Dispose()
         {
-            IdiomaService.OnIdiomaCambiado -= ActualizarIdioma;
+            GestorIdioma.IdiomaCambiado -= ActualizarIdioma;
         }
 
 
 
     
-        //public string T(string elementExpression)
-        //{
-        //    return ResourceService.T(elementExpression);
-        //}
-
         /// <summary>
         /// Obtiene el valor traducido de una clave de recurso
         /// </summary>
-        /// <param name="key">Clave del recurso (ej: "Common:Aceptar:label")</param>
+        /// <param name="claveRecurso">Clave del recurso (ej: "Common:Aceptar:label")</param>
         /// <returns>Texto traducido según el idioma actual</returns>
-        protected string T(string key) => ResourceService.T(key);
+        protected string ObtenerTexto(string claveRecurso) => TraductorRecursos.ObtenerTexto(claveRecurso);
 
 
-        public async Task SetMenuActive(int code)
+        public async Task EstablecerMenuActivo(int code)
         {
             await JSRuntime.InvokeVoidAsync("Menu.SetMenuActive", code);
         }
@@ -151,7 +146,7 @@ namespace HM.Presupuestos.Server.Helper
 
 
 
-        public string GetValoresSeleccionados<T, TValue>(IEnumerable<T>? listaObjetos,
+        public string ObtenerValoresSeleccionados<T, TValue>(IEnumerable<T>? listaObjetos,
            Func<T, TValue> selector, string separador = ",")
         {
             if (listaObjetos == null)
@@ -164,7 +159,7 @@ namespace HM.Presupuestos.Server.Helper
                 .Select(x => (selector(x) ?? default!)?.ToString() ?? string.Empty));
         }
 
-        public string GetValoresSeleccionados<T, TValue>(object? listaObjetos,
+        public string ObtenerValoresSeleccionados<T, TValue>(object? listaObjetos,
             Func<T, TValue> selector, string separador = ",")
         {
             if (listaObjetos is not IEnumerable<T> lista)
@@ -177,10 +172,10 @@ namespace HM.Presupuestos.Server.Helper
                 .Select(x => (selector(x) ?? default!)?.ToString() ?? string.Empty));
         }
 
-        public List<int> GetListaValoresSeleccionados<T, TValue>(object? listaObjetos,
+        public List<int> ObtenerListaValoresSeleccionados<T, TValue>(object? listaObjetos,
             Func<T, TValue> selector, string separador = ",")
         {
-            string cadena = GetValoresSeleccionados(listaObjetos, selector, separador);
+            string cadena = ObtenerValoresSeleccionados(listaObjetos, selector, separador);
 
             if (string.IsNullOrWhiteSpace(cadena))
                 return [];
@@ -247,8 +242,8 @@ namespace HM.Presupuestos.Server.Helper
             if (esErrorControlado)
             {
                 string clave = $"MensajeErrorBD:{ex.Codigo}:label";
-                mensaje = ExisteResourceValue(clave)
-                    ? T(clave)
+                mensaje = ExisteRecurso(clave)
+                    ? ObtenerTexto(clave)
                     : null;
             }
 
@@ -262,9 +257,9 @@ namespace HM.Presupuestos.Server.Helper
         }
 
 
-        public bool ExisteResourceValue(string elementExpression)
+        public bool ExisteRecurso(string claveRecurso)
         {
-            return ResourceService.ExisteValue(elementExpression);
+            return TraductorRecursos.ExisteRecurso(claveRecurso);
         }
 
 
@@ -275,7 +270,7 @@ namespace HM.Presupuestos.Server.Helper
         /// ? Disponible en TODOS los componentes (protegidos o no)
         /// </summary>
         /// <param name="action">Acción asíncrona a ejecutar</param>
-        /// <param name="TituloPagina">Título de la página para mensajes de error (opcional)</param>
+        /// <param name="tituloPagina">Título de la página para mensajes de error (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <example>
@@ -289,7 +284,7 @@ namespace HM.Presupuestos.Server.Helper
         /// </example>
         protected async Task EjecutarAsync(
             Func<Task> action,
-            string TituloPagina,
+            string tituloPagina,
             string? customErrorMessage = null,
             bool showOverlay = true
             )
@@ -307,7 +302,7 @@ namespace HM.Presupuestos.Server.Helper
             {
                 // Log de la excepción
                 await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
+                await MensajesHelper.MostrarMensajeError(tituloPagina, customErrorMessage);
             }
             finally
             {
@@ -325,7 +320,7 @@ namespace HM.Presupuestos.Server.Helper
         /// <typeparam name="TResult">Tipo de resultado</typeparam>
         /// <param name="func">Función asíncrona a ejecutar</param>
         /// <param name="defaultValue">Valor por defecto en caso de error</param>
-        /// <param name="TituloPagina">Título de la página para mensajes de error (opcional)</param>
+        /// <param name="tituloPagina">Título de la página para mensajes de error (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <returns>Resultado de la función o valor por defecto</returns>
         /// <example>
@@ -339,7 +334,7 @@ namespace HM.Presupuestos.Server.Helper
         /// </example>
         protected async Task<TResult?> EjecutarAsync<TResult>(
             Func<Task<TResult>> func,
-            string? TituloPagina = null,
+            string? tituloPagina = null,
             TResult? defaultValue = default,
             string? customErrorMessage = null,
             bool showOverlay = true)
@@ -358,7 +353,7 @@ namespace HM.Presupuestos.Server.Helper
                 await LogService.InsertException(ex);
 
                 await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
+                await MensajesHelper.MostrarMensajeError(tituloPagina, customErrorMessage);
 
                 return defaultValue;
             }
@@ -375,12 +370,12 @@ namespace HM.Presupuestos.Server.Helper
         /// Ejecuta una acción síncrona con gestión automática
         /// </summary>
         /// <param name="action">Acción síncrona a ejecutar</param>
-        /// <param name="TituloPagina">Título de la página para mensajes de error</param>
+        /// <param name="tituloPagina">Título de la página para mensajes de error</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         protected async Task EjecutarAsync(
             Action action,
-            string TituloPagina,
+            string tituloPagina,
             string? customErrorMessage = null,
             bool showOverlay = true)
         {
@@ -390,7 +385,7 @@ namespace HM.Presupuestos.Server.Helper
                     action();
                     return Task.CompletedTask;
                 },
-                TituloPagina,
+                tituloPagina,
                 customErrorMessage,
                 showOverlay);
         }

@@ -1,12 +1,8 @@
 ﻿@using HM.Presupuestos.Server.Helper
 @using HM.Presupuestos.Server.Layout
 
-@inject IConfiguration _Configuration
-@inject IJSRuntime _JSRuntime
-
 @attribute [Authorize]
 @inherits Context
-
 
 @if (!UsuarioCargado)
 {
@@ -24,23 +20,20 @@ else
                 <Template>
                     <div class="logo-image">
                         <span class="logo-img" title="@($"Versión: {VersionApp}")"></span>
-                        @if (_Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
+                        @if (Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
                         {
-                            <p class="entorno">@(_Configuration.GetValue<string>("AppSettings:AppEnvironment"))</p>
+                            <p class="entorno">@(Configuration.GetValue<string>("AppSettings:AppEnvironment"))</p>
                         }
                     </div>
                 </Template>
             </DxToolbarItem>
-@*             @{ 
-                if (UsuarioLogin != null)
-                    { *@
-                        <DxToolbarItem Alignment="ToolbarItemAlignment.Left" BeginGroup="true">
-                            <Template>
-                                <LoginHeaderImpersonado/>
-                            </Template>
-                        </DxToolbarItem>
-                    @* } *@
-             @* } *@
+
+            <DxToolbarItem Alignment="ToolbarItemAlignment.Left" BeginGroup="true">
+                <Template>
+                    <LoginHeaderImpersonado/>
+                </Template>
+            </DxToolbarItem>
+
             <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
                 <Template>
                     <LoginHeaderSSO/>
@@ -50,13 +43,15 @@ else
             <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
                 <Template>
                     <div class="logo-image">
-                        <a href="@(_Configuration.GetValue<string>("AppSettings:HelpDeskUrl"))" target="_blank"><span class="icono-fresh-service"></span></a>
+                        <a href="@(Configuration.GetValue<string>("AppSettings:HelpDeskUrl"))" target="_blank"><span class="icono-fresh-service"></span></a>
                     </div>
                 </Template>
             </DxToolbarItem>
             <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
                 <Template>
-                    <LanguageSwitcher />
+                    <div class="d-flex align-items-center h-100">
+                        <LanguageSwitcher />
+                    </div>
                 </Template>
             </DxToolbarItem>
             <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
@@ -66,54 +61,4 @@ else
             </DxToolbarItem>
         </Items>
     </DxToolbar>
-}
-
-@code
-{
-    // private bool _componentInitialized = false;
-    private string VersionApp = string.Empty;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        // Suscribirse al evento de cambio de usuario si es necesario
-        UsuarioService.OnUsuarioCargado += async () =>
-        {
-            await InvokeAsync(StateHasChanged);
-        };
-    }
-
-
-    protected override async Task OnUsuarioDisponibleAsync()
-    {
-        var assembly = typeof(MainLayout).Assembly;
-        var version = assembly.GetName().Version?.ToString() ?? "1.0.0";
-        var fecha = System.IO.File.GetLastWriteTime(assembly.Location);
-
-        VersionApp = $"{version} ({fecha:dd/MM/yyyy HH:mm})";
-        await InvokeAsync(StateHasChanged);
-    }
-
-    protected override async Task OnUsuarioLoginDesconectado()
-    {
-        await base.OnUsuarioLoginDesconectado();
-        
-        await InvokeAsync(StateHasChanged);
-    }
-    public override void Dispose()
-    {
-        // ✅ Desuscribirse del evento al destruir el componente
-        UsuarioService.OnUsuarioCargado -= async () =>
-        {
-            await InvokeAsync(StateHasChanged);
-        };
-
-        base.Dispose();
-    }
-
-    async Task OnToolbarItemClick()
-    {
-        await _JSRuntime.InvokeVoidAsync("Menu.ToggleMenuVisibility");
-    }
 }

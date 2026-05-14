@@ -2,11 +2,11 @@
 @using HM.Presupuestos.Server.Services
 @using System.Globalization
 
-@inject IResourceService _ResourceService
+
 @inject NavigationManager _NavigationManager
-@inject ICookieService CookieService
+@inject ICookieService _gestorCookies
 @inject ILogger<LanguageSwitcher> Logger
-@inject IIdiomaService _IdiomaService
+@inject IGestorIdioma _IdiomaService
 
 @inherits Context
 
@@ -18,39 +18,32 @@
 }
 else
 {
-    <div class="language-button-container">
-        <DxButton CssClass="language-button" Text="@GetLanguageName(_currentLanguage)" Click="ToggleLanguageSwitcher" />
-        @if (_showLanguageSwitcher)
-        {
-            <div class="language-switcher-drop shadow-sm" @onclick:stopPropagation>
-                @foreach (var language in _ResourceService.ObtenerIdiomas())
-                {
-                    <div class="language-item @GetActiveClass(language.Iso)" @onclick="@(() => ChangeLanguage(language.Iso))">
-                        <span class="language-label">@GetLanguageName(language.Iso)</span>
-                    </div>
-                }
-            </div>
-        }
-    </div>
+    <DxComboBox Data="@TraductorRecursos.ObtenerIdiomas()"
+                 Value="@_currentLanguage"
+                 ValueFieldName="Iso"
+                 TextFieldName="Iso"
+                 CssClass="language-combo"
+                 AllowUserInput="false"
+                 ValueChanged="@((string iso) => ChangeLanguage(iso))">
+        <ItemTemplate>
+            <span>@GetLanguageName(context.Iso)</span>
+        </ItemTemplate>
+        <EditBoxDisplayTemplate>
+            <span>@GetLanguageName(_currentLanguage)</span>
+        </EditBoxDisplayTemplate>
+    </DxComboBox>
 }
 
 @code {
     private const string LANGUAGE_COOKIE_KEY = "app_language";
     private const int LANGUAGE_COOKIE_EXPIRE_DAYS = 365;
 
-    private bool _showLanguageSwitcher = false;
-
-
-    private List<string>? _languageCodeList = new List<string>();
     private string _currentLanguage = "";
-
-    private bool _initialized;
 
 
     protected override async Task OnUsuarioDisponibleAsync()
     {
-        _languageCodeList = _ResourceService.ObtenerCodigosIdiomas();
-        _currentLanguage = _IdiomaService.Idioma;
+        _currentLanguage = _IdiomaService.IdiomaActual;
 
         SetAppCulture(_currentLanguage);
 
@@ -100,11 +93,6 @@ else
     //     }
     // }
 
-    private void ToggleLanguageSwitcher()
-    {
-        _showLanguageSwitcher = !_showLanguageSwitcher;
-    }
-
     private async Task ChangeLanguage(string iso)
     {
         try
@@ -122,8 +110,6 @@ else
             // Logger.LogInformation("✅ Cookie verificada: {Value}", verificacion);
 
             _currentLanguage = iso;
-            _showLanguageSwitcher = false;
-
             await InvokeAsync(StateHasChanged);
 
             // Recargar con la nueva cookie

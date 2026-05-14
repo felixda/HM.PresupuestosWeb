@@ -12,7 +12,7 @@
 @using HM.Presupuestos.Server.Helper
 @using Microsoft.AspNetCore.Components.Authorization *@
 
-@inject IResourceService _resourceService
+@inject ITraductorRecursos TraductorRecursos
 @inject NavigationManager Navigation
 @inject ISessionService _SessionService
 @inject IJwt _Jwt
@@ -27,7 +27,7 @@
 @inject IUsuarioServicio _UsuarioService
 @inject ErrorDialogService _ErrorService
 @inject ILogService _LogService
-@inject IIdiomaService _IdiomaService
+@inject IGestorIdioma _IdiomaService
 @inject INavigationService _NavigationService
 
 @inherits LayoutComponentBase

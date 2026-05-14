@@ -7,111 +7,45 @@ namespace HM.Presupuestos.Server.Services
 
     public interface IPermisosService
     {
-        void EstablecerMenus(UsuarioApp usuarioApp);
-        bool TienePermiso(string url);
-
+        bool PuedeAccederA(string url);
     }
-
 
     public class PermisosService : IPermisosService
     {
         private HashSet<string> _urlsPermitidas = [];
-        private bool _inicializado = false;
 
-        private readonly SemaphoreSlim _initSemaphore = new(initialCount: 1, maxCount: 1);
+        private readonly ITraductorRecursos ResourceService;
+        private readonly IUsuarioServicio UsuarioService;
 
-        private readonly IResourceService _ResourceService;
-        private readonly IUsuarioServicio _UsuarioService;
-
-        public PermisosService(IResourceService resourceService, IUsuarioServicio usuarioService)
+        public PermisosService(ITraductorRecursos resourceService, IUsuarioServicio usuarioService)
         {
-            _ResourceService = resourceService;
-            _UsuarioService = usuarioService;
-
-            // Suscribirse al evento de usuario cargado para inicializar permisos
-            _UsuarioService.OnUsuarioCargado += InicializarAsync;
+            ResourceService = resourceService;
+            UsuarioService = usuarioService;
         }
 
 
-        /// <summary>
-        /// Inicializa los permisos si aún no se han cargado
-        /// </summary>
-        public async Task InicializarAsync()
+        private void CargarUrlsPermitidasSiEsNecesario(UsuarioApp usuarioApp)
         {
-            // 🔒 Intenta "entrar" (espera si ya hay alguien)
-            await _initSemaphore.WaitAsync();
+            if (_urlsPermitidas.Count > 0)
+                return;
 
-            try
-            {
-                // ✅ Solo UNA tarea puede ejecutar esto a la vez
-                if (_inicializado)
-                {
-                    return;
-                }
+            var urlsPermitidas = usuarioApp.Usuario.Menus
+                .Where(menu => menu.TienePadre())
+                .Select(menu => menu.Url(ResourceService))
+                .Where(url => !string.IsNullOrWhiteSpace(url));
 
-                if (_UsuarioService.UsuarioApp == null)
-                {
-                    return;
-                }
-
-                EstablecerMenus(_UsuarioService.UsuarioApp);
-                _inicializado = true;
-            }
-            finally
-            {
-                _initSemaphore.Release();
-            }
+            _urlsPermitidas = new HashSet<string>(
+                urlsPermitidas!,
+                StringComparer.OrdinalIgnoreCase
+            );
         }
 
 
-        public void EstablecerMenus(UsuarioApp usuarioApp)
+        public bool PuedeAccederA(string url)
         {
-            if (_urlsPermitidas.Count == 0)
-            {
-                // ✅ Filtrar solo menús con IdPadre != null (menús hijos que tienen URL)
-                var urls = usuarioApp.Usuario.Menus
-                    .Where(m => m.IdPadre != null)
-                    .Select(m => m.Url(_ResourceService))
-                    .Where(url => !string.IsNullOrEmpty(url))
-                    .ToList();
-
-                _urlsPermitidas = new HashSet<string>(
-                   urls.Select(u => u!.ToLower()),
-                   StringComparer.OrdinalIgnoreCase
-               );
-            }
+            CargarUrlsPermitidasSiEsNecesario(UsuarioService.UsuarioApp!);
+            return _urlsPermitidas.Contains(url, StringComparer.OrdinalIgnoreCase);
         }
 
-        public bool TienePermiso(string url)
-        {
-            EstablecerMenus(_UsuarioService.UsuarioApp!);
-
-            return _urlsPermitidas.Contains(url.ToLower());
-        }
     }
 }
-
-
-//┌─────────────────────────────────────────────────┐
-//│              SemaphoreSlim(1, 1)                │
-//│                                                 │
-//│  Tarea A llama InicializarAsync()               │
-//│  ├─ WaitAsync() → ✅ ENTRA (semáforo: 1 → 0)    │
-//│  ├─ Ejecuta inicialización...                   │
-//│  │                                              │
-//│  │  Tarea B llama InicializarAsync()            │
-//│  │  ├─ WaitAsync() → ⏳ ESPERA (semáforo: 0)   │
-//│  │  │                                          │
-//│  │  │  Tarea C llama InicializarAsync()        │
-//│  │  │  ├─ WaitAsync() → ⏳ ESPERA (semáforo: 0)│
-//│  │  │  │                                        │
-//│  ├─ Release() → 🔓 SALE(semáforo: 0 → 1)       │
-//│  │                                             │
-//│  │  ├─ Tarea B → ✅ ENTRA (semáforo: 1 → 0)    │
-//│  │  ├─ Ve _inicializado = true                 │
-//│  │  ├─ Release() → 🔓 SALE (semáforo: 0 → 1)   │
-//│  │                                              │
-//│  │  │  ├─ Tarea C → ✅ ENTRA (semáforo: 1 → 0) │
-//│  │  │  ├─ Ve _inicializado = true              │
-//│  │  │  ├─ Release() → 🔓 SALE                  │
-//└─────────────────────────────────────────────────┘

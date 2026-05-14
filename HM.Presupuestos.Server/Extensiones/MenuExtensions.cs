@@ -1,17 +1,15 @@
-using HM.Core.Comun.v6.Entidades.Seguridad;
-using HM.Presupuestos.Domain.Comun;
-using HM.Presupuestos.Server.Services;
-
 
 namespace HM.Presupuestos.Server.Extensiones
 {
     public static class MenuExtensions
     {
-        public static string? Url(this Menu menu, IResourceService resourceService)
+        public static string? Url(this Menu menu, ITraductorRecursos resourceService)
         {
             int id = menu.Id;
-            return resourceService.BuscarUrlMenuPorCodeMenuEnJson(id);
+            return resourceService.ObtenerUrlMenu(id);
         }
+
+        public static bool TienePadre(this Menu menu) => menu.IdPadre != null;
 
     }
 }
