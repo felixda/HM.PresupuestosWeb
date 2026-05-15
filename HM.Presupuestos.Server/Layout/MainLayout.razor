@@ -12,23 +12,7 @@
 @using HM.Presupuestos.Server.Helper
 @using Microsoft.AspNetCore.Components.Authorization *@
 
-@inject ILocalizadorRecursos TraductorRecursos
-@inject NavigationManager Navigation
-@inject IAlmacenSesionUsuario AlmacenSesionUsuario
-@inject IJwt _Jwt
-@inject ConfiguracionService _ConfiguracionService
-@inject InactividadService _InactividadService
-@inject JsInteropHelper _InactividadInterop
-@inject IConfiguration _Configuration
-@inject TraduccionesHelper _TraduccionesHelper
-@inject ControlCambiosService _ControlCambiosService
-@inject IJSRuntime _JSRuntime
-@inject AuthenticationStateProvider AuthStateProvider
-@inject ISesionUsuario _SesionUsuario
-@inject ErrorDialogService _ErrorService
-@inject ILogService _LogService
-@inject IGestorIdioma _IdiomaService
-@inject IRutasNavegacion _NavigationService
+
 
 @inherits LayoutComponentBase
 @attribute [Authorize]

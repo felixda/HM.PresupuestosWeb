@@ -14,6 +14,7 @@ namespace HM.Presupuestos.Server.Helper
         [Inject] protected ControlCambiosService ControlCambios { get; set; } = default!;
         [Inject] protected ISesionUsuario UsuarioService { get; set; } = default!;
         [Inject] protected ILocalizadorRecursos TraductorRecursos { get; set; } = default!;
+        [Inject] protected IMapaMenu MapaMenu { get; set; } = default!;
         [Inject] protected IGestorIdioma GestorIdioma { get; set; } = default!;
 
         [Inject] protected ILogService LogService { get; set; } = default!;
@@ -141,9 +142,9 @@ namespace HM.Presupuestos.Server.Helper
         {
             var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var urlNormalizada = RutasNavegacion.NormalizarRuta(url);
-            var codigoMenu = TraductorRecursos.ObtenerCodigoMenuPorUrl(urlNormalizada);
-            if (codigoMenu < 0) return string.Empty;
-            return ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(codigoMenu));
+            //var codigoMenu = MapaMenu.ObtenerCodigoMenuPorUrl(urlNormalizada);
+            //if (codigoMenu < 0) return string.Empty;
+            return MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
         
         }
 

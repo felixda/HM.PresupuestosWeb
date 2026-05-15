@@ -3,13 +3,11 @@ namespace HM.Presupuestos.Server.Extensiones
 {
     public static class MenuExtensions
     {
-        public static string? Url(this Menu menu, ILocalizadorRecursos resourceService)
+        public static string? Url(this Menu menu, IMapaMenu mapaMenu)
         {
-            int id = menu.Id;
-            return resourceService.ObtenerUrlMenu(id);
+            return mapaMenu.ObtenerUrlMenu(menu.Id);
         }
 
         public static bool TienePadre(this Menu menu) => menu.IdPadre != null;
-
     }
 }
