@@ -18,18 +18,22 @@
             <Template>
                 @if (UsuarioCargado)
                 {
-                    var claseIcono = _esFavorito ? "icon star-fill" : "icon star";
-                    var tituloBoton = _esFavorito
-                    ? T(AppResources.Common.DesmarcarFavorito)
-                    : T(AppResources.Common.MarcarFavorito);
+                    //Solo mostrar el botón de favorito si el usuario es SSO
+                    @if (UsuarioImpersonado == null)
+                    {
+                        var claseIcono = _esFavorito ? "icon star-fill" : "icon star";
+                        var tituloBoton = _esFavorito
+                        ? ObtenerTexto(AppResources.Common.DesmarcarFavorito)
+                        : ObtenerTexto(AppResources.Common.MarcarFavorito);
 
-                    <div class="stacklayout-item">
-                        <button class="btn secondary"
-                                title="@tituloBoton"
-                                @onclick="ClickBotonFavorito">
-                            <i id="iconFavorite" class="@claseIcono"></i>
-                        </button>
-                    </div>
+                        <div class="stacklayout-item">
+                            <button class="btn secondary"
+                            title="@tituloBoton"
+                            @onclick="OnFavorito">
+                                <i id="iconFavorite" class="@claseIcono"></i>
+                            </button>
+                        </div>
+                    }
                 }
             </Template>
         </DxStackLayoutItem>

@@ -12,7 +12,7 @@
 @inject ErrorDialogService _ErrorService
 @inject ILogAccionesService _LogAccionesService
 @inject ILayerOverlayService _LayerOverlayService
-@inject IUsuarioServicio _UsuarioService
+@inject ISesionUsuario _SesionUsuario
 
 
 @inherits ContextProtegido
@@ -54,17 +54,17 @@ else if (TienePermiso == false)
 
 else
 {
-    <PageHeader CodigoMenu="@CodigosMenu.Versiones" Titulo="@_pageTitle" TextoToolTipAyuda="@T(AppResources.Pages.GestionVersiones.ToolTip)" />
+    <PageHeader CodigoMenu="@CodigosMenu.Versiones" Titulo="@_pageTitle" TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.GestionVersiones.ToolTip)" />
 
     <div class="layoutContainer">
         @* FILTER *@
         <DxFormLayout>
             <DxFormLayoutGroup CssClass="filterContainer"
-                               Caption="@T("common:filtros:label")"
+                               Caption="@ObtenerTexto("common:filtros:label")"
                                ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                                AnimationType="LayoutAnimationType.Slide">
                 <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                  Caption="@($"{T("common:anio:label")}")"
+                                  Caption="@($"{ObtenerTexto("common:anio:label")}")"
                                   CaptionPosition="CaptionPosition.Vertical">
                     <DxComboBox Data="@_listYear"
                                 Enabled="@(JsonSerializer.Serialize(_listVersion)==JsonSerializer.Serialize(_listOriginVersion))"
@@ -83,7 +83,7 @@ else
         </DxFormLayout>
         @* GRID VERSIONES *@
         <DxFormLayout>
-            <DxFormLayoutGroup Caption="@T("Pages:Versiones:Versiones:label")" ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
+            <DxFormLayoutGroup Caption="@ObtenerTexto("Pages:Versiones:Versiones:label")" ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
                     <DxGrid @ref="_GridVersiones"
                             Data="_listVersion"
@@ -102,7 +102,7 @@ else
                             <div class="d-flex justify-content-start">
                                 <DxButton CssClass="toolbarButtonCustom"
                                           RenderStyle=ButtonRenderStyle.None
-                                          Text="@T("common:Nuevo:label")"
+                                          Text="@ObtenerTexto("common:Nuevo:label")"
                                           Click="NewVersion"
                                           Enabled="@(_listVersion.Find(x => x.Codigo == 0)==null)"
                                           IconCssClass="fa-solid fa-plus" />
@@ -110,7 +110,7 @@ else
                             <div class="d-flex justify-content-start">
                                 <DxButton CssClass="toolbarButtonCustom"
                                           RenderStyle=ButtonRenderStyle.None
-                                          Text="@T("common:Cancelar:label")"
+                                          Text="@ObtenerTexto("common:Cancelar:label")"
                                           Click="CancelVersion"
                                           IconCssClass="fa-solid fa-cancel"
                                           Enabled="@(JsonSerializer.Serialize(_listVersion)!=JsonSerializer.Serialize(_listOriginVersion))" />
@@ -119,7 +119,7 @@ else
                         <Columns>
                             <DxGridDataColumn FieldName="@nameof(Version.Codigo)"
                                               FilterRowEditorVisible="false"
-                                              Caption="@T("common:Codigo:label")"
+                                              Caption="@ObtenerTexto("common:Codigo:label")"
                                               Width="5%"
                                               ReadOnly="true"
                                               CaptionAlignment="GridTextAlignment.Right"
@@ -132,7 +132,7 @@ else
                                 </CellDisplayTemplate>
                             </DxGridDataColumn>
 
-                            <DxGridDataColumn FieldName="@nameof(Version.Orden)" FilterRowEditorVisible="false" Caption="@T("common:Orden:label")" Width="6%" CaptionAlignment="GridTextAlignment.Right" TextAlignment="GridTextAlignment.Right"
+                            <DxGridDataColumn FieldName="@nameof(Version.Orden)" FilterRowEditorVisible="false" Caption="@ObtenerTexto("common:Orden:label")" Width="6%" CaptionAlignment="GridTextAlignment.Right" TextAlignment="GridTextAlignment.Right"
                                               SortIndex="0" SortOrder="GridColumnSortOrder.Descending">
                                 <FilterRowCellTemplate>
                                 </FilterRowCellTemplate>
@@ -140,12 +140,12 @@ else
 
                             <DxGridDataColumn FieldName="@nameof(Version.Descripcion)"
                                               FilterRowEditorVisible="true"
-                                              Caption="@T("Pages:Versiones:Version:label")"
+                                              Caption="@ObtenerTexto("Pages:Versiones:Version:label")"
                                               CaptionAlignment="GridTextAlignment.Left"
                                               TextAlignment="GridTextAlignment.Left" />
 
 
-                            <DxGridDataColumn FieldName="@nameof(Version.Mes)" FilterRowEditorVisible="false" Caption="@T("common:Mes:label")" Width="7%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left">
+                            <DxGridDataColumn FieldName="@nameof(Version.Mes)" FilterRowEditorVisible="false" Caption="@ObtenerTexto("common:Mes:label")" Width="7%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left">
                                 <FilterRowCellTemplate>
                                 </FilterRowCellTemplate>
                                 <CellDisplayTemplate>
@@ -161,7 +161,7 @@ else
                                                 @bind-Value="@version.Mes" />
                                 </CellEditTemplate>
                             </DxGridDataColumn>
-                            <DxGridBandColumn Caption="@T("Pages:Versiones:Indicadores:label")" Width="60%" CaptionAlignment="GridTextAlignment.Center">
+                            <DxGridBandColumn Caption="@ObtenerTexto("Pages:Versiones:Indicadores:label")" Width="60%" CaptionAlignment="GridTextAlignment.Center">
                                 <Columns>
                                     @{
                                         @if (_listVersion.Any())
@@ -201,7 +201,7 @@ else
                                 </Columns>
                             </DxGridBandColumn>
 
-                            <DxGridDataColumn FieldName="@nameof(Version.CodigoTipo)" FilterRowEditorVisible="false" Caption="@T("Pages:Versiones:Tipo:label")" Width="8%"
+                            <DxGridDataColumn FieldName="@nameof(Version.CodigoTipo)" FilterRowEditorVisible="false" Caption="@ObtenerTexto("Pages:Versiones:Tipo:label")" Width="8%"
                                               TextAlignment="GridTextAlignment.Left" CaptionAlignment="GridTextAlignment.Left">
                                 <FilterRowCellTemplate>
                                 </FilterRowCellTemplate>
@@ -242,8 +242,8 @@ else
                                                   RenderStyle="ButtonRenderStyle.Link"
                                                   aria-label="Delete"
                                                   title="@(isReadOnly
-                                                                                                                                                ? T("Pages:Versiones:HayDatosRelacionadosConLaVersion:label")
-                                                                                                        : T("common:EliminarRegistro:label"))"
+                                                                                                                                                ? ObtenerTexto("Pages:Versiones:HayDatosRelacionadosConLaVersion:label")
+                                                                                                        : ObtenerTexto("common:EliminarRegistro:label"))"
                                                   Click="@(() => DeleteVersion(context.DataItem))" />
                                     </div>
 
@@ -268,7 +268,7 @@ else
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="toolbarButtonCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@T("botones:Grabar:label")"
+                                      Text="@ObtenerTexto("botones:Grabar:label")"
                                       Click="SaveVersionData"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="true" />
@@ -279,15 +279,15 @@ else
         </DxFormLayout>
 
         <DxFormLayout>
-            <DxFormLayoutGroup Caption="@T("Pages:Versiones:LeyendasIndicadores:label")" ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start" AnimationType="LayoutAnimationType.Slide">
+            <DxFormLayoutGroup Caption="@ObtenerTexto("Pages:Versiones:LeyendasIndicadores:label")" ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start" AnimationType="LayoutAnimationType.Slide">
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
                     <ChildContent Context="formLayoutContext">
                         <DxGrid @ref="_GridLeyendas" Data="_listMasterIndicador.Where(c => c.IndMostrar)" PageSize="20"
                                 CustomizeElement="GridLeyendas_CustomizeElement">
                             <Columns>
-                                <DxGridDataColumn FieldName="@nameof(Indicador.Descripcion)" Caption="@T("Pages:Versiones:NombreIndicador:label")" Width="25%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
-                                <DxGridDataColumn FieldName="@nameof(Indicador.DescripcionAbreviada)" Caption="@T("common:DescripcionAbreviada:label")" Width="15%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
-                                <DxGridDataColumn FieldName="@nameof(Indicador.Leyenda)" Caption="@T("common:Descripcion:label")" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
+                                <DxGridDataColumn FieldName="@nameof(Indicador.Descripcion)" Caption="@ObtenerTexto("Pages:Versiones:NombreIndicador:label")" Width="25%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
+                                <DxGridDataColumn FieldName="@nameof(Indicador.DescripcionAbreviada)" Caption="@ObtenerTexto("common:DescripcionAbreviada:label")" Width="15%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
+                                <DxGridDataColumn FieldName="@nameof(Indicador.Leyenda)" Caption="@ObtenerTexto("common:Descripcion:label")" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
                             </Columns>
                         </DxGrid>
                     </ChildContent>

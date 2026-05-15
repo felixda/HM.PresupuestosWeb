@@ -44,7 +44,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
 
 
-        protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
+       // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
         #endregion
 
 
@@ -177,7 +177,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             //catch (Exception ex)
             //{
             //    await LogService.InsertException(ex);
-            //    await MensajesHelper.MostrarMensajeError(TituloPagina, T(AppResources.Mensajes.ErrorDelete));
+            //    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
             //}
             //finally
             //{

@@ -742,7 +742,7 @@
             /// <example>
             /// <code>
             /// var labelKey = Menu.ObtenerEtiqueta(12); // "Menu:Menu_12:label"
-            /// var label = T(labelKey); // "Indicadores"
+            /// var label = ObtenerTexto(labelKey); // "Indicadores"
             /// </code>
             /// </example>
             public static string ObtenerEtiqueta(int codigoMenu) => $"Menu:Menu_{codigoMenu}:label";
@@ -755,7 +755,7 @@
             /// <example>
             /// <code>
             /// var urlKey = Menu.ObtenerUrl(12); // "Menu:Menu_12:url"
-            /// var url = T(urlKey); // "/mantenimiento/indicadores"
+            /// var url = ObtenerTexto(urlKey); // "/mantenimiento/indicadores"
             /// </code>
             /// </example>
             public static string ObtenerUrl(int codigoMenu) => $"Menu:Menu_{codigoMenu}:url";
@@ -768,7 +768,7 @@
             /// <example>
             /// <code>
             /// var iconoKey = Menu.ObtenerIcono(12); // "Menu:Menu_12:icono"
-            /// var icono = T(iconoKey); // "fa-solid fa-list-ol"
+            /// var icono = ObtenerTexto(iconoKey); // "fa-solid fa-list-ol"
             /// </code>
             /// </example>
             public static string ObtenerIcono(int codigoMenu) => $"Menu:Menu_{codigoMenu}:icono";

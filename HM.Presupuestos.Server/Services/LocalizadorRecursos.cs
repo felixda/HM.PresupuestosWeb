@@ -6,12 +6,12 @@ using HM.Presupuestos.Domain.Entidades;
 
 namespace HM.Presupuestos.Server.Services
 {
-    public interface ITraductorRecursos
+    public interface ILocalizadorRecursos
     {
         string ObtenerTexto(string claveRecurso, string? codigoIdioma = null);
         bool ExisteRecurso(string claveRecurso, string? codigoIdioma = null);
 
-        string? ObtenerUrlMenu(int codigoBuscado);
+        string? ObtenerUrlMenu(int codigoMenu);
 
         int ObtenerCodigoMenuPorUrl(string url);
 
@@ -20,7 +20,7 @@ namespace HM.Presupuestos.Server.Services
         List<Idioma> ObtenerIdiomas();
     }
 
-    public class TraductorRecursos : ITraductorRecursos
+    public class LocalizadorRecursos : ILocalizadorRecursos
     {
 
         #region Propiedades privadas
@@ -41,7 +41,7 @@ namespace HM.Presupuestos.Server.Services
         #endregion
 
         #region Constructor
-        public TraductorRecursos(IConfiguration configuracion, IWebHostEnvironment entornoWeb, 
+        public LocalizadorRecursos(IConfiguration configuracion, IWebHostEnvironment entornoWeb, 
             IGestorIdioma idiomaService, IServiceScopeFactory scopeFactory)
         {
             _configuracion = configuracion;
@@ -536,7 +536,7 @@ namespace HM.Presupuestos.Server.Services
                 var languageKey = codigoIdioma.ToUpper();
                 var resourceKey = $"Language:{languageKey}:label";
 
-                // Usar el método T() existente para obtener la traducción
+                // Usar el método ObtenerTexto() existente para obtener la traducción
                 var descripcion = ObtenerTexto(resourceKey, codigoIdioma);
 
                 // Si no se encuentra o devuelve la misma clave, usar el código como fallback

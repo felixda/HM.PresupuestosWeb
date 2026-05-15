@@ -16,7 +16,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
         [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
         [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
-        [Inject] protected NavegacionService NavegacionService { get; set; } = default!;
+        [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
 
@@ -24,12 +24,15 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
         #region Página
 
-        private string TituloPagina { get; set; } = string.Empty;
         private string CaptionIzquierda { get; set; } = string.Empty;
         private string CaptionDerecha { get; set; } = string.Empty;
 
+       
 
-        protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Sobreprimas;
+       // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Sobreprimas;
+
+       // protected override string ObtenerTituloPagina() =>
+       //     ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
 
         #endregion
 
@@ -150,7 +153,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
 
         protected override async Task InicializarPaginaAsync()
         {
-            TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
+           // TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
             LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
 
 
@@ -182,8 +185,8 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         //{
         //    try
         //    {
-        //        TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
-        //        LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+        //        TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
+        //        LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
 
         //        await InicializarPaginaAsync();
 
@@ -205,7 +208,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         /// </summary>
         //private async Task InicializarPaginaAsync()
         //{
-        //    CaptionIzquierda = T(AppResources.Pages.Sobreprimas.Titulo);
+        //    CaptionIzquierda = ObtenerTexto(AppResources.Pages.Sobreprimas.Titulo);
 
         //    AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
         //    NetworksMaestros = await PresupuestosService.ObtenerNetworks();
@@ -1314,7 +1317,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         {
             try
             {
-                var datos = NavegacionService.GetDatos<dynamic>();
+                var datos = NavegacionService.Obtener<dynamic>();
                 if (datos == null) return;
 
                 NavegacionService.Limpiar();

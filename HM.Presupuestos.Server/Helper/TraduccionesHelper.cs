@@ -3,10 +3,10 @@ using System.Globalization;
 
 namespace HM.Presupuestos.Server.Helper
 {
-    public class TraduccionesHelper(ITraductorRecursos resourceService, IGestorIdioma idiomaService)
+    public class TraduccionesHelper(ILocalizadorRecursos resourceService, IGestorIdioma idiomaService)
     {
 
-        private readonly ITraductorRecursos _resourceService = resourceService;
+        private readonly ILocalizadorRecursos _resourceService = resourceService;
         private readonly IGestorIdioma _idiomaService = idiomaService;
 
         public async Task<string> GetResourceValue(string elementExpression)

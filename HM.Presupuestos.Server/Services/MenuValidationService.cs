@@ -12,12 +12,12 @@ namespace HM.Presupuestos.Server.Services
     public class ValidadorMenusUsuario : IValidadorMenusUsuario
     {
         private readonly ILogger<ValidadorMenusUsuario> _logger;
-        private readonly ITraductorRecursos _traductorRecursos;
+        private readonly ILocalizadorRecursos _traductorRecursos;
         private readonly Dictionary<string, string> _rutasBlazor;
 
         public ValidadorMenusUsuario(
             ILogger<ValidadorMenusUsuario> logger,
-            ITraductorRecursos traductorRecursos    )
+            ILocalizadorRecursos traductorRecursos    )
         {
             _logger = logger;
             _traductorRecursos = traductorRecursos;
@@ -126,8 +126,8 @@ namespace HM.Presupuestos.Server.Services
                     resultado.UrlOriginal = url;
 
                     // También puedes obtener otros datos del menú
-                    //var label = _resourceService.T(AppResources.Menu.ObtenerEtiqueta(menu.Id));
-                    //var icono = _resourceService.T(AppResources.Menu.ObtenerIcono(menu.Id));
+                    //var label = _resourceService.ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(menu.Id));
+                    //var icono = _resourceService.ObtenerTexto(AppResources.Menu.ObtenerIcono(menu.Id));
 
                     if (string.IsNullOrWhiteSpace(url))
                     {

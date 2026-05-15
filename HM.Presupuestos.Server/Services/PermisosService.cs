@@ -14,13 +14,13 @@ namespace HM.Presupuestos.Server.Services
     {
         private HashSet<string> _urlsPermitidas = [];
 
-        private readonly ITraductorRecursos ResourceService;
-        private readonly IUsuarioServicio UsuarioService;
+        private readonly ILocalizadorRecursos _resourceService;
+        private readonly ISesionUsuario _usuarioService;
 
-        public PermisosService(ITraductorRecursos resourceService, IUsuarioServicio usuarioService)
+        public PermisosService(ILocalizadorRecursos resourceService, ISesionUsuario usuarioService)
         {
-            ResourceService = resourceService;
-            UsuarioService = usuarioService;
+            _resourceService = resourceService;
+            _usuarioService = usuarioService;
         }
 
 
@@ -31,7 +31,7 @@ namespace HM.Presupuestos.Server.Services
 
             var urlsPermitidas = usuarioApp.Usuario.Menus
                 .Where(menu => menu.TienePadre())
-                .Select(menu => menu.Url(ResourceService))
+                .Select(menu => menu.Url(_resourceService))
                 .Where(url => !string.IsNullOrWhiteSpace(url));
 
             _urlsPermitidas = new HashSet<string>(
@@ -43,7 +43,7 @@ namespace HM.Presupuestos.Server.Services
 
         public bool PuedeAccederA(string url)
         {
-            CargarUrlsPermitidasSiEsNecesario(UsuarioService.UsuarioApp!);
+            CargarUrlsPermitidasSiEsNecesario(_usuarioService.UsuarioApp!);
             return _urlsPermitidas.Contains(url, StringComparer.OrdinalIgnoreCase);
         }
 

@@ -35,16 +35,16 @@ namespace HM.Presupuestos.Server.Services
 
         private readonly IConfiguration _configuration;
         private readonly IJSRuntime _JSRuntime;
-        private readonly ISessionService _SessionService;
-        private readonly IUsuarioServicio _usuarioServicio;
-        private readonly INavigationService _navigationService;
+        private readonly IAlmacenSesionUsuario _SessionService;
+        private readonly ISesionUsuario _usuarioServicio;
+        private readonly IRutasNavegacion _navigationService;
         private readonly ILogAccionesService _logAccionesService;
 
         #endregion
 
         #region Constructor
 
-        public LogService(IConfiguration configuration, IJSRuntime JSRuntime, ISessionService SessionService, IUsuarioServicio usuarioServicio, INavigationService navigationService, ILogAccionesService logAccionesService )
+        public LogService(IConfiguration configuration, IJSRuntime JSRuntime, IAlmacenSesionUsuario SessionService, ISesionUsuario usuarioServicio, IRutasNavegacion navigationService, ILogAccionesService logAccionesService )
         {
             _configuration = configuration;
             _JSRuntime = JSRuntime;
@@ -61,7 +61,7 @@ namespace HM.Presupuestos.Server.Services
 
         public async Task GrabarAccesoAPagina(string tituloPagina)
         {
-            var urlActual = _navigationService.ObtenerUrlActual();
+            var urlActual = _navigationService.ObtenerRutaActual();
             var accion = $"Acceso a página {tituloPagina} [{urlActual}]";
             await _logAccionesService.Insertar(accion);
         }

@@ -3,17 +3,17 @@ using HM.Presupuestos.Server.Modelos;
 using HM.Presupuestos.Server.Servicios;
 using System.ComponentModel.Design;
 using System.Text.Json;
-using ITraductorRecursos = HM.Presupuestos.Server.Services.ITraductorRecursos;
+using ILocalizadorRecursos = HM.Presupuestos.Server.Services.ILocalizadorRecursos;
 
 
 namespace HM.Presupuestos.Server.Helper
 {
 
-    public class Context : ComponentBase, IDisposable
+    public abstract class Context : ComponentBase, IDisposable
     {
         [Inject] protected ControlCambiosService ControlCambios { get; set; } = default!;
-        [Inject] protected IUsuarioServicio UsuarioService { get; set; } = default!;
-        [Inject] protected ITraductorRecursos TraductorRecursos { get; set; } = default!;
+        [Inject] protected ISesionUsuario UsuarioService { get; set; } = default!;
+        [Inject] protected ILocalizadorRecursos TraductorRecursos { get; set; } = default!;
         [Inject] protected IGestorIdioma GestorIdioma { get; set; } = default!;
 
         [Inject] protected ILogService LogService { get; set; } = default!;
@@ -23,13 +23,18 @@ namespace HM.Presupuestos.Server.Helper
 
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
         [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
+        [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
+        [Inject] protected IRutasNavegacion RutasNavegacion { get; set; } = default!;
 
 
         protected UsuarioApp? UsuarioApp { get; set; }
 
+        /// <summary>
+        /// Usuario actual(impersonado si hubiera y si no el SSO) con sus reglas, menús y permisos.
+        /// </summary>
         protected UsuarioEntidad Usuario => UsuarioApp!.Usuario;
 
-        protected UsuarioEntidad? UsuarioLogin => UsuarioApp!.ObtenerUsuarioLogin();
+        protected UsuarioEntidad? UsuarioImpersonado => UsuarioApp!.ObtenerUsuarioImpersonado();
         protected UsuarioEntidad UsuarioSSO => UsuarioApp!.ObtenerUsuarioSSO();
 
         protected bool UsuarioCargado { get; private set; } = false;
@@ -68,7 +73,7 @@ namespace HM.Presupuestos.Server.Helper
                         UsuarioCargado = true;
 
                         // Verificar si se desconectó el usuario login
-                        if (UsuarioApp.ObtenerUsuarioLogin() == null)
+                        if (UsuarioApp.ObtenerUsuarioImpersonado() == null)
                         {
                             await OnUsuarioLoginDesconectado();
                         }
@@ -95,6 +100,7 @@ namespace HM.Presupuestos.Server.Helper
 
         protected virtual async Task OnUsuarioDisponibleAsync()
         {
+            TituloPagina = ObtenerTituloPagina();
             await Task.CompletedTask;
         }
 
@@ -120,6 +126,26 @@ namespace HM.Presupuestos.Server.Helper
         /// <param name="claveRecurso">Clave del recurso (ej: "Common:Aceptar:label")</param>
         /// <returns>Texto traducido según el idioma actual</returns>
         protected string ObtenerTexto(string claveRecurso) => TraductorRecursos.ObtenerTexto(claveRecurso);
+
+        /// <summary>
+        /// Título de la página obtenido automáticamente desde recursos.
+        /// Disponible en todas las páginas sin necesidad de calcularlo manualmente.
+        /// </summary>
+        protected string TituloPagina { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Calcula el título de la página desde los recursos buscando por la URL actual.
+        /// Sobrescribir para personalizar el título en páginas concretas.
+        /// </summary>
+        protected virtual string ObtenerTituloPagina()
+        {
+            var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            var urlNormalizada = RutasNavegacion.NormalizarRuta(url);
+            var codigoMenu = TraductorRecursos.ObtenerCodigoMenuPorUrl(urlNormalizada);
+            if (codigoMenu < 0) return string.Empty;
+            return ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(codigoMenu));
+        
+        }
 
 
         public async Task EstablecerMenuActivo(int code)

@@ -55,7 +55,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 		#endregion
 
 		#endregion
-		protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Versiones;
+		//protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Versiones;
 
 		#region Page
 
@@ -92,11 +92,11 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
   //          {
   //              Console.WriteLine("[Versiones] ?? OnPermisoValidadoAsync iniciando...");
 
-  //              _pageTitle = T($"Menu:Menu_{(int)CodigosMenu.Versiones}:label");
-  //              _textoToolTipAyuda = T(AppResources.Pages.GestionVersiones.ToolTip);
+  //              _pageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Versiones}:label");
+  //              _textoToolTipAyuda = ObtenerTexto(AppResources.Pages.GestionVersiones.ToolTip);
   //              Console.WriteLine($"[Versiones] T?tulo de p?gina: {_pageTitle}");
 
-  //              LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {_pageTitle}");
+  //              LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
 
   //              await PageInitialize();
 

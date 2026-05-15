@@ -13,7 +13,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected NavegacionService NavegacionService { get; set; } = default!;
+        [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
         #region Propiedades privadas
@@ -269,7 +269,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
         private void IrACondiciones()
         {
-            NavegacionService.SetDatos(_filtro);
+            NavegacionService.Guardar(_filtro);
             Navigation.NavigateTo("/gestion/planificacion-condiciones");
         }
 

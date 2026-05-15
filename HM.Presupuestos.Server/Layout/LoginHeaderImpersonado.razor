@@ -4,10 +4,10 @@
 
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject ILogAccionesService _LogAccionesService
-@inject IUsuarioServicio _UsuarioService
+@inject ISesionUsuario _SesionUsuario
 @inject IJSRuntime JS
 
-@inject ITraductorRecursos _ResourcesService
+@inject ILocalizadorRecursos _ResourcesService
 @inject NavigationManager _NavigationManager
 
 @inherits Context
@@ -19,14 +19,14 @@
 }
 else
 {
-    @if (UsuarioLogin != null)
+    @if (UsuarioImpersonado != null)
     {
         @* MOSTRAR USUARIO LOGIN (IMPERSONADO) *@
         <DxStackLayout CssClass="h-100 w-100 ch-480" Orientation="Orientation.Horizontal">
             <Items>
                 @{
-                    var login = UsuarioLogin.Nombre + " " + UsuarioLogin.Apellido1 + " " + UsuarioLogin.Apellido2;
-                    var titleLogin = login + " [" + UsuarioLogin.Login + "]";
+                    var login = UsuarioImpersonado.Nombre + " " + UsuarioImpersonado.Apellido1 + " " + UsuarioImpersonado.Apellido2;
+                    var titleLogin = login + " [" + UsuarioImpersonado.Login + "]";
                 }
                 <DxStackLayoutItem Length="0.2fr">
                     <Template>
@@ -46,7 +46,7 @@ else
                     <Template>
                         <div class="stacklayout-item">
                             <DxButton CssClass="btn-logout" IconCssClass="icon logout-icon" 
-                                      Text="@T("Pages:Login:CerrarSesion:label")" 
+                                      Text="@ObtenerTexto("Pages:Login:CerrarSesion:label")" 
                                       Click="CerrarSesion" />
                         </div>
                     </Template>
@@ -75,7 +75,7 @@ else
 
     private async Task CerrarSesion()
     {
-        await _UsuarioService.EliminarUsuarioLoginAsync();
+        await _SesionUsuario.CerrarSesionLoginAsync();
         _NavigationManager.NavigateTo("/Index");
     }
 }

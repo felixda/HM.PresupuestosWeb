@@ -14,7 +14,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
         [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
-        [Inject] protected NavegacionService NavegacionService { get; set; } = default!;
+        [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
         #region Propiedades privadas
@@ -1918,7 +1918,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         {
             try
             {
-                var datos = NavegacionService.GetDatos<dynamic>();
+                var datos = NavegacionService.Obtener<dynamic>();
                 if (datos == null) return;
 
                 NavegacionService.Limpiar();

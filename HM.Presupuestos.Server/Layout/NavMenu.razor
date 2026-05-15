@@ -8,9 +8,9 @@
 @inject NavigationManager _NavigationManager
 @inject ILogService _LogService
 @inject ILogAccionesService _LogAccionesService
-@inject IUsuarioServicio _UsuarioService;
-@inject ITraductorRecursos _resourceService;
-@inject INavigationService _NavigationService;
+@inject ISesionUsuario _SesionUsuario;
+@inject ILocalizadorRecursos _resourceService;
+@inject IRutasNavegacion _NavigationService;
 
 @inherits Context
 
@@ -24,11 +24,11 @@
         <DxTreeView AfterExpand="OnAfterExpand">
             <Nodes>
                 <DxTreeViewNode id="menu_0"
-                                @onclick="@(() => NavigateTo(T("menu:menu_0:url"), T("menu:menu_0:label")))"
+                                @onclick="@(() => NavigateTo(ObtenerTexto("menu:menu_0:url"), ObtenerTexto("menu:menu_0:label")))"
 
-                Text="@T("menu:menu_0:label")" 
-                CssClass="menu-item"
-                IconCssClass="@T("menu:menu_0:icono")" />
+                                Text="@ObtenerTexto("menu:menu_0:label")" 
+                                CssClass="menu-item"
+                                IconCssClass="@ObtenerTexto("menu:menu_0:icono")" />
                 
                 @if (_menu != null && _menu.Count > 0)
                 {
@@ -36,26 +36,26 @@
                     {
                         @if (item.CodigoMenuPadre == null || item.CodigoMenuPadre <= 0)
                         {
-                            var labelMenuItem = T("menu:menu_" + item.CodigoMenu + ":label");
-                            var visibleMenuItemStr = T("menu:menu_" + item.CodigoMenu + ":visible");
+                            var labelMenuItem = ObtenerTexto("menu:menu_" + item.CodigoMenu + ":label");
+                            var visibleMenuItemStr = ObtenerTexto("menu:menu_" + item.CodigoMenu + ":visible");
                             bool visibleMenuItem = !string.IsNullOrEmpty(visibleMenuItemStr) && 
                                                    (visibleMenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleMenuItemStr == "1");
                             
                             @if (visibleMenuItem && !string.IsNullOrEmpty(labelMenuItem))
                             {
                                 <DxTreeViewNode id=@($"menu_{item.CodigoMenu}")
-                                                @onclick="@(() => NavigateTo(T("menu:menu_" + item.CodigoMenu + ":url"), labelMenuItem))"
+                                                @onclick="@(() => NavigateTo(ObtenerTexto("menu:menu_" + item.CodigoMenu + ":url"), labelMenuItem))"
 
                                                 Text="@labelMenuItem"
-                                                IconCssClass="@T("menu:menu_" + item.CodigoMenu + ":icono")" 
+                                                IconCssClass="@ObtenerTexto("menu:menu_" + item.CodigoMenu + ":icono")" 
                                                 CssClass="menu-item">
                                     <Nodes>
                                         @if (item.Submenus != null && item.Submenus.Any())
                                         {
                                             @foreach (var submenuItem in item.Submenus.OrderBy(o => o.IndiceOrdenacion))
                                             {
-                                                var labelSubmenuItem = T("menu:menu_" + submenuItem.CodigoMenu + ":label");
-                                                var visibleSubmenuItemStr = T("menu:menu_" + submenuItem.CodigoMenu + ":visible");
+                                                var labelSubmenuItem = ObtenerTexto("menu:menu_" + submenuItem.CodigoMenu + ":label");
+                                                var visibleSubmenuItemStr = ObtenerTexto("menu:menu_" + submenuItem.CodigoMenu + ":visible");
                                                 bool visibleSubmenuItem = !string.IsNullOrEmpty(visibleSubmenuItemStr) && 
                                                                          (visibleSubmenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleSubmenuItemStr == "1");
                                                 
@@ -65,7 +65,7 @@
                                                                     @onclick="@(() => NavigateTo(submenuItem.Url, labelSubmenuItem))"
 
                                                                     Text="@labelSubmenuItem"
-                                                                    IconCssClass="@T("menu:menu_" + submenuItem.CodigoMenu + ":icono")"
+                                                                    IconCssClass="@ObtenerTexto("menu:menu_" + submenuItem.CodigoMenu + ":icono")"
                                                                     CssClass="menu-item" />
                                                 } 
                                             }
@@ -158,7 +158,7 @@
 
     private async void OnAfterExpand(TreeViewNodeEventArgs e)
     {
-        var urlNormalizada = _NavigationService.ObtenerUrlActualNormalizada();
+        var urlNormalizada = _NavigationService.ObtenerRutaActualNormalizada();
 
         if (!string.IsNullOrEmpty(urlNormalizada))
         {
@@ -178,7 +178,7 @@
             if (!string.IsNullOrEmpty(url))
             {
 
-                string urlActual = _NavigationService.ObtenerUrlActual();
+                string urlActual = _NavigationService.ObtenerRutaActual();
 
                 if (url == urlActual)
                 {

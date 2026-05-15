@@ -36,7 +36,8 @@ namespace HM.Presupuestos.Domain.Comun
 
         public static class Session
         {
-            public const string USER = "User";
+            public const string USER_SSO = "UsuarioSSO";
+            public const string USER_LOGIN = "UsuarioLogin";
         }
 
         public static class UserConfiguration

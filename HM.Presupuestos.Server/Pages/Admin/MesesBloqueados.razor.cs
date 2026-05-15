@@ -14,7 +14,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IAdminService AdminService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-        [Inject] protected ITraductorRecursos ResourceService { get; set; } = default!;
+        [Inject] protected ILocalizadorRecursos ResourceService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] protected ILogService LogService { get; set; } = default!;

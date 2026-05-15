@@ -119,7 +119,7 @@ namespace HM.Presupuestos.Server.Layout
                 
                 try
                 {
-                    await _UsuarioService.CargarUsuarioAsync();
+                    await _SesionUsuario.InicializarUsuarioAsync();
 
                     TituloModalAdvertencia = TraductorRecursos.ObtenerTexto("Pages:ModalInactividad:Titulo:label");
                     TextoCuentaAtras = TraductorRecursos.ObtenerTexto("Pages:ModalInactividad:CuentaAtras:label");
@@ -143,7 +143,7 @@ namespace HM.Presupuestos.Server.Layout
             
             try
             {
-                var urlNormalizada = _NavigationService.NormalizarUrl(e.Location);
+                var urlNormalizada = _NavigationService.NormalizarRuta(e.Location);
                 if (urlNormalizada == _ultimaUrlNavegada)
                 {
                     Console.WriteLine($"[MainLayout] ⏭️ URL duplicada en navegación, saltando procesamiento: {urlNormalizada}");

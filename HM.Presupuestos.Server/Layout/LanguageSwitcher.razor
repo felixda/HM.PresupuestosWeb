@@ -4,7 +4,7 @@
 
 
 @inject NavigationManager _NavigationManager
-@inject ICookieService _gestorCookies
+@inject IGestorCookies _gestorCookies
 @inject ILogger<LanguageSwitcher> Logger
 @inject IGestorIdioma _IdiomaService
 
@@ -139,7 +139,7 @@ else
 
     private string GetLanguageName(string iso)
     {
-        return T($"Language:{iso}:label");
+        return ObtenerTexto($"Language:{iso}:label");
     }
 
     private string GetActiveClass(string iso)

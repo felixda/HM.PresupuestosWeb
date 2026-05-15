@@ -3,11 +3,11 @@ using HM.Presupuestos.Server.Services;
 
 namespace HM.Presupuestos.Server.Helper;
 
-public class MensajesHelper(IDialogService dialogService, ITraductorRecursos resourceService, ILayerOverlayService layerOverlayService)
+public class MensajesHelper(IDialogService dialogService, ILocalizadorRecursos resourceService, ILayerOverlayService layerOverlayService)
 {
 
     private readonly IDialogService _dialogService = dialogService;
-    private readonly ITraductorRecursos _resourceService = resourceService;
+    private readonly ILocalizadorRecursos _resourceService = resourceService;
     private readonly ILayerOverlayService _LayerOverlayService = layerOverlayService;
 
 

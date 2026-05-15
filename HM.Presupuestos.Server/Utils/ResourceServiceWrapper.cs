@@ -5,9 +5,9 @@ namespace HM.Presupuestos.Server.Utils
 {
     public static class ResourceServiceWrapper
     {
-        private static ITraductorRecursos? _service;
+        private static ILocalizadorRecursos? _service;
 
-        public static void Initialize(ITraductorRecursos service)
+        public static void Initialize(ILocalizadorRecursos service)
         {
             _service = service;
         }

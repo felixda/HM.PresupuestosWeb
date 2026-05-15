@@ -2,19 +2,19 @@
 
 namespace HM.Presupuestos.Server.Services
 {
-    public interface INavigationService
+    public interface IRutasNavegacion
     {
-        string ObtenerUrlActual();
-        string NormalizarUrl(string url);
+        string ObtenerRutaActual();
+        string NormalizarRuta(string url);
         string ObtenerUrlBase();
-        string ObtenerUrlActualNormalizada();
+        string ObtenerRutaActualNormalizada();
     }
 
-    public class NavigationService : INavigationService
+    public class RutasNavegacion : IRutasNavegacion
     {
         private readonly NavigationManager _navigationManager;
 
-        public NavigationService(NavigationManager navigationManager)
+        public RutasNavegacion(NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
         }
@@ -22,22 +22,22 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Obtiene la URL actual sin query string ni dominio
         /// </summary>
-        public string ObtenerUrlActual()
+        public string ObtenerRutaActual()
         {
             var requestUri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);
             return requestUri.AbsolutePath.ToLower();
         }
 
 
-        public string ObtenerUrlActualNormalizada()
+        public string ObtenerRutaActualNormalizada()
         {
             var requestUri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);
-            return NormalizarUrl(requestUri.AbsolutePath.ToLower());
+            return NormalizarRuta(requestUri.AbsolutePath.ToLower());
         }
         /// <summary>
         /// Normalizar URL eliminando parámetros numéricos y convirtiendo a minúsculas
         /// </summary>
-        public string NormalizarUrl(string url)
+        public string NormalizarRuta(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
             {

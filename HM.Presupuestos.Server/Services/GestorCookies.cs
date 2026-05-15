@@ -4,25 +4,25 @@ using Microsoft.JSInterop;
 
 namespace HM.Presupuestos.Server.Services
 {
-    public interface ICookieService
+    public interface IGestorCookies
     {
-        string? GetCookie(string key);
-        void SetCookie(string key, string value, int? expireDays = null);
-        Task SetCookieAsync(string key, string value, int? expireDays = null);
-        void RemoveCookie(string key);
-        Task RemoveCookieAsync(string key);
+        string? Obtener(string clave);
+        void Grabar(string clave, string valor, int? DiasExpiracion = null);
+        Task GrabarAsync(string clave, string valor, int? DiasExpiracion = null);
+        void Eliminar(string clave);
+        Task EliminarAsync(string clave);
     }
 
-    public class CookieService : ICookieService
+    public class GestorCookies : IGestorCookies
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<CookieService> _logger;
+        private readonly ILogger<GestorCookies> _logger;
         private readonly IJSRuntime? _jsRuntime;
-        private readonly Dictionary<string, string> _pendingCookies = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _cookiesPendientes = [];
 
-        public CookieService(
+        public GestorCookies(
             IHttpContextAccessor httpContextAccessor, 
-            ILogger<CookieService> logger,
+            ILogger<GestorCookies> logger,
             IJSRuntime? jsRuntime = null)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
@@ -30,52 +30,52 @@ namespace HM.Presupuestos.Server.Services
             _jsRuntime = jsRuntime;
         }
 
-        public string? GetCookie(string key)
+        public string? Obtener(string clave)
         {
             try
             {
                 // Primero verificar cache en memoria
-                if (_pendingCookies.TryGetValue(key, out var pendingValue))
+                if (_cookiesPendientes.TryGetValue(clave, out var pendingValue))
                 {
-                    _logger.LogDebug("Cookie {Key} leída desde caché: {Value}", key, pendingValue);
+                    _logger.LogDebug("Cookie {Key} leída desde caché: {Value}", clave, pendingValue);
                     return pendingValue;
                 }
 
                 var httpContext = _httpContextAccessor.HttpContext;
                 if (httpContext == null)
                 {
-                    _logger.LogWarning("HttpContext no disponible al leer cookie {Key}", key);
+                    _logger.LogWarning("HttpContext no disponible al leer cookie {Key}", clave);
                     return null;
                 }
 
-                var value = httpContext.Request.Cookies[key];
-                _logger.LogDebug("Cookie {Key} leída: {Value}", key, value ?? "null");
+                var value = httpContext.Request.Cookies[clave];
+                _logger.LogDebug("Cookie {Key} leída: {Value}", clave, value ?? "null");
                 return value;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al leer cookie {Key}", key);
+                _logger.LogError(ex, "Error al leer cookie {Key}", clave);
                 return null;
             }
         }
 
-        public void SetCookie(string key, string value, int? expireDays = null)
+        public void Grabar(string clave, string valor, int? diasExpiracion = null)
         {
             try
             {
                 var httpContext = _httpContextAccessor.HttpContext;
                 if (httpContext == null)
                 {
-                    _logger.LogError("❌ HttpContext no disponible al establecer cookie {Key}", key);
-                    _pendingCookies[key] = value;
+                    _logger.LogError("❌ HttpContext no disponible al establecer cookie {Key}", clave);
+                    _cookiesPendientes[clave] = valor;
                     return;
                 }
 
                 // Verificar si la respuesta ya ha comenzado
                 if (httpContext.Response.HasStarted)
                 {
-                    _logger.LogWarning("⚠️ Respuesta HTTP ya iniciada. No se puede establecer cookie {Key} en el servidor.", key);
-                    _pendingCookies[key] = value;
+                    _logger.LogWarning("⚠️ Respuesta HTTP ya iniciada. No se puede establecer cookie {Key} en el servidor.", clave);
+                    _cookiesPendientes[clave] = valor;
                     return;
                 }
 
@@ -88,49 +88,49 @@ namespace HM.Presupuestos.Server.Services
                     Path = "/"
                 };
 
-                if (expireDays.HasValue)
+                if (diasExpiracion.HasValue)
                 {
-                    options.Expires = DateTimeOffset.UtcNow.AddDays(expireDays.Value);
+                    options.Expires = DateTimeOffset.UtcNow.AddDays(diasExpiracion.Value);
                 }
 
-                httpContext.Response.Cookies.Append(key, value, options);
-                _pendingCookies[key] = value;
+                httpContext.Response.Cookies.Append(clave, valor, options);
+                _cookiesPendientes[clave] = valor;
                 
-                _logger.LogInformation("✅ Cookie {Key} establecida en servidor: {Value}", key, value);
+                _logger.LogInformation("✅ Cookie {Key} establecida en servidor: {Value}", clave, valor);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Error al establecer cookie {Key}", key);
-                _pendingCookies[key] = value;
+                _logger.LogError(ex, "❌ Error al establecer cookie {Key}", clave);
+                _cookiesPendientes[clave] = valor;
             }
         }
 
         /// <summary>
         /// Establecer cookie usando JavaScript cuando la respuesta HTTP ya ha comenzado
         /// </summary>
-        public async Task SetCookieAsync(string key, string value, int? expireDays = null)
+        public async Task GrabarAsync(string key, string valor, int? diasExpiracion = null)
         {
             try
             {
                 if (_jsRuntime == null)
                 {
                     _logger.LogWarning("JSRuntime no disponible, usando SetCookie estándar");
-                    SetCookie(key, value, expireDays);
+                    Grabar(key, valor, diasExpiracion);
                     return;
                 }
 
                 _logger.LogDebug("Estableciendo cookie {Key} mediante JavaScript", key);
 
-                var expiresString = expireDays.HasValue
-                    ? $"; expires={DateTimeOffset.UtcNow.AddDays(expireDays.Value):R}"
+                var expiresString = diasExpiracion.HasValue
+                    ? $"; expires={DateTimeOffset.UtcNow.AddDays(diasExpiracion.Value):R}"
                     : "";
 
-                var cookieString = $"{key}={value}; path=/{expiresString}; SameSite=Lax";
+                var cookieString = $"{key}={valor}; path=/{expiresString}; SameSite=Lax";
 
                 await _jsRuntime.InvokeVoidAsync("eval", $"document.cookie = '{cookieString}'");
                 
-                _pendingCookies[key] = value;
-                _logger.LogInformation("✅ Cookie {Key} establecida mediante JavaScript: {Value}", key, value);
+                _cookiesPendientes[key] = valor;
+                _logger.LogInformation("✅ Cookie {Key} establecida mediante JavaScript: {Value}", key, valor);
             }
             catch (Exception ex)
             {
@@ -138,51 +138,51 @@ namespace HM.Presupuestos.Server.Services
             }
         }
 
-        public void RemoveCookie(string key)
+        public void Eliminar(string valor)
         {
             try
             {
                 var httpContext = _httpContextAccessor.HttpContext;
                 if (httpContext == null || httpContext.Response.HasStarted)
                 {
-                    _logger.LogWarning("No se puede eliminar cookie {Key} del servidor", key);
-                    _pendingCookies.Remove(key);
+                    _logger.LogWarning("No se puede eliminar cookie {Key} del servidor", valor);
+                    _cookiesPendientes.Remove(valor);
                     return;
                 }
 
-                httpContext.Response.Cookies.Delete(key);
-                _pendingCookies.Remove(key);
+                httpContext.Response.Cookies.Delete(valor);
+                _cookiesPendientes.Remove(valor);
                 
-                _logger.LogDebug("Cookie {Key} eliminada", key);
+                _logger.LogDebug("Cookie {Key} eliminada", valor);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar cookie {Key}", key);
+                _logger.LogError(ex, "Error al eliminar cookie {Key}", valor);
             }
         }
 
         /// <summary>
         /// Eliminar cookie usando JavaScript cuando la respuesta HTTP ya ha comenzado
         /// </summary>
-        public async Task RemoveCookieAsync(string key)
+        public async Task EliminarAsync(string valor)
         {
             try
             {
                 if (_jsRuntime == null)
                 {
-                    RemoveCookie(key);
+                    Eliminar(valor);
                     return;
                 }
 
                 await _jsRuntime.InvokeVoidAsync("eval", 
-                    $"document.cookie = '{key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'");
+                    $"document.cookie = '{valor}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'");
                 
-                _pendingCookies.Remove(key);
-                _logger.LogDebug("Cookie {Key} eliminada mediante JavaScript", key);
+                _cookiesPendientes.Remove(valor);
+                _logger.LogDebug("Cookie {Key} eliminada mediante JavaScript", valor);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al eliminar cookie {Key} mediante JavaScript", key);
+                _logger.LogError(ex, "Error al eliminar cookie {Key} mediante JavaScript", valor);
             }
         }
     }

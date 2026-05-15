@@ -20,7 +20,8 @@ namespace HM.Presupuestos.Server.Pages
         #region Propiedades
 
         private string _pageTitle { get; set; } = string.Empty;
-        private List<Menu> _menu = new();
+        private List<Menu> Favoritos = [];
+
 
         #endregion
 
@@ -30,10 +31,11 @@ namespace HM.Presupuestos.Server.Pages
         {
             try
             {
-                // ? Usar AppResources para el mensaje de carga
-                _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
+                await base.OnUsuarioDisponibleAsync();
+
+                _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
                 
-                ActualizarMenu(Usuario);
+                ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)
@@ -54,7 +56,7 @@ namespace HM.Presupuestos.Server.Pages
             {
                 _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
                 await base.OnUsuarioLoginDesconectado();
-                ActualizarMenu(Usuario);
+                ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)
@@ -76,9 +78,9 @@ namespace HM.Presupuestos.Server.Pages
         /// <summary>
         /// Actualiza los menús favoritos del usuario
         /// </summary>
-        private void ActualizarMenu(UsuarioEntidad user)
+        private void ObtenerFavoritos(UsuarioEntidad usuario)
         {
-            _menu = user.Menus.Where(c => c.IsFavorite).ToList();
+            Favoritos = [.. usuario.Menus.Where(c => c.IsFavorite)];
         }
 
 

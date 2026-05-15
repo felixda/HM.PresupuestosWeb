@@ -11,12 +11,12 @@
 @inject IControlador _SecurityController
 @inject IJwt _Jwt
 @inject NavigationManager _NavigationManager
-@inject ISessionService _SessionService
+@inject IAlmacenSesionUsuario AlmacenSesionUsuario
 @inject ILogAccionesService _LogAccionesService
 @inject ErrorDialogService _ErrorService
 @inject ILayerOverlayService _LayerOverlayService
 @inject AuthenticationStateProvider _AuthenticationStateProvider
-@inject IUsuarioServicio _UsuarioService
+@inject ISesionUsuario _SesionUsuario
 
 @inherits ContextProtegido
 
@@ -42,7 +42,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <div>@T(AppResources.Pages.Impersonation.Description)</div>
+                            <div>@ObtenerTexto(AppResources.Pages.Impersonation.Description)</div>
                         </CaptionTemplate>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
@@ -54,14 +54,14 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
                         <DxTextBox @bind-Text="@_userNameImpersonation"
-                        NullText="@T(AppResources.Pages.Impersonation.UserName)"
+                        NullText="@ObtenerTexto(AppResources.Pages.Impersonation.UserName)"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
                         <DxTextBox @bind-Text="@_passwordImpersonation"
-                        NullText="@T(AppResources.Pages.Impersonation.Password)"
+                        NullText="@ObtenerTexto(AppResources.Pages.Impersonation.Password)"
                         Password="true"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
@@ -71,7 +71,7 @@ else
                         <div class="d-flex justify-content-center">
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@T(AppResources.Common.Aceptar)"
+                            Text="@ObtenerTexto(AppResources.Common.Aceptar)"
                             Click="LoginImpersonation" ClickEventArgs="true" /> @* para que acepte MouseEventArgs *@
                         </div>
                     </DxFormLayoutItem>
@@ -92,7 +92,7 @@ else
     private UsuarioEntidad _userAuthenticated = new UsuarioEntidad();
 
     #region Page
-    protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
+   // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
 
     protected override Task OnPermisoDenegadoAsync()
     {
@@ -102,7 +102,7 @@ else
 
     protected override async Task InicializarPaginaAsync()
     {
-        _textoToolTipAyuda = T(AppResources.Pages.Impersonation.ToolTip);
+        _textoToolTipAyuda = ObtenerTexto(AppResources.Pages.Impersonation.ToolTip);
     }
 
 
@@ -135,25 +135,25 @@ else
                 if (_userAuthenticated.Login != _userNameImpersonation)
                 {
 
-                    var respuesta = await _UsuarioService.CargarUsuarioLoginDesdeServicioExterno(_userNameImpersonation, _passwordImpersonation);
+                    var respuesta = await _SesionUsuario.AutenticarUsuarioPorLoginAsync(_userNameImpersonation, _passwordImpersonation);
                     if (respuesta)
                     {
                     _NavigationManager.NavigateTo("/home", forceLoad: false);
                     }
                     else
                     {
-                        _message = T(AppResources.Pages.Impersonation.UsuarioNoAutorizado);
+                        _message = ObtenerTexto(AppResources.Pages.Impersonation.UsuarioNoAutorizado);
                     }
 
                 }
                 else
                 {
-                    _message = T(AppResources.Pages.Impersonation.UsuarioImpersonadoIgual);
+                    _message = ObtenerTexto(AppResources.Pages.Impersonation.UsuarioImpersonadoIgual);
                 }
             }
             else
             {
-                _message = T(AppResources.Pages.Impersonation.RellenarDatosUsuario);
+                _message = ObtenerTexto(AppResources.Pages.Impersonation.RellenarDatosUsuario);
             }
         }
         catch (Exception ex)

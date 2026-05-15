@@ -13,7 +13,7 @@ namespace HM.Presupuestos.Server.Pages.Shared
         // Las inyecciones ahora van aquí en lugar del @inject
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
-        [Inject] protected ISessionService SessionService { get; set; } = default!;
+        [Inject] protected IAlmacenSesionUsuario SessionService { get; set; } = default!;
         #endregion
 
         #region Campos Privados
@@ -59,7 +59,7 @@ namespace HM.Presupuestos.Server.Pages.Shared
         /// Maneja el clic en el botón de favorito
         /// Alterna el estado y actualiza la interfaz
         /// </summary>
-        private async Task ClickBotonFavorito()
+        private async Task OnFavorito()
         {
             _esFavorito = !_esFavorito;
             await JSRuntime.InvokeVoidAsync("Page.SetMenuFavorite", "iconFavorite", _esFavorito, "star-fill", "star");
@@ -107,10 +107,10 @@ namespace HM.Presupuestos.Server.Pages.Shared
             await GuardarListaFavoritos(favoritos);
 
             // Actualizar estado del menú en sesión
-            ActualizarEstadoMenuEnSesion(codigoMenuActual, esFavorito);
+            ActualizarEstadoMenu(codigoMenuActual, esFavorito);
 
-            // Persistir cambios en sesión
-            await SessionService.EstablecerUsuarioSesion(Usuario);
+            // Persistir cambios en sesión del usuario SSO. Del impersonado no se pueden modificar los favoritos
+            await SessionService.GuardarUsuarioSSO(Usuario);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace HM.Presupuestos.Server.Pages.Shared
         /// </summary>
         /// <param name="codigoMenu">Código del menú a actualizar</param>
         /// <param name="esFavorito">Nuevo estado de favorito</param>
-        private void ActualizarEstadoMenuEnSesion(string codigoMenu, bool esFavorito)
+        private void ActualizarEstadoMenu(string codigoMenu, bool esFavorito)
         {
             var menuActual = Usuario!.Menus.FirstOrDefault(x => x.Id == int.Parse(codigoMenu));
             if (menuActual != null)

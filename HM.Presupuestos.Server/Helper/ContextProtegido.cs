@@ -4,10 +4,7 @@
 
     [Inject] protected IPermisosService PermisosService { get; set; } = default!;
     [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
-
-    [Inject] protected NavigationManager? NavigationManager { get; set; }
-
-    [Inject] protected INavigationService NavigationService { get; set; } = default!;
+    [Inject] protected IRutasNavegacion NavigationService { get; set; } = default!;
 
 
 
@@ -27,13 +24,6 @@
     /// </summary>
     protected bool? TienePermiso { get; private set; } = null;
 
-
-    /// <summary>
-    /// ⭐ Título de la página obtenido automáticamente desde recursos
-    /// Disponible en páginas .razor y .razor.cs sin necesidad de calcularlo manualmente
-    /// </summary>
-    protected string TituloPagina { get; private set; } = string.Empty;
-
     #endregion
 
     #region Propiedades Abstractas
@@ -41,7 +31,7 @@
     /// <summary>
     /// Código del menú asociado a la página (para validación de permisos)
     /// </summary>
-    protected abstract CodigosMenu CodigoMenuPermiso { get; }
+   // protected abstract CodigosMenu CodigoMenuPermiso { get; }
 
     #endregion
 
@@ -105,11 +95,8 @@
 
         try
         {
-            // ⭐ Calcular título ANTES de validar permisos (para logs y mensajes de error)
-            TituloPagina = ObtenerTituloPagina();
-
-            string url = NavigationManager!.ToBaseRelativePath(NavigationManager.Uri);
-            var urlNormalizada = NavigationService.NormalizarUrl(url);
+            string url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            var urlNormalizada = NavigationService.NormalizarRuta(url);
 
             TienePermiso = PermisosService.PuedeAccederA(urlNormalizada);
 
@@ -168,13 +155,12 @@
     }
 
     /// <summary>
-    /// Obtiene el título de la página desde los recursos
+    /// Obtiene el título de la página desde el menú del usuario usando CodigoMenuPermiso.
     /// </summary>
-    /// <returns>Título traducido según idioma actual</returns>
-    protected virtual string ObtenerTituloPagina()
-    {
-        return ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigoMenuPermiso));
-    }
+    //protected override string ObtenerTituloPagina()
+    //{
+    //    return ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigoMenuPermiso));
+    //}
 
     /// <summary>
     /// Muestra el overlay con mensaje de carga personalizado

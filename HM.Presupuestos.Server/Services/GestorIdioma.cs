@@ -24,7 +24,7 @@ namespace HM.Presupuestos.Server.Services
         private const string IDIOMA_POR_DEFECTO = "es";
 
         private readonly IConfiguration _configuracion;
-        private readonly ICookieService _gestorCookies;
+        private readonly IGestorCookies _gestorCookies;
 
         #endregion
 
@@ -36,18 +36,18 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Constructor que inicializa el idioma desde la cookie
         /// </summary>
-        public GestorIdioma(IConfiguration configuracion, ICookieService gestorCookies)
+        public GestorIdioma(IConfiguration configuracion, IGestorCookies gestorCookies)
         {
             _configuracion = configuracion;
             _gestorCookies = gestorCookies;
 
             // ? Inicializar idioma desde cookie al crear el servicio
-            var idiomaEnCookie = _gestorCookies.GetCookie(IDIOMA_COOKIE_KEY);
+            var idiomaEnCookie = _gestorCookies.Obtener(IDIOMA_COOKIE_KEY);
 
             if (idiomaEnCookie  == null)
             {
                 IdiomaActual = _configuracion.GetValue<string>("AppSettings:DefaultLanguage") ?? IDIOMA_POR_DEFECTO;
-                _gestorCookies.SetCookie(IDIOMA_COOKIE_KEY, IdiomaActual, IDIOMA_COOKIE_EXPIRE_DAYS);
+                _gestorCookies.Grabar(IDIOMA_COOKIE_KEY, IdiomaActual, IDIOMA_COOKIE_EXPIRE_DAYS);
             }
             else
             {
@@ -69,7 +69,7 @@ namespace HM.Presupuestos.Server.Services
         {
             if (IdiomaActual != nuevoIdioma)
             {
-                await _gestorCookies.SetCookieAsync(IDIOMA_COOKIE_KEY, nuevoIdioma, IDIOMA_COOKIE_EXPIRE_DAYS);
+                await _gestorCookies.GrabarAsync(IDIOMA_COOKIE_KEY, nuevoIdioma, IDIOMA_COOKIE_EXPIRE_DAYS);
                 IdiomaActual = nuevoIdioma;
                 Console.WriteLine($"[IdiomaService] ?? Idioma cambiado a: {nuevoIdioma}");
 

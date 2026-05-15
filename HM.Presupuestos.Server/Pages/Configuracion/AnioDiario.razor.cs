@@ -45,7 +45,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
             AnioSeleccionado.Codigo != AnioOriginal?.Codigo;
 
 
-        protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.AnioDiario;
+       // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.AnioDiario;
 
         #endregion
 
@@ -68,8 +68,8 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
         //{
         //    try
         //    {
-        //        TituloPagina = T(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.AnioDiario));
-        //        LayerOverlayService.Start($"{T(AppResources.Common.Loading)} {TituloPagina}");
+        //        TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.AnioDiario));
+        //        LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
 
         //        await InicializarPaginaAsync();
 
@@ -125,7 +125,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
         //{
         //    try
         //    {
-        //        TextoToolTipAyuda = T(AppResources.Pages.AnioDiario.ToolTip);
+        //        TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.AnioDiario.ToolTip);
 
         //        // Generar lista de años: año anterior, actual y posterior
         //        int añoActual = DateTime.Now.Year;
