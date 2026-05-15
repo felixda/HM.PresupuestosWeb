@@ -17,7 +17,7 @@ namespace HM.Presupuestos.Server.Helper
         [Inject] protected IMapaMenu MapaMenu { get; set; } = default!;
         [Inject] protected IGestorIdioma GestorIdioma { get; set; } = default!;
 
-        [Inject] protected ILogService LogService { get; set; } = default!;
+        [Inject] protected IRegistroAplicacion LogService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
 
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
@@ -277,7 +277,7 @@ namespace HM.Presupuestos.Server.Helper
             if (!esErrorControlado || enviarErrorLogWatcher)
             {
                 var excepcion = new Exception(ex.Message);
-                await LogService.InsertException(excepcion);
+                await LogService.RegistrarExcepcion(excepcion);
             }
 
             await MensajesHelper.MostrarMensajeError(titulo, mensaje);
@@ -297,7 +297,6 @@ namespace HM.Presupuestos.Server.Helper
         /// ? Disponible en TODOS los componentes (protegidos o no)
         /// </summary>
         /// <param name="action">Acción asíncrona a ejecutar</param>
-        /// <param name="tituloPagina">Título de la página para mensajes de error (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <example>
@@ -306,12 +305,11 @@ namespace HM.Presupuestos.Server.Helper
         /// {
         ///     var data = await Service.LoadData();
         ///     Items = data;
-        /// }, TituloPagina);
+        /// });
         /// </code>
         /// </example>
         protected async Task EjecutarAsync(
             Func<Task> action,
-            string tituloPagina,
             string? customErrorMessage = null,
             bool showOverlay = true
             )
@@ -328,8 +326,8 @@ namespace HM.Presupuestos.Server.Helper
             catch (Exception ex)
             {
                 // Log de la excepción
-                await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(tituloPagina, customErrorMessage);
+                await LogService.RegistrarExcepcion(ex);
+                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
             }
             finally
             {
@@ -347,7 +345,7 @@ namespace HM.Presupuestos.Server.Helper
         /// <typeparam name="TResult">Tipo de resultado</typeparam>
         /// <param name="func">Función asíncrona a ejecutar</param>
         /// <param name="defaultValue">Valor por defecto en caso de error</param>
-        /// <param name="tituloPagina">Título de la página para mensajes de error (opcional)</param>
+        /// <param name="customErrorMessage"></param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <returns>Resultado de la función o valor por defecto</returns>
         /// <example>
@@ -355,13 +353,11 @@ namespace HM.Presupuestos.Server.Helper
         /// var items = await EjecutarAsync(
         ///     async () => await Service.GetItems(),
         ///     defaultValue: new List&lt;Item&gt;(),
-        ///     pageTitle: TituloPagina
         /// ) ?? [];
         /// </code>
         /// </example>
         protected async Task<TResult?> EjecutarAsync<TResult>(
             Func<Task<TResult>> func,
-            string? tituloPagina = null,
             TResult? defaultValue = default,
             string? customErrorMessage = null,
             bool showOverlay = true)
@@ -377,10 +373,10 @@ namespace HM.Presupuestos.Server.Helper
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
 
-                await LogService.InsertException(ex);
-                await MensajesHelper.MostrarMensajeError(tituloPagina, customErrorMessage);
+                await LogService.RegistrarExcepcion(ex);
+                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
 
                 return defaultValue;
             }
@@ -397,12 +393,24 @@ namespace HM.Presupuestos.Server.Helper
         /// Ejecuta una acción síncrona con gestión automática
         /// </summary>
         /// <param name="action">Acción síncrona a ejecutar</param>
-        /// <param name="tituloPagina">Título de la página para mensajes de error</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
+        /// <example>
+        /// <code>
+        /// await EjecutarAsync(() =>
+        /// {
+        ///     Items = Service.GetItemsSync();
+        /// });
+        ///
+        /// // Sin overlay:
+        /// await EjecutarAsync(() =>
+        /// {
+        ///     FiltroActivo = true;
+        /// }, showOverlay: false);
+        /// </code>
+        /// </example>
         protected async Task EjecutarAsync(
             Action action,
-            string tituloPagina,
             string? customErrorMessage = null,
             bool showOverlay = true)
         {
@@ -412,7 +420,6 @@ namespace HM.Presupuestos.Server.Helper
                     action();
                     return Task.CompletedTask;
                 },
-                tituloPagina,
                 customErrorMessage,
                 showOverlay);
         }

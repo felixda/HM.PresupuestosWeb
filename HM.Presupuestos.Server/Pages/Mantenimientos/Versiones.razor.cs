@@ -199,7 +199,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(ex);
+                    await LogService.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(_pageTitle);
                 }
                 finally
@@ -301,7 +301,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(_pageTitle);
             }
         }
@@ -343,7 +343,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(ex);
+                    await LogService.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(_pageTitle);
                 }
             }
@@ -416,7 +416,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(ex);
+                    await LogService.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(_pageTitle);
                 }
             }
@@ -475,7 +475,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(ex);
+                    await LogService.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
                 }
                 finally
@@ -645,7 +645,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(_pageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally

@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Server.Pages
     {
         #region Servicios Inyectados
 
-        [Inject] private ILogService _logService { get; set; } = default!;
+        [Inject] private IRegistroAplicacion _logService { get; set; } = default!;
         [Inject] private IConfiguration _configuration { get; set; } = default!;
         [Inject] private ILayerOverlayService _LayerOverlayService { get; set; } = default!;
         [Inject] private ErrorDialogService _ErrorService { get; set; } = default!;
@@ -41,7 +41,7 @@ namespace HM.Presupuestos.Server.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"[Index] ? Error en OnUsuarioDisponibleAsync: {ex.Message}");
-                await _logService.InsertException(ex);
+                await _logService.RegistrarExcepcion(ex);
                 await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
             }
             finally
@@ -62,7 +62,7 @@ namespace HM.Presupuestos.Server.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"[Index] ? Error en OnUsuarioLoginDesconectado: {ex.Message}");
-                await _logService.InsertException(ex);
+                await _logService.RegistrarExcepcion(ex);
                 await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
             }
             finally

@@ -17,7 +17,7 @@ namespace HM.Presupuestos.Server.Layout
         [Inject] private ControlCambiosService ControlCambiosService { get; set; } = default!;
         [Inject] private ISesionUsuario SesionUsuario { get; set; } = default!;
         [Inject] private ErrorDialogService ErrorService { get; set; } = default!;
-        [Inject] private ILogService LogService { get; set; } = default!;
+        [Inject] private IRegistroAplicacion LogService { get; set; } = default!;
         [Inject] private IGestorIdioma IdiomaService { get; set; } = default!;
         [Inject] private IRutasNavegacion NavigationService { get; set; } = default!;
         [Inject] private IMapaMenu MapaMenu { get; set; } = default!;
@@ -87,7 +87,7 @@ namespace HM.Presupuestos.Server.Layout
             MensajeError = await TraduccionesHelper.GetResourceValue("mensajes:ErrorAbriendoPantalla:label");
             ErrorVisible = true;
             await InvokeAsync(StateHasChanged);
-            await LogService.InsertException(this.GetType().Name, ex);
+            await LogService.RegistrarExcepcion(this.GetType().Name, ex);
         }
 
         private void CerrarPopupError()
@@ -125,7 +125,7 @@ namespace HM.Presupuestos.Server.Layout
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ❌ Error en OnInitializedAsync: {ex.Message}");
-                await LogService.InsertException(nameof(MainLayout), ex);
+                await LogService.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }
 
@@ -146,7 +146,7 @@ namespace HM.Presupuestos.Server.Layout
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(this.GetType().Name, ex);
+                    await LogService.RegistrarExcepcion(this.GetType().Name, ex);
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace HM.Presupuestos.Server.Layout
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ❌ Error en OnLocationChangedAsync: {ex.Message}");
-                await LogService.InsertException(nameof(MainLayout), ex);
+                await LogService.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }
 
@@ -246,7 +246,7 @@ namespace HM.Presupuestos.Server.Layout
                 // Obtener label del menú para la URL
                 string tituloParaLog = MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
 
-                await LogService.GrabarAccesoAPagina(tituloParaLog);
+                await LogService.RegistrarAccesoAPagina(tituloParaLog);
 
                 // ✅ Actualizar última URL DESPUÉS de registrar exitosamente
                 _ultimaUrlLogeada = urlNormalizada;
@@ -256,7 +256,7 @@ namespace HM.Presupuestos.Server.Layout
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ⚠️ Error al registrar log: {ex.Message}");
-                await LogService.InsertException(nameof(MainLayout), ex);
+                await LogService.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }
 

@@ -17,7 +17,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
         [Inject] protected ILocalizadorRecursos ResourceService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
-        [Inject] protected ILogService LogService { get; set; } = default!;
+        [Inject] protected IRegistroAplicacion LogService { get; set; } = default!;
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
         [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
@@ -97,7 +97,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
             }
         }
@@ -121,7 +121,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
                 }
                 catch (Exception ex)
                 {
-                    await LogService.InsertException(ex);
+                    await LogService.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
@@ -150,7 +150,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally

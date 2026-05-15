@@ -33,8 +33,8 @@ else if (TienePermiso == false)
 
 else
 {
-    <PageTitle>@_pageTitle</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.Impersonacion" Titulo="@_pageTitle" TextoToolTipAyuda="@_textoToolTipAyuda" />
+    <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.Impersonacion" Titulo="@TituloPagina" TextoToolTipAyuda="@_textoToolTipAyuda" />
     <div class="layoutContainer">
         <DxFormLayout>
             <DxFormLayoutGroup ColSpanSm="6" ColSpanMd="6" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4">
@@ -72,7 +72,7 @@ else
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
                             Text="@ObtenerTexto(AppResources.Common.Aceptar)"
-                            Click="LoginImpersonation" ClickEventArgs="true" /> @* para que acepte MouseEventArgs *@
+                            Click="OnImpersonarConLogin" ClickEventArgs="true" /> @* para que acepte MouseEventArgs *@
                         </div>
                     </DxFormLayoutItem>
                 </Items>
@@ -84,7 +84,6 @@ else
 
 @code {
 
-    private string _pageTitle { get; set; } = string.Empty;
     private string _textoToolTipAyuda { get; set; } = string.Empty;
     private string _userNameImpersonation { get; set; } = "";
     private string _passwordImpersonation { get; set; } = "";
@@ -92,7 +91,7 @@ else
     private UsuarioEntidad _userAuthenticated = new UsuarioEntidad();
 
     #region Page
-   // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
+    // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
 
     protected override Task OnPermisoDenegadoAsync()
     {
@@ -109,24 +108,21 @@ else
     #endregion
 
 
-    /// <summary>
-    /// Exceute impersonation
-    /// </summary>
-    private async Task LoginImpersonation(MouseEventArgs e)
+
+    private async Task OnImpersonarConLogin(MouseEventArgs e)
     {
-        try
+        await EjecutarAsync(async () =>
         {
-            _LayerOverlayService.Start();
             _message = "";
-            _userNameImpersonation = (_userNameImpersonation!=null)?_userNameImpersonation.Replace(" ", ""):"";
+            _userNameImpersonation = (_userNameImpersonation != null) ? _userNameImpersonation.Replace(" ", "") : "";
 
             //Para las pruebas de seguridad en entornos distintos a PRO
             if (_Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
             {
                 if (e.CtrlKey && e.AltKey && (Usuario!.CodigoUsuario == 2825 || Usuario!.CodigoUsuario == 1182))
                 {
-                        _userNameImpersonation = "probar.acceso";
-                        _passwordImpersonation = "ccc";
+                    _userNameImpersonation = "probar.acceso";
+                    _passwordImpersonation = "ccc";
                 }
             }
 
@@ -134,17 +130,15 @@ else
             {
                 if (_userAuthenticated.Login != _userNameImpersonation)
                 {
-
                     var respuesta = await _SesionUsuario.AutenticarUsuarioPorLoginAsync(_userNameImpersonation, _passwordImpersonation);
                     if (respuesta)
                     {
-                    _NavigationManager.NavigateTo("/home", forceLoad: false);
+                        _NavigationManager.NavigateTo("/home", forceLoad: false);
                     }
                     else
                     {
                         _message = ObtenerTexto(AppResources.Pages.Impersonation.UsuarioNoAutorizado);
                     }
-
                 }
                 else
                 {
@@ -155,15 +149,7 @@ else
             {
                 _message = ObtenerTexto(AppResources.Pages.Impersonation.RellenarDatosUsuario);
             }
-        }
-        catch (Exception ex)
-        {
-            await LogService.InsertException(ex);
-        }
-        finally
-        {
-            _LayerOverlayService.Stop();
-        }
+        });
     }
 
 

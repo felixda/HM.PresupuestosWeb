@@ -227,8 +227,8 @@ namespace HM.Presupuestos.Server.Services
             try
             {
                 using var scope = _scopeFactory.CreateScope();
-                var logService = scope.ServiceProvider.GetRequiredService<ILogService>();
-                logService?.InsertLog(exception.TargetSite?.Name ?? methodName, exception.Message, exception.StackTrace, "");
+                var logService = scope.ServiceProvider.GetRequiredService<IRegistroAplicacion>();
+                logService?.RegistrarEvento(exception.TargetSite?.Name ?? methodName, exception.Message, exception.StackTrace, "");
             }
             catch (Exception ex)
             {

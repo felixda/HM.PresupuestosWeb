@@ -15,8 +15,6 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
         #region Propiedades para Data Binding 
 
-        //private string TituloPagina { get; set; } = string.Empty;
-
         private DxGrid GridIndicadores { get; set; } = new DxGrid();
 
         /// <summary>
@@ -121,7 +119,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                 IndicadorEnEdicion.Estado = EstadoEntidad.Nuevo;
                 EsPopupEdicionVisible = true;
-            }, TituloPagina);
+            });
 
         }
 
@@ -140,7 +138,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -159,8 +157,6 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                 if (!confirmado) return;
 
-                //LayerOverlayService.Start();
-
                 await IndicadoresService.Eliminar(indicador);
 
                 DatosIndicadores.Remove(indicador);
@@ -168,21 +164,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
 
-            }, TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
+            }, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
         
-            //try
-            //{
-                
-            //}
-            //catch (Exception ex)
-            //{
-            //    await LogService.InsertException(ex);
-            //    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
-            //}
-            //finally
-            //{
-            //    LayerOverlayService.Stop();
-            //}
         }
 
         #endregion
@@ -266,7 +249,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -381,7 +364,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -427,7 +410,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                     CerrarPopupEdicion();
                 }
 
-            }, TituloPagina);
+            });
         }
 
         /// <summary>

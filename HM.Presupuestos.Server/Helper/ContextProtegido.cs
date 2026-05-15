@@ -108,13 +108,13 @@ public abstract class ContextProtegido : Context
             }
             else
             {
-                await LogService.RegistrarAccesoNoAutorizado(urlNormalizada);
+                await LogService.RegistrarIntentoAccesoNoAutorizado(urlNormalizada);
                 await OnPermisoDenegadoAsync();
             }
         }
         catch (Exception ex)
         {
-            await LogService.InsertException(ex);
+            await LogService.RegistrarExcepcion(ex);
             TienePermiso = false;
         }
         finally
@@ -148,7 +148,7 @@ public abstract class ContextProtegido : Context
         }
         catch (Exception ex)
         {
-            await LogService.InsertException(ex);
+            await LogService.RegistrarExcepcion(ex);
             await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
         }
         finally

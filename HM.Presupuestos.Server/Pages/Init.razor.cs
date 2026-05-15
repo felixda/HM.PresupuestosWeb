@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Server.Pages
     public partial class Init
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-        [Inject] private ILogService LogService { get; set; } = default!;
+        [Inject] private IRegistroAplicacion LogService { get; set; } = default!;
         [Inject] private IAlmacenSesionUsuario SessionService { get; set; } = default!;
         [Inject] private ISesionUsuario SesionUsuario { get; set; } = default!;
         [Inject] private IGestorCookies GestorCookies { get; set; } = default!;
@@ -83,7 +83,7 @@ namespace HM.Presupuestos.Server.Pages
                 {
                     Console.WriteLine($"[Init] ? Exception: {ex.Message}");
                     NavigationManager.NavigateTo("/Unauthorized", true);
-                    await LogService.InsertException(ex);
+                    await LogService.RegistrarExcepcion(ex);
                 }
             }
         }

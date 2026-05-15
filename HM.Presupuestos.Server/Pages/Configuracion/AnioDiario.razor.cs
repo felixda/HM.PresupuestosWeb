@@ -187,7 +187,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
             }
             catch (Exception ex)
             {
-                await LogService.InsertException(ex);
+                await LogService.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally

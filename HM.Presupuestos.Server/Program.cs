@@ -142,7 +142,7 @@ builder.Services.AddScoped<ILocalizadorRecursos, LocalizadorRecursos>();
 builder.Services.AddScoped<IMapaMenu, MapaMenu>();
 builder.Services.AddScoped<IGestorIdioma, GestorIdioma>();
 builder.Services.AddScoped<IAlmacenSesionUsuario, AlmacenSesionUsuario>();
-builder.Services.AddScoped<ILogService, LogService>();
+builder.Services.AddScoped<IRegistroAplicacion, RegistroAplicacion>();
 builder.Services.AddScoped<MensajesHelper>();
 builder.Services.AddScoped<TraduccionesHelper>();
 builder.Services.AddScoped<IAdminService, AdminService>();

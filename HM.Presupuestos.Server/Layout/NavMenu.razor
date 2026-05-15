@@ -6,7 +6,7 @@
 @using HM.Presupuestos.Server.Servicios
 
 @inject NavigationManager _NavigationManager
-@inject ILogService _LogService
+@inject IRegistroAplicacion _LogService
 @inject ILogAccionesService _LogAccionesService
 @inject ISesionUsuario _SesionUsuario;
 @inject IMapaMenu _resourceService;
@@ -194,7 +194,7 @@
         }
         catch (Exception ex)
         {
-            await _LogService.InsertException(GetType().Name, ex);
+            await _LogService.RegistrarExcepcion(GetType().Name, ex);
         }
     }
 
