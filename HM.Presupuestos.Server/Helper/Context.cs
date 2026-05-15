@@ -142,8 +142,6 @@ namespace HM.Presupuestos.Server.Helper
         {
             var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var urlNormalizada = RutasNavegacion.NormalizarRuta(url);
-            //var codigoMenu = MapaMenu.ObtenerCodigoMenuPorUrl(urlNormalizada);
-            //if (codigoMenu < 0) return string.Empty;
             return MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
         
         }

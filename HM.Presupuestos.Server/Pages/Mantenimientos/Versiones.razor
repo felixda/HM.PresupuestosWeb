@@ -3,18 +3,6 @@
 
 @using Version = HM.Presupuestos.Domain.Entidades.Version
 
-@inject IJwt _Jwt
-@inject VersionesService _VersionesService
-@inject IndicadoresService _IndicadoresService
-@inject IRegistroAplicacion _LogService
-@inject MensajesHelper _MensajesHelper
-@inject TraduccionesHelper _TraduccionesHelper
-@inject ErrorDialogService _ErrorService
-@inject ILogAccionesService _LogAccionesService
-@inject ILayerOverlayService _LayerOverlayService
-@inject ISesionUsuario _SesionUsuario
-
-
 @inherits ContextProtegido
 
 @* @inject Context UserContext *@
@@ -54,7 +42,7 @@ else if (TienePermiso == false)
 
 else
 {
-    <PageHeader CodigoMenu="@CodigosMenu.Versiones" Titulo="@_pageTitle" TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.GestionVersiones.ToolTip)" />
+    <PageHeader CodigoMenu="@CodigosMenu.Versiones" Titulo="@TituloPagina" TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.GestionVersiones.ToolTip)" />
 
     <div class="layoutContainer">
         @* FILTER *@
@@ -72,7 +60,7 @@ else
                                 ValueFieldName=@nameof(CodigoDescripcion.Codigo)
                                 SearchMode="@ListSearchMode.AutoSearch"
                                 SearchFilterCondition="@ListSearchFilterCondition.Contains"
-                                @bind-Value="@_itemYearSelected"
+                                @bind-Value="@ItemYearSelected"
                                 SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => Param_Year_SelectedDataItemChanged(args)">
                         <EditBoxDisplayTemplate Context="contexto">
                             @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
@@ -85,7 +73,7 @@ else
         <DxFormLayout>
             <DxFormLayoutGroup Caption="@ObtenerTexto("Pages:Versiones:Versiones:label")" ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
-                    <DxGrid @ref="_GridVersiones"
+                    <DxGrid @ref="GridVersiones"
                             Data="_listVersion"
                             KeyFieldName="Codigo"
                             ValidationEnabled="true"
@@ -103,7 +91,7 @@ else
                                 <DxButton CssClass="toolbarButtonCustom"
                                           RenderStyle=ButtonRenderStyle.None
                                           Text="@ObtenerTexto("common:Nuevo:label")"
-                                          Click="NewVersion"
+                                          Click="OnNuevaVersion"
                                           Enabled="@(_listVersion.Find(x => x.Codigo == 0)==null)"
                                           IconCssClass="fa-solid fa-plus" />
                             </div>
@@ -111,7 +99,7 @@ else
                                 <DxButton CssClass="toolbarButtonCustom"
                                           RenderStyle=ButtonRenderStyle.None
                                           Text="@ObtenerTexto("common:Cancelar:label")"
-                                          Click="CancelVersion"
+                                          Click="OnCancelarVersion"
                                           IconCssClass="fa-solid fa-cancel"
                                           Enabled="@(JsonSerializer.Serialize(_listVersion)!=JsonSerializer.Serialize(_listOriginVersion))" />
                             </div>
@@ -244,7 +232,7 @@ else
                                                   title="@(isReadOnly
                                                                                                                                                 ? ObtenerTexto("Pages:Versiones:HayDatosRelacionadosConLaVersion:label")
                                                                                                         : ObtenerTexto("common:EliminarRegistro:label"))"
-                                                  Click="@(() => DeleteVersion(context.DataItem))" />
+                                                  Click="@(() => OnEliminarVersion(context.DataItem))" />
                                     </div>
 
                                 </CellDisplayTemplate>

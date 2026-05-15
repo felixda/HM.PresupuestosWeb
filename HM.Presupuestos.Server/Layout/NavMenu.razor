@@ -1,16 +1,5 @@
 ﻿@using DevExpress.Blazor
 @using DevExpress.Blazor.Internal
-@using HM.Presupuestos.Server.Extensiones
-@using HM.Presupuestos.Server.Services
-@* @using Core.Comun.v6.Entidades.Seguridad *@
-@using HM.Presupuestos.Server.Servicios
-
-@inject NavigationManager _NavigationManager
-@inject IRegistroAplicacion _LogService
-@inject ILogAccionesService _LogAccionesService
-@inject ISesionUsuario _SesionUsuario;
-@inject IMapaMenu _resourceService;
-@inject IRutasNavegacion _NavigationService;
 
 @inherits Context
 
@@ -21,51 +10,50 @@
     }
     else
     {
-        <DxTreeView AfterExpand="OnAfterExpand">
+        <DxTreeView AfterExpand="OnMenuExpandido">
             <Nodes>
                 <DxTreeViewNode id="menu_0"
-                                @onclick="@(() => NavigateTo(ObtenerTexto("menu:menu_0:url"), ObtenerTexto("menu:menu_0:label")))"
-
-                                Text="@ObtenerTexto("menu:menu_0:label")" 
+                                @onclick="@(() => OnNavegarA(MapaMenu.ObtenerUrlMenu(CodigosMenu.Home)!))"
+                                Text="@MapaMenu.ObtenerEtiquetaMenu(CodigosMenu.Home)" 
                                 CssClass="menu-item"
-                                IconCssClass="@ObtenerTexto("menu:menu_0:icono")" />
+                                IconCssClass="@MapaMenu.ObtenerIconoMenu(CodigosMenu.Home)" />
                 
-                @if (_menu != null && _menu.Count > 0)
+                @if (Menu != null && Menu.Count > 0)
                 {
-                    @foreach (var item in _menu.OrderBy(o => o.IndiceOrdenacion))
+                    @foreach (var item in Menu.OrderBy(o => o.IndiceOrdenacion))
                     {
                         @if (item.CodigoMenuPadre == null || item.CodigoMenuPadre <= 0)
                         {
-                            var labelMenuItem = ObtenerTexto("menu:menu_" + item.CodigoMenu + ":label");
-                            var visibleMenuItemStr = ObtenerTexto("menu:menu_" + item.CodigoMenu + ":visible");
+                            var labelMenuItem = MapaMenu.ObtenerEtiquetaMenu((CodigosMenu)item.CodigoMenu);
+                            var visibleMenuItemStr = MapaMenu.ObtenerVisibilidadMenu((CodigosMenu)item.CodigoMenu);
                             bool visibleMenuItem = !string.IsNullOrEmpty(visibleMenuItemStr) && 
                                                    (visibleMenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleMenuItemStr == "1");
                             
                             @if (visibleMenuItem && !string.IsNullOrEmpty(labelMenuItem))
                             {
                                 <DxTreeViewNode id=@($"menu_{item.CodigoMenu}")
-                                                @onclick="@(() => NavigateTo(ObtenerTexto("menu:menu_" + item.CodigoMenu + ":url"), labelMenuItem))"
+                                                @onclick="@(() => OnNavegarA(MapaMenu.ObtenerUrlMenu((CodigosMenu)item.CodigoMenu)!))"
 
                                                 Text="@labelMenuItem"
-                                                IconCssClass="@ObtenerTexto("menu:menu_" + item.CodigoMenu + ":icono")" 
+                                                IconCssClass="@MapaMenu.ObtenerIconoMenu((CodigosMenu)item.CodigoMenu)" 
                                                 CssClass="menu-item">
                                     <Nodes>
                                         @if (item.Submenus != null && item.Submenus.Any())
                                         {
                                             @foreach (var submenuItem in item.Submenus.OrderBy(o => o.IndiceOrdenacion))
                                             {
-                                                var labelSubmenuItem = ObtenerTexto("menu:menu_" + submenuItem.CodigoMenu + ":label");
-                                                var visibleSubmenuItemStr = ObtenerTexto("menu:menu_" + submenuItem.CodigoMenu + ":visible");
+                                                var labelSubmenuItem = MapaMenu.ObtenerEtiquetaMenu((CodigosMenu)submenuItem.CodigoMenu);
+                                                var visibleSubmenuItemStr = MapaMenu.ObtenerVisibilidadMenu((CodigosMenu)submenuItem.CodigoMenu);
                                                 bool visibleSubmenuItem = !string.IsNullOrEmpty(visibleSubmenuItemStr) && 
                                                                          (visibleSubmenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleSubmenuItemStr == "1");
                                                 
                                                 @if (visibleSubmenuItem && !string.IsNullOrEmpty(submenuItem.Url))
                                                 { 
                                                     <DxTreeViewNode id=@($"menu_{submenuItem.CodigoMenu}")
-                                                                    @onclick="@(() => NavigateTo(submenuItem.Url, labelSubmenuItem))"
+                                                                    @onclick="@(() => OnNavegarA(submenuItem.Url))"
 
                                                                     Text="@labelSubmenuItem"
-                                                                    IconCssClass="@ObtenerTexto("menu:menu_" + submenuItem.CodigoMenu + ":icono")"
+                                                                    IconCssClass="@MapaMenu.ObtenerIconoMenu((CodigosMenu)submenuItem.CodigoMenu)"
                                                                     CssClass="menu-item" />
                                                 } 
                                             }
@@ -81,122 +69,4 @@
     }
 </div>
 
-@code {
-    private List<ConfiguracionMenu> _menu = new();
 
-    protected override async Task OnUsuarioDisponibleAsync()
-    {
-        ActualizarMenu(Usuario);
-        await EstablecerMenuActivo(0);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private void ActualizarMenu(UsuarioEntidad user)
-    {
-        CrearMenu(user);
-
-    }
-
-    /// <summary>
-    /// Build ConfiguracionMenu object from user object
-    /// </summary>
-    private void CrearMenu(UsuarioEntidad user)
-    {
-        _menu = new List<ConfiguracionMenu>();
-
-        List<Menu> menusPadres = user.Menus.Where(c => c.IdPadre == null).ToList();
-        List<Menu> menusHijos = user.Menus.Where(c => c.IdPadre != null).ToList();
-
-        Console.WriteLine($"[NavMenu] 📋 Creando menú - Padres: {menusPadres.Count}, Hijos: {menusHijos.Count}");
-
-        foreach (var opcion in menusPadres)
-        {
-            var menuPadre = new ConfiguracionMenu
-            {
-                CodigoMenu = opcion.Id,
-                CodigoMenuPadre = opcion.IdPadre,
-                DescripcionMenu = opcion.NombreMenu,
-                IndiceOrdenacion = opcion.IndOrdenacion
-            };
-
-            _menu.Add(menuPadre);
-            Console.WriteLine($"[NavMenu] 📁 Menú padre creado: {opcion.Id} - {opcion.NombreMenu}");
-        }
-
-        foreach (var item in menusHijos)
-        {
-            var url = item.Url(_resourceService) ?? "";
-
-            ConfiguracionMenu menuHijo = new ConfiguracionMenu
-            {
-                CodigoMenu = item.Id,
-                CodigoMenuPadre = item.IdPadre,
-                DescripcionMenu = item.NombreMenu,
-                IndiceOrdenacion = item.IndOrdenacion,
-                Url = url
-            };
-
-            var menuPadre = _menu.FirstOrDefault(o => o.CodigoMenu == item.IdPadre);
-
-            if (menuPadre != null)
-            {
-                menuPadre.Submenus.Add(menuHijo);
-                Console.WriteLine($"[NavMenu] ✅ Submenú agregado: {item.Id} - {item.NombreMenu} (Padre: {item.IdPadre}, URL: {url})");
-            }
-            else
-            {
-                Console.WriteLine($"[NavMenu] ⚠️ Padre no encontrado para submenú: {item.Id} - IdPadre: {item.IdPadre}");
-            }
-        }
-
-        // Log final de verificación
-        foreach (var menu in _menu)
-        {
-            Console.WriteLine($"[NavMenu] 🔍 Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenús");
-        }
-    }
-
-    private async void OnAfterExpand(TreeViewNodeEventArgs e)
-    {
-        var urlNormalizada = _NavigationService.ObtenerRutaActualNormalizada();
-
-        if (!string.IsNullOrEmpty(urlNormalizada))
-        {
-            var menuCodeActive = _resourceService.ObtenerCodigoMenuPorUrl(urlNormalizada);
-
-            if (menuCodeActive > 0)
-            {
-                await EstablecerMenuActivo(menuCodeActive);
-            }
-        }
-    }
-
-    private async Task NavigateTo(string url, string menuName)
-    {
-        try
-        {
-            if (!string.IsNullOrEmpty(url))
-            {
-
-                string urlActual = _NavigationService.ObtenerRutaActual();
-
-                if (url == urlActual)
-                {
-                    return;
-                }
-
-                // await _LogAccionesService.Insertar(
-                //     _UsuarioService.UsuarioApp!.Usuario.CodigoUsuario, 
-                //     $"{GetType().Name} > {GetResourceValue("Common:LogActions:LogAction_5:label")} {menuName} [{url}]"
-                // );
-                _NavigationManager.NavigateTo(url);
-            }
-        }
-        catch (Exception ex)
-        {
-            await _LogService.RegistrarExcepcion(GetType().Name, ex);
-        }
-    }
-
-
-}

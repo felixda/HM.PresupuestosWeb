@@ -9,8 +9,14 @@ namespace HM.Presupuestos.Server.Services
     public interface IMapaMenu
     {
         string? ObtenerUrlMenu(int codigoMenu);
+        string? ObtenerUrlMenu( CodigosMenu codigoMenu) => ObtenerUrlMenu((int)codigoMenu);
         int ObtenerCodigoMenuPorUrl(string url);
         string ObtenerEtiquetaMenuPorUrl(string url);
+
+        string ObtenerEtiquetaMenu(CodigosMenu codigoMenu);
+        string ObtenerIconoMenu(CodigosMenu codigoMenu);
+        string ObtenerVisibilidadMenu(CodigosMenu codigoMenu);
+
     }
 
     public class MapaMenu : IMapaMenu
@@ -112,6 +118,21 @@ namespace HM.Presupuestos.Server.Services
                 return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{code}:label");
 
             return url;
+        }
+
+        public string ObtenerEtiquetaMenu(CodigosMenu codigoMenu)
+        {
+            return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{(int)codigoMenu}:label");
+        }
+
+        public string ObtenerIconoMenu(CodigosMenu codigoMenu)
+        {
+            return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{(int)codigoMenu}:icono");
+        }
+
+        public string ObtenerVisibilidadMenu(CodigosMenu codigoMenu)
+        {
+            return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{(int)codigoMenu}:visible");
         }
     }
 }

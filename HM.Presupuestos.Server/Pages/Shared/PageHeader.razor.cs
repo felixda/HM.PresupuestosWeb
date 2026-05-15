@@ -1,19 +1,13 @@
 using HM.Core.Comun.v6.Entidades.Configuracion;
 using HM.Presupuestos.Infrastructure;
-using HM.Presupuestos.Domain.Comun;
-using HM.Presupuestos.Server.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace HM.Presupuestos.Server.Pages.Shared
 {
     public partial class PageHeader  
     {
         #region Inyecciones de Dependencias
-        // Las inyecciones ahora van aquí en lugar del @inject
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
-        [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
-        [Inject] protected IAlmacenSesionUsuario SessionService { get; set; } = default!;
+        [Inject] protected IAlmacenSesionUsuario AlmacenSesionUsuario { get; set; } = default!;
         #endregion
 
         #region Campos Privados
@@ -69,10 +63,10 @@ namespace HM.Presupuestos.Server.Pages.Shared
         /// <summary>
         /// Navega a la página anterior usando el historial del navegador
         /// </summary>
-        private void Volver()
+        private async Task OnVolver()
         {
             Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
-            JSRuntime.InvokeVoidAsync("history.back");
+            await JSRuntime.InvokeVoidAsync("history.back");
         }
 
         #endregion
@@ -110,7 +104,7 @@ namespace HM.Presupuestos.Server.Pages.Shared
             ActualizarEstadoMenu(codigoMenuActual, esFavorito);
 
             // Persistir cambios en sesión del usuario SSO. Del impersonado no se pueden modificar los favoritos
-            await SessionService.GuardarUsuarioSSO(Usuario);
+            await AlmacenSesionUsuario.GuardarUsuarioSSO(Usuario);
         }
 
         /// <summary>
