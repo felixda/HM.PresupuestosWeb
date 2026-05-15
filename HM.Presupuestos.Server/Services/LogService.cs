@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using HM.Core.Comun.v6.Entidades.Logger;
 using HM.Presupuestos.Infrastructure;
 using HM.Presupuestos.Server.Servicios;
@@ -20,13 +21,12 @@ namespace HM.Presupuestos.Server.Services
 
     public interface ILogService
     {
-       Task InsertLog(string category, string message, string? stackTrace, string comments, LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true);
+        Task InsertLog(string category, string message, string? stackTrace, string comments, LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task InsertException(string category, Exception exception, string comments = "", LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task InsertException(Exception exception, string comments = "", LogLevel logLevel = LogLevel.Error, bool insertDBLog = true, bool insertFileLog = true, [CallerFilePath] string callerFilePath = "", [CallerMemberName] string callerMemberName = "");
         Task GrabarAccesoAPagina( string tituloPagina);
 
-        Task RegistrarAccesoNoAutorizado( LogAccion logAccion);
-
+        Task RegistrarAccesoNoAutorizado( string ruta);
     }
 
     public class LogService:ILogService
@@ -70,19 +70,14 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Registrar intento de acceso no autorizado
         /// </summary>
-        public async Task RegistrarAccesoNoAutorizado( LogAccion logAccion)
+        public async Task RegistrarAccesoNoAutorizado( string ruta)
         {
             try
             { 
-                var usuario = _usuarioServicio.UsuarioApp!.Usuario;
-                if (usuario == null)
-                {
-                    return;
-                }
+                await _logAccionesService.Insertar(
+                      AccionesLog.IntentoAccesoNoAutorizado,
+                      ruta);
 
-                await _logAccionesService.Insertar(logAccion);
-
-                Console.WriteLine($"[MainLayout] ?? Acceso denegado registrado: {usuario.Login} -> ({logAccion.Parametros!.ToString()})");
             }
             catch (Exception ex)
             {

@@ -1,4 +1,6 @@
-﻿public abstract class ContextProtegido : Context
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+
+public abstract class ContextProtegido : Context
 {
     #region Servicios de Seguridad
 
@@ -106,6 +108,7 @@
             }
             else
             {
+                await LogService.RegistrarAccesoNoAutorizado(urlNormalizada);
                 await OnPermisoDenegadoAsync();
             }
         }

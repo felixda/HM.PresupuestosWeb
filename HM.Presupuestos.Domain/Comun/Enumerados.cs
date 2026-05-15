@@ -167,7 +167,7 @@ namespace HM.Presupuestos.Domain.Comun
         ImportarSobreprimasMMS,
         [Description("Recuperar sesión después de F5 con SSO")]
         RecuperarSesionDespuesDeF5SSO,
-        [Description("Intento de acceso no autorizado")]
+        [Description("Intento de acceso no autorizado a la página -> (mirar campo Parámetros)")]
         IntentoAccesoNoAutorizado,
         [Description("Entrar en la aplicacion Presupuestos Web con Impersonación")]
         EntrarEnPresupuestosWebImpersonacion,

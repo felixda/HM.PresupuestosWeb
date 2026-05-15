@@ -72,7 +72,7 @@ namespace HM.Presupuestos.Server.Services
             foreach (var parte in claveRecurso.Replace(" ", "").Split(":"))
             {
                 if (element.ValueKind == JsonValueKind.Array) return false;
-                if (!_proveedorJson.TryGetPropertyCaseInsensitive(element, parte, out element)) return false;
+                if (!_proveedorJson.IntentarObtenerPropiedadIgnorandoMayusculas(element, parte, out element)) return false;
             }
 
             resultado = element;

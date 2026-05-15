@@ -10,8 +10,9 @@ namespace HM.Presupuestos.Server.Services
     public interface IProveedorRecursosJson
     {
         JsonDocument? ObtenerDocumento(string codigoIdioma);
-        bool TryGetPropertyCaseInsensitive(JsonElement element, string propertyName, out JsonElement propertyValue);
-        void LimpiarCacheValores();
+        bool IntentarObtenerPropiedadIgnorandoMayusculas(JsonElement elemento, 
+            string propiedad, out JsonElement valorPropiedad);
+        //void LimpiarCacheValores();
     }
 
     public class ProveedorRecursosJson : IProveedorRecursosJson
@@ -44,27 +45,28 @@ namespace HM.Presupuestos.Server.Services
         /// <summary>
         /// Limpia la caché interna de documentos JSON (útil al cambiar idioma).
         /// </summary>
-        public void LimpiarCacheValores()
-        {
-            // Los JsonDocuments son inmutables; no necesitan limpiarse.
-            // Expuesto para que LocalizadorRecursos pueda limpiar su propia caché de valores.
-        }
+        //public void LimpiarCacheValores()
+        //{
+        //    // Los JsonDocuments son inmutables; no necesitan limpiarse.
+        //    // Expuesto para que LocalizadorRecursos pueda limpiar su propia caché de valores.
+        //}
 
         /// <summary>
         /// Busca una propiedad en un JsonElement sin distinción de mayúsculas/minúsculas.
         /// </summary>
-        public bool TryGetPropertyCaseInsensitive(JsonElement element, string propertyName, out JsonElement propertyValue)
+        public bool IntentarObtenerPropiedadIgnorandoMayusculas(JsonElement elemento, 
+            string propiedad, out JsonElement valorPropiedad)
         {
-            foreach (JsonProperty property in element.EnumerateObject())
+            foreach (JsonProperty property in elemento.EnumerateObject())
             {
-                if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(property.Name, propiedad, StringComparison.OrdinalIgnoreCase))
                 {
-                    propertyValue = property.Value;
+                    valorPropiedad = property.Value;
                     return true;
                 }
             }
 
-            propertyValue = default;
+            valorPropiedad = default;
             return false;
         }
 
