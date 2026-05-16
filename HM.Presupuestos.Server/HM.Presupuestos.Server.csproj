@@ -116,6 +116,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Layout\MainLayout.Errores.cs">
+      <DependentUpon>MainLayout.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Layout\MainLayout.Inactividad.cs">
+      <DependentUpon>MainLayout.razor</DependentUpon>
+    </Compile>
+    <Compile Update="Layout\MainLayout.Navegacion.cs">
+      <DependentUpon>MainLayout.razor</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Components\" />
     <Folder Include="Pages\Procesos\" />
     <Folder Include="Security\" />

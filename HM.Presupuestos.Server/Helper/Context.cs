@@ -1,5 +1,6 @@
-using HM.Presupuestos.Domain.Helper;
+﻿using HM.Presupuestos.Domain.Helper;
 using HM.Presupuestos.Server.Modelos;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using ILocalizadorRecursos = HM.Presupuestos.Server.Services.ILocalizadorRecursos;
 
@@ -26,7 +27,7 @@ namespace HM.Presupuestos.Server.Helper
         protected UsuarioApp? UsuarioApp { get; set; }
 
         /// <summary>
-        /// Usuario actual(impersonado si hubiera y si no el SSO) con sus reglas, men�s y permisos.
+        /// Usuario actual(impersonado si hubiera y si no el SSO) con sus reglas, menús y permisos.
         /// </summary>
         protected UsuarioEntidad Usuario => UsuarioApp!.Usuario;
 
@@ -68,13 +69,13 @@ namespace HM.Presupuestos.Server.Helper
                     {
                         UsuarioCargado = true;
 
-                        // Verificar si se desconect� el usuario login
+                        // Verificar si se desconectó el usuario login
                         if (UsuarioApp.ObtenerUsuarioImpersonado() == null)
                         {
                             await OnUsuarioLoginDesconectado();
                         }
 
-                        // ? Aqu� se llama cuando el usuario est� disponible
+                        // ? Aquí se llama cuando el usuario está disponible
                         await OnUsuarioDisponibleAsync();
                         await InvokeAsync(StateHasChanged);
                     }
@@ -120,18 +121,18 @@ namespace HM.Presupuestos.Server.Helper
         /// Obtiene el valor traducido de una clave de recurso
         /// </summary>
         /// <param name="claveRecurso">Clave del recurso (ej: "Common:Aceptar:label")</param>
-        /// <returns>Texto traducido seg�n el idioma actual</returns>
+        /// <returns>Texto traducido según el idioma actual</returns>
         protected string ObtenerTexto(string claveRecurso) => LocalizadorRecursos.ObtenerTexto(claveRecurso);
 
         /// <summary>
-        /// T�tulo de la p�gina obtenido autom�ticamente desde recursos.
-        /// Disponible en todas las p�ginas sin necesidad de calcularlo manualmente.
+        /// Título de la página obtenido automáticamente desde recursos.
+        /// Disponible en todas las páginas sin necesidad de calcularlo manualmente.
         /// </summary>
         protected string TituloPagina { get; private set; } = string.Empty;
 
         /// <summary>
-        /// Calcula el t�tulo de la p�gina desde los recursos buscando por la URL actual.
-        /// Sobrescribir para personalizar el t�tulo en p�ginas concretas.
+        /// Calcula el título de la página desde los recursos buscando por la URL actual.
+        /// Sobrescribir para personalizar el título en páginas concretas.
         /// </summary>
         protected virtual string ObtenerTituloPagina()
         {
@@ -250,29 +251,63 @@ namespace HM.Presupuestos.Server.Helper
             }
         }
 
-
+        /// <summary>
+        /// Maneja una excepción generada por la base de datos mostrando error al usuario
+        /// </summary>
         public async Task TratarExcepcionGeneradaEnBD(ExcepcionBaseDatos ex, string titulo)
         {
-            bool esErrorControlado = Math.Abs(ex.Codigo) >= 20001 && Math.Abs(ex.Codigo) <= 20999;
-            bool enviarErrorLogWatcher = Math.Abs(ex.Codigo) >= 20001 && Math.Abs(ex.Codigo) <= 20499;
+            await TratarExcepcionBaseDatos(ex, titulo, esWarning: false);
+        }
+
+        /// <summary>
+        /// Maneja una excepción generada por la base de datos mostrando advertencia al usuario
+        /// </summary>
+        public async Task TratarWarningGeneradoEnBD(ExcepcionBaseDatos ex, string titulo)
+        {
+            await TratarExcepcionBaseDatos(ex, titulo, esWarning: true);
+        }
+
+        
+
+        private async Task TratarExcepcionBaseDatos(ExcepcionBaseDatos ex, string titulo, bool esWarning)
+        {
+            bool esErrorControlado = Math.Abs(ex.Codigo) is >= 20001 and <= 20999;
+            bool enviarErrorLogWatcher = Math.Abs(ex.Codigo) is >= 20001 and <= 20499;
 
             string? mensaje = null;
 
+            // Intentar obtener mensaje traducido para errores controlados
             if (esErrorControlado)
             {
                 string clave = $"MensajeErrorBD:{ex.Codigo}:label";
                 mensaje = ExisteRecurso(clave)
                     ? ObtenerTexto(clave)
-                    : null;
+                    : (esWarning ? ObtenerTexto("common:Messages:DatabaseWarning:label") : null);
             }
 
+            // Registrar en log si es necesario y capturar si falló
+            bool loggingFallo = false;
             if (!esErrorControlado || enviarErrorLogWatcher)
             {
-                var excepcion = new Exception(ex.Message);
-                await RegistroAplicacion.RegistrarExcepcion(excepcion);
+                loggingFallo = await RegistrarExcepcionSeguro(ex);
             }
 
-            await MensajesHelper.MostrarMensajeError(titulo, mensaje);
+            // Agregar advertencia de logging fallido al mensaje si corresponde
+            if (loggingFallo && mensaje != null)
+            {
+                mensaje += "\n\n" + ObtenerTexto("common:Messages:LoggingError:label");
+            }
+
+            // Mostrar mensaje según tipo
+            if (esWarning)
+            {
+                await MensajesHelper.MostrarMensajeAviso(titulo, 
+                    mensaje ?? ObtenerTexto("common:Messages:DatabaseWarning:label"));
+            }
+            else
+            {
+                await MensajesHelper.MostrarMensajeError(titulo, mensaje);
+            }
         }
 
 
@@ -282,13 +317,13 @@ namespace HM.Presupuestos.Server.Helper
         }
 
 
-        #region Ejecuci�n (disponible para TODOS los componentes)
+        #region Ejecución (disponible para TODOS los componentes)
 
         /// <summary>
-        /// Ejecuta una acci�n con gesti�n autom�tica de overlay, logging y manejo de errores
+        /// Ejecuta una acción con gestión automática de overlay, logging y manejo de errores
         /// ? Disponible en TODOS los componentes (protegidos o no)
         /// </summary>
-        /// <param name="action">Acci�n as�ncrona a ejecutar</param>
+        /// <param name="action">Acción asíncrona a ejecutar</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <example>
@@ -317,7 +352,7 @@ namespace HM.Presupuestos.Server.Helper
             }
             catch (Exception ex)
             {
-                // Log de la excepci�n
+                // Log de la excepción
                 await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
             }
@@ -331,15 +366,15 @@ namespace HM.Presupuestos.Server.Helper
         }
 
         /// <summary>
-        /// Ejecuta una funci�n con gesti�n autom�tica y retorna el resultado
+        /// Ejecuta una función con gestión automática y retorna el resultado
         /// ? Retorna el valor por defecto si ocurre un error
         /// </summary>
         /// <typeparam name="TResult">Tipo de resultado</typeparam>
-        /// <param name="func">Funci�n as�ncrona a ejecutar</param>
+        /// <param name="func">Función asíncrona a ejecutar</param>
         /// <param name="defaultValue">Valor por defecto en caso de error</param>
         /// <param name="customErrorMessage"></param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
-        /// <returns>Resultado de la funci�n o valor por defecto</returns>
+        /// <returns>Resultado de la función o valor por defecto</returns>
         /// <example>
         /// <code>
         /// var items = await EjecutarAsync(
@@ -382,9 +417,9 @@ namespace HM.Presupuestos.Server.Helper
         }
 
         /// <summary>
-        /// Ejecuta una acci�n s�ncrona con gesti�n autom�tica
+        /// Ejecuta una acción síncrona con gestión automática
         /// </summary>
-        /// <param name="action">Acci�n s�ncrona a ejecutar</param>
+        /// <param name="action">Acción síncrona a ejecutar</param>
         /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
         /// <example>
@@ -417,6 +452,98 @@ namespace HM.Presupuestos.Server.Helper
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Maneja excepciones de forma centralizada: registra el error y muestra mensaje al usuario
+        /// </summary>
+        /// <param name="ex">Excepción capturada</param>
+        /// <param name="pageTitle">Título de la página</param>
+        /// <param name="mensajePersonalizado">Mensaje personalizado opcional</param>
+        /// <param name="nombreMetodoLlamador">Nombre del método que llamó a esta función</param>
+        /// <param name="callerFilePath">Ruta del archivo que llama (se captura automáticamente)</param>
+        protected async Task ManejarExcepcion(Exception ex,
+            string pageTitle,
+            string? mensajePersonalizado = null,
+            [CallerMemberName] string nombreMetodoLlamador = "",
+            [CallerFilePath] string callerFilePath = "")
+        {
+            // ✅ Construir categoría automáticamente: "NombreClase.NombreMetodo"
+            var className = ExtractClassNameFromFilePath(callerFilePath);
+            var category = $"{className}.{nombreMetodoLlamador}";
+
+            // ✅ Registrar con fallback seguro y capturar si falló
+            bool loggingFallo = await RegistrarExcepcionSeguro(ex, category);
+
+            // Construir mensaje para el usuario
+            var mensaje = mensajePersonalizado ?? AppResources.Mensajes.ErrorGeneral;
+                //GetResourceValue("mensajes:ErrorGenerico:label");
+
+            // Agregar advertencia de logging fallido si corresponde
+            if (loggingFallo)
+            {
+                mensaje += "\n\n" + AppResources.Mensajes.ErrorGeneral; 
+                //Añadir entrada error login
+            }
+
+            await MensajesHelper.MostrarMensajeError(pageTitle, mensaje);
+        }
+
+        /// <summary>
+        /// Extrae el nombre de la clase desde la ruta completa del archivo
+        /// </summary>
+        /// <param name="filePath">Ruta completa del archivo (ej: C:\Proyectos\...\Pages\Versiones.razor.cs)</param>
+        /// <returns>Nombre de la clase (ej: Versiones)</returns>
+        private static string ExtractClassNameFromFilePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return "Unknown";
+
+            // ✅ Obtener nombre del archivo sin extensión
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+
+            // ✅ Remover extensiones múltiples (.razor.cs → Versiones)
+            if (fileName.EndsWith(".razor"))
+                fileName = fileName[..^6]; // Remover ".razor"
+
+            return fileName;
+        }
+
+        /// <summary>
+        /// Registra una excepción con múltiples niveles de fallback para garantizar que siempre se registre
+        /// </summary>
+        /// <param name="ex">Excepción a registrar</param>
+        private async Task<bool> RegistrarExcepcionSeguro(Exception ex, string? category = null)
+        {
+            try
+            {
+                // Nivel 1: Comportamiento normal (API + Archivo)
+                await RegistroAplicacion.RegistrarExcepcion(category, ex);
+                return false; // ✅ Éxito
+            }
+            catch (Exception exLogging)
+            {
+                try
+                {
+                    // Nivel 2: Fallback a solo archivo NLog
+                    await RegistroAplicacion.RegistrarExcepcion(
+                        ex,
+                        comments: "[FALLBACK] Error al registrar en API",
+                        insertDBLog: false,  // ❌ Skip API
+                        insertFileLog: true  // ✅ Solo NLog
+                    );
+                    return false; // ✅ Éxito en fallback
+                }
+                catch (Exception exFallback)
+                {
+                    // Nivel 3: Console como último recurso
+                    Console.WriteLine($"[CRITICAL] Error registrando excepción:");
+                    Console.WriteLine($"  - Excepción original: {ex.Message}");
+                    Console.WriteLine($"  - Error logging API: {exLogging.Message}");
+                    return true; // ❌ Fallo total (notifica al usuario)
+                }
+            }
+        }
 
 
     }
