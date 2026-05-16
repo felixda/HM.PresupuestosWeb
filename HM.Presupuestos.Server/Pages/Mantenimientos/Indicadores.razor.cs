@@ -135,8 +135,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
+                await ManejarExcepcion(ex);
             }
         }
 
@@ -246,8 +245,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
+                await ManejarExcepcion(ex);
             }
         }
 
@@ -361,8 +359,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
+                await ManejarExcepcion(ex);
             }
             finally
             {

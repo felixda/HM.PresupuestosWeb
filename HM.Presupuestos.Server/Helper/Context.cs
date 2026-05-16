@@ -254,22 +254,32 @@ namespace HM.Presupuestos.Server.Helper
         /// <summary>
         /// Maneja una excepción generada por la base de datos mostrando error al usuario
         /// </summary>
-        public async Task TratarExcepcionGeneradaEnBD(ExcepcionBaseDatos ex, string titulo)
+        public async Task TratarExcepcionGeneradaEnBD(ExcepcionBaseDatos ex, string titulo,
+            [CallerMemberName] string nombreMetodoLlamador = "",
+            [CallerFilePath] string rutaFicheroLlamador = "")
         {
-            await TratarExcepcionBaseDatos(ex, titulo, esWarning: false);
+            // ✅ Construir categoría automáticamente: "NombreClase.NombreMetodo"
+            var nombreClase = ExtractClassNameFromFilePath(rutaFicheroLlamador);
+            var categoria = $"{nombreClase}.{nombreMetodoLlamador}";
+            await TratarExcepcionBaseDatos(ex, categoria, titulo, esWarning: false);
         }
 
         /// <summary>
         /// Maneja una excepción generada por la base de datos mostrando advertencia al usuario
         /// </summary>
-        public async Task TratarWarningGeneradoEnBD(ExcepcionBaseDatos ex, string titulo)
+        public async Task TratarWarningGeneradoEnBD(ExcepcionBaseDatos ex, string titulo,
+            [CallerMemberName] string nombreMetodoLlamador = "",
+            [CallerFilePath] string rutaFicheroLlamador = "")
         {
-            await TratarExcepcionBaseDatos(ex, titulo, esWarning: true);
+            // ✅ Construir categoría automáticamente: "NombreClase.NombreMetodo"
+            var nombreClase = ExtractClassNameFromFilePath(rutaFicheroLlamador);
+            var categoria = $"{nombreClase}.{nombreMetodoLlamador}";
+            await TratarExcepcionBaseDatos(ex, categoria, titulo, esWarning: true);
         }
 
         
 
-        private async Task TratarExcepcionBaseDatos(ExcepcionBaseDatos ex, string titulo, bool esWarning)
+        private async Task TratarExcepcionBaseDatos(ExcepcionBaseDatos ex, string categoria, string titulo, bool esWarning)
         {
             bool esErrorControlado = Math.Abs(ex.Codigo) is >= 20001 and <= 20999;
             bool enviarErrorLogWatcher = Math.Abs(ex.Codigo) is >= 20001 and <= 20499;
@@ -286,14 +296,14 @@ namespace HM.Presupuestos.Server.Helper
             }
 
             // Registrar en log si es necesario y capturar si falló
-            bool loggingFallo = false;
+            bool excepcionRegistrada = true;
             if (!esErrorControlado || enviarErrorLogWatcher)
             {
-                loggingFallo = await RegistrarExcepcionSeguro(ex);
+                excepcionRegistrada  = await SeRegistroExcepcion(ex, categoria);
             }
 
             // Agregar advertencia de logging fallido al mensaje si corresponde
-            if (loggingFallo && mensaje != null)
+            if (!excepcionRegistrada  && mensaje != null)
             {
                 mensaje += "\n\n" + AppResources.Mensajes.LoggingError;
             }
@@ -325,7 +335,7 @@ namespace HM.Presupuestos.Server.Helper
         /// </summary>
         /// <param name="action">Acción asíncrona a ejecutar</param>
         /// <param name="showOverlay">Si debe mostrar el overlay de carga (default: true)</param>
-        /// <param name="customErrorMessage">Mensaje de error personalizado (opcional)</param>
+        /// <param name="mensajePersonalizado">Mensaje de error personalizado (opcional)</param>
         /// <example>
         /// <code>
         /// await EjecutarAsync(async () =>
@@ -337,7 +347,7 @@ namespace HM.Presupuestos.Server.Helper
         /// </example>
         protected async Task EjecutarAsync(
             Func<Task> action,
-            string? customErrorMessage = null,
+            string? mensajePersonalizado = null,
             bool showOverlay = true
             )
         {
@@ -352,9 +362,7 @@ namespace HM.Presupuestos.Server.Helper
             }
             catch (Exception ex)
             {
-                // Log de la excepción
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
+                await ManejarExcepcion(ex, mensajePersonalizado);
             }
             finally
             {
@@ -457,36 +465,32 @@ namespace HM.Presupuestos.Server.Helper
         /// <summary>
         /// Maneja excepciones de forma centralizada: registra el error y muestra mensaje al usuario
         /// </summary>
-        /// <param name="ex">Excepción capturada</param>
-        /// <param name="pageTitle">Título de la página</param>
+        /// <param name="excepcion">Excepción capturada</param>
         /// <param name="mensajePersonalizado">Mensaje personalizado opcional</param>
         /// <param name="nombreMetodoLlamador">Nombre del método que llamó a esta función</param>
-        /// <param name="callerFilePath">Ruta del archivo que llama (se captura automáticamente)</param>
-        protected async Task ManejarExcepcion(Exception ex,
-            string pageTitle,
+        /// <param name="rutaFicheroLlamador">Ruta del archivo que llama (se captura automáticamente)</param>
+        protected async Task ManejarExcepcion(Exception excepcion,
             string? mensajePersonalizado = null,
             [CallerMemberName] string nombreMetodoLlamador = "",
-            [CallerFilePath] string callerFilePath = "")
+            [CallerFilePath] string rutaFicheroLlamador = "")
         {
             // ✅ Construir categoría automáticamente: "NombreClase.NombreMetodo"
-            var className = ExtractClassNameFromFilePath(callerFilePath);
-            var category = $"{className}.{nombreMetodoLlamador}";
+            var nombreClase = ExtractClassNameFromFilePath(rutaFicheroLlamador);
+            var categoria = $"{nombreClase}.{nombreMetodoLlamador}";
 
-            // ✅ Registrar con fallback seguro y capturar si falló
-            bool loggingFallo = await RegistrarExcepcionSeguro(ex, category);
+            // ✅ Registrar con respaldo seguro y capturar si falló
+            bool excepcionRegistrada  = await SeRegistroExcepcion(excepcion, categoria);
 
             // Construir mensaje para el usuario
             var mensaje = mensajePersonalizado ?? AppResources.Mensajes.ErrorGeneral;
-                //GetResourceValue("mensajes:ErrorGenerico:label");
 
             // Agregar advertencia de logging fallido si corresponde
-            if (loggingFallo)
+            if (!excepcionRegistrada)
             {
-                mensaje += "\n\n" + AppResources.Mensajes.ErrorGeneral; 
-                //Añadir entrada error login
+                mensaje += "\n\n" + AppResources.Mensajes.LoggingError; 
             }
 
-            await MensajesHelper.MostrarMensajeError(pageTitle, mensaje);
+            await MensajesHelper.MostrarMensajeError(TituloPagina, mensaje);
         }
 
         /// <summary>
@@ -510,41 +514,63 @@ namespace HM.Presupuestos.Server.Helper
         }
 
         /// <summary>
-        /// Registra una excepción con múltiples niveles de fallback para garantizar que siempre se registre
+        /// Registra una excepción con múltiples niveles de respaldo para garantizar que siempre se registre
         /// </summary>
-        /// <param name="ex">Excepción a registrar</param>
-        /// <param name="category">Categoría de la excepción</param>
-        /// <returns>True si hubo un fallo total al registrar la excepción, False en caso contrario</returns>
-        private async Task<bool> RegistrarExcepcionSeguro(Exception ex, string? category = null)
+        /// <param name="excepcion">Excepción a registrar</param>
+        /// <param name="categoria">Categoría de la excepción</param>
+        /// <returns>False si hubo un fallo total al registrar la excepción, true en caso contrario</returns>
+        private async Task<bool> SeRegistroExcepcion(Exception excepcion, string? categoria = null)
         {
             try
             {
-                // Nivel 1: Comportamiento normal (API + Archivo)
-                await RegistroAplicacion.RegistrarExcepcion(category, ex);
-                return false; // ✅ Éxito
+                await RegistrarExcepcionPrincipal(excepcion, categoria);
+                return true;
             }
-            catch (Exception exLogging)
+            catch (Exception excepcionApi)
             {
                 try
                 {
-                    // Nivel 2: Fallback a solo archivo NLog
-                    await RegistroAplicacion.RegistrarExcepcion(
-                        ex,
-                        comments: "[FALLBACK] Error al registrar en API",
-                        insertDBLog: false,  // ❌ Skip API
-                        insertFileLog: true  // ✅ Solo NLog
-                    );
-                    return false; // ✅ Éxito en fallback
+                    await RegistrarExcepcionRespaldo(excepcion, excepcionApi);
+                    return true;
                 }
-                catch (Exception exFallback)
+                catch (Exception excepcionArchivo)
                 {
-                    // Nivel 3: Console como último recurso
-                    Console.WriteLine($"[CRITICAL] Error registrando excepción:");
-                    Console.WriteLine($"  - Excepción original: {ex.Message}");
-                    Console.WriteLine($"  - Error logging API: {exLogging.Message}");
-                    return true; // ❌ Fallo total (notifica al usuario)
+                    RegistrarExcepcionEnConsola(excepcion, excepcionApi, excepcionArchivo);
+                    return false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Nivel 1: Registra la excepción en la API y en archivo (comportamiento normal)
+        /// </summary>
+        private async Task RegistrarExcepcionPrincipal(Exception excepcion, string categoria )
+        {
+            await RegistroAplicacion.RegistrarExcepcion(categoria, excepcion);
+        }
+
+        /// <summary>
+        /// Nivel 2: Fallback — registra la excepción solo en archivo NLog cuando la API falla
+        /// </summary>
+        private async Task RegistrarExcepcionRespaldo(Exception excepcionOriginal, Exception excepcionApi)
+        {
+            await RegistroAplicacion.RegistrarExcepcion(
+                excepcionOriginal,
+                comments: "[Respaldo] Error al registrar en API " + excepcionApi.Message,
+                insertDBLog: false,
+                insertFileLog: true
+            );
+        }
+
+        /// <summary>
+        /// Nivel 3: Último recurso — escribe la excepción en consola cuando API y archivo fallan
+        /// </summary>
+        private static void RegistrarExcepcionEnConsola(Exception excepcionOriginal, Exception excepcionApi, Exception excepcionArchivo)
+        {
+            Console.WriteLine($"[CRITICAL] Error registrando excepción:");
+            Console.WriteLine($"  - Excepción original: {excepcionOriginal.Message}");
+            Console.WriteLine($"  - Error logging API:  {excepcionApi.Message}");
+            Console.WriteLine($"  - Error logging archivo: {excepcionArchivo.Message}");
         }
 
 
