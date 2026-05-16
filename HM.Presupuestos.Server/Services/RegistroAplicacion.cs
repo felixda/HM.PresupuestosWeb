@@ -172,7 +172,7 @@ namespace HM.Presupuestos.Server.Services
             if (!insertDBLog && !insertFileLog)
                 return;
 
-            var usuario =  _sesionUsuario.UsuarioApp!.Usuario;
+            var usuario =  _sesionUsuario.UsuarioApp!.UsuarioActivo;
             var stackTraceText = stackTrace ?? string.Empty;
 
             if (insertDBLog)

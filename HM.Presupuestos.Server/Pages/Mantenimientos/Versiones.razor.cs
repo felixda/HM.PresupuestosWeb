@@ -535,7 +535,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                     if (newVersionList.Count > 0 || updateVersionList.Count > 0)
                     {
-                        var result = await VersionesService.GrabarVersiones(newVersionList, updateVersionList, SesionUsuario.UsuarioApp!.Usuario!.CodigoPais);
+                        var result = await VersionesService.GrabarVersiones(newVersionList, updateVersionList, SesionUsuario.UsuarioApp!.UsuarioActivo!.CodigoPais);
 
                         if (result)
                         {

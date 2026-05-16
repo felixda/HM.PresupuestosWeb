@@ -24,12 +24,12 @@ namespace HM.Presupuestos.Server.Services
         }
 
 
-        private void CargarUrlsPermitidasSiEsNecesario(UsuarioApp usuarioApp)
+        private void CargarUrlsPermitidasSiEsNecesario(ContextoUsuario usuarioApp)
         {
             if (_urlsPermitidas.Count > 0)
                 return;
 
-            var urlsPermitidas = usuarioApp.Usuario.Menus
+            var urlsPermitidas = usuarioApp.UsuarioActivo.Menus
                 .Where(menu => menu.TienePadre())
                 .Select(menu => menu.Url(_mapaMenu))
                 .Where(url => !string.IsNullOrWhiteSpace(url));

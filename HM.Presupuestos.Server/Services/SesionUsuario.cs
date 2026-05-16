@@ -8,7 +8,7 @@ namespace HM.Presupuestos.Server.Servicios
 {
     public interface ISesionUsuario
     {
-        UsuarioApp? UsuarioApp { get; }
+        ContextoUsuario? UsuarioApp { get; }
 
         event Func<Task>? UsuarioCargado;
 
@@ -32,7 +32,7 @@ namespace HM.Presupuestos.Server.Servicios
 
         public event Func<Task>? UsuarioCargado;
 
-        public UsuarioApp? UsuarioApp { get; private set; }
+        public ContextoUsuario? UsuarioApp { get; private set; }
 
 
         public SesionUsuario(
@@ -62,16 +62,16 @@ namespace HM.Presupuestos.Server.Servicios
                 return;
             }
 
-            var usuario = new UsuarioApp();
+            var usuario = new ContextoUsuario();
 
             UsuarioEntidad usuarioSSO = await _sesionUsuario.ObtenerUsuarioSSO(); 
             UsuarioEntidad? usuarioLogin = await _sesionUsuario.ObtenerUsuarioImpersonado();
 
-            usuario.AsociarUsuarioSSO(usuarioSSO);
-            usuario.AsociarUsuarioImpersonado(usuarioLogin);
+            usuario.AsignarUsuarioAutenticado(usuarioSSO);
+            usuario.AsignarUsuarioImpersonado(usuarioLogin);
 
             UsuarioApp = usuario;
-            _jwt.Usuario = UsuarioApp.Usuario;
+            _jwt.Usuario = UsuarioApp.UsuarioActivo;
 
             if (UsuarioCargado != null)
             {
@@ -104,8 +104,8 @@ namespace HM.Presupuestos.Server.Servicios
 
                 await _sesionUsuario.GuardarUsuarioImpersonado(usuario);
 
-                UsuarioApp ??= new UsuarioApp();
-                UsuarioApp.AsociarUsuarioImpersonado(usuario);
+                UsuarioApp ??= new ContextoUsuario();
+                UsuarioApp.AsignarUsuarioImpersonado(usuario);
 
                 // Disparar evento de forma asíncrona SIN esperar (fire-and-forget)
                 // Esto permite que el método retorne inmediatamente sin bloquearse
@@ -177,8 +177,8 @@ namespace HM.Presupuestos.Server.Servicios
 
                 await _sesionUsuario.GuardarUsuarioSSO(usuario);
 
-                UsuarioApp ??= new UsuarioApp();
-                UsuarioApp!.AsociarUsuarioSSO(usuario);
+                UsuarioApp ??= new ContextoUsuario();
+                UsuarioApp!.AsignarUsuarioAutenticado(usuario);
 
                 return usuario;
             }
@@ -197,7 +197,7 @@ namespace HM.Presupuestos.Server.Servicios
                 return;
             }
             
-            var usuarioLogin = UsuarioApp.ObtenerUsuarioImpersonado();
+            var usuarioLogin = UsuarioApp.UsuarioImpersonado;
             if (usuarioLogin == null)
             {
                 _logger.LogWarning("[UsuarioServicio] No hay usuario login para eliminar");
@@ -207,17 +207,17 @@ namespace HM.Presupuestos.Server.Servicios
             LogAccion logAccionLogin = CrearRegistroAccionUsuario(usuarioLogin, AccionesLog.CerrarSesionUsuarioLogin);
 
             await _sesionUsuario.EliminarUsuarioImpersonado(); 
-            UsuarioApp.DesconectarUsuarioImpersonado();
+            UsuarioApp.DesactivarUsuarioImpersonado();
 
             await _registroAcciones.Insertar(logAccionLogin);
 
             _logger.LogInformation("? Usuario {UserName} descargado exitosamente ", usuarioLogin.Nombre);
 
-            var usuarioCopiaSSO = UsuarioApp.Usuario;
-            LogAccion logAccionSSO = CrearRegistroAccionUsuario(usuarioCopiaSSO, AccionesLog.VolverEntrarEnPresupuestosWebSSO);
+            var usuarioCopiaActivo = UsuarioApp.UsuarioActivo;
+            LogAccion logAccionSSO = CrearRegistroAccionUsuario(usuarioCopiaActivo, AccionesLog.VolverEntrarEnPresupuestosWebSSO);
             await _registroAcciones.Insertar(logAccionSSO);
 
-            _logger.LogInformation("? Usuario SSO {UserName} cargado de nuevo exitosamente ", usuarioCopiaSSO.Nombre);
+            _logger.LogInformation("? Usuario Autenticado {UserName} cargado de nuevo exitosamente ", usuarioCopiaActivo.Nombre);
 
             if (UsuarioCargado != null)
             {

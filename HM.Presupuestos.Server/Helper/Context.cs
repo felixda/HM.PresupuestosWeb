@@ -24,15 +24,15 @@ namespace HM.Presupuestos.Server.Helper
         [Inject] protected IRutasNavegacion RutasNavegacion { get; set; } = default!;
 
 
-        protected UsuarioApp? UsuarioApp { get; set; }
+        protected ContextoUsuario? UsuarioApp { get; set; }
 
         /// <summary>
         /// Usuario actual(impersonado si hubiera y si no el SSO) con sus reglas, menús y permisos.
         /// </summary>
-        protected UsuarioEntidad Usuario => UsuarioApp!.Usuario;
+        protected UsuarioEntidad Usuario => UsuarioApp!.UsuarioActivo;
 
-        protected UsuarioEntidad? UsuarioImpersonado => UsuarioApp!.ObtenerUsuarioImpersonado();
-        protected UsuarioEntidad UsuarioSSO => UsuarioApp!.ObtenerUsuarioSSO();
+        protected UsuarioEntidad? UsuarioImpersonado => UsuarioApp!.UsuarioImpersonado;
+        protected UsuarioEntidad UsuarioSSO => UsuarioApp!.UsuarioAutenticado;
 
         protected bool UsuarioCargado { get; private set; } = false;
 
@@ -70,7 +70,7 @@ namespace HM.Presupuestos.Server.Helper
                         UsuarioCargado = true;
 
                         // Verificar si se desconectó el usuario login
-                        if (UsuarioApp.ObtenerUsuarioImpersonado() == null)
+                        if (UsuarioApp.UsuarioImpersonado == null)
                         {
                             await OnUsuarioLoginDesconectado();
                         }

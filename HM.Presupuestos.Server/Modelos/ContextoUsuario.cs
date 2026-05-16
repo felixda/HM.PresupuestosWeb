@@ -1,16 +1,16 @@
 ﻿
 namespace HM.Presupuestos.Server.Modelos
 { 
-    public class UsuarioApp
+    public class ContextoUsuario
     {
-        private UsuarioEntidad _usarioSSO = new();
+        private UsuarioEntidad _usarioAutenticado = new();
         private UsuarioEntidad? _usuarioImpersonado = null;
 
         /// <summary>
         /// Devuelve el usuario activo en la aplicación. 
         /// Si hay un usuario impersonado, se devuelve ese; de lo contrario, se devuelve el usuario SSO.
         /// </summary>
-        public UsuarioEntidad Usuario
+        public UsuarioEntidad UsuarioActivo
         {
             get
             {
@@ -20,34 +20,39 @@ namespace HM.Presupuestos.Server.Modelos
                 }
                 else
                 {
-                    return _usarioSSO;
+                    return _usarioAutenticado;
                 }
             }
         }
 
-        public void AsociarUsuarioSSO(UsuarioEntidad usuarioSSO)
+        public void AsignarUsuarioAutenticado(UsuarioEntidad usuarioAutenticado)
         {
-            _usarioSSO = usuarioSSO;
+            _usarioAutenticado = usuarioAutenticado;
         }
 
-        public void AsociarUsuarioImpersonado(UsuarioEntidad? usuarioImpersonado)
+        public void AsignarUsuarioImpersonado(UsuarioEntidad? usuarioImpersonado)
         {
             _usuarioImpersonado = usuarioImpersonado;
         }
 
     
 
-        public void DesconectarUsuarioImpersonado()
+        public void DesactivarUsuarioImpersonado()
         {
             _usuarioImpersonado = null;
           
         }
 
-        public UsuarioEntidad ObtenerUsuarioSSO()
+
+        public UsuarioEntidad UsuarioAutenticado
         {
-            return _usarioSSO;
+            get { return _usarioAutenticado; }
         }
 
+        public UsuarioEntidad? UsuarioImpersonado
+        {
+            get { return _usuarioImpersonado; }
+        }
         public UsuarioEntidad? ObtenerUsuarioImpersonado ()
         {
             return _usuarioImpersonado;
