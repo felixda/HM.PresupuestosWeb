@@ -1,25 +1,22 @@
-﻿//using DevExpress.Blazor;
-//using HM.Presupuestos.Server.Pages.Shared;
-//using Microsoft.AspNetCore.Components.Routing;
-
+﻿
 namespace HM.Presupuestos.Server.Layout
 {
     public partial class MainLayout
     {
         #region Servicios Inyectados
 
-        [Inject] private ILocalizadorRecursos TraductorRecursos { get; set; } = default!;
+        [Inject] private ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
-        [Inject] private InactividadService InactividadService { get; set; } = default!;
-        [Inject] private JsInteropHelper InactividadInterop { get; set; } = default!;
-        [Inject] private IConfiguration Configuration { get; set; } = default!;
+        [Inject] private ControlInactividad ControlInactividad { get; set; } = default!;
+        [Inject] private JsInteropHelper InteropInactividad { get; set; } = default!;
+        [Inject] private IConfiguration Configuracion { get; set; } = default!;
         [Inject] private TraduccionesHelper TraduccionesHelper { get; set; } = default!;
-        [Inject] private ControlCambiosService ControlCambiosService { get; set; } = default!;
+        [Inject] private IControlCambiosNavegacion ControlCambiosNavegacion { get; set; } = default!;
         [Inject] private ISesionUsuario SesionUsuario { get; set; } = default!;
-        [Inject] private ErrorDialogService ErrorService { get; set; } = default!;
-        [Inject] private IRegistroAplicacion LogService { get; set; } = default!;
-        [Inject] private IGestorIdioma IdiomaService { get; set; } = default!;
-        [Inject] private IRutasNavegacion NavigationService { get; set; } = default!;
+        [Inject] private DialogoErrores DialogoErrores { get; set; } = default!;
+        [Inject] private IRegistroAplicacion RegistroAplicacion { get; set; } = default!;
+        [Inject] private IGestorIdioma GestorIdioma { get; set; } = default!;
+        [Inject] private IRutasNavegacion RutasNavegacion { get; set; } = default!;
         [Inject] private IMapaMenu MapaMenu { get; set; } = default!;
 
         #endregion
@@ -31,18 +28,18 @@ namespace HM.Presupuestos.Server.Layout
         /// </summary>
         private DxPopup? ErrorPopup { get; set; }
         
-        private bool ErrorVisible { get; set; }
+        private bool MostrarError { get; set; }
         private string MensajeError { get; set; } = string.Empty;
         private string TituloVentanaError { get; set; } = string.Empty;
 
-        private bool IsOpen { get; set; } = true;
-        private DrawerMode Mode { get; set; } = DrawerMode.Shrink;
-        private DrawerPosition Position { get; set; } = DrawerPosition.Left;
+        private bool MenuAbierto { get; set; } = true;
+        private DrawerMode ModoMenu { get; set; } = DrawerMode.Shrink;
+        private DrawerPosition PosicionMenu { get; set; } = DrawerPosition.Left;
 
         /// <summary>
         /// Controla la visibilidad del modal de advertencia de inactividad
         /// </summary>
-        private bool MostrarAdvertenciaInactividad { get; set; } = false;
+        private bool MostrarAvisoInactividad { get; set; } = false;
         
         /// <summary>
         /// Tiempo restante en milisegundos para la cuenta atrás
@@ -52,7 +49,7 @@ namespace HM.Presupuestos.Server.Layout
         /// <summary>
         /// Título del modal de advertencia
         /// </summary>
-        private string TituloModalAdvertencia { get; set; } = string.Empty;
+        private string TituloAvisoInactividad { get; set; } = string.Empty;
         
         /// <summary>
         /// Texto para la cuenta atrás
@@ -62,17 +59,17 @@ namespace HM.Presupuestos.Server.Layout
         /// <summary>
         /// Referencia al componente modal de control de cambios
         /// </summary>
-        private ModalControlCambios? ConfirmModalControlCambios { get; set; }
+        private ModalControlCambios? ModalConfirmacionCambios { get; set; }
 
         #endregion
 
         #region Propiedades Internas (camelCase con _)
 
-        private bool _esHome => Navigation.Uri.ToLower().EndsWith("/home");
-        private bool _suscripcionEventosJsActiva = false;
-        private string _ultimaUrlLogeada = "";
+        private bool EsHome => Navigation.Uri.ToLower().EndsWith("/home");
+        private bool _eventosJavascriptSuscritos = false;
+        private string _ultimaUrlRegistrada = "";
         private bool _layoutInicializado = false;
-        private string _ultimaUrlNavegada = "";
+        private string _ultimaRutaVisitada = "";
 
         #endregion
 
@@ -85,14 +82,14 @@ namespace HM.Presupuestos.Server.Layout
         {
             TituloVentanaError = $"{nombrePantalla}";
             MensajeError = await TraduccionesHelper.GetResourceValue("mensajes:ErrorAbriendoPantalla:label");
-            ErrorVisible = true;
+            MostrarError = true;
             await InvokeAsync(StateHasChanged);
-            await LogService.RegistrarExcepcion(this.GetType().Name, ex);
+            await RegistroAplicacion.RegistrarExcepcion(this.GetType().Name, ex);
         }
 
         private void CerrarPopupError()
         {
-            ErrorVisible = false;
+            MostrarError = false;
             Navigation.NavigateTo("/home", forceLoad: false);
         }
 
@@ -110,12 +107,12 @@ namespace HM.Presupuestos.Server.Layout
                 Navigation.LocationChanged -= OnLocationChangedAsync;
                 Navigation.LocationChanged += OnLocationChangedAsync;
 
-                ErrorService.OnError += MostrarPopupError;
+                DialogoErrores.OnError += MostrarPopupError;
 
                 // Para indicar la función que se mostrará al cambiar de páginas en la navegación y se ha indicado que hay cambios
-                ControlCambiosService.RegistrarConfirmador(ShowModalConfirmacion);
+                ControlCambiosNavegacion.RegistrarConfirmacionSalida(MostrarConfirmacionCambiosPendientes);
 
-                IdiomaService.IdiomaCambiado += async () =>
+                GestorIdioma.IdiomaCambiado += async () =>
                 {
                     await InvokeAsync(StateHasChanged);
                 };
@@ -125,7 +122,7 @@ namespace HM.Presupuestos.Server.Layout
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ❌ Error en OnInitializedAsync: {ex.Message}");
-                await LogService.RegistrarExcepcion(nameof(MainLayout), ex);
+                await RegistroAplicacion.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }
 
@@ -139,14 +136,14 @@ namespace HM.Presupuestos.Server.Layout
                 {
                     await SesionUsuario.InicializarUsuarioAsync();
 
-                    TituloModalAdvertencia = TraductorRecursos.ObtenerTexto("Pages:ModalInactividad:Titulo:label");
-                    TextoCuentaAtras = TraductorRecursos.ObtenerTexto("Pages:ModalInactividad:CuentaAtras:label");
+                    TituloAvisoInactividad = AppResources.Pages.ModalInactividad.Titulo; //  LocalizadorRecursos.ObtenerTexto("Pages:ModalInactividad:Titulo:label");
+                    TextoCuentaAtras = AppResources.Pages.ModalInactividad.CuentaAtras; //  LocalizadorRecursos.ObtenerTexto("Pages:ModalInactividad:CuentaAtras:label");
 
-                    await ManejarSubscripciones();
+                    await ActualizarSubscripcionesInactividad();
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(this.GetType().Name, ex);
+                    await RegistroAplicacion.RegistrarExcepcion(this.GetType().Name, ex);
                 }
             }
         }
@@ -161,39 +158,40 @@ namespace HM.Presupuestos.Server.Layout
             
             try
             {
-                var urlNormalizada = NavigationService.NormalizarRuta(e.Location);
-                if (urlNormalizada == _ultimaUrlNavegada)
+                var urlNormalizada = RutasNavegacion.NormalizarRuta(e.Location);
+                if (urlNormalizada == _ultimaRutaVisitada)
                 {
                     Console.WriteLine($"[MainLayout] ⏭️ URL duplicada en navegación, saltando procesamiento: {urlNormalizada}");
                     return;
                 }
 
-                _ultimaUrlNavegada = urlNormalizada;
+                _ultimaRutaVisitada = urlNormalizada;
 
                 // ✅ NO registrar log si estamos en Index/Home
                 if (!EsPaginaIndex(urlNormalizada))
                 {
-                    await RegistrarLogAcceso(urlNormalizada);
+                    await RegistrarAccesoPagina(urlNormalizada);
                 }
                 else
                 {
                     Console.WriteLine($"[MainLayout] ⏭️ Página Index/Home detectada, no se registra log de acceso");
                 }
 
-                await ManejarSubscripciones();
+                await ActualizarSubscripcionesInactividad();
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ❌ Error en OnLocationChangedAsync: {ex.Message}");
-                await LogService.RegistrarExcepcion(nameof(MainLayout), ex);
+                await RegistroAplicacion.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }
 
         /// <summary>
-        /// Verifica si la URL corresponde
+        /// Verifica si la URL corresponde a la principal (Index/Home) 
+        /// para evitar registrar logs de acceso a la página de inicio
         /// </summary>
-        private bool EsPaginaIndex(string urlNormalizada)
+        private static bool EsPaginaIndex(string urlNormalizada)
         {
             if (string.IsNullOrEmpty(urlNormalizada))
             {
@@ -207,9 +205,15 @@ namespace HM.Presupuestos.Server.Layout
                    urlLower == "index";
         }
 
+        /// <summary>
+        /// Controla la navegación interna dentro de la aplicación, 
+        /// mostrando un modal de confirmación si hay cambios pendientes
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private async Task OnBeforeInternalNavigation(LocationChangingContext context)
         {
-            bool permitir = await ControlCambiosService.ConfirmarNavegacionAsync(context.TargetLocation);
+            bool permitir = await ControlCambiosNavegacion.PuedeAbandonarPagina(context.TargetLocation);
 
             if (!permitir)
             {
@@ -217,27 +221,27 @@ namespace HM.Presupuestos.Server.Layout
             }
             else
             {
-                ControlCambiosService.LimpiarCambios();
+                ControlCambiosNavegacion.LimpiarCambiosPendientes();
             }
         }
 
-        private async Task<bool> ShowModalConfirmacion(string destino)
+        private async Task<bool> MostrarConfirmacionCambiosPendientes(string destino)
         {
-            if (ConfirmModalControlCambios is not null)
+            if (ModalConfirmacionCambios is not null)
             {
-                string mensaje = await TraduccionesHelper.GetResourceValue("Mensajes:AvisoCambiosPendientes:label");
-                return await ConfirmModalControlCambios.Show(mensaje);
+                string mensaje = AppResources.Mensajes.AvisoCambiosPendientes;// await TraduccionesHelper.GetResourceValue("Mensajes:AvisoCambiosPendientes:label");
+                return await ModalConfirmacionCambios.Show(mensaje);
             }
 
             return true;
         }
 
-        private async Task RegistrarLogAcceso(string urlNormalizada)
+        private async Task RegistrarAccesoPagina(string urlNormalizada)
         {
             try
             {
                 // Evitar registrar duplicados consecutivos
-                if (urlNormalizada == _ultimaUrlLogeada)
+                if (urlNormalizada == _ultimaUrlRegistrada)
                 {
                     Console.WriteLine($"[MainLayout] ⏭️ URL duplicada, no se registra: {urlNormalizada}");
                     return;
@@ -246,17 +250,17 @@ namespace HM.Presupuestos.Server.Layout
                 // Obtener label del menú para la URL
                 string tituloParaLog = MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
 
-                await LogService.RegistrarAccesoAPagina(tituloParaLog);
+                await RegistroAplicacion.RegistrarAccesoAPagina(tituloParaLog);
 
                 // ✅ Actualizar última URL DESPUÉS de registrar exitosamente
-                _ultimaUrlLogeada = urlNormalizada;
+                _ultimaUrlRegistrada = urlNormalizada;
 
                 Console.WriteLine($"[MainLayout] ✅ Log registrado: {tituloParaLog} ({urlNormalizada})");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[MainLayout] ⚠️ Error al registrar log: {ex.Message}");
-                await LogService.RegistrarExcepcion(nameof(MainLayout), ex);
+                await RegistroAplicacion.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }
 
@@ -264,52 +268,52 @@ namespace HM.Presupuestos.Server.Layout
 
         #region Mensaje Inactividad
 
-        private async Task ManejarSubscripciones()
+        private async Task ActualizarSubscripcionesInactividad()
         {
-            if (_esHome)
+            if (EsHome)
             {
-                InactividadService.OnInactividadIniciada -= MostrarModalAdvertenciaInactividad;
-                InactividadService.OnCuentaRegresiva -= ActualizarCuentaAtras;
-                InactividadService.OnInactividadFinalizada -= CerrarPorInactividad;
-                InactividadService.OnAdvertenciaCancelada -= OcultarModalAdvertenciaInactividad;
-                await DesuscribirEventosJsInactividad();
+                ControlInactividad.OnInactividadIniciada -= MostrarModalAdvertenciaInactividad;
+                ControlInactividad.OnCuentaRegresiva -= ActualizarCuentaAtras;
+                ControlInactividad.OnInactividadFinalizada -= CerrarPorInactividad;
+                ControlInactividad.OnAdvertenciaCancelada -= OcultarModalAdvertenciaInactividad;
+                await DesactivarEventosJavascriptInactividad();
             }
             else
             {
-                if (!_suscripcionEventosJsActiva)
+                if (!_eventosJavascriptSuscritos)
                 {
-                    InactividadService.OnInactividadIniciada -= MostrarModalAdvertenciaInactividad;
-                    InactividadService.OnInactividadIniciada += MostrarModalAdvertenciaInactividad;
-                    InactividadService.OnCuentaRegresiva -= ActualizarCuentaAtras;
-                    InactividadService.OnCuentaRegresiva += ActualizarCuentaAtras;
-                    InactividadService.OnInactividadFinalizada -= CerrarPorInactividad;
-                    InactividadService.OnInactividadFinalizada += CerrarPorInactividad;
-                    InactividadService.OnAdvertenciaCancelada -= OcultarModalAdvertenciaInactividad;
-                    InactividadService.OnAdvertenciaCancelada += OcultarModalAdvertenciaInactividad;
-                    await SuscribirEventosJsInactividad();
+                    ControlInactividad.OnInactividadIniciada -= MostrarModalAdvertenciaInactividad;
+                    ControlInactividad.OnInactividadIniciada += MostrarModalAdvertenciaInactividad;
+                    ControlInactividad.OnCuentaRegresiva -= ActualizarCuentaAtras;
+                    ControlInactividad.OnCuentaRegresiva += ActualizarCuentaAtras;
+                    ControlInactividad.OnInactividadFinalizada -= CerrarPorInactividad;
+                    ControlInactividad.OnInactividadFinalizada += CerrarPorInactividad;
+                    ControlInactividad.OnAdvertenciaCancelada -= OcultarModalAdvertenciaInactividad;
+                    ControlInactividad.OnAdvertenciaCancelada += OcultarModalAdvertenciaInactividad;
+                    await ActivarEventosJavascriptInactividad();
                 }
             }
         }
 
-        private async Task SuscribirEventosJsInactividad()
+        private async Task ActivarEventosJavascriptInactividad()
         {
-            var inactividadTimeMinutos = Configuration.GetValue<int>("AppSettings:Session:InactividadMinutos", 10);
-            var tiempoMostrarAvisoSegundos = Configuration.GetValue<int>("AppSettings:Session:TiempoVisualizacionAvisoInactividadSegundos", 30);
+            var inactividadTimeMinutos = Configuracion.GetValue<int>("AppSettings:Session:InactividadMinutos", 10);
+            var tiempoMostrarAvisoSegundos = Configuracion.GetValue<int>("AppSettings:Session:TiempoVisualizacionAvisoInactividadSegundos", 30);
 
             var tiempoInactividad = inactividadTimeMinutos * 60 * 1000;
             TiempoRestante = tiempoMostrarAvisoSegundos * 1000;
 
-            await InactividadInterop.Iniciar(tiempoInactividad, TiempoRestante);
-            _suscripcionEventosJsActiva = true;
+            await InteropInactividad.Iniciar(tiempoInactividad, TiempoRestante);
+            _eventosJavascriptSuscritos = true;
             Console.WriteLine("Eventos de inactividad js suscritos.");
         }
 
-        private async Task DesuscribirEventosJsInactividad()
+        private async Task DesactivarEventosJavascriptInactividad()
         {
-            if (_suscripcionEventosJsActiva)
+            if (_eventosJavascriptSuscritos)
             {
-                await InactividadInterop.Finalizar();
-                _suscripcionEventosJsActiva = false;
+                await InteropInactividad.Finalizar();
+                _eventosJavascriptSuscritos = false;
                 Console.WriteLine("Eventos de inactividad js desuscritos.");
             }
         }
@@ -319,7 +323,7 @@ namespace HM.Presupuestos.Server.Layout
         /// </summary>
         private void MostrarModalAdvertenciaInactividad(object? sender, EventArgs e)
         {
-            MostrarAdvertenciaInactividad = true;
+            MostrarAvisoInactividad = true;
             InvokeAsync(StateHasChanged);
         }
 
@@ -337,7 +341,7 @@ namespace HM.Presupuestos.Server.Layout
         /// </summary>
         private void OcultarModalAdvertenciaInactividad(object? sender, EventArgs e)
         {
-            MostrarAdvertenciaInactividad = false;
+            MostrarAvisoInactividad = false;
             InvokeAsync(StateHasChanged);
         }
 
@@ -346,8 +350,8 @@ namespace HM.Presupuestos.Server.Layout
         /// </summary>
         private void CerrarPorInactividad(object? sender, EventArgs e)
         {
-            MostrarAdvertenciaInactividad = false;
-            ControlCambiosService.LimpiarCambios();
+            MostrarAvisoInactividad = false;
+            ControlCambiosNavegacion.LimpiarCambiosPendientes();
             InvokeAsync(StateHasChanged);
             InvokeAsync(() => Navigation.NavigateTo("/home", forceLoad: false));
         }
@@ -363,13 +367,13 @@ namespace HM.Presupuestos.Server.Layout
         public async ValueTask DisposeAsync()
         {
             Navigation.LocationChanged -= OnLocationChangedAsync;
-            ErrorService.OnError -= MostrarPopupError;
+            DialogoErrores.OnError -= MostrarPopupError;
 
-            InactividadService.OnInactividadIniciada -= MostrarModalAdvertenciaInactividad;
-            InactividadService.OnCuentaRegresiva -= ActualizarCuentaAtras;
-            InactividadService.OnInactividadFinalizada -= CerrarPorInactividad;
-            InactividadService.OnAdvertenciaCancelada -= OcultarModalAdvertenciaInactividad;
-            await DesuscribirEventosJsInactividad();
+            ControlInactividad.OnInactividadIniciada -= MostrarModalAdvertenciaInactividad;
+            ControlInactividad.OnCuentaRegresiva -= ActualizarCuentaAtras;
+            ControlInactividad.OnInactividadFinalizada -= CerrarPorInactividad;
+            ControlInactividad.OnAdvertenciaCancelada -= OcultarModalAdvertenciaInactividad;
+            await DesactivarEventosJavascriptInactividad();
         }
 
         #endregion

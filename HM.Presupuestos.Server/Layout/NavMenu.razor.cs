@@ -115,7 +115,7 @@ namespace HM.Presupuestos.Server.Layout
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(GetType().Name, ex);
+                await RegistroAplicacion.RegistrarExcepcion(GetType().Name, ex);
             }
         }
 

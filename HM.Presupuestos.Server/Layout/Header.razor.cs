@@ -14,7 +14,7 @@ namespace HM.Presupuestos.Server.Layout
         {
             await base.OnInitializedAsync();
 
-            UsuarioService.UsuarioCargado += async () =>
+            SesionUsuario.UsuarioCargado += async () =>
             {
                 await InvokeAsync(StateHasChanged);
             };
@@ -38,7 +38,7 @@ namespace HM.Presupuestos.Server.Layout
 
         public override void Dispose()
         {
-            UsuarioService.UsuarioCargado -= async () =>
+            SesionUsuario.UsuarioCargado -= async () =>
             {
                 await InvokeAsync(StateHasChanged);
             };

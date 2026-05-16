@@ -5,7 +5,7 @@ public abstract class ContextProtegido : Context
     #region Servicios de Seguridad
 
     [Inject] protected IPermisosService PermisosService { get; set; } = default!;
-    [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+    [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
     [Inject] protected IRutasNavegacion NavigationService { get; set; } = default!;
 
 
@@ -108,13 +108,13 @@ public abstract class ContextProtegido : Context
             }
             else
             {
-                await LogService.RegistrarIntentoAccesoNoAutorizado(urlNormalizada);
+                await RegistroAplicacion.RegistrarIntentoAccesoNoAutorizado(urlNormalizada);
                 await OnPermisoDenegadoAsync();
             }
         }
         catch (Exception ex)
         {
-            await LogService.RegistrarExcepcion(ex);
+            await RegistroAplicacion.RegistrarExcepcion(ex);
             TienePermiso = false;
         }
         finally
@@ -148,7 +148,7 @@ public abstract class ContextProtegido : Context
         }
         catch (Exception ex)
         {
-            await LogService.RegistrarExcepcion(ex);
+            await RegistroAplicacion.RegistrarExcepcion(ex);
             await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
         }
         finally

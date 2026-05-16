@@ -71,7 +71,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 				ItemYearSelected = _listYear[1];
 			}
 			string currentLanguageCode = GestorIdioma.IdiomaActual;
-			var obLanguageList = TraductorRecursos.ObtenerIdiomas();
+			var obLanguageList = LocalizadorRecursos.ObtenerIdiomas();
 			_listTipoVersion = ObtenerTiposVersion();
 			_listMonth = await TraduccionesHelper.ObtenerMeses();
 			_listMasterIndicador = await IndicadoresService.ObtenerIndicadoresConIdiomas();
@@ -228,11 +228,11 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                     }
                 }
 
-                await MarcarCambios(HayCambios);
+                await ActualizarEstadoCambios(HayCambios);
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -269,12 +269,12 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                     _listVersion.Insert(0, nuevaVersion);
                     GridVersiones!.Reload(); //Porque si no desplaza la ultima fila y no se ve
-                    await MarcarCambios(true);
+                    await ActualizarEstadoCambios(true);
 
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
             }
@@ -283,7 +283,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         private void OnCancelarVersion()
         {
             _listVersion = DatosHelper.ClonarObjeto(_listOriginVersion);
-            LimpiarCambios();
+            LimpiarCambiosPendientes();
         }
 
         ///<summary>
@@ -341,7 +341,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
             }
@@ -359,7 +359,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             if (indexVersion != -1)
             {
                 _listVersion[indexVersion] = editVersion;
-                await MarcarCambios(true);
+                await ActualizarEstadoCambios(true);
             }
         }
 
@@ -535,7 +535,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
                     if (newVersionList.Count > 0 || updateVersionList.Count > 0)
                     {
-                        var result = await VersionesService.GrabarVersiones(newVersionList, updateVersionList, UsuarioService.UsuarioApp!.Usuario!.CodigoPais);
+                        var result = await VersionesService.GrabarVersiones(newVersionList, updateVersionList, SesionUsuario.UsuarioApp!.Usuario!.CodigoPais);
 
                         if (result)
                         {
@@ -544,8 +544,8 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
                                 _listOriginVersion = DatosHelper.ClonarObjeto(_listVersion);
 
                             await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
-                            await MarcarCambios(false);
-                            LimpiarCambios();
+                            await ActualizarEstadoCambios(false);
+                            LimpiarCambiosPendientes();
                         }
                         else
                         {
@@ -560,7 +560,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally

@@ -13,7 +13,7 @@ namespace HM.Presupuestos.Server.Pages
         [Inject] private IRegistroAplicacion _logService { get; set; } = default!;
         [Inject] private IConfiguration _configuration { get; set; } = default!;
         [Inject] private ILayerOverlayService _LayerOverlayService { get; set; } = default!;
-        [Inject] private ErrorDialogService _ErrorService { get; set; } = default!;
+        [Inject] private DialogoErrores _ErrorService { get; set; } = default!;
 
         #endregion
 

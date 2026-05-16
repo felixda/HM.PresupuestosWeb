@@ -40,9 +40,6 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// </summary>
         private IEnumerable<Idioma> Idiomas { get; set; } = [];
 
-
-
-       // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Indicadores;
         #endregion
 
 
@@ -59,7 +56,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
 
         protected override async Task InicializarPaginaAsync()
         {
-            Idiomas = TraductorRecursos.ObtenerIdiomas();
+            Idiomas = LocalizadorRecursos.ObtenerIdiomas();
             DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
 
             if (DatosIndicadores.Count == 0)
@@ -138,7 +135,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -249,7 +246,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -364,7 +361,7 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -602,8 +599,9 @@ namespace HM.Presupuestos.Server.Pages.Mantenimientos
         /// </summary>
         /// <param name="indicadorOriginal">Versión original del indicador obtenida de base de datos, o null si no existe.</param>
         /// <returns>Tupla con las tres listas de cambios de idiomas.</returns>
-        private (List<IdiomaIndicador> nuevos, List<IdiomaIndicador> actualizados, List<IdiomaIndicador> aEliminar)
-            ObtenerCambiosIdiomas(Indicador? indicadorOriginal)
+        private (List<IdiomaIndicador> nuevos, 
+            List<IdiomaIndicador> actualizados, 
+            List<IdiomaIndicador> aEliminar)  ObtenerCambiosIdiomas(Indicador? indicadorOriginal)
         {
             if (indicadorOriginal == null)
                 return ([], [], []);

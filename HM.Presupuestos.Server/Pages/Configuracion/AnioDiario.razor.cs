@@ -11,7 +11,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
         #region Inyección de Dependencias
 
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
         [Inject] protected IConfiguracionService ConfiguracionService { get; set; } = default!;
 
@@ -187,7 +187,7 @@ namespace HM.Presupuestos.Server.Pages.Configuracion
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally

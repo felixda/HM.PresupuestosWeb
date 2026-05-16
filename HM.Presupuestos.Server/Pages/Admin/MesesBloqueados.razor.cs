@@ -19,7 +19,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
         [Inject] protected IRegistroAplicacion LogService { get; set; } = default!;
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
         [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
 

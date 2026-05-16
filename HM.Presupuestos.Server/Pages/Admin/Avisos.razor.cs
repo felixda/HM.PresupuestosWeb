@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Server.Pages.Admin
 
         [Inject] protected IAvisosService AvisosService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
       
 
         #endregion

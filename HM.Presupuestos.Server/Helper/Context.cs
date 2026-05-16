@@ -1,7 +1,5 @@
 using HM.Presupuestos.Domain.Helper;
 using HM.Presupuestos.Server.Modelos;
-using HM.Presupuestos.Server.Servicios;
-using System.ComponentModel.Design;
 using System.Text.Json;
 using ILocalizadorRecursos = HM.Presupuestos.Server.Services.ILocalizadorRecursos;
 
@@ -11,17 +9,14 @@ namespace HM.Presupuestos.Server.Helper
 
     public abstract class Context : ComponentBase, IDisposable
     {
-        [Inject] protected ControlCambiosService ControlCambios { get; set; } = default!;
-        [Inject] protected ISesionUsuario UsuarioService { get; set; } = default!;
-        [Inject] protected ILocalizadorRecursos TraductorRecursos { get; set; } = default!;
+        [Inject] protected IControlCambiosNavegacion ControlCambios { get; set; } = default!;
+        [Inject] protected ISesionUsuario SesionUsuario { get; set; } = default!;
+        [Inject] protected ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
         [Inject] protected IMapaMenu MapaMenu { get; set; } = default!;
         [Inject] protected IGestorIdioma GestorIdioma { get; set; } = default!;
-
-        [Inject] protected IRegistroAplicacion LogService { get; set; } = default!;
+        [Inject] protected IRegistroAplicacion RegistroAplicacion { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-
         [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
-
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
         [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
         [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
@@ -46,14 +41,14 @@ namespace HM.Presupuestos.Server.Helper
             await InvokeAsync(StateHasChanged);
         }
 
-        protected async Task MarcarCambios(bool conCambios = true)
+        protected async Task ActualizarEstadoCambios(bool conCambios = true)
         {
-            await ControlCambios.MarcarCambios(conCambios);
+            await ControlCambios.ActualizarEstadoCambios(conCambios);
         }
 
-        protected void LimpiarCambios()
+        protected void LimpiarCambiosPendientes()
         {
-            ControlCambios.LimpiarCambios();
+            ControlCambios.LimpiarCambiosPendientes();
         }
 
         public bool UsuarioEsAdmin => Usuario?.Reglas?.Any(o => o.Id == Constantes.User.RULE_ADMIN) ?? false;
@@ -65,9 +60,9 @@ namespace HM.Presupuestos.Server.Helper
                 GestorIdioma.IdiomaCambiado += ActualizarIdioma;
 
 
-                UsuarioService.UsuarioCargado += async () =>
+                SesionUsuario.UsuarioCargado += async () =>
                 {
-                    UsuarioApp = UsuarioService.UsuarioApp!;
+                    UsuarioApp = SesionUsuario.UsuarioApp!;
 
                     if (UsuarioApp != null)
                     {
@@ -87,7 +82,7 @@ namespace HM.Presupuestos.Server.Helper
 
 
                 // Llamamos por si ya estaba cargado
-                UsuarioApp = UsuarioService.UsuarioApp!;
+                UsuarioApp = SesionUsuario.UsuarioApp!;
 
                 if (UsuarioApp != null)
                 {
@@ -126,7 +121,7 @@ namespace HM.Presupuestos.Server.Helper
         /// </summary>
         /// <param name="claveRecurso">Clave del recurso (ej: "Common:Aceptar:label")</param>
         /// <returns>Texto traducido según el idioma actual</returns>
-        protected string ObtenerTexto(string claveRecurso) => TraductorRecursos.ObtenerTexto(claveRecurso);
+        protected string ObtenerTexto(string claveRecurso) => LocalizadorRecursos.ObtenerTexto(claveRecurso);
 
         /// <summary>
         /// Título de la página obtenido automáticamente desde recursos.
@@ -143,7 +138,6 @@ namespace HM.Presupuestos.Server.Helper
             var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var urlNormalizada = RutasNavegacion.NormalizarRuta(url);
             return MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
-        
         }
 
 
@@ -275,7 +269,7 @@ namespace HM.Presupuestos.Server.Helper
             if (!esErrorControlado || enviarErrorLogWatcher)
             {
                 var excepcion = new Exception(ex.Message);
-                await LogService.RegistrarExcepcion(excepcion);
+                await RegistroAplicacion.RegistrarExcepcion(excepcion);
             }
 
             await MensajesHelper.MostrarMensajeError(titulo, mensaje);
@@ -284,7 +278,7 @@ namespace HM.Presupuestos.Server.Helper
 
         public bool ExisteRecurso(string claveRecurso)
         {
-            return TraductorRecursos.ExisteRecurso(claveRecurso);
+            return LocalizadorRecursos.ExisteRecurso(claveRecurso);
         }
 
 
@@ -324,7 +318,7 @@ namespace HM.Presupuestos.Server.Helper
             catch (Exception ex)
             {
                 // Log de la excepción
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
             }
             finally
@@ -371,9 +365,9 @@ namespace HM.Presupuestos.Server.Helper
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
 
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
 
                 return defaultValue;

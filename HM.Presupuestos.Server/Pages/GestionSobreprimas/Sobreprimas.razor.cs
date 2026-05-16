@@ -14,7 +14,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
         [Inject] protected IPresupuestosService PresupuestosService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
@@ -265,7 +265,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     }
                     catch (Exception ex)
                     {
-                        await LogService.RegistrarExcepcion(ex);
+                        await RegistroAplicacion.RegistrarExcepcion(ex);
                         await MensajesHelper.MostrarMensajeError(TituloPagina);
                     }
                     finally
@@ -288,7 +288,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -306,7 +306,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -359,7 +359,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -398,7 +398,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -516,7 +516,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
@@ -594,7 +594,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -630,7 +630,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -676,7 +676,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
@@ -732,7 +732,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -762,7 +762,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
             }
             finally
@@ -818,7 +818,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
@@ -846,7 +846,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     }
                     catch (Exception ex)
                     {
-                        await LogService.RegistrarExcepcion(ex);
+                        await RegistroAplicacion.RegistrarExcepcion(ex);
                         await MensajesHelper.MostrarMensajeError(TituloPagina);
                     }
                     finally
@@ -879,7 +879,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
                     }
                     catch (Exception ex)
                     {
-                        await LogService.RegistrarExcepcion(ex);
+                        await RegistroAplicacion.RegistrarExcepcion(ex);
                         await MensajesHelper.MostrarMensajeError(TituloPagina);
                     }
                     finally
@@ -1151,7 +1151,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
 
                 if (grabacionExitosa)
                 {
@@ -1370,7 +1370,7 @@ namespace HM.Presupuestos.Server.Pages.GestionSobreprimas
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
             }
         }

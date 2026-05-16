@@ -12,9 +12,9 @@ namespace HM.Presupuestos.Server.Helper
     {
         private readonly IJSRuntime js;
         private readonly DotNetObjectReference<JsInteropHelper> objRef;
-        private readonly InactividadService service;
+        private readonly ControlInactividad service;
 
-        public JsInteropHelper(IJSRuntime js, InactividadService service)
+        public JsInteropHelper(IJSRuntime js, ControlInactividad service)
         {
             this.js = js;
             this.service = service;

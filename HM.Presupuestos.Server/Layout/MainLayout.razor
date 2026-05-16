@@ -18,17 +18,17 @@
 @attribute [Authorize]
 
 @* Componente modal para confirmar cambios *@
-<ModalControlCambios @ref="ConfirmModalControlCambios" />
+<ModalControlCambios @ref="ModalConfirmacionCambios" />
 
 @* Para controlar los eventos de navegación *@
 <NavigationLock OnBeforeInternalNavigation="@OnBeforeInternalNavigation"></NavigationLock>
 
 @* Modal de advertencia de inactividad *@
-<DxPopup @bind-Visible="MostrarAdvertenciaInactividad" 
+<DxPopup @bind-Visible="MostrarAvisoInactividad"
          ShowCloseButton="false" 
          Width="300px" 
          Height="350px"
-         HeaderText="@TituloModalAdvertencia" 
+         HeaderText="@TituloAvisoInactividad"
          CssClass="countdown-popup">
     <ChildContent>
         <div class="countdown-container">
@@ -45,7 +45,7 @@
          Width="400px"
          ShowCloseButton="false"
          CloseOnOutsideClick="false"
-         Visible="@ErrorVisible">
+         Visible="@MostrarError">
     <div class="p-3">
         <p style="color:red">@MensajeError</p>
         <div class="d-flex justify-content-end mt-3">
@@ -76,9 +76,9 @@
             <DxGridLayoutItem Area="content">
                 <Template>
                     <DxDrawer CssClass="demo-drawer"
-                              @bind-IsOpen="IsOpen"
-                              Mode="Mode"
-                              Position="Position"
+                              @bind-IsOpen="MenuAbierto"
+                              Mode="ModoMenu"
+                              Position="PosicionMenu"
                               PanelWidth="auto">
                         <BodyTemplate>
                             <div id="menuContainer" class="menuContainer">

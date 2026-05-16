@@ -1,6 +1,6 @@
 ﻿namespace HM.Presupuestos.Server.Services
 {
-    public class ErrorDialogService
+    public class DialogoErrores
     {
         public event Func<string, Exception, Task>? OnError;
 

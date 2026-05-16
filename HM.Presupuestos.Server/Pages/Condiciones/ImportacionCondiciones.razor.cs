@@ -9,7 +9,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IPresupuestosService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
@@ -143,7 +143,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
@@ -170,7 +170,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
@@ -221,7 +221,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
                 ImportacionRealizada = false;
             }
@@ -254,7 +254,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }

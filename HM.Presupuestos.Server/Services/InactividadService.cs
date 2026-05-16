@@ -6,7 +6,7 @@ namespace HM.Presupuestos.Server.Services
     /// para enviarle los eventos correspondientes
     /// </summary>
 
-    public class InactividadService
+    public class ControlInactividad
     {
         /// <summary>
         /// Evento para mostrar la advertencia

@@ -12,7 +12,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
 
-        [Inject] protected ErrorDialogService ErrorService { get; set; } = default!;
+        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
@@ -286,7 +286,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
@@ -312,7 +312,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
@@ -345,7 +345,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -397,7 +397,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
@@ -478,7 +478,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
             }
             finally
             {
@@ -515,7 +515,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
@@ -617,7 +617,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
@@ -693,7 +693,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
             finally
@@ -776,7 +776,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -840,7 +840,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -884,7 +884,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -914,7 +914,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 }
             }
 
-            await MarcarCambios(HayCambiosPendientes);
+            await ActualizarEstadoCambios(HayCambiosPendientes);
             StateHasChanged();
         }
 
@@ -1002,7 +1002,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -1133,7 +1133,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -1181,7 +1181,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -1214,7 +1214,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                     ExcepcionesNoGuardadas.Remove(itemDestino);
                 }
             }
-            await MarcarCambios(HayCambiosPendientes);
+            await ActualizarEstadoCambios(HayCambiosPendientes);
             StateHasChanged();
         }
 
@@ -1260,11 +1260,11 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                     ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
 
                     GridExcepciones.Reload();
-                    await MarcarCambios(true);
+                    await ActualizarEstadoCambios(true);
                 }
                 catch (Exception ex)
                 {
-                    await LogService.RegistrarExcepcion(ex);
+                    await RegistroAplicacion.RegistrarExcepcion(ex);
                     await MensajesHelper.MostrarMensajeError(PageTitle);
                 }
                 finally
@@ -1329,7 +1329,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
              }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle);
             }
         }
@@ -1385,7 +1385,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
             }
             finally
@@ -1650,7 +1650,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally
@@ -1707,7 +1707,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
 
                 GridExcepciones.Reload(); //Porque si no desplaza la ultima fila y no se ve
-                await MarcarCambios(true);
+                await ActualizarEstadoCambios(true);
 
 
                 _medioSeleccionadoDesdePopup = null;
@@ -1715,7 +1715,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally
@@ -1780,7 +1780,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
             if (ExcepcionesNoGuardadas.Count == 0)
             {
-                LimpiarCambios();
+                base.LimpiarCambiosPendientes();
             }
         }
 
@@ -1801,7 +1801,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
             if (_condicionesNoGuardados.Count == 0)
             {
-                LimpiarCambios();
+                base.LimpiarCambiosPendientes();
             }
         }
 
@@ -1899,7 +1899,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
                 return new List<CodigoDescripcion>();
             }
@@ -1965,7 +1965,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             catch (Exception ex)
             {
-                await LogService.RegistrarExcepcion(ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
                 await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
             }
         }
