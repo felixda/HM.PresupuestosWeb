@@ -844,7 +844,13 @@
                                               },
                      "AvisoImportarCondiciones":  {
                                                       "label":  "You are about to import Conditions with the specified parameters. The current ones will be deleted. Do you want to continue?"
-                                                  }
+                                                  },
+                     "LoggingError":  {
+                                          "label":  "⚠️ The error could not be recorded in the logging system. The support team has been notified."
+                                      },
+                     "DatabaseWarning":  {
+                                             "label":  "Database manager warning"
+                                         }
                  },
     "Meses":  {
 

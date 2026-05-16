@@ -841,7 +841,13 @@
                                               },
                      "AvisoImportarCondiciones":  {
                                                       "label":  "Vai importar CondiÁ§Áµes com os parÁ¢metros indicados. As atuais serÁ£o eliminadas. Deseja continuar?"
-                                                  }
+                                                  },
+                     "LoggingError":  {
+                                          "label":  "⚠️ Não foi possível registar o erro no sistema de logs. A equipa de suporte foi notificada."
+                                      },
+                     "DatabaseWarning":  {
+                                             "label":  "Aviso do gestor de base de dados"
+                                         }
                  },
     "Meses":  {
 

@@ -337,6 +337,12 @@
 
             /// <summary>El valor {1} del campo {0} ya existe.</summary>
             public const string ValorCampoRepetido = "Mensajes:ValorCampoRepetido:label";
+
+            /// <summary>No se pudo registrar el error en el sistema de logs. El equipo de soporte ha sido notificado.</summary>
+            public const string LoggingError = "Mensajes:LoggingError:label";
+
+            /// <summary>Advertencia de gestor de base de datos</summary>
+            public const string DatabaseWarning = "Mensajes:DatabaseWarning:label";
         }
 
         #endregion

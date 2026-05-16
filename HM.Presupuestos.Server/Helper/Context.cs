@@ -282,7 +282,7 @@ namespace HM.Presupuestos.Server.Helper
                 string clave = $"MensajeErrorBD:{ex.Codigo}:label";
                 mensaje = ExisteRecurso(clave)
                     ? ObtenerTexto(clave)
-                    : (esWarning ? ObtenerTexto("common:Messages:DatabaseWarning:label") : null);
+                    : (esWarning ? AppResources.Mensajes.DatabaseWarning : null);
             }
 
             // Registrar en log si es necesario y capturar si falló
@@ -295,14 +295,14 @@ namespace HM.Presupuestos.Server.Helper
             // Agregar advertencia de logging fallido al mensaje si corresponde
             if (loggingFallo && mensaje != null)
             {
-                mensaje += "\n\n" + ObtenerTexto("common:Messages:LoggingError:label");
+                mensaje += "\n\n" + AppResources.Mensajes.LoggingError;
             }
 
             // Mostrar mensaje según tipo
             if (esWarning)
             {
                 await MensajesHelper.MostrarMensajeAviso(titulo, 
-                    mensaje ?? ObtenerTexto("common:Messages:DatabaseWarning:label"));
+                    mensaje ?? AppResources.Mensajes.DatabaseWarning);
             }
             else
             {
@@ -513,6 +513,8 @@ namespace HM.Presupuestos.Server.Helper
         /// Registra una excepción con múltiples niveles de fallback para garantizar que siempre se registre
         /// </summary>
         /// <param name="ex">Excepción a registrar</param>
+        /// <param name="category">Categoría de la excepción</param>
+        /// <returns>True si hubo un fallo total al registrar la excepción, False en caso contrario</returns>
         private async Task<bool> RegistrarExcepcionSeguro(Exception ex, string? category = null)
         {
             try
