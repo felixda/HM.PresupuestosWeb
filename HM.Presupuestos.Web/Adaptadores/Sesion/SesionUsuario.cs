@@ -1,8 +1,4 @@
-using HM.Presupuestos.Web.Adaptadores.Navegacion;
-using HM.Core.Comun.v6.Seguridad.Interfaces;
-using HM.Core.Modelo.v6.Login;
 using HM.Presupuestos.Domain.Extensiones;
-using HM.Presupuestos.Web.Adaptadores.Sesion;
 using System.Text.Json;
 
 namespace HM.Presupuestos.Web.Adaptadores.Sesion
@@ -22,7 +18,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
     public class SesionUsuario : ISesionUsuario
     {
         private readonly IAlmacenSesionUsuario _sesionUsuario;
-        private readonly AuthenticationStateProvider AuthStateProvider;
+        private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILogger<SesionUsuario> _logger;
         private readonly IConfiguration _configuracion;
         private readonly IControlador _servicioAutenticacion;
@@ -48,7 +44,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
         {
             _sesionUsuario = sesionUsuario;
             _registroAcciones = registroAcciones;
-            AuthStateProvider = authStateProvider;
+            _authStateProvider = authStateProvider;
             _logger = logger;
             _servicioAutenticacion = servicioAutenticacion;
             _jwt = jwt;
@@ -139,7 +135,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             try
             {
                 // Obtener usuario autenticado desde Azure AD/Windows
-                var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+                var authState = await _authStateProvider.GetAuthenticationStateAsync();
                 var userSSO = authState?.User;
 
                 if (authState == null ||
