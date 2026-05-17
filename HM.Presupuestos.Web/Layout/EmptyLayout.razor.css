@@ -1,0 +1,29 @@
+﻿.page {
+    height: 100%;
+    width: 100%;
+    font-family: var(--bs-font-sans-serif);
+}
+
+::deep .content {
+    overflow: auto;    
+}
+
+
+@media (max-width: 768px) {
+    ::deep .layout-sidebar {
+        grid-area: header / header / header / header !important;
+    }
+}
+
+
+.background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+.body-background {
+    padding: 1rem;
+}

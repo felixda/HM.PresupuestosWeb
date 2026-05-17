@@ -1,0 +1,584 @@
+@page "/gestion/sobreprimas"
+
+@using HM.Presupuestos.Application.CasosDeUso
+@using HM.Presupuestos.Domain.Entidades
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Presupuestos.Domain.Compartido
+@using HM.Presupuestos.Web.Adaptadores
+@using HM.Presupuestos.Web.Componentes.Base
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Linq.Expressions
+@using System.Text.Json;
+@using Version = HM.Presupuestos.Domain.Entidades.Version
+
+@attribute [Authorize]
+
+@inherits ContextProtegido
+
+@if (ValidandoPermisos)
+{
+    @* <p>Validando permisos...</p> *@
+}
+else if (TienePermiso == false)
+{
+    <p>No autorizado</p>
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.Sobreprimas" Titulo="@TituloPagina" TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Sobreprimas.ToolTip)" />
+
+    <div class="layoutContainer">
+
+        <DxFormLayout>
+            <DxFormLayoutGroup CssClass="filterContainer"
+                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                               AnimationType="LayoutAnimationType.Slide">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" CaptionPosition="CaptionPosition.Vertical">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@AñosMaestros"
+                                        TextFieldName="Descripcion"
+                                        ValueFieldName="Codigo"
+                                        @bind-Value="AñoSeleccionado"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                                                                                            ComboBoxAño_CambioSeleccion(args)">
+                            <EditBoxDisplayTemplate Context="contexto">
+                                @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                            </EditBoxDisplayTemplate>
+                        </DxComboBox>
+                    </Template>
+                </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="8" ColSpanMd="4" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4" CaptionPosition="CaptionPosition.Vertical">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.Version)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@VersionesMaestras"
+                                        TextFieldName="DisplayText"
+                                        ValueFieldName="Codigo"
+                                        @bind-Value="VersionSeleccionada"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                                <ItemDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxItemTemplate(contexto)
+                                </ItemDisplayTemplate>
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="6" ColSpanMd="3" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                                      Caption="@ObtenerTexto(AppResources.Common.Network)"
+                                      CaptionPosition="CaptionPosition.Vertical"
+                                      Context="formLayout">
+                        <DxDropDownBox @bind-Value="@NetworksSeleccionados"
+                                       QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
+                                                                               arg,
+                                                                               x => x.Descripcion,
+                                                                               ObtenerTexto(AppResources.Common.Todos)
+                                                                           ))"
+                                   DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                   InputId="dropDownBoxNetwork"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                        <DropDownBodyTemplate>
+                            <DxListBox Data="@NetworksMaestros"
+                                       TData="CodigoDescripcion"
+                                       TValue="CodigoDescripcion"
+                                       Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
+                                       ValuesChanged="@(values => ListBoxNetworks_CambioValores(values, context.DropDownBox, false))"
+                                       TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                       SearchMode="@ListSearchMode.AutoSearch"
+                                       SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                       ShowCheckboxes="true">
+                            </DxListBox>
+                        </DropDownBodyTemplate>
+                    </DxDropDownBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="6" ColSpanMd="3" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                                  Caption="@ObtenerTexto(AppResources.Common.Medio)"
+                                  CaptionPosition="CaptionPosition.Vertical"
+                                  Context="formLayout">
+                    <DxDropDownBox @bind-Value="@MediosSeleccionados"
+                                   QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
+                                                                               arg,
+                                                                               x => x.Descripcion,
+                                                                               ObtenerTexto(AppResources.Common.Todos)
+                                                                           ))"
+                                   DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                   InputId="dropDownBoxMedio"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                        <DropDownBodyTemplate>
+                            <DxListBox Data="@MediosFiltrados"
+                                       TData="CodigoDescripcion"
+                                       TValue="CodigoDescripcion"
+                                       Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
+                                       ValuesChanged="@(values => ListBoxMedios_CambioValores(values, context.DropDownBox, false))"
+                                       TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                       ShowCheckboxes="true">
+                            </DxListBox>
+                        </DropDownBodyTemplate>
+                    </DxDropDownBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                  Caption="@ObtenerTexto(AppResources.Common.AgrupacionComercial)"
+                                  CaptionPosition="CaptionPosition.Vertical"
+                                  Context="formLayout">
+                    <DxDropDownBox @bind-Value="@AgrupacionesComercialesSeleccionadas"
+                                   QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
+                                                                               arg,
+                                                                               x => x.CodigoConDescripcion,
+                                                                               ObtenerTexto(AppResources.Common.Todos)
+                                                                           ))"
+                                   DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                   InputId="dropDownBoxAgrupacionComercial"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                   NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                        <DropDownBodyTemplate>
+                            <DxTextBox NullText="@ObtenerTexto(AppResources.Common.EscribaTextoBusqueda)"
+                                       InputDelay="500"
+                                       @bind-Text="@TextoBusquedaAgrupacionesComerciales"
+                                       BindValueMode="BindValueMode.OnInput"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                            </DxTextBox>
+                            <DxListBox Data="@AgrupacionesComercialesMaestras"
+                                       TData="CodigoDescripcion"
+                                       TValue="CodigoDescripcion"
+                                       Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
+                                       ValuesChanged="@(values => ListBoxAgrupaciones_CambioValores(values, context.DropDownBox, false))"
+                                       TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
+                                       ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                       ShowCheckboxes="true"
+                                       ListRenderMode="ListRenderMode.Virtual"
+                                       SearchText="@TextoBusquedaAgrupacionesComerciales">
+                            </DxListBox>
+                        </DropDownBodyTemplate>
+                    </DxDropDownBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                  Caption="@ObtenerTexto(AppResources.Common.Editorial)"
+                                  CaptionPosition="CaptionPosition.Vertical"
+                                  Context="formLayout">
+                    <DxDropDownBox @bind-Value="@EditorialesSeleccionadas"
+                                   QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
+                                                                               arg,
+                                                                               x => x.CodigoConDescripcion,
+                                                                               ObtenerTexto(AppResources.Common.Todos)
+                                                                           ))"
+                                   DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                   InputId="dropDownBoxEditorial"
+                                   NullText="@ObtenerTexto(AppResources.Common.Todos)"
+                                   ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                        <DropDownBodyTemplate>
+                            <DxTextBox NullText="@ObtenerTexto(AppResources.Common.EscribaTextoBusqueda)"
+                                       InputDelay="500"
+                                       @bind-Text="@TextoBusquedaEditoriales"
+                                       BindValueMode="BindValueMode.OnInput"
+                                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                            </DxTextBox>
+                            <DxListBox Data="@EditorialesMaestras"
+                                       TData="CodigoDescripcion"
+                                       TValue="CodigoDescripcion"
+                                       Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
+                                       ValuesChanged="@(values => ListBoxEditoriales_CambioValores(values, context.DropDownBox, false))"
+                                       TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
+                                       SelectionMode="ListBoxSelectionMode.Multiple"
+                                       ShowCheckboxes="true"
+                                       ListRenderMode="ListRenderMode.Virtual"
+                                       SearchText="@TextoBusquedaEditoriales"
+                                       CssClass="templateListbox">
+                            </DxListBox>
+                        </DropDownBodyTemplate>
+                    </DxDropDownBox>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="3" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true">
+                    <div class="d-flex justify-content-start">
+                        <DxButton CssClass="btnCustom"
+                                  RenderStyle=ButtonRenderStyle.None
+                                  Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                                  IconCssClass="fa-solid fa-search"
+                                  Click="@AplicarFiltro" />
+                    </div>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="8" ColSpanXl="8" ColSpanXxl="8"></DxFormLayoutItem>
+
+                <DxFormLayoutItem ColSpanSm="3" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2">
+                    <div class="d-flex justify-content-end">
+                        <DxButton CssClass="btnCustom"
+                                  RenderStyle=ButtonRenderStyle.None
+                                  IconCssClass="fa-solid fa-trash"
+                                  Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                                  Click="@LimpiarFiltro" />
+                    </div>
+                </DxFormLayoutItem>
+
+            </Items>
+        </DxFormLayoutGroup>
+    </DxFormLayout>
+
+    <DxFormLayout>
+
+        @* GRID SOBREPRIMAS *@
+        <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                           ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                           AnimationType="LayoutAnimationType.Slide"
+                           Visible="@HayVersionSeleccionada()">
+            <CaptionTemplate>
+                <CaptionGroup LeftText="@CaptionIzquierda"
+                              LeftBoldText=""
+                              RightText="@CaptionDerecha" />
+            </CaptionTemplate>
+            <Items>
+                <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                                  Context="formLayout">
+                    <div class="gridSobreprimas-container">
+                        <DxGrid @ref="GridSobreprimas"
+                                Data="@SobreprimasGrid"
+                                PagerVisible="false"
+                                PageSize="30"
+                                KeyFieldName="KeyGrid"
+                                ShowFilterRow="true"
+                                ValidationEnabled="true"
+                                ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                                RowDoubleClick="GridSobreprimas_DobleClick"
+                                TextWrapEnabled="false"
+                                HighlightRowOnHover="true"
+                                FocusedRowEnabled="true"
+                                PageSizeSelectorVisible="false"
+                                PageSizeSelectorItems="@(new int[] { 10, 25, 50 })"
+                                VirtualScrollingEnabled="true">
+                            <ToolbarTemplate>
+                                <div class="d-flex justify-content-start">
+                                    <DxButton CssClass="toolbarButtonCustom"
+                                              RenderStyle=ButtonRenderStyle.None
+                                              Text="@ObtenerTexto(AppResources.Common.Nuevo)"
+                                              Click="@NuevaSobreprima"
+                                              title="@ObtenerTexto(AppResources.Common.Nuevo)"
+                                              IconCssClass="fa-solid fa-add"
+                                              Enabled="@HayVersionSeleccionada()" />
+                                </div>
+                            </ToolbarTemplate>
+                            <Columns>
+                                <DxGridDataColumn FieldName="@nameof(SobreprimaGridModel.DescripcionNetwork)"
+                                                  Caption="@ObtenerTexto(AppResources.Common.Network)"
+                                                  Width="10%"
+                                                  DataRowEditorVisible="false"
+                                                  CaptionAlignment="GridTextAlignment.Left"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(SobreprimaGridModel.DescripcionMedio)"
+                                                  Caption="@ObtenerTexto(AppResources.Common.Medio)"
+                                                  Width="10%"
+                                                  DataRowEditorVisible="false"
+                                                  CaptionAlignment="GridTextAlignment.Left"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(SobreprimaGridModel.CodigoDescripcionAgrupacionComercial)"
+                                                  Caption="@ObtenerTexto(AppResources.Common.AgrupacionComercial)"
+                                                  Width="20%"
+                                                  DataRowEditorVisible="false"
+                                                  CaptionAlignment="GridTextAlignment.Left"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn FieldName="@nameof(SobreprimaGridModel.CodigoDescripcionEditorial)"
+                                                  Caption="@ObtenerTexto(AppResources.Common.Editorial)"
+                                                  Width="20%"
+                                                  DataRowEditorVisible="false"
+                                                  CaptionAlignment="GridTextAlignment.Left"
+                                                  TextAlignment="GridTextAlignment.Left">
+                                </DxGridDataColumn>
+
+                                <DxGridDataColumn Caption="@($"{ObtenerTexto(AppResources.Pages.Sobreprimas.TypeConcept.Default)} %")"
+                                                  Width="10%"
+                                                  DataRowEditorVisible="false"
+                                                  CaptionAlignment="GridTextAlignment.Right"
+                                                  TextAlignment="GridTextAlignment.Right">
+                                    <CellDisplayTemplate>
+                                        @if (context.DataItem is SobreprimaGridModel item)
+                                            {
+                                                <span>@string.Format("{0:N2} %", item.ConceptoDefaul.Porcentaje)</span>
+                                            }
+                                        </CellDisplayTemplate>
+                                        <FilterRowCellTemplate><span></span></FilterRowCellTemplate>
+                                    </DxGridDataColumn>
+
+                                    <DxGridDataColumn Caption="@($"{ObtenerTexto(AppResources.Pages.Sobreprimas.TypeConcept.SLA)} %")"
+                                                      Width="10%"
+                                                      DataRowEditorVisible="false"
+                                                      CaptionAlignment="GridTextAlignment.Right"
+                                                      TextAlignment="GridTextAlignment.Right">
+                                        <CellDisplayTemplate>
+                                            @if (context.DataItem is SobreprimaGridModel item)
+                                            {
+                                                <span>@string.Format("{0:N2} %", item.ConceptoSLA.Porcentaje)</span>
+                                            }
+                                        </CellDisplayTemplate>
+                                        <FilterRowCellTemplate><span></span></FilterRowCellTemplate>
+                                    </DxGridDataColumn>
+
+                                    <DxGridDataColumn Caption="@($"{ObtenerTexto(AppResources.Pages.Sobreprimas.TypeConcept.HVP)} %")"
+                                                      Width="10%"
+                                                      DataRowEditorVisible="false"
+                                                      CaptionAlignment="GridTextAlignment.Right"
+                                                      TextAlignment="GridTextAlignment.Right">
+                                        <CellDisplayTemplate>
+                                            @if (context.DataItem is SobreprimaGridModel item)
+                                            {
+                                                <span>@string.Format("{0:N2} %", item.ConceptoHVP.Porcentaje)</span>
+                                            }
+                                        </CellDisplayTemplate>
+                                        <FilterRowCellTemplate><span></span></FilterRowCellTemplate>
+                                    </DxGridDataColumn>
+
+                                    <DxGridCommandColumn Width="3%"
+                                                         NewButtonVisible="false" EditButtonVisible="false"
+                                                         DeleteButtonVisible="false" CancelButtonVisible="false" SaveButtonVisible="false"
+                                                         CaptionAlignment="GridTextAlignment.Center" TextAlignment="GridTextAlignment.Center">
+                                        <FilterRowCellTemplate><span></span></FilterRowCellTemplate>
+                                        <CellDisplayTemplate>
+                                            @{
+                                                var item = (SobreprimaGridModel)context.DataItem;
+                                                var isReadOnly = !item.MedioAccesible;
+                                            }
+                                            <div class="grid-cell-align-center">
+                                                <DxButton IconCssClass="fas fa-edit"
+                                                          Disabled="@isReadOnly"
+                                                          RenderStyle="ButtonRenderStyle.Link"
+                                                          aria-label="Edit"
+                                                          title="@(isReadOnly
+                                                                                                                          ? "No puede editar estas sobreprimas por no tener acceso al Medio"
+                                                                                                                          : ObtenerTexto(AppResources.Common.EditarRegistro))"
+                                                          Click="() => MostrarPopupEdicion((SobreprimaGridModel)context.DataItem, ModoOperacion.Modificar)"
+                                                          @onclick:stopPropagation />
+                                            </div>
+                                        </CellDisplayTemplate>
+                                    </DxGridCommandColumn>
+
+                                    <DxGridCommandColumn Width="3%" NewButtonVisible="false" CaptionAlignment="GridTextAlignment.Center" TextAlignment="GridTextAlignment.Center">
+                                        <FilterRowCellTemplate><span></span></FilterRowCellTemplate>
+                                        <CellDisplayTemplate>
+                                            <DxButton IconCssClass="fa fa-trash"
+                                                      RenderStyle="ButtonRenderStyle.Link"
+                                                      title="@ObtenerTexto(AppResources.Common.EliminarRegistro)"
+                                                      aria-label="Delete"
+                                                      Enabled="true"
+                                                      Click="() => EliminarSobreprima((SobreprimaGridModel)context.DataItem)" />
+                                        </CellDisplayTemplate>
+                                    </DxGridCommandColumn>
+                                </Columns>
+                            </DxGrid>
+                        </div>
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+
+            @* POPUP EDIT SOBREPRIMAS *@
+            <DxPopup @ref="_popupSobreprimas"
+                     Visible="@_popupEdicionVisible"
+                     ShowFooter="true"
+                     HeaderText="@_tituloPopupEdicion"
+                     ShowCloseButton="false"
+                     Width="65%"
+                     Height="Auto"
+                     CloseOnEscape="false"
+                     CloseOnOutsideClick="false"
+                     AllowDrag="false"
+                     AllowDragByHeaderOnly="false">
+                <BodyContentTemplate Context="popupContext">
+                    <DxFormLayout>
+                        <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@ObtenerTexto(AppResources.Common.Network)</span><span class="mandatory"></span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxComboBox Data="@NetworksMaestros"
+                                            @bind-Value="@_sobreprimaEnEdicion.CodigoNetwork"
+                                            ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                            TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                                                                                                    PopupComboBoxNetwork_CambioSeleccion(args)"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains">
+                                    <EditBoxDisplayTemplate Context="contexto">
+                                        @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                    </EditBoxDisplayTemplate>
+                                </DxComboBox>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@ObtenerTexto(AppResources.Common.Medio)</span><span class="mandatory"></span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxComboBox Data="@_mediosPopup"
+                                            @bind-Value="@_sobreprimaEnEdicion.CodigoMedio"
+                                            ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                            TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                                                                                                PopupComboBoxMedio_CambioSeleccion(args)">
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                      CaptionPosition="CaptionPosition.Vertical" BeginRow="true">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.AgrupacionComercial)</span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_agrupacionesComercialesPopup"
+                                        @bind-Value="@_sobreprimaEnEdicion.CodigoAgrupacionComercial"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                        TextFieldName="@nameof(CodigoDescripcion.DescripcionConCodigo)"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        ListRenderMode="ListRenderMode.Virtual"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                                                                                                PopupComboBoxAgrupacion_CambioSeleccion(args)">
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                        <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@ObtenerTexto(AppResources.Common.Editorial)</span><span class="mandatory"></span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxComboBox Data="@_editorialesPopup"
+                                            @bind-Value="@_sobreprimaEnEdicion.CodigoEditorial"
+                                            ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                            TextFieldName="@nameof(CodigoDescripcion.DescripcionConCodigo)"
+                                            ListRenderMode="ListRenderMode.Virtual"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains">
+                                    <EditBoxDisplayTemplate Context="contexto">
+                                        @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                    </EditBoxDisplayTemplate>
+                                </DxComboBox>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
+                                          CaptionPosition="CaptionPosition.Vertical" BeginRow="true" />
+
+                        <DxFormLayoutItem ColSpanSm="2" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@ObtenerTexto(AppResources.Pages.Sobreprimas.TypeConcept.Default) %</span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxSpinEdit @bind-Value="@_sobreprimaEnEdicion.ConceptoDefaul.Porcentaje"
+                                            ShowSpinButtons="false"
+                                            InputCssClass="text-end"
+                                            DisplayFormat="{0:N2} %"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            onfocus="this.select()"
+                                            oninput="validarDecimales(this, 2)">
+                                </DxSpinEdit>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem ColSpanSm="2" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@ObtenerTexto(AppResources.Pages.Sobreprimas.TypeConcept.SLA) %</span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxSpinEdit @bind-Value="@_sobreprimaEnEdicion.ConceptoSLA.Porcentaje"
+                                            ShowSpinButtons="false"
+                                            InputCssClass="text-end"
+                                            DisplayFormat="{0:N2} %"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            onfocus="this.select()"
+                                            oninput="validarDecimales(this, 2)">
+                                </DxSpinEdit>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem ColSpanSm="2" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <CaptionTemplate>
+                                <span>@ObtenerTexto(AppResources.Pages.Sobreprimas.TypeConcept.HVP) %</span>
+                            </CaptionTemplate>
+                            <Template>
+                                <DxSpinEdit @bind-Value="@_sobreprimaEnEdicion.ConceptoHVP.Porcentaje"
+                                            ShowSpinButtons="false"
+                                            InputCssClass="text-end"
+                                            MaxValue="100"
+                                            MinValue="0"
+                                            DisplayFormat="{0:N2} %"
+                                            onfocus="this.select()"
+                                            oninput="validarDecimales(this, 2)">
+                                </DxSpinEdit>
+                            </Template>
+                        </DxFormLayoutItem>
+
+                        <DxFormLayoutItem CssClass="emptyrow"></DxFormLayoutItem>
+
+                    </DxFormLayout>
+
+                </BodyContentTemplate>
+                <FooterContentTemplate>
+                    <div class="popupFooter">
+                        <DxButton CssClass="btnCustom"
+                                  RenderStyle=ButtonRenderStyle.None
+                                  Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+                                  IconCssClass="fa-solid fa-save"
+                                  Click="GuardarSobreprima" />
+                        <DxButton CssClass="btnCustom"
+                                  RenderStyle=ButtonRenderStyle.None
+                                  Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                  Click="@(()=>OcultarPopupEdicion())"
+                                  IconCssClass="fa-solid fa-cancel" />
+                    </div>
+                </FooterContentTemplate>
+            </DxPopup>
+        </DxFormLayout>
+    </div>
+}
+

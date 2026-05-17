@@ -1,0 +1,27 @@
+﻿.demo-drawer .dxbl-drawer-content {
+    font-size: var(--dxbl-drawer-panel-font-size);
+    line-height: var(--dxbl-drawer-panel-line-height);
+    overflow: auto;
+    padding: var(--dxbl-drawer-panel-padding-y) var(--dxbl-drawer-panel-padding-x);
+}
+
+.demo-drawer:has(.demo-drawer-menu) {
+    --dxbl-drawer-panel-body-padding-x: 0;
+    --dxbl-drawer-panel-body-padding-y: 0;
+}
+
+.dxbl-menu.demo-drawer-menu {
+    --dxbl-menu-item-padding-x: 0.9375rem;
+    --dxbl-menu-top-left-border-radius: 0;
+    --dxbl-menu-top-right-border-radius: 0;
+    --dxbl-menu-bottom-left-border-radius: 0;
+    --dxbl-menu-bottom-right-border-radius: 0;
+}
+
+.dxbl-sm .dxbl-menu.demo-drawer-menu {
+    --dxbl-menu-item-padding-x: 0.8125rem;
+}
+
+.dxbl-lg .dxbl-menu.demo-drawer-menu {
+    --dxbl-menu-item-padding-x: 1.0625rem;
+}

@@ -1,0 +1,80 @@
+@page "/HttpError/{StatusCode:int?}"
+@layout Layout.EmptyLayout
+
+@using HM.Presupuestos.Web.Pages
+
+@inject ILocalizadorRecursos _ResourceService
+
+
+@if (_componentInitialized)
+{
+    <PageTitle>@_pageTitle</PageTitle>
+    <div class="layer-container">
+        <div class="layer-image">
+            <img src="images/logo/logo-havas-noir_small.png" />
+        </div>
+        <div class="layer-text">@_htmlMessage</div>
+        <div><a class="layer-link" href="/">@_link</a></div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int StatusCode { get; set; }
+
+    private bool _componentInitialized = false;
+    private string _pageTitle { get; set; } = string.Empty;
+    private string _link { get; set; } = string.Empty;
+    private MarkupString _htmlMessage;
+    private int _httpStatusCode;
+
+    /// <summary>
+    /// Component event
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+
+    /// <summary>
+    /// Se ejecuta cuando los parámetros (StatusCode) son establecidos por el router.
+    /// Es el lugar ideal para cargar datos dependientes del parámetro.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        _httpStatusCode =(StatusCode == 0) ? 500 : StatusCode;
+    }
+    
+
+    /// <summary>
+    /// Component event
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            _pageTitle = $"{_ResourceService.ObtenerTexto(AppResources.Common.AppName)} - {_httpStatusCode}";
+            _link = _ResourceService.ObtenerTexto(AppResources.Common.BackToHome);
+
+            var msgDescription = _httpStatusCode switch
+            {
+                400 => _ResourceService.ObtenerTexto(AppResources.Common.Http400),
+                403 => _ResourceService.ObtenerTexto(AppResources.Common.Http403),
+                404 => _ResourceService.ObtenerTexto(AppResources.Common.Http404),
+                500 => _ResourceService.ObtenerTexto(AppResources.Common.Http500),
+                _   => _ResourceService.ObtenerTexto(AppResources.Common.HttpError),
+            };
+            _htmlMessage = new MarkupString($"{_httpStatusCode.ToString()} - {msgDescription}");
+
+            if (!_componentInitialized)
+            {
+                _componentInitialized = true;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+
+    }
+}
+

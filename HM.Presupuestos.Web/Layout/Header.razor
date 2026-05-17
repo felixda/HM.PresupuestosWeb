@@ -1,0 +1,66 @@
+@using HM.Presupuestos.Web.Componentes.Base
+@using HM.Presupuestos.Web.Layout
+
+@attribute [Authorize]
+@inherits Context
+
+@if (!UsuarioCargado)
+{
+    @* <p>Cargando...</p> *@
+}
+else
+{
+    <DxToolbar CssClass="card w-100 overflow-hidden" ItemRenderStyleMode="ToolbarRenderStyleMode.Plain">
+        <Items>
+            <DxToolbarItem Click="OnToolbarItemClick"
+            Tooltip=""
+            IconCssClass="icon hamburguer-menu-button">
+            </DxToolbarItem>
+            <DxToolbarItem BeginGroup="true">
+                <Template>
+                    <div class="logo-image">
+                        <span class="logo-img" title="@($"Versión: {VersionApp}")"></span>
+                        @if (Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
+                        {
+                            <p class="entorno">@(Configuration.GetValue<string>("AppSettings:AppEnvironment"))</p>
+                        }
+                    </div>
+                </Template>
+            </DxToolbarItem>
+
+            <DxToolbarItem Alignment="ToolbarItemAlignment.Left" BeginGroup="true">
+                <Template>
+                    <LoginHeaderImpersonado/>
+                </Template>
+            </DxToolbarItem>
+
+            <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                <Template>
+                    <LoginHeaderSSO/>
+                </Template>
+            </DxToolbarItem>
+
+            <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                <Template>
+                    <div class="logo-image">
+                        <a href="@(Configuration.GetValue<string>("AppSettings:HelpDeskUrl"))" target="_blank"><span class="icono-fresh-service"></span></a>
+                    </div>
+                </Template>
+            </DxToolbarItem>
+            <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                <Template>
+                    <div class="d-flex align-items-center h-100">
+                        <LanguageSwitcher />
+                    </div>
+                </Template>
+            </DxToolbarItem>
+            <DxToolbarItem Alignment="ToolbarItemAlignment.Right" BeginGroup="true">
+                <Template>
+                    <div class="user-info d-flex flex-row align-items-center h-100 me-2"></div>
+                </Template>
+            </DxToolbarItem>
+        </Items>
+    </DxToolbar>
+}
+
+

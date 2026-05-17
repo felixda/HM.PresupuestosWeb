@@ -1,0 +1,63 @@
+﻿::deep .language-combo {
+    align-self: center;
+}
+
+::deep .language-combo .dxbl-edit-box {
+    align-items: center;
+}
+
+.user.header {
+    display: flex;
+    padding: 2.5rem 1.5rem 1.5rem 1.5rem;
+    flex-direction: column;
+    border-radius: 1rem;
+    gap: 1.5rem;
+    justify-content: end;
+    align-items: end;
+    width: 16.875rem;
+    height: 17rem;
+    position: relative;
+    align-content: end;
+    align-self: end;
+}
+
+.user.info{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: end;
+    align-content: end;
+    align-content: end;
+}
+
+.login.info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: end;
+    align-content: end;
+    align-self: end;
+}
+
+::deep .power {
+    background-image: url("images/power.svg");
+}
+
+::deep .box-arrow-right {
+    background-image: url("images/box-arrow-right.svg");
+}
+
+::deep .person {
+    background-image: url("images/person.svg");
+}
+
+.form-control-sm {
+    border-radius: 20px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+}
+
+    .form-control-sm:hover {
+        background: #e9ecef;
+    }
+

@@ -1,0 +1,858 @@
+﻿{
+"Language":  {
+                 "ES":  {
+                            "label":  "Espanhol",
+                            "code":  "es"
+                        },
+                 "EN":  {
+                            "label":  "Inglês",
+                            "code":  "en"
+                        },
+                 "PT":  {
+                            "label":  "Português",
+                            "code":  "pt"
+                            }
+                 },
+    "Menu":  {
+                 "Menu_0":  {
+                                "label":  "Ini­cio",
+                                "url":  "/home",
+                                "icono":  "fa-solid fa-house",
+                                "visible":  true,
+                                "code":  0
+                            },
+                 "Menu_1":  {
+                                "label":  "VersÁµes",
+                                "url":  "/mantenimiento/versiones",
+                                "icono":  "fa-solid fa-table-list",
+                                "visible":  true,
+                                "code":  1
+                            },
+                 "Menu_2":  {
+                                "label":  "ImportaÁ§Á£o de VersÁµes",
+                                "url":  "/gestion/importacion-versiones",
+                                "icono":  "fa-solid fa-code-pull-request fa-flip-horizontal",
+                                "visible":  true,
+                                "code":  2
+                            },
+                 "Menu_3":  {
+                                "label":  "PrevisÁµes",
+                                "url":  "/gestion/previsiones",
+                                "icono":  "fa-solid fa-chart-line",
+                                "visible":  true,
+                                "code":  3
+                            },
+                 "Menu_4":  {
+                                "label":  "Relatórios",
+                                "url":  "",
+                                "icono":  "",
+                                "image":  "",
+                                "visible":  false,
+                                "code":  4
+                            },
+                 "Menu_5":  {
+                                "label":  "Planeamento de CondiÁ§Áµes",
+                                "url":  "/gestion/planificacion-condiciones",
+                                "icono":  "fa-solid fa-solar-panel",
+                                "visible":  true,
+                                "code":  5
+                            },
+                 "Menu_7":  {
+                                "label":  "iTracker",
+                                "url":  "/reportes/itracker",
+                                "icono":  "fa-solid fa-chart-column",
+                                "visible":  false,
+                                "code":  7
+                            },
+                 "Menu_8":  {
+                                "label":  "Magnitude",
+                                "url":  "/reportes/magnitude",
+                                "icono":  "icon reporteMagnitude",
+                                "visible":  false,
+                                "code":  8
+                            },
+                 "Menu_9":  {
+                                "label":  "Processos Automáticos",
+                                "url":  "",
+                                "icono":  "",
+                                "visible":  true,
+                                "code":  9
+                            },
+                 "Menu_10":  {
+                                 "label":  "GI para Billings",
+                                 "url":  "/procesos-automaticos/gibillings",
+                                 "icono":  "fa-solid fa-money-bill-transfer",
+                                 "visible":  true,
+                                 "code":  10
+                             },
+                 "Menu_11":  {
+                                 "label":  "NV e NC de Acordos para PrevisÁ£o",
+                                 "url":  "/copiarinversiones",
+                                 "icono":  "icon processos",
+                                 "visible":  true,
+                                 "code":  11
+                             },
+                 "Menu_12":  {
+                                 "label":  "Indicadores",
+                                 "url":  "/mantenimiento/indicadores",
+                                 "icono":  "fa-solid fa-list-ol",
+                                 "visible":  true,
+                                 "code":  12
+                             },
+                 "Menu_13":  {
+                                 "label":  "ImportaÁ§Á£o de CondiÁ§Áµes",
+                                 "url":  "/gestion/importacion-condiciones",
+                                 "icono":  "fa-solid fa-file-import",
+                                 "visible":  true,
+                                 "code":  13
+                             },
+                 "Menu_14":  {
+                                 "label":  "Sobretaxas",
+                                 "url":  "/gestion/sobreprimas",
+                                 "icono":  "fa-solid fa-scale-balanced",
+                                 "image":  "images/favoritos/sobreprimas.svg",
+                                 "visible":  true,
+                                 "code":  14
+                             },
+                 "Menu_15":  {
+                                 "label":  "ManutenÁ§Á£o",
+                                 "url":  "",
+                                 "icono":  "",
+                                 "visible":  true,
+                                 "code":  15
+                             },
+                 "Menu_16":  {
+                                 "label":  "CondiÁ§Áµes de Grupos",
+                                 "url":  "",
+                                 "icono":  "",
+                                 "visible":  true,
+                                 "code":  16
+                             },
+                 "Menu_17":  {
+                                 "label":  "GestÁ£o",
+                                 "url":  "",
+                                 "icono":  "",
+                                 "visible":  true,
+                                 "code":  17
+                             },
+                 "Menu_18":  {
+                                 "label":  "Ajustes",
+                                 "url":  "/gestion/ajustes",
+                                 "icono":  "fa-solid fa-gear",
+                                 "visible":  true,
+                                 "code":  18
+                             },
+                 "Menu_19":  {
+                                 "label":  "Copiar Investimentos",
+                                 "url":  "/procesos-automaticos/copiar-inversiones",
+                                 "icono":  "fa-solid fa-copy",
+                                 "visible":  true,
+                                 "code":  19
+                             },
+                 "Menu_20":  {
+                                 "label":  "AdministraÁ§Á£o",
+                                 "url":  "",
+                                 "icono":  "",
+                                 "visible":  true,
+                                 "code":  20
+                             },
+                 "Menu_21":  {
+                                 "label":  "Envio de mensagens informativas",
+                                 "url":  "/administracion/avisos",
+                                 "icono":  "fa-solid fa-paper-plane",
+                                 "visible":  true,
+                                 "code":  21
+                             },
+                 "Menu_22":  {
+                                 "label":  "ImpersonaÁ§Á£o",
+                                 "url":  "/administracion/impersonacion",
+                                 "icono":  "fa-solid fa-users-gear",
+                                 "visible":  true,
+                                 "code":  22
+                             },
+                 "Menu_23":  {
+                                 "label":  "Meses Bloqueados",
+                                 "url":  "/administracion/meses-bloqueados",
+                                 "icono":  "fa-solid fa-calendar-days",
+                                 "visible":  true,
+                                 "code":  23
+                             },
+                 "Menu_24":  {
+                                 "label":  "ConfiguraÁ§Á£o",
+                                 "url":  "",
+                                 "icono":  "",
+                                 "visible":  true,
+                                 "code":  24
+                             },
+                 "Menu_25":  {
+                                 "label":  "Ano para diário",
+                                 "url":  "/configuracion/anio-diario",
+                                 "icono":  "fa-solid fa-clock",
+                                 "visible":  true,
+                                 "code":  25
+                             }
+             },
+    "Pages":  {
+                  "ITracker":  {
+                                   "TypeVersionSource":  {
+                                                             "Channels":  {
+                                                                              "label":  "Canais",
+                                                                              "code":  1
+                                                                          },
+                                                             "Publishers":  {
+                                                                                "label":  "Editores",
+                                                                                "code":  2
+                                                                            }
+                                                         }
+                               },
+                  "Login":  {
+                                "CerrarSesion":  {
+                                                     "label":  "Finalizar sesion"
+                                                 }
+                            },
+                  "Editoriales":  {
+
+                                  },
+                  "Versiones":  {
+                                    "Indicadores":  {
+                                                        "label":  "Indicadores"
+                                                    },
+                                    "Tipo":  {
+                                                 "label":  "Tipo"
+                                             },
+                                    "Versiones":  {
+                                                      "label":  "VersÁµes"
+                                                  },
+                                    "Version":  {
+                                                    "label":  "VersÁ£o"
+                                                },
+                                    "LeyendasIndicadores":  {
+                                                                "label":  "Legendas dos Indicadores"
+                                                            },
+                                    "NombreIndicador":  {
+                                                            "label":  "Nome do Indicador"
+                                                        },
+                                    "Message_VersionDescriptionError":  {
+                                                                            "label":  "A descriÁ§Á£o da VersÁ£o {0} coincide com a de outra versÁ£o. A descriÁ§Á£o nÁ£o pode ser duplicada entre versÁµes"
+                                                                        },
+                                    "HayDatosRelacionadosConLaVersion":  {
+                                                                             "label":  "A VersÁ£o nÁ£o pode ser exclui­da porque há dados relacionados a ela"
+                                                                         },
+                                    "TipoVersion":  {
+                                                        "User":  {
+                                                                     "label":  "Usuário",
+                                                                     "code":  1
+                                                                 },
+                                                        "Monthly":  {
+                                                                        "label":  "Mensal",
+                                                                        "code":  2
+                                                                    },
+                                                        "Backup":  {
+                                                                       "label":  "Backup",
+                                                                       "code":  3
+                                                                   }
+                                                    }
+                                },
+                  "GestionVersiones":  {
+                                           "ToolTip":  {
+                                                           "label":  "Permite transferir dados de investimento entre versÁµes, filtrando por grupos de clientes ou outros campos do novo modelo de dados. Á‰ necessário selecionar uma VersÁ£o-Ano de Origem e uma VersÁ£o-Ano de Destino"
+                                                       },
+                                           "TypeVersionSource":  {
+                                                                     "Presupuestos":  {
+                                                                                          "label":  "OrÁ§amentos",
+                                                                                          "code":  1
+                                                                                      },
+                                                                     "Inges":  {
+                                                                                   "label":  "Real",
+                                                                                   "code":  2
+                                                                               },
+                                                                     "Set0":  {
+                                                                                  "label":  "Colocar a 0",
+                                                                                  "code":  3
+                                                                              }
+                                                                 }
+                                       },
+                  "Indicadores":  {
+                                      "ToolTip":  {
+                                                      "label":  "ManutenÁ§Á£o de Indicadores de status para as VersÁµes"
+                                                  },
+                                      "VersionUnica":  {
+                                                           "label":  "VersÁ£o única"
+                                                       },
+                                      "ListaIndicadores":  {
+                                                               "label":  "Lista de Indicadores"
+                                                           },
+                                      "Mostrar":  {
+                                                      "label":  "Mostrar"
+                                                  },
+                                      "LanguageDataIncompleted":  {
+                                                                      "label":  "Existem campos obrigatórios de idioma sem preenchimento"
+                                                                  },
+                                      "Grabar":  {
+                                                     "label":  "Gravar"
+                                                 }
+                                  },
+                 
+                  "Index":  {
+                                "Hola":  {
+                                             "label":  "Olá"
+                                         },
+                                "Bienvenida":  {
+                                                   "label":  "Bem-vindo ao aplicativo de OrÁ§amentos"
+                                               }
+                            },
+                  "SelectorIdioma":  {
+
+                                     },
+                  "PlanificacionCondiciones":  {
+                                                   "Alcance":  {
+                                                                   "label":  "Escopo"
+                                                               },
+                                                   "Disciplina":  {
+                                                                      "label":  "Disciplina"
+                                                                  },
+                                                   "Diversified":  {
+                                                                       "label":  "Diversificado"
+                                                                   },
+                                                   "Excepciones":  {
+                                                                       "label":  "ExceÁ§Áµes"
+                                                                   },
+                                                   "ExcepcionesMedio":  {
+                                                                            "label":  "ExceÁ§Áµes da Media:"
+                                                                        },
+                                                   "Objetivo":  {
+                                                                    "label":  "Objetivo"
+                                                                },
+                                                   "TipoCompra":  {
+                                                                      "label":  "Tipo de Compra"
+                                                                  },
+                                                   "TipoDisciplina":  {
+                                                                          "label":  "Natureza"
+                                                                      },
+                                                   "DisciplinaGrupo":  {
+                                                                           "label":  "Disciplina do Grupo"
+                                                                       },
+                                                   "ToolTip":  {
+                                                                   "label":  "Permite introduzir o serviÁ§o de agencia e a devoluÁ§Á£o do grupo selecionado."
+                                                               },
+                                                   "Jerarquia":  {
+                                                                     "label":  "Hierarquia"
+                                                                 },
+                                                   "Condiciones":  {
+                                                                       "label":  "Planeamento de CondiÁ§Áµes"
+                                                                   },
+                                                   "CondicionesAcuerdos":  {
+                                                                               "label":  "Planeamento de CondiÁ§Áµes de Acordos"
+                                                                           },
+                                                   "CondicionesCodigo":  {
+                                                                             "Code":  0
+                                                                         },
+                                                   "CondicionesAcuerdosCodigo":  {
+                                                                                     "Code":  1
+                                                                                 },
+                                                   "Vigencias":  {
+                                                                     "label":  "Vigencias"
+                                                                 },
+                                                   "ToolTipSagTpc":  {
+                                                                         "label":  "Percentual de ServiÁ§o de Agencia"
+                                                                     },
+                                                   "ToolTipManpowerTpc":  {
+                                                                              "label":  "Percentual de Manpower"
+                                                                          },
+                                                   "ToolTipDevolucionTpc":  {
+                                                                                "label":  "Percentual de DevoluÁ§Á£o"
+                                                                            },
+                                                   "SagTpc":  {
+                                                                  "label":  "% SAG"
+                                                              },
+                                                   "ManpowerTpc":  {
+                                                                       "label":  "% MNP"
+                                                                   },
+                                                   "NumExcepciones":  {
+                                                                          "label":  "Nº ExceÁ§Áµes"
+                                                                      },
+                                                   "NetoVenta":  {
+                                                                     "label":  "Venda Líquida"
+                                                                 },
+                                                   "Sobreprima":  {
+                                                                      "label":  "Sobretaxa"
+                                                                  },
+                                                   "DevolucionTpc":  {
+                                                                         "label":  "% DEV"
+                                                                     },
+                                                   "BCDevolucion":  {
+                                                                        "label":  "Base de Cálculo DEV."
+                                                                    },
+                                                   "NuevaVigencia":  {
+                                                                         "label":  "Nova Vigencia"
+                                                                     },
+                                                   "EditarVigencia":  {
+                                                                          "label":  "Editar Vigencia"
+                                                                      },
+                                                   "FiltroPorMedio":  {
+                                                                          "label":  "Filtrar por Media"
+                                                                      },
+                                                   "FiltroExcepciones":  {
+                                                                             "label":  "Filtro de ExceÁ§Áµes"
+                                                                         },
+                                                   "Mensajes":  {
+                                                                    "VigenciasSolapadas":  {
+                                                                                               "label":  "As datas coincidem com outra vigencia, por favor verifique."
+                                                                                           },
+                                                                    "VigenciaConCondiciones":  {
+                                                                                                   "label":  "A Vigencia selecionada possui CondiÁ§Áµes associadas que serÁ£o excluídas. Deseja continuar?"
+                                                                                               },
+                                                                    "VigenciaModificada":  {
+                                                                                               "label":  "Vigencia modificada"
+                                                                                           },
+                                                                    "VigenciaSinMeses":  {
+                                                                                             "label":  "Por favor, selecione os meses para a vigencia"
+                                                                                         },
+                                                                    "VigenciaValidacion":  {
+                                                                                               "label":  "O mes de início nÁ£o pode ser maior que o mes final"
+                                                                                           },
+                                                                    "PctDevCondicionSinBC":  {
+                                                                                                 "label":  "Por favor, ao introduzir um %DevoluÁ§Á£o nas condiÁ§Áµes, voce deve selecionar uma Base de Cálculo"
+                                                                                             },
+                                                                    "PctExcepcionSinPctSAGCondicion":  {
+                                                                                                           "label":  "Por favor, ao introduzir um % nas exceÁ§Áµes, voce deve ter um % na condiÁ§Á£o para a mesma Media"
+                                                                                                       },
+                                                                    "PctExcepcionSinPctManPowerCondicion":  {
+                                                                                                                "label":  "Por favor, ao introduzir um % nas exceÁ§Áµes, voce deve ter um % na condiÁ§Á£o para a mesma Media"
+                                                                                                            },
+                                                                    "PctExcepcionSinPctDEVCondicion":  {
+                                                                                                           "label":  "Por favor, ao introduzir um % nas exceÁ§Áµes, voce deve ter um % na condiÁ§Á£o para a mesma Media"
+                                                                                                       },
+                                                                    "ExcepcionesSinCondiciones":  {
+                                                                                                      "label":  "NÁ£o é possível criar exceÁ§Áµes por Media sem ter condiÁ§Áµes para essa Media"
+                                                                                                  },
+                                                                    "MedioExcepcionConDatosDuplicados":  {
+                                                                                                             "label":  "A Media {0} possui dados duplicados nas exceÁ§Áµes."
+                                                                                                         },
+                                                                    "PctEnTodasExcepciones":  {
+                                                                                                  "label":  "Todas as exceÁ§Áµes devem ter pelo menos uma percentagem."
+                                                                                              },
+                                                                    "ConceptoNMDEnTodasExcepciones":  {
+                                                                                                          "label":  "Todas as exceÁ§Áµes devem ter pelo menos um Conceito NMD selecionado"
+                                                                                                      },
+                                                                    "ExcepcionesConCondicionesEnMedio":  {
+                                                                                                             "label":  "Todas as exceÁ§Áµes devem ter condiÁ§Áµes para sua Media"
+                                                                                                         },
+                                                                    "PctDevExcepcionSinBD":  {
+                                                                                                 "label":  "Por favor, ao introduzir um %DevoluÁ§Á£o nas exceÁ§Áµes, voce deve selecionar um indicador do BC"
+                                                                                             },
+                                                                    "AlFiltrarExcepcionesConCambios":  {
+                                                                                                           "label":  "NÁ£o é possível filtrar por Media se houver alteraÁ§Áµes nÁ£o salvas nas exceÁ§Áµes dessa Media"
+                                                                                                       },
+                                                                    "CancelarCambiosCondiciones":  {
+                                                                                                       "label":  "Há alteraÁ§Áµes nÁ£o salvas nas CondiÁ§Áµes. Deseja continuar e perder estas alteraÁ§Áµes?"
+                                                                                                   },
+                                                                    "CancelarCambiosExcepciones":  {
+                                                                                                       "label":  "Há alteraÁ§Áµes nÁ£o salvas nas ExceÁ§Áµes. Deseja continuar e perder estas alteraÁ§Áµes?"
+                                                                                                   },
+                                                                    "BCCondicionSinPctDevolucion":  {
+                                                                                                        "label":  "Por favor, ao introduzir uma Base de Cálculo nas condiÁ§Áµes, voce deve introduzir uma Percentagem."
+                                                                                                    }
+                                                                }
+                                               },
+                 
+                  "Sobreprimas":  {
+                                      "ToolTip":  {
+                                                      "label":  "Permite carregar sobretaxas em OrÁ§amentos ou importar as existentes no MMS."
+                                                  },
+                                      "Sobreprimas":  {
+                                                          "label":  "Sobretaxas"
+                                                      },
+                                      "TypeConcept":  {
+                                                          "Default":  {
+                                                                          "label":  "Sobretaxa",
+                                                                          "code":  1
+                                                                      },
+                                                          "SLA":  {
+                                                                      "label":  "Sobretaxa SLA",
+                                                                      "code":  2
+                                                                  },
+                                                          "HVP":  {
+                                                                      "label":  "Sobretaxa HVP",
+                                                                      "code":  3
+                                                                  }
+                                                      }
+                                  },
+                  "Magnitude":  {
+
+                                },
+                  "CopiarInversiones":  {
+
+                                        },
+                  "Avisos":  {
+                                 "Titulo":  {
+                                                "label":  "Aviso geral"
+                                            },
+                                 "ToolTip":  {
+                                                 "Label":  "Utilitário para enviar notificaÁ§Áµes que serÁ£o vistas por todos os usuários conectados no momento ao aplicativo"
+                                             },
+                                 "Mensaje":  {
+                                                 "Label":  "Mensagem de aviso:"
+                                             },
+                                 "TipoAviso":  {
+                                                   "Label":  "Tipo de aviso:"
+                                               }
+                             },
+                  "Impersonation":  {
+                                        "ToolTip":  {
+                                                        "label":  "Acesso ao aplicativo personificando outro usuário"
+                                                    },
+                                        "UserName":  {
+                                                         "label":  "Nome de usuário"
+                                                     },
+                                        "Password":  {
+                                                         "label":  "Senha do usuário"
+                                                     },
+                                        "Description":  {
+                                                            "label":  "Insira o nome de usuário e a senha a ser personificado"
+                                                        },
+                                        "RellenarDatosUsuario":  {
+                                                                     "label":  "Preencha o nome de usuário e a senha"
+                                                                 },
+                                        "Error":  {
+                                                      "label":  "Ocorreu um erro e o processo nÁ£o foi concluído"
+                                                  },
+                                        "UsuarioNoAutorizado":  {
+                                                                    "label":  "O usuário nÁ£o está autorizado a acessar o aplicativo"
+                                                                },
+                                        "UsuarioImpersonadoIgual":  {
+                                                                        "label":  "O usuário a ser personificado deve ser diferente do usuário autenticado"
+                                                                    }
+                                    },
+                  "ModalInactividad":  {
+                                           "Titulo":  {
+                                                          "label":  "Aviso de inatividade"
+                                                      },
+                                           "CuentaAtras":  {
+                                                               "label":  "Volta para a página Inicial em:"
+                                                           }
+                                       },
+                  "MesesBloqueados":  {
+                                          "ToolTip":  {
+                                                          "label":  "Permite selecionar meses em um ano selecionado para bloqueá-los)"
+                                                      },
+                                          "MesesBloqueados":  {
+                                                                  "label":  "Meses Bloqueados"
+                                                              }
+                                      },
+                  "AnioDiario":  {
+                                     "ToolTip":  {
+                                                     "label":  "Permite selecionar ano para o Diário de orÁ§amentos"
+                                                 }
+                                 },
+                  "ImportacionCondiciones":  {
+                                                 "ToolTip":  {
+                                                                 "label":  "Permite importar as condiÁ§Áµes do MMS filtrando por parÁ¢metros dados."
+                                                             },
+                                                 "ImportarCondicionesMMS":  {
+                                                                                "label":  "Importar condiÁ§Áµes do MMS"
+                                                                            },
+                                                 "LinkCondiciones":  {
+                                                                         "label":  "Ver CondiÁ§Áµes importadas"
+                                                                     },
+                                                 "LinkCondicionesHelp":  {
+                                                                             "label":  "Navegar para a página de CondiÁ§Áµes filtrando por importaÁ§Á£o realizada"
+                                                                         }
+                                             }
+              },
+    "Common":  {
+                   "AppName":  {
+                                   "const":  "Presupuestos"
+                               },
+                   "Http404":  {
+                                   "label":  "Página NÁ£o Encontrada"
+                               },
+                   "Http403":  {
+                                   "label":  "Acesso Proibido"
+                               },
+                   "Http400":  {
+                                   "label":  "SolicitaÁ§Á£o Inválida"
+                               },
+                   "Http500":  {
+                                   "label":  "Erro Interno do Servidor"
+                               },
+                   "HttpError":  {
+                                     "label":  "Erro Interno NÁ£o Controlado"
+                                 },
+                   "Aceptar":  {
+                                   "label":  "Aceitar"
+                               },
+                   "AgrupacionComercial":  {
+                                               "label":  "Agrupamento Comercial"
+                                           },
+                   "Anio":  {
+                                "label":  "Ano"
+                            },
+                   "BackToHome":  {
+                                      "label":  "Vá para a página inicial"
+                                  },
+                   "BitAnd":  {
+                                  "label":  "BitAnd"
+                              },
+                   "Buscar":  {
+                                  "label":  "Pesquisar"
+                              },
+                   "Cancelar":  {
+                                    "label":  "Cancelar"
+                                },
+                   "Loading":  {
+                                   "label":  "Carregando"
+                               },
+                   "Codigo":  {
+                                  "label":  "Código"
+                              },
+                   "DatosGrabados":  {
+                                         "label":  "Dados salvos com sucesso"
+                                     },
+                   "Detalle":  {
+                                   "label":  "Detalhe"
+                               },
+                   "Descripcion":  {
+                                       "label":  "DescriÁ§Á£o"
+                                   },
+                   "DescripcionAbreviada":  {
+                                                "label":  "DescriÁ§Á£o Abreviada"
+                                            },
+                   "DesmarcarFavorito":  {
+                                             "label":  "Desmarcar dos favoritos"
+                                         },
+                   "Edit":  {
+                                "label":  "EdiÁ§Á£o"
+                            },
+                   "EditarRegistro":  {
+                                          "label":  "Editar registro"
+                                      },
+                   "Editorial":  {
+                                     "label":  "Editora"
+                                 },
+                   "EliminarRegistro":  {
+                                            "label":  "Excluir registro"
+                                        },
+                   "EscribaTextoBusqueda":  {
+                                                "label":  "Digite o texto de pesquisa..."
+                                            },
+                   "FiltroQuitar":  {
+                                        "label":  "Remover Filtro"
+                                    },
+                   "Filtros":  {
+                                   "label":  "Filtros"
+                               },
+                   "GrupoClientes":  {
+                                         "label":  "Grupo de Clientes"
+                                     },
+                   "Idioma":  {
+                                  "label":  "Idioma"
+                              },
+                   "Leyenda":  {
+                                   "label":  "Legenda"
+                               },
+                   "Limpiar":  {
+                                   "label":  "Limpar"
+                               },
+                   "MarcarFavorito":  {
+                                          "label":  "Marcar como favorito"
+                                      },
+                   "Medio":  {
+                                 "label":  "Media"
+                             },
+                   "Medios":  {
+                                  "label":  "Medias"
+                              },
+                   "Mes":  {
+                               "label":  "Mes"
+                           },
+                   "MesDesde":  {
+                                    "label":  "Mes de Início"
+                                },
+                   "MesHasta":  {
+                                    "label":  "Mes Final"
+                                },
+                   "No":  {
+                              "label":  "NÁ£o"
+                          },
+                   "Network":  {
+                                   "label":  "Network"
+                               },
+                   "Nuevo":  {
+                                 "label":  "Novo"
+                             },
+                   "Orden":  {
+                                 "label":  "Ordem"
+                             },
+                   "Parametros":  {
+                                      "label":  "ParÁ¢metros"
+                                  },
+                   "Save":  {
+                                "label":  "Salvar"
+                            },
+                   "Si":  {
+                              "label":  "Sim"
+                          },
+                   "Todos":  {
+                                 "label":  "Todos"
+                             },
+                   "Todo":  {
+                                "label":  "Tudo"
+                            },
+                   "Porcentaje":  {
+                                      "label":  "Percentagem"
+                                  },
+                   "Prueba":  {
+                                  "label":  "Teste"
+                              },
+                   "UnauthorizedUser":{
+                                            "label":  "Usuário NÁ£o Autorizado"
+                                        },
+                   "Version":  {
+                                   "label":  "VersÁ£o"
+                               },
+                   "Messages":  {
+                                    "UndefinedError":  {
+                                                           "label":  "Erro nÁ£o definido"
+                                                       }
+                                },
+      "LogActions": {
+        "DatosGuardadosCorrectamente": {
+          "label": "Dados salvos com sucesso"
+        },
+        "ErrorGuardandoDatos": {
+          "label": "Erro ao salvar dados"
+        },
+        "AccesoPagina": {
+          "label": "Acesso Á  página"
+        },
+        "DatosEliminadosCorrectamente": {
+          "label": "Dados excluídos com sucesso"
+        },
+        "ErrorEliminandoDatos": {
+          "label": "Erro ao excluir dados"
+        }
+      }
+               },
+    "Botones":  {
+                    "Anadir":  {
+                                   "label":  "Adicionar"
+                               },
+                    "Cancelar":  {
+                                     "label":  "Cancelar"
+                                 },
+                    "Eliminar":  {
+                                     "label":  "Excluir"
+                                 },
+                    "Grabar":  {
+                                   "label":  "Salvar"
+                               },
+                    "Modificar":  {
+                                      "label":  "Modificar"
+                                  },
+                    "Enviar":  {
+                                   "label":  "Enviar"
+                               },
+                    "Cerrar":  {
+                                   "label":  "Fechar"
+                               }
+                },
+    "Mensajes":  {
+                     "Cancelar":  {
+                                      "label":  "Há alteraÁ§Áµes nÁ£o salvas. Deseja continuar e perder estas alteraÁ§Áµes?"
+                                  },
+                     "CampoMayorQueCero":  {
+                                               "label":  "O campo {0} deve ser maior que 0"
+                                           },
+                     "CamposObligatorios":  {
+                                                "label":  "Por favor, preencha todos os campos indicados como obrigatórios."
+                                            },
+                     "ConfirmacionEliminar":  {
+                                                  "label":  "Voce vai excluir o registro selecionado. Deseja continuar?"
+                                              },
+                     "IdiomasDuplicados":  {
+                                               "label":  "Existem Idiomas duplicados."
+                                           },
+                     "SinModificaciones":  {
+                                               "label":  "NÁ£o há modificaÁ§Áµes no registro atual."
+                                           },
+                     "RegistrosNoEncontrados":  {
+                                                    "label":  "NÁ£o foram encontrados registros com os parÁ¢metros de pesquisa indicados."
+                                                },
+                     "RegistroEliminado":  {
+                                               "label":  "O registro foi excluído com sucesso."
+                                           },
+                     "RegistroGrabado":  {
+                                             "label":  "O registro foi salvo com sucesso."
+                                         },
+                     "ErrorGeneral":  {
+                                          "label":  "O processo nÁ£o foi concluído com sucesso. Por favor, consulte o suporte."
+                                      },
+                     "ErrorAlGrabar":  {
+                                           "label":  "O processo nÁ£o foi concluído com sucesso. Tente salvar o registro novamente e, se o erro persistir, entre em contato com o suporte."
+                                       },
+                     "ValidarBitAnd":  {
+                                           "label":  "O valor introduzido para o campo BitAnd nÁ£o tem um único 1 em binário ({0})."
+                                       },
+                     "ValorCampoRepetido":  {
+                                                "label":  "O valor {1} do campo {0} já existe."
+                                            },
+                     "AvisoAntesCancelar":  {
+                                                "label":  "Há alteraÁ§Áµes nÁ£o salvas. Deseja continuar e perder estas alteraÁ§Áµes?"
+                                            },
+                     "IndicadorUnico":  {
+                                            "label":  "O indicador {0} só pode ser selecionado para uma versÁ£o."
+                                        },
+                     "SinCambios":  {
+                                        "Label":  "NÁ£o há alteraÁ§Áµes para salvar. "
+                                    },
+                     "MandatoryField":  {
+                                            "Label":  "Campo obrigatório"
+                                        },
+                     "LongitudCaracteres":  {
+                                                "Label":  "Por favor, revise a informaÁ§Á£o inserida, está ultrapassando o limite de caracteres aceito no campo "
+                                            },
+                     "ErrorDelete":  {
+                                         "label":  "Ocorreu um problema e o registro nÁ£o foi excluído. Por favor, consulte o Suporte"
+                                     },
+                     "CampoVersionObligatorio":  {
+                                                     "label":  "A DescriÁ§Á£o da VersÁ£o é um campo obrigatório"
+                                                 },
+                     "PermisosInsuficientes":  {
+                                                   "label":  "Voce nÁ£o tem as permissÁµes necessárias para realizar a operaÁ§Á£o indicada"
+                                               },
+                     "SobreprimaDuplicated":  {
+                                                  "Label":  "Sobretaxa duplicada. Verifique os dados "
+                                              },
+                     "IndicadorCerradaConIndicadorReal":  {
+                                                              "label":  "Se a versÁ£o tiver o indicador {0} ativo, o indicador {1} deve estar ativo."
+                                                          },
+                     "AvisoCambiosPendientes":  {
+                                                    "Label":  "Há alteraÁ§Áµes nÁ£o salvas. Deseja continuar e perder estas alteraÁ§Áµes?"
+                                                },
+                     "ErrorAbriendoPantalla":  {
+                                                   "label":  "Erro ao inicializar a tela. Por favor, consulte o suporte."
+                                               },
+                     "ImportacionCondicionesFinalizada":  {
+                                                              "label":  "A importaÁ§Á£o de CondiÁ§Áµes foi concluída com sucesso."
+                                                          },
+                     "ErrorDespuesDeGrabar":  {
+                                                  "label":  "Processo concluído com erros na atualizaÁ§Á£o de dados na tela. Consulte o suporte"
+                                              },
+                     "AvisoImportarCondiciones":  {
+                                                      "label":  "Vai importar CondiÁ§Áµes com os parÁ¢metros indicados. As atuais serÁ£o eliminadas. Deseja continuar?"
+                                                  },
+                     "LoggingError":  {
+                                          "label":  "⚠️ Não foi possível registar o erro no sistema de logs. A equipa de suporte foi notificada."
+                                      },
+                     "DatabaseWarning":  {
+                                             "label":  "Aviso do gestor de base de dados"
+                                         }
+                 },
+    "Meses":  {
+
+              },
+    "MensajeErrorBD":  {
+
+                       }
+}

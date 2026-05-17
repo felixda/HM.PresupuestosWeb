@@ -1,0 +1,30 @@
+﻿
+::deep .expand {
+    background-image: url("images/expand.svg");
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+::deep .collapse {
+    background-image: url("images/collapse.svg");
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.gridSobreprimas-container {
+    width: 100%;
+}
+
+::deep .gridSobreprimas-container .dxbl-grid {
+    max-height: 30rem;
+    height: auto;
+    min-height: 10rem;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.cursor-wait,
+.cursor-wait * {
+    cursor: wait !important;
+}
+

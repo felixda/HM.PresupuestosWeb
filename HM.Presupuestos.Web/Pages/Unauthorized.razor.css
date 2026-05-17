@@ -1,0 +1,35 @@
+﻿.layer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    gap: 2rem;
+}
+
+.layer-image img {
+    display: block;
+    max-width: 25rem;
+    height: auto;
+    animation: fadeIn 0.4s ease-in;
+}
+
+.layer-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--havas-color-red);;
+    text-align: center;
+    word-break: break-word;
+    letter-spacing:0.05rem;
+}
+
+.layer-link {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(var(--havas-color-black), 70%);
+    text-align: center;
+    word-break: break-word;
+    letter-spacing: 0.05rem;
+    padding: 0.5rem;
+}

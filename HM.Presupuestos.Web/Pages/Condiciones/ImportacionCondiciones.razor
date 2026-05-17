@@ -1,0 +1,199 @@
+@page "/gestion/importacion-condiciones"
+
+@using HM.Presupuestos.Application.CasosDeUso
+@using HM.Presupuestos.Domain.Entidades
+@using HM.Core.Comun.v6.Seguridad.Interfaces
+@using HM.Presupuestos.Domain.Compartido
+@using HM.Presupuestos.Web.Adaptadores
+@using static HM.Presupuestos.Application.CasosDeUso.VersionesService
+@using HM.Presupuestos.Web.Componentes.Base
+@using Version = HM.Presupuestos.Domain.Entidades.Version
+@using DevExpress.Blazor
+
+@inherits Context
+
+@attribute [StreamRendering(true)]
+@attribute [Authorize]
+
+
+@if (_componentInitialized)
+{
+     <PageTitle>@PageTitle</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.ImportacionCondiciones" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+
+    <div class="layoutContainer">
+        @* FILTER *@
+
+        @* FILTER BODY *@    
+        <DxFormLayout>
+            <DxFormLayoutGroup Visible="true"
+            ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+            ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+            AnimationType="LayoutAnimationType.Slide">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true"
+                                      CaptionPosition="CaptionPosition.Vertical"
+                                      Context="formLayout">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.Network)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                         <Template>
+                            <DxDropDownBox @bind-Value="@NetworkSeleccionados"
+                                           QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
+                                                arg,
+                                                x => x.Descripcion,
+                                                ObtenerTexto(AppResources.Common.Todos)
+                                            ))"
+                                           DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                           InputId="dropDownBoxNetwork"
+                                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                           NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                                <DropDownBodyTemplate>
+                                    <DxListBox Data="@_networks"
+                                               TData="CodigoDescripcion"
+                                               TValue="CodigoDescripcion"
+                                               Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
+                                               ValuesChanged="@(values => DxListBoxNetwoks_ValuesChanged(values, context.DropDownBox, false))"
+                                               TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                               SelectionMode="ListBoxSelectionMode.Multiple"
+                                               SearchMode="@ListSearchMode.AutoSearch"
+                                               SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                               ShowCheckboxes="true">
+                                    </DxListBox>
+                                </DropDownBodyTemplate>
+                            </DxDropDownBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="5" ColSpanXl="5" ColSpanXxl="5"
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.GrupoClientes)</span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxDropDownBox @bind-Value="_gruposClientesSeleccionados"
+                                           QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
+                                            arg,
+                                            x => x.Descripcion,
+                                            ObtenerTexto(AppResources.Common.Todos)
+                                        ))"
+                                           DropDownWidthMode="DropDownWidthMode.EditorWidth"
+                                           InputId="ddbGrupos"
+                                           ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                           NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                                <DropDownBodyTemplate>
+                                    <DxTextBox                                    NullText="@ObtenerTexto(AppResources.Common.EscribaTextoBusqueda)"
+                                               InputDelay="500"
+                                               @bind-Text="@_querySearchGrupoClientesList"
+                                               BindValueMode="BindValueMode.OnInput"
+                                               ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
+                                    </DxTextBox>
+                                    <DxListBox Data="@_gruposClientes"
+                                               TData="CodigoDescripcion"
+                                               TValue="CodigoDescripcion"
+                                               Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
+                                               ValuesChanged="@(values => DxListBox_ValuesChanged(values, context.DropDownBox))"
+                                               TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
+                                               ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                               SelectionMode="ListBoxSelectionMode.Multiple"
+                                               ShowCheckboxes="true"
+                                               ListRenderMode="ListRenderMode.Virtual"
+                                               SearchText="@_querySearchGrupoClientesList">
+                                    </DxListBox>
+                                </DropDownBodyTemplate>
+                            </DxDropDownBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                  
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_anios" Enabled="true"
+                                        TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                        ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                        @bind-Value="@_anioSeleccionado"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                    ComboAnios_SelectedDataItemChanged(args)" >
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                    CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Common.Version)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_versiones"
+                                        TextFieldName=@nameof(VersionResumen.Descripcion)
+                                        ValueFieldName=@nameof(VersionResumen.Codigo)
+                                        @bind-Value="_versionSeleccionada"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" >
+                                <ItemDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxItemTemplate(contexto)
+                                </ItemDisplayTemplate>
+
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" BeginRow="true">
+                        <div class="d-flex justify-content-start">
+                             <DxButton CssClass="btnCustom"
+                                      RenderStyle="ButtonRenderStyle.None"
+                                      Text="@ObtenerTexto(AppResources.Pages.ImportacionCondiciones.ImportarCondicionesMMS)"
+                                      IconCssClass="fa-solid fa-file-import"
+                                      Click="@ImportarCondicionesMMS" />
+                        </div>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="5" ColSpanMd="6" ColSpanLg="7" ColSpanXl="7" ColSpanXxl="7">
+                        <div class="d-flex">
+                            @if (ImportacionRealizada)
+                            {
+                                <a href="#"
+                                   class="d-flex align-items-center"
+                                   title="@ObtenerTexto(AppResources.Pages.ImportacionCondiciones.LinkCondicionesHelp)"
+                                   @onclick="IrACondiciones">@ObtenerTexto(AppResources.Pages.ImportacionCondiciones.LinkCondiciones)</a>
+                            }
+                        </div>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="3" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2">
+                        <div class="d-flex justify-content-end">
+                            <DxButton CssClass="btnCustom"
+                            RenderStyle=ButtonRenderStyle.None
+                                      IconCssClass="fa-solid fa-trash"
+                            Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                            Click="FiltroLimpiar" />
+                        </div>
+                    </DxFormLayoutItem>
+
+                </Items>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+    </div>
+}
+
+
+
+

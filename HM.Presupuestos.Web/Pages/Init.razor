@@ -1,0 +1,14 @@
+@page "/"
+@layout Layout.EmptyLayout
+
+@attribute [Authorize]
+
+@if (_componentInitialized)
+{
+    <div class="spinner-container">
+        <div class="spinner-image">
+            <img src="images/logo/logo-havas-rouge_small.png" />
+        </div>
+        <div class="spinner"></div>
+    </div>
+}

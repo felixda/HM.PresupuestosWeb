@@ -1,0 +1,60 @@
+@page "/home"
+@page "/index"
+
+@using HM.Presupuestos.Web.Componentes.Base
+@inherits Context
+
+@if (!UsuarioCargado)
+{
+   @* Cargando... *@
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
+
+    <div class="welcome">
+        <DxFormLayout CssClass="welcome-gridlayout">
+            <ChildContent>
+                <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                    CssClass="welcome-title" Context="formLayout">
+                    <Template>
+                        <div class="welcome-title-header">
+                            @($"{ObtenerTexto(AppResources.Pages.Index.Hola)} {Usuario?.Nombre ?? ""}")
+                        </div>
+                        <div class="welcome-title-content">
+                            @ObtenerTexto(AppResources.Pages.Index.Bienvenida)
+                        </div>
+                    </Template>
+                </DxFormLayoutItem>
+                
+                <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
+                    CssClass="welcome-cards" Context="formLayout">
+                    <Template>
+                        <DxFormLayout>
+                            <ChildContent>
+                                @foreach (var item in Favoritos.OrderBy(o => o.IndOrdenacion))
+                                {
+                                    <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="4" ColSpanXl="3" ColSpanXxl="3">
+                                        <NavLink class="welcome-card" href="@ObtenerTexto(AppResources.Menu.ObtenerUrl(item.Id))">
+                                            <i class="@($"{ObtenerTexto(AppResources.Menu.ObtenerIcono(item.Id))} fa-4x")" aria-hidden="true"></i>
+                                            
+                                            @{
+                                                var menuParentName = item.IdPadre > 0 
+                                                ? ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(item.IdPadre.Value))
+                                                    : "";
+                                            }
+                                            <div class="welcome-card-title">@menuParentName</div>
+                                            <div class="welcome-card-text">@ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(item.Id))</div>
+                                        </NavLink>
+                                    </DxFormLayoutItem>
+                                }
+                            </ChildContent>
+                        </DxFormLayout>
+                    </Template>
+                </DxFormLayoutItem>
+            </ChildContent>
+        </DxFormLayout>
+    </div>
+}
+
+

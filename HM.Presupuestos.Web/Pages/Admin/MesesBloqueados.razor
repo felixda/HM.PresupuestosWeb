@@ -1,0 +1,95 @@
+﻿@page "/administracion/meses-bloqueados"
+
+@inherits Context
+
+@attribute [Authorize]
+
+@if (_componentInitialized)
+{
+    <PageHeader CodigoMenu="@CodigosMenu.MesesBloqueados" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+
+    <div class="layoutContainer">
+
+        @* FILTER *@
+        <DxFormLayout>
+            <DxFormLayoutGroup CssClass="filterContainer"
+                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                               AnimationType="LayoutAnimationType.Slide">
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                  Caption="@($"{ObtenerTexto(AppResources.Common.Anio)}")"
+                                  CaptionPosition="CaptionPosition.Vertical">
+                    <DxComboBox Data="@Anios" Enabled="true"
+                                TextFieldName=@nameof(CodigoDescripcion.Descripcion)
+                                ValueFieldName=@nameof(CodigoDescripcion.Codigo)
+                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Never"
+                                SearchMode="@ListSearchMode.AutoSearch"
+                                SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                ListRenderMode="ListRenderMode.Entire"
+                                @bind-Value="@AnioSeleccionado" SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
+                                                 ComboAnios_SelectedDataItemChanged(args)" >
+                        <EditBoxDisplayTemplate Context="contexto">
+                            @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                        </EditBoxDisplayTemplate>
+                    </DxComboBox>
+                </DxFormLayoutItem>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+        <DxFormLayout>
+           
+            <DxFormLayoutGroup Caption="@ObtenerTexto(AppResources.Pages.MesesBloqueados.Titulo)"
+                                CaptionCssClass="formLayoutGroupCaption">
+                @* GRID MESES *@
+                <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" Context="formLayout">
+                    <DxGrid @ref="GridMeses"
+                            PageSize="12"
+                            KeyFieldName="Codigo"
+                            ValidationEnabled="false"
+                            Data="@Meses"
+                            @bind-SelectedDataItems="MesesSeleccionados"
+                            SelectAllCheckboxMode="GridSelectAllCheckboxMode.Page"
+                            EditMode="GridEditMode.EditCell"
+                              
+                            ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                            TextWrapEnabled="false"
+                            HighlightRowOnHover="true">
+                           
+                        <Columns>
+                            <DxGridSelectionColumn Width="5%" CaptionAlignment="GridTextAlignment.Center" TextAlignment="GridTextAlignment.Center" />
+                            <DxGridDataColumn FieldName="@nameof(CodigoDescripcion.Descripcion)" Caption="@ObtenerTexto(AppResources.Common.Mes)"
+                                                Width="95%" DataRowEditorVisible="false" ReadOnly="true" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left">
+
+                                <CellDisplayTemplate>
+                                    <span class="dxgrid-readonly-cell"><b>@context.DisplayText</b></span>
+                                </CellDisplayTemplate>
+                                   
+                            </DxGridDataColumn>
+                               
+                        </Columns>
+                           
+                    </DxGrid>
+                </DxFormLayoutItem>
+
+                <DxFormLayoutItem BeginRow="true"></DxFormLayoutItem>
+                <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true">
+                    <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-start">
+                            <DxButton CssClass="toolbarButtonCustom"
+                                      RenderStyle=ButtonRenderStyle.None
+                                      Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+                                      Click="Grabar_Click"
+                                      IconCssClass="fa-solid fa-save"
+                                      Enabled="@HayAnioSeleccionado" />
+                        </div>
+                    </div>
+                </DxFormLayoutItem>
+
+
+            </DxFormLayoutGroup>
+           
+        </DxFormLayout>
+
+    </div>
+
+}

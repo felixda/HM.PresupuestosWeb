@@ -1,0 +1,12 @@
+﻿@if (Mostrar)
+{
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <p>@Mensaje</p>
+            <div class="modal-buttons">
+                <button @onclick="Confirmar"> @Si</button>
+                <button @onclick="Cancelar">No</button>
+            </div>
+        </div>
+    </div>
+}
