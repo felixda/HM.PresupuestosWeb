@@ -1,7 +1,7 @@
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Modelo.v6.Login;
 using HM.Presupuestos.Domain.Helper;
-using HM.Presupuestos.Server.Modelos;
+using HM.Presupuestos.Server.Sesion;
 using System.Text.Json;
 
 namespace HM.Presupuestos.Server.Servicios

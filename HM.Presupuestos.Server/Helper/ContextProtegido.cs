@@ -4,7 +4,7 @@ public abstract class ContextProtegido : Context
 {
     #region Servicios de Seguridad
 
-    [Inject] protected IPermisosService PermisosService { get; set; } = default!;
+    [Inject] protected IControlAccesoNavegacion PermisosService { get; set; } = default!;
     [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
     [Inject] protected IRutasNavegacion NavigationService { get; set; } = default!;
 

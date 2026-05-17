@@ -4,7 +4,7 @@
     {
         #region Servicios Inyectados
 
-        [Inject] private ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
+        [Inject] protected ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
         [Inject] private NavigationManager Navigation { get; set; } = default!;
         [Inject] private ControlInactividad ControlInactividad { get; set; } = default!;
         [Inject] private JsInteropHelper InteropInactividad { get; set; } = default!;

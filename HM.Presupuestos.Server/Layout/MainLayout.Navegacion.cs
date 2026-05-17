@@ -72,11 +72,10 @@ namespace HM.Presupuestos.Server.Layout
             }
         }
 
-        private async Task<bool> MostrarConfirmacionCambiosPendientes(string destino)
+        private async Task<bool> MostrarConfirmacionCambiosPendientes(string mensaje)
         {
             if (ModalConfirmacionCambios is not null)
             {
-                string mensaje = AppResources.Mensajes.AvisoCambiosPendientes;
                 return await ModalConfirmacionCambios.Show(mensaje);
             }
 

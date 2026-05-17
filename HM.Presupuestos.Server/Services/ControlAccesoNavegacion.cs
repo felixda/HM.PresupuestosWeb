@@ -1,23 +1,22 @@
 ﻿using HM.Presupuestos.Server.Extensiones;
-using HM.Presupuestos.Server.Modelos;
-using HM.Presupuestos.Server.Servicios;
+using HM.Presupuestos.Server.Sesion;
 
 namespace HM.Presupuestos.Server.Services
 {
 
-    public interface IPermisosService
+    public interface IControlAccesoNavegacion
     {
         bool PuedeAccederA(string url);
     }
 
-    public class PermisosService : IPermisosService
+    public class ControlAccesoNavegacion : IControlAccesoNavegacion
     {
         private HashSet<string> _urlsPermitidas = [];
 
         private readonly IMapaMenu _mapaMenu;
         private readonly ISesionUsuario _usuarioService;
 
-        public PermisosService(IMapaMenu mapaMenu, ISesionUsuario usuarioService)
+        public ControlAccesoNavegacion(IMapaMenu mapaMenu, ISesionUsuario usuarioService)
         {
             _mapaMenu = mapaMenu;
             _usuarioService = usuarioService;

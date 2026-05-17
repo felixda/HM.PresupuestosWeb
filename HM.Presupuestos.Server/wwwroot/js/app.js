@@ -1,5 +1,4 @@
-﻿var _pageChanges = false;
-var _messagePageChangesAbandon = '';
+﻿
 var _timerIdleTimeout;
 var _timerInterval = 0;
 var _blazorReady = false;
@@ -35,60 +34,14 @@ window.whenBlazorReady = function(callback) {
     }
 };
 
-// GetResourceValue seguro con verificación de DotNet
+// GetResourceValue — obtiene textos localizados via API REST (sin interop estático)
 window.GetResourceValue = function (expression) {
-    return new Promise((resolve, reject) => {
-        if (!_blazorReady || typeof DotNet === 'undefined') {
-            console.warn('[GetResourceValue] Blazor no está listo, encolando llamada para:', expression);
-            whenBlazorReady(() => {
-                DotNet.invokeMethodAsync('HM.Presupuestos.Server', 'GetValue', expression, localStorageInterop.getItem('LanguageCode'))
-                    .then(resolve)
-                    .catch(reject);
-            });
-        } else {
-            DotNet.invokeMethodAsync('HM.Presupuestos.Server', 'GetValue', expression, localStorageInterop.getItem('LanguageCode'))
-                .then(resolve)
-                .catch(reject);
-        }
-    });
+    var idioma = (Cookie.Read('app_idioma') || 'es').trim();
+    var url = '/api/recursos/' + encodeURIComponent(expression) + '/' + encodeURIComponent(idioma);
+    return fetch(url)
+        .then(function (r) { return r.ok ? r.json() : Promise.reject('HTTP ' + r.status); });
 };
 
-// Inicialización después de que Blazor esté listo
-window.addEventListener('load', () => {
-    // Esperar a que Blazor esté listo antes de inicializar
-    whenBlazorReady(() => {
-        console.log('[App] Inicializando funcionalidad post-Blazor');
-        
-        // KeepAlive cada 30 segundos
-        setInterval(function () { 
-            if (JSRuntimeLoaded()) {
-                DotNet.invokeMethodAsync('HM.Presupuestos.Server', 'KeepAlive');
-            }
-        }, 30000);
-        
-        // Cargar mensaje de cambios de página
-        GetResourceValue('Mensajes:PaginaConCambios:mensaje')
-            .then(result => {
-                _messagePageChangesAbandon = result;
-                console.log('[App] Mensaje de cambios cargado');
-            })
-            .catch(error => {
-                console.error('[App] Error cargando mensaje de cambios:', error);
-            });
-    });
-});
-
-
-
-setTimeout(() => {
-window.addEventListener('beforeunload', function (e) {
-    if (_pageChanges) {
-        e.preventDefault(); 
-        e.returnValue = ''; 
-        return _messagePageChangesAbandon; 
-    }
-});
-}, 2000);
 
 
 

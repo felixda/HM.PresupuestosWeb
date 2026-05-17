@@ -2,10 +2,8 @@
 @layout Layout.EmptyLayout
 
 @using HM.Presupuestos.Server.Pages
-@using HM.Presupuestos.Server.Utils
 
 @inject ILocalizadorRecursos _ResourceService
-@inject IJSRuntime _JSRuntime
 
 
 @if (_componentInitialized)
@@ -57,17 +55,16 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            ResourceServiceWrapper.Initialize(_ResourceService);
-            _pageTitle = $"{await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:appname:const")} - {_httpStatusCode.ToString()}";
-            _link = $"{await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:BackToHome:label")}";
-            
+            _pageTitle = $"{_ResourceService.ObtenerTexto(AppResources.Common.AppName)} - {_httpStatusCode}";
+            _link = _ResourceService.ObtenerTexto(AppResources.Common.BackToHome);
+
             var msgDescription = _httpStatusCode switch
             {
-                400 => await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:Http400:label"),
-                403 => await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:Http403:label"),
-                404 => await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:Http404:label"),
-                500 => await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:Http500:label"),
-                _ => await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:HttpError:label"),
+                400 => _ResourceService.ObtenerTexto(AppResources.Common.Http400),
+                403 => _ResourceService.ObtenerTexto(AppResources.Common.Http403),
+                404 => _ResourceService.ObtenerTexto(AppResources.Common.Http404),
+                500 => _ResourceService.ObtenerTexto(AppResources.Common.Http500),
+                _   => _ResourceService.ObtenerTexto(AppResources.Common.HttpError),
             };
             _htmlMessage = new MarkupString($"{_httpStatusCode.ToString()} - {msgDescription}");
 

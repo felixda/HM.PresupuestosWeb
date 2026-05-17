@@ -157,7 +157,7 @@ builder.Services.AddScoped<ConfiguracionService>();
 builder.Services.AddScoped<ILayerOverlayService, LayerOverlayService>();
 builder.Services.AddScoped<IGestorCookies, GestorCookies>(); 
 builder.Services.AddScoped<ISesionUsuario, SesionUsuario>();
-builder.Services.AddScoped<IPermisosService, PermisosService>();
+builder.Services.AddScoped<IControlAccesoNavegacion, ControlAccesoNavegacion>();
 builder.Services.AddScoped<IRutasNavegacion, RutasNavegacion>();
 builder.Services.AddScoped<IValidadorMenusUsuario, ValidadorMenusUsuario>();
 
@@ -264,6 +264,10 @@ app.MapControllers(); // Mapea los controladores API
 app.MapRazorComponents<App>()  // Mapea Blazor en toda la aplicación
 .AddInteractiveServerRenderMode(); // Habilita la interactividad en Blazor Server
 
+// Endpoint para que JavaScript obtenga textos localizados sin depender de interop estático
+app.MapGet("/api/recursos/{expresion}/{idioma}", (string expresion, string idioma, ILocalizadorRecursos localizador) =>
+    Results.Ok(localizador.ObtenerTexto(Uri.UnescapeDataString(expresion), idioma)))
+    .AllowAnonymous();
 
 app.Run();
 

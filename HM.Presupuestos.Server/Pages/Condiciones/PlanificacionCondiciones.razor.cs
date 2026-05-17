@@ -680,7 +680,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaA�adida:label"));
+                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAñadida:label"));
                 }
                 else
                 {
