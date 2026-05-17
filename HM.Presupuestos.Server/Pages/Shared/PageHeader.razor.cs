@@ -1,5 +1,5 @@
 using HM.Core.Comun.v6.Entidades.Configuracion;
-using HM.Presupuestos.Infrastructure;
+using HM.Presupuestos.Infrastructure.Servicios;
 
 namespace HM.Presupuestos.Server.Pages.Shared
 {

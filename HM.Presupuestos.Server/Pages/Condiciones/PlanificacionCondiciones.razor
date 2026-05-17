@@ -1,12 +1,12 @@
 @page "/gestion/planificacion-condiciones"
 
-@using HM.Presupuestos.Application.Servicios
+@using HM.Presupuestos.Application.CasosDeUso
 @using HM.Presupuestos.Domain.Entidades
 @using HM.Core.Comun.v6.Seguridad.Interfaces
-@using HM.Presupuestos.Domain.Comun
-@using HM.Presupuestos.Server.Services
-@using static HM.Presupuestos.Application.Servicios.VersionesService
-@using HM.Presupuestos.Server.Helper
+@using HM.Presupuestos.Domain.Compartido
+@using HM.Presupuestos.Server.Adaptadores
+@using static HM.Presupuestos.Application.CasosDeUso.VersionesService
+@using HM.Presupuestos.Server.Componentes.Base
 @using Version = HM.Presupuestos.Domain.Entidades.Version
 @using DevExpress.Blazor
 
@@ -1381,5 +1381,6 @@
     </div>
 
 }
+
 
 

@@ -1,7 +1,7 @@
 using HM.Core.Comun.v6.Entidades.Seguridad;
-using HM.Presupuestos.Domain.Comun;
-using HM.Presupuestos.Server.Helper;
-using HM.Presupuestos.Server.Services;
+using HM.Presupuestos.Domain.Compartido;
+using HM.Presupuestos.Server.Componentes.Base;
+using HM.Presupuestos.Server.Adaptadores;
 using Microsoft.AspNetCore.Components;
 
 namespace HM.Presupuestos.Server.Pages

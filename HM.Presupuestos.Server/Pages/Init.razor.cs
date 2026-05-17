@@ -1,8 +1,9 @@
 using HM.Core.Comun.v6.Entidades.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
-using HM.Presupuestos.Server.Services;
-using HM.Presupuestos.Server.Servicios;
-using HM.Presupuestos.Server.Utils;
+using HM.Presupuestos.Server.Adaptadores.Sesion;
+using HM.Presupuestos.Server.Adaptadores.Ui;
+
+using HM.Presupuestos.Server.Componentes.Ui;
 using Microsoft.AspNetCore.Components;
 
 namespace HM.Presupuestos.Server.Pages
@@ -106,3 +107,5 @@ namespace HM.Presupuestos.Server.Pages
         
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿@using HM.Presupuestos.Server.Helper
+@using HM.Presupuestos.Server.Componentes.Base
 @using HM.Presupuestos.Server.Layout
 
 @attribute [Authorize]
@@ -19,7 +19,7 @@ else
             <DxToolbarItem BeginGroup="true">
                 <Template>
                     <div class="logo-image">
-                        <span class="logo-img" title="@($"Versión: {VersionApp}")"></span>
+                        <span class="logo-img" title="@($"Versi�n: {VersionApp}")"></span>
                         @if (Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
                         {
                             <p class="entorno">@(Configuration.GetValue<string>("AppSettings:AppEnvironment"))</p>
@@ -62,3 +62,4 @@ else
         </Items>
     </DxToolbar>
 }
+

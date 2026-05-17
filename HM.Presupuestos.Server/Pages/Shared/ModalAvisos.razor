@@ -1,5 +1,5 @@
-﻿
-@using HM.Presupuestos.Server.Services
+
+@using HM.Presupuestos.Server.Adaptadores
 
 @inject IAvisosService AvisosService
 @inject TraduccionesHelper TraduccionesHelper
@@ -97,11 +97,11 @@
 
     private string IconoAviso => _tipoClase switch
     {
-        "warning" => "⚠",
-        "info" => "ℹ",
-        "success" => "✅",
-        "danger" => "❌",
-        _ => "⚠"
+        "warning" => "?",
+        "info" => "?",
+        "success" => "?",
+        "danger" => "?",
+        _ => "?"
     };
 
 

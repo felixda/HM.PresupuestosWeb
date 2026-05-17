@@ -1,4 +1,4 @@
-using HM.Presupuestos.Server.Helper;
+using HM.Presupuestos.Server.Componentes.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -53,3 +53,4 @@ namespace HM.Presupuestos.Server.Layout
         }
     }
 }
+

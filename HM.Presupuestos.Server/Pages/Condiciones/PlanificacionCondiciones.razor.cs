@@ -1,11 +1,11 @@
-ï»¿using HM.Core.Comun.v6.Seguridad.Interfaces;
-using static HM.Presupuestos.Application.Servicios.CondicionesService;
+using HM.Core.Comun.v6.Seguridad.Interfaces;
+using static HM.Presupuestos.Application.CasosDeUso.CondicionesService;
 
 namespace HM.Presupuestos.Server.Pages.Condiciones
 {
     public partial class PlanificacionCondiciones
     {
-        #region Inyecciï¿½n de Dependencias
+        #region Inyecci?n de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IPresupuestosService PresupuestosService { get; set; } = default!;
@@ -98,7 +98,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
         private string _tituloGridExcepciones = string.Empty;
 
-        // Cachï¿½ para optimizar bï¿½squedas de condiciones por medio
+        // Cach? para optimizar b?squedas de condiciones por medio
         private Dictionary<int, List<CondicionDto>>? _condicionesPorMedio;
 
         private enum AccionJerarquias
@@ -195,31 +195,31 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             _indicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 2, Descripcion = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Sobreprima) });
 
             _alcances = await PresupuestosService.ObtenerAlcances();
-            _alcances.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _alcances.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_alcances);
 
             _disciplinas = await PresupuestosService.ObtenerDisciplinas();
-            _disciplinas.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _disciplinas.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_disciplinas);
 
             _diversifieds = await PresupuestosService.ObtenerDiversifiedsNCB();
-            _diversifieds.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _diversifieds.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_diversifieds);
 
             _objetivos = await PresupuestosService.ObtenerObjetivos();
-            _objetivos.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _objetivos.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_objetivos);
 
             _tiposCompra = await PresupuestosService.ObtenerTiposCompra();
-            _tiposCompra.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _tiposCompra.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_tiposCompra);
 
             _disciplinasGrupo = await PresupuestosService.ObtenerDisciplinasGrupos();
-            _disciplinasGrupo.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _disciplinasGrupo.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_disciplinasGrupo);
 
             _tiposDisciplina = await PresupuestosService.ObtenerTiposDisciplinas();
-            _tiposDisciplina.ForEach(m => m.Descripcion = Helper.StringHelper.Capitalize(m.Descripcion));
+            _tiposDisciplina.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_tiposDisciplina);
 
             _tituloGridExcepciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Excepciones);
@@ -384,7 +384,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 ActualizarCondicionesConMedioAccesible();
 
                 _condicionesCache = DatosHelper.ClonarObjeto(_condiciones);
-                _condicionesPorMedio = null; // Limpiar cachï¿½
+                _condicionesPorMedio = null; // Limpiar cach?
 
                 _medios = [.. _condiciones
                                 .Select(x => new CodigoDescripcion
@@ -544,12 +544,12 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             }
             else
             {
-                //Se usa el operador ^ al calcular un ï¿½ndice desde el final de una colecciï¿½n.
+                //Se usa el operador ^ al calcular un ?ndice desde el final de una colecci?n.
                 _vigenciaSeleccionada = _vigencias[^1];
             }
         }
 
-        private void AÃ±adirVigencia()
+        private void AñadirVigencia()
         {
             _vigenciaNueva.CodigoNetWork = _filtroCondiciones.CodigoNetwork;
             _vigenciaNueva.CodigoVersion = _filtroCondiciones.CodigoVersion;
@@ -680,7 +680,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAÃ±adida:label"));
+                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAñadida:label"));
                 }
                 else
                 {
@@ -744,7 +744,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             { 
                 //Para utilizar este metodo de comparacion las columnas a comparar deben tener definida la propiedad caption
 
-                // Diccionario: caption ? funciï¿½n que devuelve (original, actual)
+                // Diccionario: caption ? funci?n que devuelve (original, actual)
                 var comparadores = new Dictionary<string, Func<(object? original, object? actual)>>
                 {
                     {
@@ -941,7 +941,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
                 //Para utilizar este metodo de comparacion las columnas a comparar deben tener definida la propiedad caption
 
-                // Diccionario: caption ? funciï¿½n que devuelve (original, actual)
+                // Diccionario: caption ? funci?n que devuelve (original, actual)
                 var comparadores = new Dictionary<string, Func<(object? original, object? actual)>>()
                 { 
                     {
@@ -1218,7 +1218,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
             StateHasChanged();
         }
 
-        private async void AÃ±adirExcepcion()
+        private async void AñadirExcepcion()
         {
             if (_codigoMedioleccionadoParaFiltro.HasValue)
             {
@@ -1257,7 +1257,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
                     _excepciones.Insert(jerarquia - 1, nuevaExcepcion);
 
-                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
+                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
 
                     GridExcepciones.Reload();
                     await ActualizarEstadoCambios(true);
@@ -1280,7 +1280,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
         private string ObtenerNuevoCodigoExcepcion()
         {
-            //Se busca en las excepciones aquella cuyo condigo empiza por -, que son la que ha aï¿½adido el usuario y aun no se han grabado
+            //Se busca en las excepciones aquella cuyo condigo empiza por -, que son la que ha a?adido el usuario y aun no se han grabado
             var codigosNuevos = _excepciones
                 .Select(x => x.CodigoCondicionMedio)
                 .Where(c => c.StartsWith("-"))
@@ -1289,7 +1289,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
             int nuevoCodigoNumerico;
 
-            // Si ya hay cï¿½digos nuevos, toma el menor y rï¿½stale 1
+            // Si ya hay c?digos nuevos, toma el menor y r?stale 1
             if (codigosNuevos.Count > 0)
             {
                 nuevoCodigoNumerico = codigosNuevos.Min() - 1;
@@ -1401,7 +1401,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         {
             if (_codigoMedioleccionadoParaFiltro == item.CodigoMedio)
             {
-                //Hay que aï¿½adir las excepciones que se han quitado al hacer el filtro por medio
+                //Hay que a?adir las excepciones que se han quitado al hacer el filtro por medio
                 foreach (ExcepcionDto excepcion in _excepcionesCache)
                 {
                     ExcepcionDto? exc = _excepciones.Find(c => c.CodigoCondicionMedio == excepcion.CodigoCondicionMedio);
@@ -1480,13 +1480,13 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                 return false;
             }
 
-            // Validaciï¿½n de duplicados optimizada con HashSet
+            // Validaci?n de duplicados optimizada con HashSet
             var excepcionesVistas = new HashSet<string>();
             ExcepcionDto? primerDuplicado = null;
 
             foreach (var excepcion in _excepciones)
             {
-                // Crear clave ï¿½nica basada en los valores que identifican duplicados
+                // Crear clave ?nica basada en los valores que identifican duplicados
                 var clave = $"{excepcion.CodigoMedio}|{excepcion.PctManPower}|{excepcion.PctSAG}|{excepcion.PctDevolucion}|" +
                             $"{excepcion.CodigoAlcance}|{excepcion.CodigoDisciplina}|{excepcion.CodigoDiversified}|" +
                             $"{excepcion.CodigoObjetivo}|{excepcion.CodigoTipoCompra}|{excepcion.CodigoTipoDisciplina}|" +
@@ -1553,7 +1553,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                     }
                 }
 
-                // Validaciones de porcentajes optimizadas con cachï¿½
+                // Validaciones de porcentajes optimizadas con cach?
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctSAG, codigoMedio, c => c.PctSAG))
                 {
                     await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctSAGCondicion));
@@ -1586,7 +1586,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         }
 
         /// <summary>
-        /// Obtiene las condiciones agrupadas por medio usando cachï¿½ para optimizar bï¿½squedas
+        /// Obtiene las condiciones agrupadas por medio usando cach? para optimizar b?squedas
         /// </summary>
         private Dictionary<int, List<CondicionDto>> ObtenerCondicionesPorMedio()
         {
@@ -1600,7 +1600,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         }
 
         /// <summary>
-        /// Valida si existe una condiciï¿½n con el porcentaje especificado para un medio (O(1) con cachï¿½)
+        /// Valida si existe una condici?n con el porcentaje especificado para un medio (O(1) con cach?)
         /// </summary>
         private bool ValidarPorcentajeExcepcion(decimal? porcentaje, int codigoMedio, 
     Func<CondicionDto, decimal?> selector)
@@ -1662,9 +1662,9 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         #endregion
 
 
-        #region Popup AÃ±adir Excepcion
+        #region Popup Añadir Excepcion
 
-        private async Task AÃ±adirExcepcionDesdePopup()
+        private async Task AñadirExcepcionDesdePopup()
         {
             try
             {
@@ -1704,7 +1704,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
 
                 OrdenarExcepciones();
 
-                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
+                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
 
                 GridExcepciones.Reload(); //Porque si no desplaza la ultima fila y no se ve
                 await ActualizarEstadoCambios(true);
@@ -1829,7 +1829,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         {
             try
             {
-                // Verificar si ya estï¿½n cargadas las opciones para esta fila
+                // Verificar si ya est?n cargadas las opciones para esta fila
                 var yaEstanCargadas = concepto switch
                 {
                     ConceptosCondicionesNMD.Disciplina => fila.DisciplinasDisponibles != null,
@@ -1840,7 +1840,7 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
                     _ => false
                 };
 
-                if (yaEstanCargadas) return; // Ya estï¿½n cargadas, no hacer nada
+                if (yaEstanCargadas) return; // Ya est?n cargadas, no hacer nada
 
                 var datos = await ObtenerConceptosNMD(fila, concepto);
                 AsignarConceptosAFila(fila, concepto, datos);
@@ -1971,5 +1971,6 @@ namespace HM.Presupuestos.Server.Pages.Condiciones
         }
     }
 }
+
 
 

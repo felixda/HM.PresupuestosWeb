@@ -1,5 +1,5 @@
-Ôªø@using HM.Core.Comun.v6.Entidades.Configuracion
-@using HM.Presupuestos.Server.Services
+@using HM.Core.Comun.v6.Entidades.Configuracion
+@using HM.Presupuestos.Server.Adaptadores
 @using System.Globalization
 
 
@@ -74,11 +74,11 @@ else
     //     {
     //         try
     //         {
-    //             Logger.LogDebug("üîß Inicializando LanguageSwitcher...");
+    //             Logger.LogDebug("?? Inicializando LanguageSwitcher...");
 
     //             // await InicializarAsync();
     //             SelectedLanguageIso = _IdiomaService.Idioma;
-    //             Logger.LogDebug("‚úÖ Idioma actual: {Language}", SelectedLanguageIso);
+    //             Logger.LogDebug("? Idioma actual: {Language}", SelectedLanguageIso);
 
     //             if (!_componentInitialized)
     //             {
@@ -88,7 +88,7 @@ else
     //         }
     //         catch (Exception ex)
     //         {
-    //             Logger.LogError(ex, "‚ùå Error en OnAfterRenderAsync");
+    //             Logger.LogError(ex, "? Error en OnAfterRenderAsync");
     //         }
     //     }
     // }
@@ -97,33 +97,33 @@ else
     {
         try
         {
-            Logger.LogInformation("üåê Cambiando idioma a: {Language}", iso);
+            Logger.LogInformation("?? Cambiando idioma a: {Language}", iso);
 
-            // Convertir c√≥digo ISO corto a formato completo
+            // Convertir cÛdigo ISO corto a formato completo
             // string fullLanguageCode = ConvertirIsoACodigoCompleto(iso);
-            // Logger.LogDebug("üîß C√≥digo idioma completo: {Code}", fullLanguageCode);
+            // Logger.LogDebug("?? CÛdigo idioma completo: {Code}", fullLanguageCode);
 
             await _IdiomaService.CambiarIdioma(iso);
 
-            // // Verificar que se guard√≥ correctamente
+            // // Verificar que se guardÛ correctamente
             // var verificacion = CookieService.GetCookie(LANGUAGE_COOKIE_KEY);
-            // Logger.LogInformation("‚úÖ Cookie verificada: {Value}", verificacion);
+            // Logger.LogInformation("? Cookie verificada: {Value}", verificacion);
 
             _currentLanguage = iso;
             await InvokeAsync(StateHasChanged);
 
             // Recargar con la nueva cookie
             //
-            // -    *¬∫¬∫¬∫¬∫¬∫-------------------¬∫_NavigationManager.NavigateTo(_NavigationManager.Uri, forceLoad: true);
+            // -    *∫∫∫∫∫-------------------∫_NavigationManager.NavigateTo(_NavigationManager.Uri, forceLoad: true);
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "‚ùå Error al cambiar idioma");
+            Logger.LogError(ex, "? Error al cambiar idioma");
         }
     }
 
     /// <summary>
-    /// Convertir c√≥digo ISO corto (es, en, pt) a formato completo (es-ES, en-US, pt-PT)
+    /// Convertir cÛdigo ISO corto (es, en, pt) a formato completo (es-ES, en-US, pt-PT)
     /// </summary>
     private string ConvertirIsoACodigoCompleto(string iso)
     {
@@ -133,7 +133,7 @@ else
             "en" => "en-US",
             "pt" => "pt-PT",
             "fr" => "fr-FR",
-            _ => "es-ES" // Por defecto espa√±ol
+            _ => "es-ES" // Por defecto espaÒol
         };
     }
 
@@ -147,3 +147,4 @@ else
         return iso == _currentLanguage ? "active" : "";
     }
 }
+

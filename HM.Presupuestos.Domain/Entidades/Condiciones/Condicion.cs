@@ -1,5 +1,5 @@
-Ôªø
-using HM.Presupuestos.Domain.Comun;
+
+using HM.Presupuestos.Domain.Compartido;
 
 namespace HM.Presupuestos.Domain.Entidades
 {
@@ -23,9 +23,10 @@ namespace HM.Presupuestos.Domain.Entidades
         public int Jerarquia { get; set; }
 
         /// <summary>
-        ///Indica sobre qu√© se hace el c√°lculo. (1=Neto Venta, 2 = Sobreprima)'
+        ///Indica sobre quÈ se hace el c·lculo. (1=Neto Venta, 2 = Sobreprima)'
         /// </summary>
         public int IndicadorCalculo { get;set; }  
 
     }
 }
+

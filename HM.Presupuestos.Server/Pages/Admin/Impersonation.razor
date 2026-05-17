@@ -1,6 +1,5 @@
-﻿@page "/administracion/impersonacion"
+@page "/administracion/impersonacion"
 
-@using HM.Presupuestos.Server.Servicios
 @using Microsoft.AspNetCore.Components.Authorization
 @using HM.Core.Comun.v6.Entidades.Seguridad
 @using HM.Core.Comun.v6.Seguridad.Interfaces
@@ -95,7 +94,7 @@ else
 
     protected override Task OnPermisoDenegadoAsync()
     {
-        Console.WriteLine("❌ Permiso denegado");
+        Console.WriteLine("? Permiso denegado");
         return Task.CompletedTask;
     }
 

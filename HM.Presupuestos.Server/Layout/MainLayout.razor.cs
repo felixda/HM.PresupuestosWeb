@@ -1,4 +1,5 @@
-﻿namespace HM.Presupuestos.Server.Layout
+using HM.Presupuestos.Server.Adaptadores.Sesion;
+namespace HM.Presupuestos.Server.Layout
 {
     public partial class MainLayout
     {

@@ -1,4 +1,4 @@
-﻿using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Compartido;
 
 namespace HM.Presupuestos.Domain.Entidades
 {
@@ -96,7 +96,7 @@ namespace HM.Presupuestos.Domain.Entidades
         public bool IndMostrar { get; set;}
 
         /// <summary>
-        /// Si es 1, no puede haber mas versiones con ese estado para el mismo año. Y si es 0, si
+        /// Si es 1, no puede haber mas versiones con ese estado para el mismo a�o. Y si es 0, si
         /// </summary>
         public bool IndVersionUnica { get; set;}
 
@@ -139,3 +139,4 @@ namespace HM.Presupuestos.Domain.Entidades
       
     }
 }
+

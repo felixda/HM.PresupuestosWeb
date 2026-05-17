@@ -1,9 +1,9 @@
 using DevExpress.Blazor;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
-using HM.Presupuestos.Application.Servicios;
-using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Application.CasosDeUso;
+using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
-using HM.Presupuestos.Server.Services;
+using HM.Presupuestos.Server.Adaptadores;
 
 namespace HM.Presupuestos.Server.Pages.Admin
 {
@@ -164,3 +164,4 @@ namespace HM.Presupuestos.Server.Pages.Admin
 
     }
 }
+

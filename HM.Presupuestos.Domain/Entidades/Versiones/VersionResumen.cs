@@ -1,4 +1,4 @@
-﻿using HM.Presupuestos.Domain.Comun;
+using HM.Presupuestos.Domain.Compartido;
 
 namespace HM.Presupuestos.Domain.Entidades
 {
@@ -44,3 +44,4 @@ namespace HM.Presupuestos.Domain.Entidades
         }
     }
 }
+
