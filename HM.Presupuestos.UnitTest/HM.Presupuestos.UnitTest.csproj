@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
-    <ProjectReference Include="..\HM.Presupuestos.Server\HM.Presupuestos.Server.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.Web\HM.Presupuestos.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,3 +38,4 @@
   </ItemGroup>
 
 </Project>
+

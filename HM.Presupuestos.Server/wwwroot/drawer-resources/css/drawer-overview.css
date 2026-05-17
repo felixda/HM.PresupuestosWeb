@@ -1,9 +1,0 @@
-﻿.dxbl-drawer-content:has(.demo-drawer-overview-right) {
-    padding: 0;
-}
-
-.demo-drawer-overview-right .dxbl-drawer-header,
-.demo-drawer-overview-right .dxbl-drawer-body,
-.demo-drawer-overview-right .dxbl-drawer-footer {
-    width: 225px;
-}
