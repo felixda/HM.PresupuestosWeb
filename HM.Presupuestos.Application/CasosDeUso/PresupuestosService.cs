@@ -9,12 +9,10 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
     public class PresupuestosService(
         ILogger logger, 
-        IPresupuestosRepository presupRepository, 
-        ILogAccionesRepository logAccionesRepository) :IPresupuestosService
+        IPresupuestosRepository presupuestosRepository) :IPresupuestosService
     {
         private readonly ILogger _logger = logger;
-        private readonly IPresupuestosRepository _presupuestosRepository = presupRepository;
-        private readonly ILogAccionesRepository _logAccionesRepository = logAccionesRepository;
+        private readonly IPresupuestosRepository _presupuestosRepository = presupuestosRepository;
 
         public async Task<List<CodigoDescripcion>> ObtenerTipologias()
         {

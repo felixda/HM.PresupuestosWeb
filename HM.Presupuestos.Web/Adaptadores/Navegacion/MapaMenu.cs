@@ -1,11 +1,9 @@
-using HM.Presupuestos.Web.Adaptadores.Idioma;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
     /// <summary>
-    /// Resuelve la correspondencia entre códigos de menú y sus URLs a partir del JSON de recursos.
+    /// Clase para mapear códigos de menú a URLs, etiquetas, iconos y visibilidad.
     /// </summary>
     public interface IMapaMenu
     {
@@ -13,11 +11,9 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         string? ObtenerUrlMenu( CodigosMenu codigoMenu) => ObtenerUrlMenu((int)codigoMenu);
         int ObtenerCodigoMenuPorUrl(string url);
         string ObtenerEtiquetaMenuPorUrl(string url);
-
         string ObtenerEtiquetaMenu(CodigosMenu codigoMenu);
         string ObtenerIconoMenu(CodigosMenu codigoMenu);
         string ObtenerVisibilidadMenu(CodigosMenu codigoMenu);
-
     }
 
     public class MapaMenu : IMapaMenu

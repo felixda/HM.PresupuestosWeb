@@ -1,11 +1,10 @@
-using HM.Presupuestos.Web.Adaptadores.Sesion;
 using HM.Core.Comun.v6.Entidades.Logger;
 using HM.Presupuestos.Infrastructure.Servicios;
 using NLog;
 using NLog.Targets;
 using System.Runtime.CompilerServices;
 
-namespace HM.Presupuestos.Web.Adaptadores.Ui
+namespace HM.Presupuestos.Web.Adaptadores.Auditoria
 {
 
     public enum NivelRegistro
@@ -56,7 +55,6 @@ namespace HM.Presupuestos.Web.Adaptadores.Ui
         }
 
         #endregion
-
 
         #region Public Methods
 
@@ -188,8 +186,6 @@ namespace HM.Presupuestos.Web.Adaptadores.Ui
         }
 
         #endregion
-
-
 
         #region Private Methods
 

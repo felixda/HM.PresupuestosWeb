@@ -14,6 +14,7 @@ global using HM.Presupuestos.Web.Adaptadores.Navegacion;
 global using HM.Presupuestos.Web.Adaptadores.Sesion;
 global using HM.Presupuestos.Web.Adaptadores.Idioma;
 global using HM.Presupuestos.Web.Adaptadores.Ui;
+global using HM.Presupuestos.Web.Adaptadores.Auditoria;
 global using HM.Presupuestos.Web.Adaptadores.Inactividad;
 global using HM.Presupuestos.Web.Componentes.Base;
 global using HM.Presupuestos.Web.Componentes.Helpers;

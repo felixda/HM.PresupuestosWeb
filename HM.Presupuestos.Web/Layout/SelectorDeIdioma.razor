@@ -1,0 +1,29 @@
+@inherits Context
+
+@attribute [Authorize]
+
+@if (!UsuarioCargado)
+{
+    @* <p>Comprobando permisos...</p> <!-- Se puede mostrar un loading si se quiere --> *@
+}
+else
+{
+    <DxComboBox Data="@LocalizadorRecursos.ObtenerIdiomas()"
+                Value="@IdiomaSeleccionado"
+                 ValueFieldName="Iso"
+                 TextFieldName="Iso"
+                 CssClass="language-combo"
+                 AllowUserInput="false"
+                ValueChanged="@((string iso) => CambiarIdioma(iso))">
+        <ItemTemplate>
+            <span>@ObtenerEtiquetaDeIdioma(context.Iso)</span>
+        </ItemTemplate>
+        <EditBoxDisplayTemplate>
+            <span>@ObtenerEtiquetaDeIdioma(IdiomaSeleccionado)</span>
+        </EditBoxDisplayTemplate>
+    </DxComboBox>
+}
+
+
+
+

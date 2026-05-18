@@ -1,5 +1,3 @@
-using HM.Presupuestos.Web.Adaptadores.Sesion;
-//using HM.Core.Comun.v6.Entidades.Seguridad;
 
 namespace HM.Presupuestos.Web.Adaptadores.Sesion
 {

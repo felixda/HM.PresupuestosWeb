@@ -155,11 +155,11 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
                 _logger.LogDebug("Validando usuario {UserName} con servicio externo...", nombreUsuarioSinDominio);
 
-                var applicationCode = _configuracion.GetValue<int>("AppSettings:AppCode");
+                var codigoAplicacion = _configuracion.GetValue<int>("AppSettings:AppCode");
                 var tokenInternalAuthentication = _configuracion.GetValue<string>("AppSettings:Session:TokenInternalAuthentication");
 
                 RespuestaLogin respuestaLogin = await _servicioAutenticacion.ValidarUsuario(
-                        applicationCode,
+                        codigoAplicacion,
                         nombreUsuarioSinDominio,
                         tokenInternalAuthentication);
 
@@ -170,7 +170,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                     return null;
                 }
 
-                UsuarioEntidad usuario = await CrearUsuarioDesdeRespuestaServicioExterno(respuestaLogin, applicationCode, nombreUsuarioSinDominio, OrigenValidacionUsuario.SSO, esRecargaPagina);
+                UsuarioEntidad usuario = await CrearUsuarioDesdeRespuestaServicioExterno(respuestaLogin, codigoAplicacion , nombreUsuarioSinDominio, OrigenValidacionUsuario.SSO, esRecargaPagina);
 
                 await _sesionUsuario.GuardarUsuarioSSO(usuario);
 
