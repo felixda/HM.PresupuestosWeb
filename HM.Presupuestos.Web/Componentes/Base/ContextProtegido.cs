@@ -4,9 +4,9 @@ public abstract class ContextProtegido : Context
 {
     #region Servicios de Seguridad
 
-    [Inject] protected IControlAccesoNavegacion PermisosService { get; set; } = default!;
-    [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-    [Inject] protected IRutasNavegacion NavigationService { get; set; } = default!;
+    [Inject] protected IControlAccesoNavegacion ControlAccesNavegacion { get; set; } = default!;
+    [Inject] protected DialogoErrores DialogoErrores { get; set; } = default!;
+    [Inject] protected IRutasNavegacion RutasNavegecion { get; set; } = default!;
 
 
 
@@ -39,35 +39,21 @@ public abstract class ContextProtegido : Context
 
     #region Ciclo de Vida con Validación de Permisos
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (firstRender)
-    //    {
-    //        await base.OnAfterRenderAsync(firstRender);
-
-    //        // Validar permisos cuando el usuario esté disponible
-    //        //if (UsuarioCargado)
-    //        //{
-    //        //    await ValidarPermisosAsync();
-    //        //}
-    //    }
-    //}
-
     protected override async Task OnUsuarioDisponibleAsync()
     {
         await base.OnUsuarioDisponibleAsync();
 
         Console.WriteLine($"[ContextProtegido] ?? OnUsuarioDisponibleAsync - Usuario: {Usuario?.Login ?? "NULL"}, UsuarioCargado: {UsuarioCargado}");
 
-        // ? Verificación estricta: Usuario DEBE existir
-        if (UsuarioApp == null || Usuario == null || !UsuarioCargado)
+        // Verificación estricta: Usuario DEBE existir
+        if (ContextoUsuario == null || Usuario == null || !UsuarioCargado)
         {
             Console.WriteLine($"[ContextProtegido] ?? Usuario no disponible, esperando...");
 
             // Intentar esperar un poco y reintentar (solo una vez)
             await Task.Delay(100);
 
-            if (UsuarioApp == null || Usuario == null)
+            if (ContextoUsuario == null || Usuario == null)
             {
                 Console.WriteLine($"[ContextProtegido] ? Usuario sigue NULL después de esperar");
                 return;
@@ -82,8 +68,8 @@ public abstract class ContextProtegido : Context
     /// </summary>
     private async Task ValidarPermisosAsync()
     {
-        // ? Verificación adicional de seguridad
-        if (UsuarioApp == null || Usuario == null)
+        //+++++++++++ Verificación adicional de seguridad
+        if (ContextoUsuario == null || Usuario == null)
         {
             Console.WriteLine($"[ContextProtegido] ?? Abortando ValidarPermisosAsync - Usuario NULL");
             TienePermiso = false;
@@ -98,9 +84,9 @@ public abstract class ContextProtegido : Context
         try
         {
             string url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-            var urlNormalizada = NavigationService.NormalizarRuta(url);
+            var urlNormalizada = RutasNavegecion.NormalizarRuta(url);
 
-            TienePermiso = PermisosService.PuedeAccederA(urlNormalizada);
+            TienePermiso = ControlAccesNavegacion.PuedeAccederA(urlNormalizada);
 
             if ((bool)TienePermiso)
             {
@@ -149,21 +135,13 @@ public abstract class ContextProtegido : Context
         catch (Exception ex)
         {
             await RegistroAplicacion.RegistrarExcepcion(ex);
-            await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
+            await DialogoErrores.MostrarErrorInicializandoPagina(TituloPagina, ex);
         }
         finally
         {
             LayerOverlayService.Stop();
         }
     }
-
-    /// <summary>
-    /// Obtiene el título de la página desde el menú del usuario usando CodigoMenuPermiso.
-    /// </summary>
-    //protected override string ObtenerTituloPagina()
-    //{
-    //    return ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigoMenuPermiso));
-    //}
 
     /// <summary>
     /// Muestra el overlay con mensaje de carga personalizado

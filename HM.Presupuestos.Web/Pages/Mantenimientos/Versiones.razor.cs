@@ -80,9 +80,9 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
 		}
 
-        protected override async Task OnUsuarioLoginDesconectado()
+        protected override async Task OnUsuarioImpersonadoDesconectado()
         {
-            await base.OnUsuarioLoginDesconectado();
+            await base.OnUsuarioImpersonadoDesconectado();
 
             await InvokeAsync(StateHasChanged);
         }

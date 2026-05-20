@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Web.Pages
             {
                 await base.OnUsuarioDisponibleAsync();
 
-                LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {base.TituloPagina}");
+                LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
                 
                 ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
@@ -40,12 +40,12 @@ namespace HM.Presupuestos.Web.Pages
             }
         }
 
-        protected override async Task OnUsuarioLoginDesconectado()
+        protected override async Task OnUsuarioImpersonadoDesconectado()
         {
             try
             {
                 LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
-                await base.OnUsuarioLoginDesconectado();
+                await base.OnUsuarioImpersonadoDesconectado();
                 ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
             }

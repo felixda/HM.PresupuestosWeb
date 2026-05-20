@@ -69,9 +69,9 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// <summary>
         /// Se ejecuta cuando el usuario cierra sesión o se desconecta
         /// </summary>
-        protected override async Task OnUsuarioLoginDesconectado()
+        protected override async Task OnUsuarioImpersonadoDesconectado()
         {
-            await base.OnUsuarioLoginDesconectado();
+            await base.OnUsuarioImpersonadoDesconectado();
             await InvokeAsync(StateHasChanged);
         }
 

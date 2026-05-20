@@ -1,11 +1,6 @@
-using HM.Presupuestos.Web.Adaptadores.Sesion;
 using HM.Presupuestos.Domain.Extensiones;
-using HM.Presupuestos.Web.Adaptadores.Sesion;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using HM.Presupuestos.Web.Adaptadores.Idioma;
-//using ILocalizadorRecursos = HM.Presupuestos.Web.Adaptadores.ILocalizadorRecursos;
-
 
 namespace HM.Presupuestos.Web.Componentes.Base
 {
@@ -26,15 +21,15 @@ namespace HM.Presupuestos.Web.Componentes.Base
         [Inject] protected IRutasNavegacion RutasNavegacion { get; set; } = default!;
 
 
-        protected ContextoUsuario? UsuarioApp { get; set; }
+        protected ContextoUsuario? ContextoUsuario { get; set; }
 
         /// <summary>
         /// Usuario actual(impersonado si hubiera y si no el SSO) con sus reglas, menús y permisos.
         /// </summary>
-        protected UsuarioEntidad Usuario => UsuarioApp!.UsuarioActivo;
+        protected UsuarioEntidad Usuario => ContextoUsuario!.UsuarioActivo;
 
-        protected UsuarioEntidad? UsuarioImpersonado => UsuarioApp!.UsuarioImpersonado;
-        protected UsuarioEntidad UsuarioAutenticado => UsuarioApp!.UsuarioAutenticado;
+        protected UsuarioEntidad? UsuarioImpersonado => ContextoUsuario!.UsuarioImpersonado;
+        protected UsuarioEntidad UsuarioAutenticado => ContextoUsuario!.UsuarioAutenticado;
 
         protected bool UsuarioCargado { get; private set; } = false;
 
@@ -62,19 +57,18 @@ namespace HM.Presupuestos.Web.Componentes.Base
             {
                 GestorIdioma.IdiomaCambiado += ActualizarIdioma;
 
-
                 SesionUsuario.UsuarioCargado += async () =>
                 {
-                    UsuarioApp = SesionUsuario.UsuarioApp!;
+                    ContextoUsuario = SesionUsuario.UsuarioApp!;
 
-                    if (UsuarioApp != null)
+                    if (ContextoUsuario != null)
                     {
                         UsuarioCargado = true;
 
                         // Verificar si se desconectó el usuario login
-                        if (UsuarioApp.UsuarioImpersonado == null)
+                        if (ContextoUsuario.UsuarioImpersonado == null)
                         {
-                            await OnUsuarioLoginDesconectado();
+                            await OnUsuarioImpersonadoDesconectado();
                         }
 
                         // ? Aquí se llama cuando el usuario está disponible
@@ -83,11 +77,10 @@ namespace HM.Presupuestos.Web.Componentes.Base
                     }
                 };
 
-
                 // Llamamos por si ya estaba cargado
-                UsuarioApp = SesionUsuario.UsuarioApp!;
+                ContextoUsuario = SesionUsuario.UsuarioApp!;
 
-                if (UsuarioApp != null)
+                if (ContextoUsuario != null)
                 {
                     UsuarioCargado = true;
                     await OnUsuarioDisponibleAsync();
@@ -96,15 +89,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
             }
         }
 
-
         protected virtual async Task OnUsuarioDisponibleAsync()
         {
             TituloPagina = ObtenerTituloPagina();
             await Task.CompletedTask;
         }
 
-
-        protected virtual async Task OnUsuarioLoginDesconectado()
+        protected virtual async Task OnUsuarioImpersonadoDesconectado()
         {
             UsuarioCargado = true;
             await InvokeAsync(StateHasChanged);
@@ -115,8 +106,6 @@ namespace HM.Presupuestos.Web.Componentes.Base
         {
             GestorIdioma.IdiomaCambiado -= ActualizarIdioma;
         }
-
-
 
     
         /// <summary>
@@ -240,6 +229,16 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 .Select(x => (selector(x) ?? default!)?.ToString() ?? string.Empty));
         }
 
+        /// <summary>
+        /// Obtiene una lista de resúmenes de versiones del año especificado, filtradas según los permisos del usuario
+        /// actual.
+        /// </summary>
+        /// <remarks>Si el usuario tiene permisos de administrador, se devuelven todas las versiones
+        /// reales del año indicado. Para otros usuarios, solo se incluyen las versiones publicadas y reales según los
+        /// permisos asignados.</remarks>
+        /// <param name="anio">El año para el que se desean obtener los resúmenes de versiones.</param>
+        /// <returns>Una lista de objetos VersionResumen que representan las versiones accesibles para el usuario en el año
+        /// especificado.</returns>
         public async Task<List<VersionResumen>> ObtenerVersionesPorPermisos(int anio)
         {
             if (UsuarioEsAdmin)
@@ -278,8 +277,6 @@ namespace HM.Presupuestos.Web.Componentes.Base
             var categoria = $"{nombreClase}.{nombreMetodoLlamador}";
             await TratarExcepcionBaseDatos(ex, categoria, titulo, esWarning: true);
         }
-
-        
 
         private async Task TratarExcepcionBaseDatos(ExcepcionBaseDatos ex, string categoria, string titulo, bool esWarning)
         {

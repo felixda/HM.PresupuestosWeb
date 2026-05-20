@@ -27,9 +27,9 @@ namespace HM.Presupuestos.Web.Layout
             await InvokeAsync(StateHasChanged);
         }
 
-        protected override async Task OnUsuarioLoginDesconectado()
+        protected override async Task OnUsuarioImpersonadoDesconectado()
         {
-            await base.OnUsuarioLoginDesconectado();
+            await base.OnUsuarioImpersonadoDesconectado();
             await InvokeAsync(StateHasChanged);
         }
 
