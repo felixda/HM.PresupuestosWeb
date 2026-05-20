@@ -1,14 +1,11 @@
-using HM.Presupuestos.Web.Componentes.Base;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace HM.Presupuestos.Web.Layout
 {
-    public partial class Header : Context
+    public partial class Cabecera : Context
     {
         [Inject] private IConfiguration Configuration { get; set; } = default!;
       
-        private string VersionApp = string.Empty;
+        private string VersionApp { get; set; } = string.Empty;
 
         protected override async Task OnInitializedAsync()
         {

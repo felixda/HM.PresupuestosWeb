@@ -1,8 +1,3 @@
-using HM.Core.Comun.v6.Entidades.Seguridad;
-using HM.Presupuestos.Domain.Compartido;
-using HM.Presupuestos.Web.Componentes.Base;
-using HM.Presupuestos.Web.Adaptadores;
-using Microsoft.AspNetCore.Components;
 
 namespace HM.Presupuestos.Web.Pages
 {
@@ -10,18 +5,13 @@ namespace HM.Presupuestos.Web.Pages
     {
         #region Servicios Inyectados
 
-        [Inject] private IRegistroAplicacion _logService { get; set; } = default!;
-        [Inject] private IConfiguration _configuration { get; set; } = default!;
-        [Inject] private ILayerOverlayService _LayerOverlayService { get; set; } = default!;
-        [Inject] private DialogoErrores _ErrorService { get; set; } = default!;
+        [Inject] private DialogoErrores DialogoErrores { get; set; } = default!;
 
         #endregion
 
         #region Propiedades
 
-        private string _pageTitle { get; set; } = string.Empty;
         private List<Menu> Favoritos = [];
-
 
         #endregion
 
@@ -33,7 +23,7 @@ namespace HM.Presupuestos.Web.Pages
             {
                 await base.OnUsuarioDisponibleAsync();
 
-                _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
+                LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {base.TituloPagina}");
                 
                 ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
@@ -41,12 +31,12 @@ namespace HM.Presupuestos.Web.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"[Index] ? Error en OnUsuarioDisponibleAsync: {ex.Message}");
-                await _logService.RegistrarExcepcion(ex);
-                await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
+                await DialogoErrores.MostrarErrorInicializandoPagina(TituloPagina, ex);
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
         }
 
@@ -54,7 +44,7 @@ namespace HM.Presupuestos.Web.Pages
         {
             try
             {
-                _LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
+                LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
                 await base.OnUsuarioLoginDesconectado();
                 ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
@@ -62,12 +52,12 @@ namespace HM.Presupuestos.Web.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"[Index] ? Error en OnUsuarioLoginDesconectado: {ex.Message}");
-                await _logService.RegistrarExcepcion(ex);
-                await _ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
+                await RegistroAplicacion.RegistrarExcepcion(ex);
+                await DialogoErrores.MostrarErrorInicializandoPagina(TituloPagina, ex);
             }
             finally
             {
-                _LayerOverlayService.Stop();
+                LayerOverlayService.Stop();
             }
         }
 

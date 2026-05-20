@@ -34,7 +34,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         protected UsuarioEntidad Usuario => UsuarioApp!.UsuarioActivo;
 
         protected UsuarioEntidad? UsuarioImpersonado => UsuarioApp!.UsuarioImpersonado;
-        protected UsuarioEntidad UsuarioSSO => UsuarioApp!.UsuarioAutenticado;
+        protected UsuarioEntidad UsuarioAutenticado => UsuarioApp!.UsuarioAutenticado;
 
         protected bool UsuarioCargado { get; private set; } = false;
 

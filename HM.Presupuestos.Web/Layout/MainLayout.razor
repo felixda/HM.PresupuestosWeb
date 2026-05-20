@@ -1,17 +1,3 @@
-@* @using HM.Core.Comun.v6.Seguridad.Interfaces
-@using HM.Core.Comun.v6.Entidades.Seguridad
-@using DevExpress.Blazor
-@using DevExpress.Blazor.Internal
-@using HM.Presupuestos.Infrastructure.Servicios
-@using HM.Presupuestos.Web.Servicios
-@using HM.Presupuestos.Web.Componentes.Ui
-@using HM.Presupuestos.Web.ThemeSwitcher
-@using HM.Presupuestos.Web.Adaptadores
-@using System.Text.Json
-@using HM.Presupuestos.Application.CasosDeUso
-@using HM.Presupuestos.Web.Componentes.Base
-@using Microsoft.AspNetCore.Components.Authorization *@
-
 
 
 @inherits LayoutComponentBase
@@ -70,7 +56,7 @@
         <Items>
             <DxGridLayoutItem Area="header" CssClass="header-component">
                 <Template>
-                   <Header/>
+                   <Cabecera/>
                 </Template>
             </DxGridLayoutItem>          
             <DxGridLayoutItem Area="content">
@@ -96,7 +82,7 @@
             </DxGridLayoutItem>
             <DxGridLayoutItem Area="footer" CssClass="footer">
                 <Template>
-                    <Footer />
+                    <Pie />
                 </Template>
             </DxGridLayoutItem>
         </Items>

@@ -1,0 +1,32 @@
+
+namespace HM.Presupuestos.Web.Layout;
+
+public partial class LoginCabeceraImpersonado
+{
+
+    #region Ciclo de vida
+
+    protected override async Task OnUsuarioDisponibleAsync()
+    {
+        await base.OnUsuarioDisponibleAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnUsuarioLoginDesconectado()
+    {
+        await base.OnUsuarioLoginDesconectado();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    #endregion
+
+    #region Métodos privados
+
+    private async Task OnCerrarSesion()
+    {
+        await SesionUsuario.CerrarSesionLoginAsync();
+        NavigationManager.NavigateTo("/Index");
+    }
+
+    #endregion
+}

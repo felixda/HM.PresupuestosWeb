@@ -1,15 +1,3 @@
-@using HM.Core.Comun.v6.Entidades.Seguridad
-
-
-
-@inject AuthenticationStateProvider _AuthenticationStateProvider
-@inject ILogAccionesService _LogAccionesService
-@inject ISesionUsuario _SesionUsuario
-@inject IJSRuntime JS
-
-@inject ILocalizadorRecursos _ResourcesService
-@inject NavigationManager _NavigationManager
-
 @inherits Context
 @attribute [Authorize]
 
@@ -46,8 +34,8 @@ else
                     <Template>
                         <div class="stacklayout-item">
                             <DxButton CssClass="btn-logout" IconCssClass="icon logout-icon" 
-                                      Text="@ObtenerTexto("Pages:Login:CerrarSesion:label")" 
-                                      Click="CerrarSesion" />
+                                      Text="@ObtenerTexto(AppResources.Pages.Login.CerrarSesion)" 
+                                      Click="OnCerrarSesion" />
                         </div>
                     </Template>
                 </DxStackLayoutItem>
@@ -57,27 +45,6 @@ else
   
 }
 
-@code {
 
-  
-
-    protected override async Task OnUsuarioDisponibleAsync()
-    {
-        await base.OnUsuarioDisponibleAsync();
-        await InvokeAsync(StateHasChanged);
-    }
-
-    protected override async Task OnUsuarioLoginDesconectado()
-    {
-        await base.OnUsuarioLoginDesconectado();
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task CerrarSesion()
-    {
-        await _SesionUsuario.CerrarSesionLoginAsync();
-        _NavigationManager.NavigateTo("/Index");
-    }
-}
 
 

@@ -12,7 +12,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         #region Campos Privados
 
-        private bool _esFavorito = false;
+        private bool EsFavorito { get; set; } = false;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
             var menuActual = Usuario.Menus.FirstOrDefault(x => x.Id == (int)CodigoMenu);
             if (menuActual != null)
             {
-                _esFavorito = menuActual.IsFavorite;
+                EsFavorito = menuActual.IsFavorite;
             }
             await InvokeAsync(StateHasChanged);
         }
@@ -55,9 +55,9 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// </summary>
         private async Task OnFavorito()
         {
-            _esFavorito = !_esFavorito;
-            await JSRuntime.InvokeVoidAsync("Page.SetMenuFavorite", "iconFavorite", _esFavorito, "star-fill", "star");
-            await GestionarFavorito(_esFavorito);
+            EsFavorito = !EsFavorito;
+            await JSRuntime.InvokeVoidAsync("Page.SetMenuFavorite", "iconFavorite", EsFavorito, "star-fill", "star");
+            await GestionarFavorito(EsFavorito);
         }
 
         /// <summary>

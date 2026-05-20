@@ -1,13 +1,3 @@
-@using HM.Core.Comun.v6.Entidades.Configuracion
-@using HM.Core.Comun.v6.Entidades.Seguridad
-@using HM.Presupuestos.Web.Componentes.Base
-@using HM.Core.Comun.v6.Seguridad.Interfaces
-@using HM.Presupuestos.Domain.Compartido
-@using HM.Presupuestos.Domain.Entidades
-@using HM.Presupuestos.Application.CasosDeUso
-@using HM.Presupuestos.Web.Componentes.Ui
-@using HM.Presupuestos.Infrastructure.Servicios
-@using HM.Presupuestos.Web.Adaptadores
 
 
 @inherits Context
@@ -21,8 +11,8 @@
                     //Solo mostrar el botón de favorito si el usuario es SSO
                     @if (UsuarioImpersonado == null)
                     {
-                        var claseIcono = _esFavorito ? "icon star-fill" : "icon star";
-                        var tituloBoton = _esFavorito
+                        var claseIcono = EsFavorito ? "icon star-fill" : "icon star";
+                        var tituloBoton = EsFavorito
                         ? ObtenerTexto(AppResources.Common.DesmarcarFavorito)
                         : ObtenerTexto(AppResources.Common.MarcarFavorito);
 

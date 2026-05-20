@@ -12,11 +12,7 @@ using HM.Presupuestos.Application.CasosDeUso;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Infrastructure.Servicios;
 using HM.Presupuestos.Infrastructure.Persistencia;
-//using HM.Presupuestos.Infrastructure.Servicios;
 using HM.Presupuestos.Web;
-//using HM.Presupuestos.Web.Componentes.Base;
-//using HM.Presupuestos.Web.Pages.Shared;
-//using HM.Presupuestos.Web.Adaptadores;
 using HM.Presupuestos.Web.Adaptadores.Sesion;
 using HM.Presupuestos.Web.ThemeSwitcher;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -28,7 +24,6 @@ using Microsoft.Identity.Web.UI;
 using System.Globalization;
 using System.Net;
 using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
-using HM.Presupuestos.Infrastructure.Servicios;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

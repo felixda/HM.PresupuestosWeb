@@ -1,13 +1,3 @@
-@using HM.Core.Comun.v6.Entidades.Seguridad
-
-@inject AuthenticationStateProvider _AuthenticationStateProvider
-@inject ILogAccionesService _LogAccionesService
-@inject ISesionUsuario _SesionUsuario
-@inject IJSRuntime JS
-
-@inject ILocalizadorRecursos _ResourcesService
-@inject NavigationManager _NavigationManager
-
 @inherits Context
 @attribute [Authorize]
 
@@ -22,8 +12,8 @@ else
     <DxStackLayout CssClass="h-100 w-100 ch-480" Orientation="Orientation.Horizontal">
         <Items>
             @{
-                var login = UsuarioSSO.Nombre + " " + UsuarioSSO.Apellido1 + " " + UsuarioSSO.Apellido2;
-                var titleLogin = login + " [" + UsuarioSSO.Login + "]";
+                var login = UsuarioAutenticado.Nombre + " " + UsuarioAutenticado.Apellido1 + " " + UsuarioAutenticado.Apellido2;
+                var titleLogin = login + " [" + UsuarioAutenticado.Login + "]";
             }
             <DxStackLayoutItem Length="0.2fr">
                 <Template>
@@ -42,15 +32,6 @@ else
         </Items>
     </DxStackLayout>
     
-}
-
-@code {
-
-    protected override async Task OnUsuarioDisponibleAsync()
-    {
-        await base.OnUsuarioDisponibleAsync();
-        await InvokeAsync(StateHasChanged);
-    }
 }
 
 
