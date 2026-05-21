@@ -80,6 +80,7 @@
     <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
     <ProjectReference Include="..\HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj" />
     <ProjectReference Include="..\HM.Presupuestos.Infrastructure\HM.Presupuestos.Infrastructure.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.UnitTest\HM.Presupuestos.UnitTest.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings._PRE_.json">
@@ -132,4 +133,16 @@
     <Folder Include="Pages\Procesos\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties wwwroot_4data_4app_1es_1json__JsonSchema="https://cdn.sdf.com/schemas/sdf-schema-1.3.json" /></VisualStudio></ProjectExtensions>
+
+  <Target Name="EjecutarTestsUnitarios" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Message Text="▶ Ejecutando tests unitarios antes de compilar..." Importance="high" />
+    <Exec Command="dotnet test &quot;$(SolutionDir)HM.Presupuestos.UnitTest\bin\$(Configuration)\net8.0\HM.Presupuestos.UnitTest.dll&quot; --verbosity quiet"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true">
+      <Output TaskParameter="ExitCode" PropertyName="TestExitCode" />
+    </Exec>
+    <Error Text="❌ Tests unitarios fallaron. Corrige los tests antes de continuar."
+           Condition="'$(TestExitCode)' == '1'" />
+  </Target>
+
 </Project>

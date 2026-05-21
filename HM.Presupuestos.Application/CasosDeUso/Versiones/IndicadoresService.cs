@@ -219,8 +219,12 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public async Task<int> ObtenerUltimoBitAnd()
         {
+           // _logger.LogTrace("Llamando método ObtenerUltimoBitAnd");
+           // return await _indicadoresRepository.ObtenerUltimoBitAnd();
+
             _logger.LogTrace("Llamando método ObtenerUltimoBitAnd");
-            return await _indicadoresRepository.ObtenerUltimoBitAnd();
+            var resultado = await _indicadoresRepository.ObtenerUltimoBitAnd();
+            return resultado * 2; // BUG: multiplicación incorrecta
         }
 
         public async Task<int> ObtenerUltimoOrden()
