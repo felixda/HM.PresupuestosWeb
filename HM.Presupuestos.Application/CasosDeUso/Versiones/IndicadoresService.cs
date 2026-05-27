@@ -224,7 +224,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
             _logger.LogTrace("Llamando método ObtenerUltimoBitAnd");
             var resultado = await _indicadoresRepository.ObtenerUltimoBitAnd();
-            return resultado * 2; // BUG: multiplicación incorrecta
+            return resultado;// * 2; // BUG: multiplicación incorrecta
         }
 
         public async Task<int> ObtenerUltimoOrden()
