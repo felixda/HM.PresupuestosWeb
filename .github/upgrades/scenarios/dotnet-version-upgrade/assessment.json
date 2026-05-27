@@ -1,0 +1,2102 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-05-27T15:36:44.5470403Z",
+  "analysisEndTime": "2026-05-27T15:36:56.4275153Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 6,
+      "issues": 6,
+      "incidents": 72,
+      "effort": 72
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 25,
+        "Optional": 0,
+        "Potential": 41,
+        "Information": 6
+      },
+      "category": {
+        "NuGet": 14,
+        "Project": 6,
+        "Api": 52
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "HM.Presupuestos.Application\\HM.Presupuestos.Application.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 3,
+      "properties": {
+        "appName": "HM.Presupuestos.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 17,
+        "numberOfCodeFiles": 17,
+        "linesTotal": 2443,
+        "linesOfCode": 2443,
+        "totalApiScanned": 1081,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "4d9e6c6d-0551-4c5e-88e4-4c4b6958127f",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.Application\\HM.Presupuestos.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Logging, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Logging, and replace with new package Microsoft.Extensions.Logging 10.0.8",
+              "protected": "Microsoft.Extensions.Logging, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Logging, and replace with new package Microsoft.Extensions.Logging 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Application\\HM.Presupuestos.Application.csproj",
+            "snippet": "Microsoft.Extensions.Logging, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Logging, and replace with new package Microsoft.Extensions.Logging 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Logging, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Logging, and replace with new package Microsoft.Extensions.Logging 10.0.8",
+            "label": "Microsoft.Extensions.Logging 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Logging",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a430c3e5-bf0b-49e1-b904-86a5b5b8264b",
+          "ruleId": "NuGet.0006",
+          "projectPath": "HM.Presupuestos.Application\\HM.Presupuestos.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+              "protected": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+            },
+            "kind": "File",
+            "path": "NuGet.config",
+            "snippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+            "protectedSnippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+          }
+        },
+        {
+          "incidentId": "649d58bd-dc55-4be2-9cf9-3386ff99080f",
+          "ruleId": "Project.0002",
+          "projectPath": "HM.Presupuestos.Application\\HM.Presupuestos.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+              "protected": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Application\\HM.Presupuestos.Application.csproj",
+            "snippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "protectedSnippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HM.Presupuestos.Domain\\HM.Presupuestos.Domain.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "HM.Presupuestos.Domain",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 48,
+        "numberOfCodeFiles": 48,
+        "linesTotal": 1922,
+        "linesOfCode": 1922,
+        "totalApiScanned": 1639,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "267de201-2ef3-4ec8-b04c-f495c6b3732a",
+          "ruleId": "NuGet.0006",
+          "projectPath": "HM.Presupuestos.Domain\\HM.Presupuestos.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+              "protected": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+            },
+            "kind": "File",
+            "path": "NuGet.config",
+            "snippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+            "protectedSnippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+          }
+        },
+        {
+          "incidentId": "942dd8ac-1301-4fd0-ae41-f864122d97a9",
+          "ruleId": "Project.0002",
+          "projectPath": "HM.Presupuestos.Domain\\HM.Presupuestos.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+              "protected": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Domain\\HM.Presupuestos.Domain.csproj",
+            "snippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "protectedSnippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 5,
+      "properties": {
+        "appName": "HM.Presupuestos.E2ETest",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 8,
+        "numberOfCodeFiles": 5,
+        "linesTotal": 2034,
+        "linesOfCode": 250,
+        "totalApiScanned": 472,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "20c1cb03-b76d-4634-91a7-c0389e4d5343",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.Binder, 8.0.2\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Binder, and replace with new package Microsoft.Extensions.Configuration.Binder 10.0.8",
+              "protected": "Microsoft.Extensions.Configuration.Binder, 8.0.2\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Binder, and replace with new package Microsoft.Extensions.Configuration.Binder 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.Binder, 8.0.2\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Binder, and replace with new package Microsoft.Extensions.Configuration.Binder 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.Binder, 8.0.2\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Binder, and replace with new package Microsoft.Extensions.Configuration.Binder 10.0.8",
+            "label": "Microsoft.Extensions.Configuration.Binder 8.0.2",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.Binder",
+              "PackageVersion": "8.0.2",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "0e087ea4-0741-486d-adf2-4a4fac5f015e",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.EnvironmentVariables, 8.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.EnvironmentVariables, and replace with new package Microsoft.Extensions.Configuration.EnvironmentVariables 10.0.8",
+              "protected": "Microsoft.Extensions.Configuration.EnvironmentVariables, 8.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.EnvironmentVariables, and replace with new package Microsoft.Extensions.Configuration.EnvironmentVariables 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.EnvironmentVariables, 8.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.EnvironmentVariables, and replace with new package Microsoft.Extensions.Configuration.EnvironmentVariables 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.EnvironmentVariables, 8.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.EnvironmentVariables, and replace with new package Microsoft.Extensions.Configuration.EnvironmentVariables 10.0.8",
+            "label": "Microsoft.Extensions.Configuration.EnvironmentVariables 8.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.EnvironmentVariables",
+              "PackageVersion": "8.0.0",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1715706d-ddb4-4384-ae40-076cbf701cdc",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.8",
+              "protected": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+            "snippet": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Configuration.Json, 8.0.1\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Configuration.Json, and replace with new package Microsoft.Extensions.Configuration.Json 10.0.8",
+            "label": "Microsoft.Extensions.Configuration.Json 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Configuration.Json",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "73a15fbb-b9e8-4246-89ac-48deb0936b90",
+          "ruleId": "NuGet.0006",
+          "projectPath": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+              "protected": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+            },
+            "kind": "File",
+            "path": "NuGet.config",
+            "snippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+            "protectedSnippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+          }
+        },
+        {
+          "incidentId": "5ba72e27-a0d9-4e5b-b6b4-6ce6e8504f48",
+          "ruleId": "Project.0002",
+          "projectPath": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+              "protected": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.E2ETest\\HM.Presupuestos.E2ETest.csproj",
+            "snippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "protectedSnippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 8,
+      "properties": {
+        "appName": "HM.Presupuestos.Infrastructure",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 12,
+        "numberOfCodeFiles": 12,
+        "linesTotal": 3807,
+        "linesOfCode": 3807,
+        "totalApiScanned": 4471,
+        "minLinesOfCodeToChange": 6,
+        "maxLinesOfCodeToChange": 6
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "16e22577-38bc-4307-b404-ff3dc8483722",
+          "ruleId": "NuGet.0006",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+              "protected": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+            },
+            "kind": "File",
+            "path": "NuGet.config",
+            "snippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+            "protectedSnippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+          }
+        },
+        {
+          "incidentId": "736eefe4-a3b1-4c77-b380-04c8e435de52",
+          "ruleId": "Project.0002",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+              "protected": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+            "snippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "protectedSnippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "38007014-d275-4183-9644-07d6118f8955",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_logger?.Error($\u0022Mensaje: {await response.Content.ReadAsStringAsync()}\u0022);",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\Servicios\\ApiCoreCli.cs",
+            "snippet": "_logger?.Error($\u0022Mensaje: {await response.Content.ReadAsStringAsync()}\u0022);",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 122,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "19389269-aa55-4e91-a778-ed92ba225d49",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "string retorno = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\Servicios\\ApiCoreCli.cs",
+            "snippet": "string retorno = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 116,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "d856d0e9-6f75-409e-9d72-6c0a5e6fea60",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_logger?.Error($\u0022Mensaje: {await response.Content.ReadAsStringAsync()}\u0022);",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\Servicios\\ApiCoreCli.cs",
+            "snippet": "_logger?.Error($\u0022Mensaje: {await response.Content.ReadAsStringAsync()}\u0022);",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 84,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "75a4b315-9498-48a3-a1ef-89fcc10b6221",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "string retorno = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\Servicios\\ApiCoreCli.cs",
+            "snippet": "string retorno = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 78,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "e6d7b64f-9bb4-4cf4-9a30-72d8371f26a9",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Console.WriteLine($\u0022Mensaje: {await response.Content.ReadAsStringAsync()}\u0022);",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\Servicios\\ApiCoreCli.cs",
+            "snippet": "Console.WriteLine($\u0022Mensaje: {await response.Content.ReadAsStringAsync()}\u0022);",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 46,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "33999762-e855-472e-a215-1ffc1ec9097b",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "HM.Presupuestos.Infrastructure\\HM.Presupuestos.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "retorno = await response.Content.ReadAsStringAsync();",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Infrastructure\\Servicios\\ApiCoreCli.cs",
+            "snippet": "retorno = await response.Content.ReadAsStringAsync();",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 39,
+            "column": 20
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HM.Presupuestos.UnitTest\\HM.Presupuestos.UnitTest.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "HM.Presupuestos.UnitTest",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 1996,
+        "linesOfCode": 221,
+        "totalApiScanned": 358,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "44d05b29-727c-4e6c-948f-c5c1ae6bd04c",
+          "ruleId": "NuGet.0006",
+          "projectPath": "HM.Presupuestos.UnitTest\\HM.Presupuestos.UnitTest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+              "protected": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+            },
+            "kind": "File",
+            "path": "NuGet.config",
+            "snippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+            "protectedSnippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+          }
+        },
+        {
+          "incidentId": "8a12fec2-3361-492d-a2e0-3fbf0e582842",
+          "ruleId": "Project.0002",
+          "projectPath": "HM.Presupuestos.UnitTest\\HM.Presupuestos.UnitTest.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+              "protected": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.UnitTest\\HM.Presupuestos.UnitTest.csproj",
+            "snippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "protectedSnippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+      "startingProject": true,
+      "issues": 6,
+      "storyPoints": 52,
+      "properties": {
+        "appName": "HM.Presupuestos.Web",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net8.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 2264,
+        "numberOfCodeFiles": 58,
+        "linesTotal": 56213,
+        "linesOfCode": 12377,
+        "totalApiScanned": 30163,
+        "minLinesOfCodeToChange": 46,
+        "maxLinesOfCodeToChange": 46
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "4bb18115-a36a-4493-985a-a52c3ec42ce5",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8",
+              "protected": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+            "snippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8",
+            "protectedSnippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.8",
+            "label": "Microsoft.AspNetCore.Authentication.JwtBearer 8.0.13",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageVersion": "8.0.13",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "c18ef315-205f-4e54-a1c0-fceb47231e16",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.OpenIdConnect, and replace with new package Microsoft.AspNetCore.Authentication.OpenIdConnect 10.0.8",
+              "protected": "Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.OpenIdConnect, and replace with new package Microsoft.AspNetCore.Authentication.OpenIdConnect 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+            "snippet": "Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.OpenIdConnect, and replace with new package Microsoft.AspNetCore.Authentication.OpenIdConnect 10.0.8",
+            "protectedSnippet": "Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.13\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Authentication.OpenIdConnect, and replace with new package Microsoft.AspNetCore.Authentication.OpenIdConnect 10.0.8",
+            "label": "Microsoft.AspNetCore.Authentication.OpenIdConnect 8.0.13",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.OpenIdConnect",
+              "PackageVersion": "8.0.13",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a487bf04-7c9d-42ac-9407-5da4abe4342c",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Components.WebAssembly.Server, 8.*-*\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.8",
+              "protected": "Microsoft.AspNetCore.Components.WebAssembly.Server, 8.*-*\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+            "snippet": "Microsoft.AspNetCore.Components.WebAssembly.Server, 8.*-*\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.8",
+            "protectedSnippet": "Microsoft.AspNetCore.Components.WebAssembly.Server, 8.*-*\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.AspNetCore.Components.WebAssembly.Server, and replace with new package Microsoft.AspNetCore.Components.WebAssembly.Server 10.0.8",
+            "label": "Microsoft.AspNetCore.Components.WebAssembly.Server 8.*-*",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Components.WebAssembly.Server",
+              "PackageVersion": "8.*-*",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "42c91ea2-8137-45cd-b410-9df57b9daa08",
+          "ruleId": "NuGet.0002",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Localization, 9.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Localization, and replace with new package Microsoft.Extensions.Localization 10.0.8",
+              "protected": "Microsoft.Extensions.Localization, 9.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Localization, and replace with new package Microsoft.Extensions.Localization 10.0.8"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+            "snippet": "Microsoft.Extensions.Localization, 9.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Localization, and replace with new package Microsoft.Extensions.Localization 10.0.8",
+            "protectedSnippet": "Microsoft.Extensions.Localization, 9.0.0\n\nRecomendaci\u00F3n:\n\nRemove Microsoft.Extensions.Localization, and replace with new package Microsoft.Extensions.Localization 10.0.8",
+            "label": "Microsoft.Extensions.Localization 9.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Localization",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "10.0.8",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9a1f3eb2-251c-40fe-9d56-0f3cddce4fca",
+          "ruleId": "NuGet.0006",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+              "protected": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+            },
+            "kind": "File",
+            "path": "NuGet.config",
+            "snippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n",
+            "protectedSnippet": "Se encontraron 1 archivos que coinciden con la regla:\r\n\r\nNuGet.config\r\n"
+          }
+        },
+        {
+          "incidentId": "7731e187-53c4-4502-8fc4-c0e72455442d",
+          "ruleId": "Project.0002",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+              "protected": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+            "snippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "protectedSnippet": "Marco de destino actual: net8.0\nMarco de destino recomendado: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net8.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "6ed2e85b-d830-4db7-87ee-f56bbb9052de",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "__builder3.AddAttribute(44, \u0022href\u0022, \r\n#nullable restore\r\n#line (46,36)-(46,93) \u0022C:\\GitHub\\ESFNN-PresupuestosWeb\\HM.Presupuestos.Web\\Layout\\Cabecera.razor\u0022\r\nConfiguration.GetValue\u003Cstring\u003E(\u0022AppSettings:HelpDeskUrl\u0022)\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n                    );",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\obj\\Debug\\net8.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Layout/Cabecera_razor.g.cs",
+            "snippet": "__builder3.AddAttribute(44, \u0022href\u0022, \r\n#nullable restore\r\n#line (46,36)-(46,93) \u0022C:\\GitHub\\ESFNN-PresupuestosWeb\\HM.Presupuestos.Web\\Layout\\Cabecera.razor\u0022\r\nConfiguration.GetValue\u003Cstring\u003E(\u0022AppSettings:HelpDeskUrl\u0022)\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n                    );",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 570,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "80fa50d7-4479-437b-a489-c97cba3081c8",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "__builder3.AddContent(22, Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022)\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n                    );",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\obj\\Debug\\net8.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Layout/Cabecera_razor.g.cs",
+            "snippet": "__builder3.AddContent(22, Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022)\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n                    );",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 426,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "d06933d1-4d14-450a-98e7-f0f630bd1aed",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022) != Constantes.Environment.PRO)\r\n                        {\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n\r\n                    __builder3.OpenElement(19, \u0022p\u0022);\r\n                    __builder3.AddAttribute(20, \u0022class\u0022, \u0022entorno\u0022);\r\n                    __builder3.AddAttribute(21, \u0022b-je0v7kpa5d\u0022);\r\n#nullable restore\r\n#line (25,50)-(25,110) 26 \u0022C:\\GitHub\\ESFNN-PresupuestosWeb\\HM.Presupuestos.Web\\Layout\\Cabecera.razor\u0022\r\n__builder3.AddContent(22, Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022)\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n                    );\r\n                    __builder3.CloseElement();\r\n#nullable restore\r\n#line (26,1)-(27,1) \u0022C:\\GitHub\\ESFNN-PresupuestosWeb\\HM.Presupuestos.Web\\Layout\\Cabecera.razor\u0022\r\n                        }",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\obj\\Debug\\net8.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Layout/Cabecera_razor.g.cs",
+            "snippet": "if (Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022) != Constantes.Environment.PRO)\r\n                        {\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n\r\n                    __builder3.OpenElement(19, \u0022p\u0022);\r\n                    __builder3.AddAttribute(20, \u0022class\u0022, \u0022entorno\u0022);\r\n                    __builder3.AddAttribute(21, \u0022b-je0v7kpa5d\u0022);\r\n#nullable restore\r\n#line (25,50)-(25,110) 26 \u0022C:\\GitHub\\ESFNN-PresupuestosWeb\\HM.Presupuestos.Web\\Layout\\Cabecera.razor\u0022\r\n__builder3.AddContent(22, Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022)\r\n\r\n#line default\r\n#line hidden\r\n#nullable disable\r\n                    );\r\n                    __builder3.CloseElement();\r\n#nullable restore\r\n#line (26,1)-(27,1) \u0022C:\\GitHub\\ESFNN-PresupuestosWeb\\HM.Presupuestos.Web\\Layout\\Cabecera.razor\u0022\r\n                        }",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 414,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "061b4b8f-c788-474f-b9e8-8f7d4c9b1b5c",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "if (_Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022) != Constantes.Environment.PRO)\r\n            {\r\n                if (e.CtrlKey \u0026\u0026 e.AltKey \u0026\u0026 (Usuario!.CodigoUsuario == 2825 || Usuario!.CodigoUsuario == 1182))\r\n                {\r\n                    _userNameImpersonation = \u0022probar.acceso\u0022;\r\n                    _passwordImpersonation = \u0022ccc\u0022;\r\n                }\r\n            }",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\obj\\Debug\\net8.0\\Microsoft.CodeAnalysis.Razor.Compiler\\Microsoft.NET.Sdk.Razor.SourceGenerators.RazorSourceGenerator\\Pages/Admin/Impersonation_razor.g.cs",
+            "snippet": "if (_Configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppEnvironment\u0022) != Constantes.Environment.PRO)\r\n            {\r\n                if (e.CtrlKey \u0026\u0026 e.AltKey \u0026\u0026 (Usuario!.CodigoUsuario == 2825 || Usuario!.CodigoUsuario == 1182))\r\n                {\r\n                    _userNameImpersonation = \u0022probar.acceso\u0022;\r\n                    _passwordImpersonation = \u0022ccc\u0022;\r\n                }\r\n            }",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 1447,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "8b894a33-b816-4804-ba9c-4c97c179ff6b",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var data = new DatosPeticionLogData\r\n            {\r\n                CodigoAplicacion = usuario.CodigoAplicacion,\r\n                CodigoPais = usuario.CodigoPais,\r\n                CodigoCompania = usuario.CodigoCompania,\r\n                UserName = usuario.Login,\r\n                Fecha = DateTime.Now,\r\n                Categoria = category,\r\n                Mensaje = message.Length \u003E MaxMensajeLength\r\n                    ? message[..MaxMensajeLength]\r\n                    : message,\r\n                StackTrace = stackTraceText,\r\n                Observaciones = comments,\r\n                DominioAplicacion = _configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppDomain\u0022)\r\n            };",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Auditoria\\RegistroAplicacion.cs",
+            "snippet": "var data = new DatosPeticionLogData\r\n            {\r\n                CodigoAplicacion = usuario.CodigoAplicacion,\r\n                CodigoPais = usuario.CodigoPais,\r\n                CodigoCompania = usuario.CodigoCompania,\r\n                UserName = usuario.Login,\r\n                Fecha = DateTime.Now,\r\n                Categoria = category,\r\n                Mensaje = message.Length \u003E MaxMensajeLength\r\n                    ? message[..MaxMensajeLength]\r\n                    : message,\r\n                StackTrace = stackTraceText,\r\n                Observaciones = comments,\r\n                DominioAplicacion = _configuration.GetValue\u003Cstring\u003E(\u0022AppSettings:AppDomain\u0022)\r\n            };",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 199,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "0c36b938-5940-4f2e-8ae5-9cdbc1800703",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "await Task.Delay(TimeSpan.FromSeconds(secondsAutoStopAfter), token).ConfigureAwait(false);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Ui\\LayerOverlayService.cs",
+            "snippet": "await Task.Delay(TimeSpan.FromSeconds(secondsAutoStopAfter), token).ConfigureAwait(false);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 110,
+            "column": 24
+          }
+        },
+        {
+          "incidentId": "55df7a41-b3e4-4536-89e0-9b429045bcdd",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "IdiomaActual = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? IDIOMA_POR_DEFECTO;",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\GestorIdioma.cs",
+            "snippet": "IdiomaActual = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? IDIOMA_POR_DEFECTO;",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 47,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "656f2f0f-25d1-4f26-a399-56c045647fce",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "IdiomaActual = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? IDIOMA_POR_DEFECTO;",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\GestorIdioma.cs",
+            "snippet": "IdiomaActual = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? IDIOMA_POR_DEFECTO;",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 47,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "363ba90c-99a7-4989-8dad-dbf4bfc6926f",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = _proveedorJson.ObtenerDocumento(idioma);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\LocalizadorRecursos.cs",
+            "snippet": "var doc = _proveedorJson.ObtenerDocumento(idioma);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 142,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "ef160609-b8a0-4907-bf90-ff275c1d248b",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = _proveedorJson.ObtenerDocumento(codigoIdioma);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\LocalizadorRecursos.cs",
+            "snippet": "var doc = _proveedorJson.ObtenerDocumento(codigoIdioma);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 69,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "12020422-c6dd-4448-ab9e-39a13ce01064",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_idiomaPorDefecto = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\LocalizadorRecursos.cs",
+            "snippet": "_idiomaPorDefecto = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 42,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "1f8cc887-6c75-4838-abee-2fd1b508a384",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_idiomaPorDefecto = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\LocalizadorRecursos.cs",
+            "snippet": "_idiomaPorDefecto = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 42,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "19fef7b6-35f3-4c79-ab01-b4cfd58f041e",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var jsonDoc = JsonDocument.Parse(content);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\ProveedorRecursosJson.cs",
+            "snippet": "var jsonDoc = JsonDocument.Parse(content);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 112,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "058098e6-1e17-4408-bbb7-76f209775d79",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var jsonDoc = JsonDocument.Parse(content);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\ProveedorRecursosJson.cs",
+            "snippet": "var jsonDoc = JsonDocument.Parse(content);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 112,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "5f55d4b6-d88b-4092-b58c-f29d798ad793",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "public JsonDocument? ObtenerDocumento(string codigoIdioma)",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\ProveedorRecursosJson.cs",
+            "snippet": "public JsonDocument? ObtenerDocumento(string codigoIdioma)",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "9f827cf9-2fe0-48da-8664-6da896d6589e",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": " JsonDocument? ObtenerDocumento(string codigoIdioma)",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Idioma\\ProveedorRecursosJson.cs",
+            "snippet": " JsonDocument? ObtenerDocumento(string codigoIdioma)",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 11,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "8c674037-fce0-496b-88d2-d0f520d9a366",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var tokenInternalAuthentication = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:Session:TokenInternalAuthentication\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Sesion\\SesionUsuario.cs",
+            "snippet": "var tokenInternalAuthentication = _configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:Session:TokenInternalAuthentication\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 158,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "015d4efd-2f2a-4e6e-807f-afc26a351d0a",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var codigoAplicacion = _configuracion.GetValue\u003Cint\u003E(\u0022AppSettings:AppCode\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Sesion\\SesionUsuario.cs",
+            "snippet": "var codigoAplicacion = _configuracion.GetValue\u003Cint\u003E(\u0022AppSettings:AppCode\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 157,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "50830771-0c8e-441f-8f09-ce89a5d04b32",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var applicationCode = _configuracion.GetValue\u003Cint\u003E(\u0022AppSettings:AppCode\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Sesion\\SesionUsuario.cs",
+            "snippet": "var applicationCode = _configuracion.GetValue\u003Cint\u003E(\u0022AppSettings:AppCode\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 90,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "89b310c5-9bd6-4590-ac50-985366eb02c8",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var path = uri.AbsolutePath.ToLowerInvariant();",
+              "protected": "P:System.Uri.AbsolutePath"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\RutasNavegacion.cs",
+            "snippet": "var path = uri.AbsolutePath.ToLowerInvariant();",
+            "protectedSnippet": "P:System.Uri.AbsolutePath",
+            "label": "P:System.Uri.AbsolutePath",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 49,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "9c40b2b0-7b4b-4cb4-b12b-23372185beda",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var uri = _navigationManager.ToAbsoluteUri(url);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\RutasNavegacion.cs",
+            "snippet": "var uri = _navigationManager.ToAbsoluteUri(url);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 48,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "15e28600-3dfc-4681-98b7-dd0848b4e285",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return NormalizarRuta(requestUri.AbsolutePath.ToLower());",
+              "protected": "P:System.Uri.AbsolutePath"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\RutasNavegacion.cs",
+            "snippet": "return NormalizarRuta(requestUri.AbsolutePath.ToLower());",
+            "protectedSnippet": "P:System.Uri.AbsolutePath",
+            "label": "P:System.Uri.AbsolutePath",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "4bf9505d-85c6-4cc2-bc84-9f181a4d3675",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var requestUri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\RutasNavegacion.cs",
+            "snippet": "var requestUri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 33,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "6dff271d-8d10-4243-86c2-635fdae77db7",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return requestUri.AbsolutePath.ToLower();",
+              "protected": "P:System.Uri.AbsolutePath"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\RutasNavegacion.cs",
+            "snippet": "return requestUri.AbsolutePath.ToLower();",
+            "protectedSnippet": "P:System.Uri.AbsolutePath",
+            "label": "P:System.Uri.AbsolutePath",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 27,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "80228476-dd2e-479c-9b4f-f2b20add7abf",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var requestUri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\RutasNavegacion.cs",
+            "snippet": "var requestUri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 26,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "ac8f8c55-5648-480e-bd12-7fb5c2f540b1",
+          "ruleId": "Api.0003",
+          "description": "Nullable JsonDocument properties deserialize to JsonValueKind.Null ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var doc = _proveedorJson.ObtenerDocumento(IdiomaActual);",
+              "protected": "T:System.Text.Json.JsonDocument"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\MapaMenu.cs",
+            "snippet": "var doc = _proveedorJson.ObtenerDocumento(IdiomaActual);",
+            "protectedSnippet": "T:System.Text.Json.JsonDocument",
+            "label": "T:System.Text.Json.JsonDocument",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/serialization/9.0/jsondocument-props.md",
+                "isCustom": false
+              }
+            ],
+            "line": 42,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "39712e34-7259-4137-b8e7-222a5992b820",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_idiomaPorDefecto = configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\MapaMenu.cs",
+            "snippet": "_idiomaPorDefecto = configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 31,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "cee35dec-acac-4bf7-8e53-12579bc2d165",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "_idiomaPorDefecto = configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Adaptadores\\Navegacion\\MapaMenu.cs",
+            "snippet": "_idiomaPorDefecto = configuracion.GetValue\u003Cstring\u003E(\u0022AppSettings:DefaultLanguage\u0022) ?? \u0022es\u0022;",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 31,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "70aeb61e-0d52-44de-a0b3-d4744c9b5203",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.MapGet(\u0022/api/recursos/{expresion}/{idioma}\u0022, (string expresion, string idioma, ILocalizadorRecursos localizador) =\u003E\r\n    Results.Ok(localizador.ObtenerTexto(Uri.UnescapeDataString(expresion), idioma)))\r\n    .AllowAnonymous();",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "app.MapGet(\u0022/api/recursos/{expresion}/{idioma}\u0022, (string expresion, string idioma, ILocalizadorRecursos localizador) =\u003E\r\n    Results.Ok(localizador.ObtenerTexto(Uri.UnescapeDataString(expresion), idioma)))\r\n    .AllowAnonymous();",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 262,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "e1482a09-0588-4605-a20c-fcba771e1bb6",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Exception diagnostics are suppressed when IExceptionHandler.TryHandleAsync returns true ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseExceptionHandler(\u0022/HttpError\u0022, createScopeForErrors: true);",
+              "protected": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "app.UseExceptionHandler(\u0022/HttpError\u0022, createScopeForErrors: true);",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)",
+            "label": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/10/exception-handler-diagnostics-suppressed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 227,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "548ed74b-b6e9-4b4e-bdaa-2b774a9c8708",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Exception diagnostics are suppressed when IExceptionHandler.TryHandleAsync returns true ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseExceptionHandler(\u0022/HttpError\u0022, createScopeForErrors: true);",
+              "protected": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "app.UseExceptionHandler(\u0022/HttpError\u0022, createScopeForErrors: true);",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)",
+            "label": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/10/exception-handler-diagnostics-suppressed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 221,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "098c1c4e-e32e-4dfe-bc24-d0ae50142d07",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.IdleTimeout = TimeSpan.FromSeconds(3600);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "options.IdleTimeout = TimeSpan.FromSeconds(3600);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 194,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "e9e3692e-e7b2-4925-a890-68fc0a3f4aa4",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 184,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "248d2ebc-2f08-4022-b975-ee8109576570",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 184,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "f538d277-c10b-4f7d-9781-7f05cc25a9f0",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 184,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "45802920-5d36-4658-97d3-e1ed47513eb7",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.Configure\u003CAppConfigServidor\u003E(configuration);",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "builder.Services.Configure\u003CAppConfigServidor\u003E(configuration);",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 118,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "5a72fdbb-6304-4a0c-b26a-fd131dcd5aed",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.KeepAliveInterval = TimeSpan.FromSeconds(15);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "options.KeepAliveInterval = TimeSpan.FromSeconds(15);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 110,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "6d45a54a-4661-426a-bb27-0bdf29abe2eb",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.HandshakeTimeout = TimeSpan.FromSeconds(30);",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Double)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "options.HandshakeTimeout = TimeSpan.FromSeconds(30);",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Double)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 108,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "c23bfc47-1928-411a-97f6-a5fa645c4a05",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.ClientTimeoutInterval = TimeSpan.FromMinutes(5);",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "options.ClientTimeoutInterval = TimeSpan.FromMinutes(5);",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 106,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "c87352bc-b58f-435c-941a-4007836b8c13",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(6);",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(6);",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 98,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "41ea7061-f0bf-492f-b713-539b77a88fad",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.6",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)\r\n    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection(\u0022AppSettings:AzureAd\u0022));",
+              "protected": "T:Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)\r\n    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection(\u0022AppSettings:AzureAd\u0022));",
+            "protectedSnippet": "T:Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults",
+            "label": "T:Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.OpenIdConnect",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 57,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "294e3401-cd85-41cb-9227-ef18baae54f7",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.OpenIdConnect, 8.0.6",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)\r\n    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection(\u0022AppSettings:AzureAd\u0022));",
+              "protected": "F:Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)\r\n    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection(\u0022AppSettings:AzureAd\u0022));",
+            "protectedSnippet": "F:Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme",
+            "label": "F:Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.OpenIdConnect",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 57,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "f89fa6ad-fffc-4328-9caa-73cbc213640c",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var puerto = configuration.GetValue\u003Cint\u003E(\u0022Hosting:PuertoHttp\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "var puerto = configuration.GetValue\u003Cint\u003E(\u0022Hosting:PuertoHttp\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 35,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "42e1bed1-769b-4b4a-9472-5b91258b5337",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var hoursExpired = configuration.GetValue\u003Cint\u003E(\u0022Presupuestos:CookieJwtExpire\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "var hoursExpired = configuration.GetValue\u003Cint\u003E(\u0022Presupuestos:CookieJwtExpire\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "1dbaeac6-ef15-4b2e-a157-f773c6f53189",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var urlBase = configuration.GetValue\u003Cstring\u003E(\u0022Presupuestos:UrlBaseApi\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "var urlBase = configuration.GetValue\u003Cstring\u003E(\u0022Presupuestos:UrlBaseApi\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 33,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "b2701a25-fcaa-424c-93c1-76192fb317b4",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "HM.Presupuestos.Web\\HM.Presupuestos.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var urlBaseCore = configuration.GetValue\u003Cstring\u003E(\u0022ServicioCore:Core\u0022);",
+              "protected": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)"
+            },
+            "kind": "File",
+            "path": "HM.Presupuestos.Web\\Program.cs",
+            "snippet": "var urlBaseCore = configuration.GetValue\u003Cstring\u003E(\u0022ServicioCore:Core\u0022);",
+            "protectedSnippet": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "label": "M:Microsoft.Extensions.Configuration.ConfigurationBinder.GetValue\u0060\u00601(Microsoft.Extensions.Configuration.IConfiguration,System.String)",
+            "links": [
+              {
+                "title": "Documentaci\u00F3n de la API",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 32,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "NuGet.0006": {
+      "id": "NuGet.0006",
+      "isFeature": false,
+      "description": "Se recomiendan las asignaciones de origen de paquetes NuGet.\n\nCuando NuGet.config contiene varios or\u00EDgenes de paquetes, asignaci\u00F3n de origen de paquetes es una herramienta que se puede usar para mejorar la seguridad de la cadena de suministro, especialmente si se usa una combinaci\u00F3n de or\u00EDgenes de paquetes p\u00FAblicos y privados.\n\nDe forma predeterminada, NuGet buscar\u00E1 en todos los or\u00EDgenes de paquetes configurados cuando necesite descargar un paquete. Cuando un paquete existe en varios or\u00EDgenes, es posible que no sea determinista desde qu\u00E9 origen se descargar\u00E1 el paquete. Con la asignaci\u00F3n de origen del paquete, puede filtrar, por paquete, los or\u00EDgenes en los que Buscar\u00E1 NuGet.",
+      "label": "Se recomiendan las asignaciones de origen del paquete NuGet",
+      "severity": "Information",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2288407",
+          "isCustom": false
+        }
+      ]
+    },
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "El marco de destino del proyecto deben cambiarse al nuevo marco de destino que seleccion\u00F3 para esta actualizaci\u00F3n.\n\nDurante la actualizaci\u00F3n, el marco de destino se ajustar\u00E1 a la plataforma correspondiente cuando proceda. En algunos casos, el proyecto dar\u00EDa como resultado varios marcos de destino despu\u00E9s de la actualizaci\u00F3n si usara caracter\u00EDsticas que ahora tienen sus propias plataformas en marcos de .NET modernos (windows, iOS, Android, etc.).",
+      "label": "Es necesario cambiar el marco de destino del proyecto",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Informaci\u00F3n general sobre la portabilidad de .NET Framework a .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": "SDK de proyecto .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0002": {
+      "id": "NuGet.0002",
+      "isFeature": false,
+      "description": "Se recomienda actualizar el paquete NuGet para la plataforma de destino seleccionada.\n\nSe recomienda que los paquetes .NET est\u00E1ndar tengan versiones que coincidan con la versi\u00F3n de .NET de destino del proyecto.\n\nTambi\u00E9n se sabe que otros paquetes funcionan mejor para las plataformas de destino seleccionadas.",
+      "label": "Se recomienda actualizar el paquete NuGet",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262530",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "La API tiene un cambio de comportamiento en la versi\u00F3n de .NET seleccionada: el c\u00F3digo y los archivos binarios pueden comportarse de forma diferente en el runtime sin necesidad de recompilaci\u00F3n, pero el nuevo comportamiento podr\u00EDa no ser deseable y requerir actualizaciones.",
+      "label": "Cambio de comportamiento en la versi\u00F3n de .NET seleccionada",
+      "severity": "Potential",
+      "effort": 1
+    },
+    "Api.0001": {
+      "id": "Api.0001",
+      "isFeature": false,
+      "description": "La API es binariamente incompatible con la versi\u00F3n de .NET seleccionada: afecta a los archivos binarios existentes y suele requerir recompilaci\u00F3n, porque la API ha cambiado de forma que impide que los binarios antiguos se carguen o ejecuten.",
+      "label": "Binario incompatible para la versi\u00F3n de .NET seleccionada",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Cambios importantes en .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0002": {
+      "id": "Api.0002",
+      "isFeature": false,
+      "description": "La API es incompatible a nivel de origen para la versi\u00F3n de .NET seleccionada: requiere cambios en el c\u00F3digo para compilarse correctamente cuando se dirige a una nueva versi\u00F3n, como eliminar API obsoletas o cambiar las firmas de los m\u00E9todos.",
+      "label": "El origen no es compatible con la versi\u00F3n de .NET seleccionada",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Cambios importantes en .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}
