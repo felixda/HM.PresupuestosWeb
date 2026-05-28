@@ -181,7 +181,10 @@ namespace HM.Presupuestos.Domain.Compartido
         EliminarIndicador,
         [Description("Grabar Indicador")]
         GrabarIndicador,
-
+        [Description("Enviar aviso")]
+        EnviarAviso,
+        [Description("Error al enviar aviso")]
+        ErrorAlEnviarAviso,
     }
 
     public enum OrigenValidacionUsuario

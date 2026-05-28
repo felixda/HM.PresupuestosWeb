@@ -65,11 +65,11 @@ namespace HM.Presupuestos.Web.Pages.Admin
             {
                 LayerOverlayService.Start();
                 await AvisosService.ActivarAvisosAsync(_mensaje, TipoAviso);
-                await LogAccionesService.Insertar(this.GetType().Name + " > " + ObtenerTexto("Common:LogActions:LogAction_3:label"));
+                await LogAccionesService.Insertar(AccionesLog.EnviarAviso, _mensaje);
             }
             catch (Exception ex)
             {
-                await LogAccionesService.Insertar(this.GetType().Name + " > " + ObtenerTexto("Common:LogActions:LogAction_4:label"));
+                await LogAccionesService.Insertar(AccionesLog.ErrorAlEnviarAviso, ex.Message);
                 _error = "Error al enviar el aviso: " + ex.Message;
             }
             finally
