@@ -1,4 +1,5 @@
 using HM.Core.Comun.v6.Seguridad.Interfaces;
+using HM.Presupuestos.Application.CasosDeUso.Compartido;
 
 namespace HM.Presupuestos.Web.Pages.Condiciones
 {
@@ -7,7 +8,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #region Inyecci?n de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
-        [Inject] protected IPresupuestosService PresupuestosService { get; set; } = default!;
+        [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
         [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;

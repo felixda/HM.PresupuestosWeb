@@ -949,6 +949,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class Indicadores
             {
+                /// <summary>Actualizar</summary>
+                public const string Actualizar = "Pages:Indicadores:Actualizar:label";
+
                 /// <summary>Existen campos obligatorios de idioma sin rellenar</summary>
                 public const string LanguageDataIncompleted = "Pages:Indicadores:LanguageDataIncompleted:label";
 

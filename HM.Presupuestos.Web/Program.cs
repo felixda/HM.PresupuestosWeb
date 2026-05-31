@@ -9,6 +9,7 @@ using HM.Core.Servidor.v6.Pack.Entidades.Configuracion;
 using HM.Core.Servidor.v6.Pack.UserProviders;
 using HM.Core.Servidor.v6.UserProviders.Interfaces;
 using HM.Presupuestos.Application.CasosDeUso;
+using HM.Presupuestos.Application.CasosDeUso.Compartido;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Infrastructure.Servicios;
 using HM.Presupuestos.Infrastructure.Persistencia;
@@ -127,7 +128,7 @@ builder.Services.AddHttpContextAccessor();
 
 // ===== SERVICIOS DE APLICACIÓN =====
 builder.Services.AddScoped<ThemeService>();
-builder.Services.AddScoped<PresupuestosService>();
+builder.Services.AddScoped<MaestrosService>();
 builder.Services.AddScoped<VersionesService>();
 builder.Services.AddScoped<ISobreprimasService, SobreprimasService>();
 builder.Services.AddScoped<CondicionesService>();
@@ -158,7 +159,7 @@ builder.Services.AddScoped<IValidadorMenusUsuario, ValidadorMenusUsuario>();
 
 
 // ===== SERVICIOS DATOS =====
-builder.Services.AddScoped<IPresupuestosService, PresupuestosService>();
+builder.Services.AddScoped<IMaestrosService, MaestrosService>();
 builder.Services.AddScoped<IVersionesService, VersionesService>();
 builder.Services.AddScoped<IIndicadoresService, IndicadoresService>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();

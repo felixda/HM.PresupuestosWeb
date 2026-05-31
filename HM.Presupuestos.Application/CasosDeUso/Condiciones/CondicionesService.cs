@@ -1,3 +1,4 @@
+using HM.Presupuestos.Application.CasosDeUso.Compartido;
 using HM.Presupuestos.Application.CasosDeUso.LogAcciones;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Domain.Compartido;
@@ -30,12 +31,12 @@ namespace HM.Presupuestos.Application.CasosDeUso
     public class CondicionesService(
         ILogger<CondicionesService> logger, 
         ICondicionesRepository condicionesRepository, 
-        IPresupuestosService presupuestosService, 
+        IMaestrosService maestrosService, 
         ILogAccionesService logAccionesService) : ICondicionesService
     {
         private readonly ILogger<CondicionesService> _logger = logger;
         private readonly ICondicionesRepository _condicionesRepository = condicionesRepository;
-        private readonly IPresupuestosService _presupuestosService = presupuestosService;
+        private readonly IMaestrosService _maestrosService = maestrosService;
         private readonly ILogAccionesService _logAccionesService = logAccionesService;
 
         /// <summary>
@@ -165,7 +166,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
             if (resultado.Count > 0) return resultado;
 
             // Si no hay datos, devolvemos la colección de condiciones para cada medio accesible por network
-            List<CodigoDescripcion> medios = await _presupuestosService.ObtenerMediosPorNetWork(codigoNetwork.ToString());
+            List<CodigoDescripcion> medios = await _maestrosService.ObtenerMediosPorNetWork(codigoNetwork.ToString());
 
             return [.. medios.Select(m => new CondicionDto
             {

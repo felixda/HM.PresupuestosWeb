@@ -290,9 +290,12 @@
                                                                   },
                                       "Grabar":  {
                                                      "label":  "Save"
-                                                 }
+                                                 },
+                                      "Actualizar":  {
+                                                         "label":  "Refresh"
+                                                     }
                                   },
-                 
+
                   "Index":  {
                                 "Hola":  {
                                              "label":  "Hello"

@@ -2,12 +2,12 @@
 namespace HM.Presupuestos.Web.Pages.Mantenimientos
 {
     /// <summary>
-    /// Página de mantenimiento de Indicadores
+    /// Pï¿½gina de mantenimiento de Indicadores
     /// Gestiona el CRUD de indicadores con sus traducciones multiidioma
     /// </summary>
     public partial class Indicadores : ContextProtegido
     {
-        #region Inyección de Dependencias
+        #region Inyecciï¿½n de Dependencias
 
         [Inject] protected IIndicadoresService IndicadoresService { get; set; } = default!;
 
@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         private List<Indicador> DatosIndicadores { get; set; } = [];
 
         /// <summary>
-        /// Indicador actualmente en edición o creación
+        /// Indicador actualmente en ediciï¿½n o creaciï¿½n
         /// </summary>
         private Indicador IndicadorEnEdicion { get; set; } = new();
 
@@ -36,7 +36,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         private DxGrid GridIdiomasIndicador { get; set; } = new();
 
         /// <summary>
-        /// Idiomas disponibles para selección
+        /// Idiomas disponibles para selecciï¿½n
         /// </summary>
         private IEnumerable<Idioma> Idiomas { get; set; } = [];
 
@@ -46,7 +46,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         #region Ciclo de Vida del Componente
 
         /// <summary>
-        /// Se ejecuta cuando el usuario no tiene permisos para acceder a la página
+        /// Se ejecuta cuando el usuario no tiene permisos para acceder a la pÃ¡gina
         /// </summary>
         protected override Task OnPermisoDenegadoAsync()
         {
@@ -67,7 +67,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
 
         /// <summary>
-        /// Se ejecuta cuando el usuario cierra sesión o se desconecta
+        /// Se ejecuta cuando el usuario cierra sesiï¿½n o se desconecta
         /// </summary>
         protected override async Task OnUsuarioImpersonadoDesconectado()
         {
@@ -84,7 +84,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
         /// <summary>
         /// Maneja el evento de doble clic en una fila del grid
-        /// Abre el popup de edición para el indicador seleccionado
+        /// Abre el popup de ediciï¿½n para el indicador seleccionado
         /// </summary>
         /// <param name="e">Argumentos del evento de clic</param>
         private async Task GridIndicadores_DoubleClick(GridRowClickEventArgs e)
@@ -100,8 +100,22 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         #region Grid Indicadores - CRUD
 
         /// <summary>
+        /// Recarga los indicadores desde el servicio y actualiza el grid
+        /// </summary>
+        private async Task ActualizarGridAsync()
+        {
+            await EjecutarAsync(async () =>
+            {
+                GridIndicadores.ClearFilter();
+                DatosIndicadores = await IndicadoresService.ObtenerIndicadoresConIdiomas(null);
+                GridIndicadores.Reload();
+            });
+        }
+
+        
+        /// <summary>
         /// Crea un nuevo indicador con valores predeterminados
-        /// Calcula automáticamente BitAnd (siguiente potencia de 2) y Orden (último + 10)
+        /// Calcula automï¿½ticamente BitAnd (siguiente potencia de 2) y Orden (ï¿½ltimo + 10)
         /// </summary>
         private async Task NuevoIndicadorAsync()
         { 
@@ -140,7 +154,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Elimina un indicador previa confirmación del usuario
+        /// Elimina un indicador previa confirmaciï¿½n del usuario
         /// </summary>
         /// <param name="indicador">Indicador a eliminar</param>
         private async Task EliminarIndicadorAsync(Indicador indicador)
@@ -171,7 +185,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
        
         /// <summary>
         /// Guarda los cambios del idioma editado en la lista del indicador
-        /// Distingue entre nuevo y modificación
+        /// Distingue entre nuevo y modificaciï¿½n
         /// </summary>
         /// <param name="e">Argumentos del evento</param>
         private void GridIdiomasIndicador_EditModelSaving(GridEditModelSavingEventArgs e)
@@ -196,7 +210,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// Resalta visualmente las celdas que han sido modificadas
         /// Compara valores actuales con valores originales campo por campo
         /// </summary>
-        /// <param name="ea">Argumentos del evento de personalización</param>
+        /// <param name="ea">Argumentos del evento de personalizaciï¿½n</param>
         private async void GridIdiomasIndicador_CustomizeElement(GridCustomizeElementEventArgs ea)
         {
             if (ea.ElementType != GridElementType.DataCell) return;
@@ -251,7 +265,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
         /// <summary>
         /// Personaliza el editor de celdas del grid de idiomas
-        /// Habilita el ícono de validación
+        /// Habilita el ï¿½cono de validaciï¿½n
         /// </summary>
         /// <param name="e">Argumentos del evento</param>
         private void GridIdiomasIndicador_CustomizeDataRowEditor(GridCustomizeDataRowEditorEventArgs e)
@@ -269,7 +283,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Elimina un idioma de la lista del indicador en edición
+        /// Elimina un idioma de la lista del indicador en ediciï¿½n
         /// No persiste hasta que se guarde el indicador
         /// </summary>
         /// <param name="dataItem">Item de idioma a eliminar</param>
@@ -286,7 +300,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         #endregion
 
 
-        #region Popup Edit - Validación y Guardado
+        #region Popup Edit - Validaciï¿½n y Guardado
 
         /// <summary>
         /// Valida y guarda el indicador editado
@@ -368,9 +382,9 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Genera mensaje de validación para campos con valores duplicados
+        /// Genera mensaje de validaciï¿½n para campos con valores duplicados
         /// </summary>
-        /// <param name="campo">Campo que tiene el error de validación</param>
+        /// <param name="campo">Campo que tiene el error de validaciï¿½n</param>
         /// <param name="valor">Valor duplicado encontrado</param>
         /// <returns>Mensaje formateado con el nombre del campo y valor</returns>
         private string ObtenerMensajeValidacion(CampoErrorValidacion campo, string valor)
@@ -380,9 +394,9 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Cancela la edición del indicador
-        /// Solicita confirmación si hay cambios sin guardar
-        /// ? Método con sufijo Async
+        /// Cancela la ediciï¿½n del indicador
+        /// Solicita confirmaciï¿½n si hay cambios sin guardar
+        /// ? Mï¿½todo con sufijo Async
         /// </summary>
         private async Task CancelarEdicionIndicadorAsync()
         {
@@ -408,7 +422,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Cierra el popup de edición y reinicia el estado
+        /// Cierra el popup de ediciï¿½n y reinicia el estado
         /// </summary>
         private void CerrarPopupEdicion()
         {
@@ -419,7 +433,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         #endregion
 
 
-        #region Métodos de Validación
+        #region Mï¿½todos de Validaciï¿½n
 
         /// <summary>
         /// Verifica si hay cambios en el indicador actual comparando con el original
@@ -450,10 +464,10 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Valida que los campos no excedan la longitud máxima permitida
-        /// Límites: Descripción (50), DescripcionAbreviada (10), Leyenda (100)
+        /// Valida que los campos no excedan la longitud mï¿½xima permitida
+        /// Lï¿½mites: Descripciï¿½n (50), DescripcionAbreviada (10), Leyenda (100)
         /// </summary>
-        /// <returns>Nombre del campo que excede la longitud, o string vacío si todo OK</returns>
+        /// <returns>Nombre del campo que excede la longitud, o string vacï¿½o si todo OK</returns>
         private string ValidarLongitudDatos()
         {
             if (IndicadorEnEdicion.Descripcion.Length > 50)
@@ -480,10 +494,10 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         }
 
         /// <summary>
-        /// Valida que los campos obligatorios estén completos
-        /// Campos requeridos: Descripción, BitAnd, Orden
+        /// Valida que los campos obligatorios estï¿½n completos
+        /// Campos requeridos: Descripciï¿½n, BitAnd, Orden
         /// </summary>
-        /// <returns>True si todos los campos obligatorios están completos</returns>
+        /// <returns>True si todos los campos obligatorios estï¿½n completos</returns>
         private bool ValidarCamposRequeridos()
         {
             return !(string.IsNullOrEmpty(IndicadorEnEdicion.Descripcion) ||
@@ -495,7 +509,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// Valida que el BitAnd sea una potencia de 2 (solo un bit a 1 en binario)
         /// Algoritmo: n & (n-1) == 0 solo si n es potencia de 2
         /// </summary>
-        /// <returns>True si el BitAnd es válido</returns>
+        /// <returns>True si el BitAnd es vï¿½lido</returns>
         private bool EsBitAndValido()
         {
             return IndicadorEnEdicion.BitAnd <= 0 ||
@@ -514,7 +528,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// <summary>
         /// Valida que al menos un idioma tenga todos los campos completos
         /// </summary>
-        /// <returns>True si ningún idioma tiene datos completos</returns>
+        /// <returns>True si ningï¿½n idioma tiene datos completos</returns>
         private bool TieneDatosIdiomaIncompletos()
         {
             return IndicadorEnEdicion.Idiomas.FirstOrDefault(x =>
@@ -530,7 +544,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
         /// <summary>
         /// Persiste los cambios del indicador en base de datos.
-        /// Delega en el método correspondiente según el estado del indicador.
+        /// Delega en el mï¿½todo correspondiente segï¿½n el estado del indicador.
         /// </summary>
         private async Task GuardarDatosAsync()
         {
@@ -569,7 +583,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
         /// <summary>
         /// Persiste los cambios de un indicador existente.
-        /// Detecta qué idiomas son nuevos, han sido modificados o deben eliminarse
+        /// Detecta quï¿½ idiomas son nuevos, han sido modificados o deben eliminarse
         /// comparando con el estado actual en base de datos.
         /// </summary>
         private async Task GuardarIndicadorModificadoAsync()
@@ -592,9 +606,9 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
         /// <summary>
         /// Calcula las listas de idiomas nuevos, modificados y a eliminar
-        /// comparando el indicador en edición con su versión original en base de datos.
+        /// comparando el indicador en ediciï¿½n con su versiï¿½n original en base de datos.
         /// </summary>
-        /// <param name="indicadorOriginal">Versión original del indicador obtenida de base de datos, o null si no existe.</param>
+        /// <param name="indicadorOriginal">Versiï¿½n original del indicador obtenida de base de datos, o null si no existe.</param>
         /// <returns>Tupla con las tres listas de cambios de idiomas.</returns>
         private (List<IdiomaIndicador> nuevos, 
             List<IdiomaIndicador> actualizados, 

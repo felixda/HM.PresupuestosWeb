@@ -66,12 +66,21 @@ else
                             PageSizeSelectorItems="@(new int[] { 10, 25, 50 })"
                             PageSize="50">
                         <ToolbarTemplate>
-                            <div class="d-flex justify-content-start">
-                                <DxButton CssClass="toolbarButtonCustom"
-                                          RenderStyle="ButtonRenderStyle.None"
-                                          Text="@ObtenerTexto(AppResources.Common.Nuevo)"
-                                          Click="NuevoIndicadorAsync"
-                                          IconCssClass="fa-solid fa-plus" />
+                            <div class="row w-100">
+                                <div class="col-1">
+                                    <DxButton CssClass="toolbarButtonCustom"
+                                              RenderStyle="ButtonRenderStyle.None"
+                                              Text="@ObtenerTexto(AppResources.Common.Nuevo)"
+                                              Click="NuevoIndicadorAsync"
+                                              IconCssClass="fa-solid fa-plus" />
+                                </div>
+                                <div class="col-2 offset-9 d-flex justify-content-end">
+                                    <DxButton CssClass="toolbarButtonCustom"
+                                              RenderStyle="ButtonRenderStyle.None"
+                                              Text="@ObtenerTexto(AppResources.Pages.Indicadores.Actualizar)"
+                                              Click="ActualizarGridAsync"
+                                              IconCssClass="fa-solid fa-rotate" />
+                                </div>
                             </div>
                         </ToolbarTemplate>
                         <Columns>

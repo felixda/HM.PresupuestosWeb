@@ -3,13 +3,11 @@ using HM.Presupuestos.Domain.Entidades;
 using HM.Core.Comun.v6.Loggers.Interfaces;
 using HM.Presupuestos.Domain.Compartido;
 
-
-namespace HM.Presupuestos.Application.CasosDeUso
+namespace HM.Presupuestos.Application.CasosDeUso.Compartido
 {
-
-    public class PresupuestosService(
-        ILogger logger, 
-        IPresupuestosRepository presupuestosRepository) :IPresupuestosService
+    public class MaestrosService(
+        ILogger logger,
+        IPresupuestosRepository presupuestosRepository) : IMaestrosService
     {
         private readonly ILogger _logger = logger;
         private readonly IPresupuestosRepository _presupuestosRepository = presupuestosRepository;
@@ -18,7 +16,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerTipologías");
+            _logger.Trace($"Llamando mï¿½todo ObtenerTipologï¿½as");
             resultado = await _presupuestosRepository.ObtenerTipologias();
 
             return resultado;
@@ -28,18 +26,17 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerAlcances");
+            _logger.Trace($"Llamando mï¿½todo ObtenerAlcances");
             resultado = await _presupuestosRepository.ObtenerAlcances();
 
             return resultado;
         }
 
-
         public async Task<List<CodigoDescripcion>> ObtenerDiversifiedsNCB()
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerDiversifiedsNCB");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDiversifiedsNCB");
             resultado = await _presupuestosRepository.ObtenerDiversifiedsNCB();
 
             return resultado;
@@ -49,18 +46,17 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerDisciplinas");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDisciplinas");
             resultado = await _presupuestosRepository.ObtenerDisciplinas();
 
             return resultado;
         }
 
-
         public async Task<List<CodigoDescripcion>> ObtenerTiposCompra()
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerTiposCompra");
+            _logger.Trace($"Llamando mï¿½todo ObtenerTiposCompra");
             resultado = await _presupuestosRepository.ObtenerTiposCompra();
 
             return resultado;
@@ -70,18 +66,17 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerObjetivos");
+            _logger.Trace($"Llamando mï¿½todo ObtenerObjetivos");
             resultado = await _presupuestosRepository.ObtenerObjetivos();
 
             return resultado;
         }
 
-
         public async Task<List<CodigoDescripcion>> ObtenerMedios()
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerMedios");
+            _logger.Trace($"Llamando mï¿½todo ObtenerMedios");
 
             resultado = await _presupuestosRepository.ObtenerMedios();
 
@@ -90,7 +85,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public async Task<List<CodigoDescripcion>> ObtenerMediosPorNetWork(string codigosNetwork)
         {
-            _logger.Trace($"Llamando método ObtenerMediosPorNetWork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerMediosPorNetWork");
             List<CodigoDescripcion> resultado = await _presupuestosRepository.ObtenerMediosPorNetWork(codigosNetwork);
             return resultado;
         }
@@ -99,7 +94,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerNetworks");
+            _logger.Trace($"Llamando mï¿½todo ObtenerNetworks");
 
             resultado = await _presupuestosRepository.ObtenerNetworks();
 
@@ -110,7 +105,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerGruposClientes");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientes");
 
             resultado = await _presupuestosRepository.ObtenerGruposClientes();
 
@@ -119,22 +114,21 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public async Task<List<CodigoDescripcion>> ObtenerGruposClientePorNetwork(int codigoNetwork)
         {
-            _logger.Trace($"Llamando método ObtenerGruposClientePorNetwork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientePorNetwork");
             return await _presupuestosRepository.ObtenerGruposClientePorNetworks(codigoNetwork.ToString());
         }
 
         public async Task<List<CodigoDescripcion>> ObtenerGruposClientePorNetworks(string codigosNetworks)
         {
-            _logger.Trace($"Llamando método ObtenerGruposClientePorNetwork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientePorNetwork");
             return await _presupuestosRepository.ObtenerGruposClientePorNetworks(codigosNetworks);
         }
-
 
         public async Task<List<GrupoClientesConNetwork>> ObtenerGruposClientesConNetwork()
         {
             List<GrupoClientesConNetwork> resultado;
 
-            _logger.Trace($"Llamando método ObtenerGruposClientesConNetwork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientesConNetwork");
 
             resultado = await _presupuestosRepository.ObtenerGruposClientesConNetwork();
 
@@ -145,20 +139,18 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"PresupuestosService.ObtenerEditoriales");
+            _logger.Trace($"MaestrosService.ObtenerEditoriales");
 
             resultado = await _presupuestosRepository.ObtenerEditoriales(filtro);
 
             return resultado;
         }
 
-
-
         public async Task<List<CodigoDescripcion>> ObtenerAgrupacionesComerciales(string? codigosMedios = null)
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerAgrupacionesComerciales");
+            _logger.Trace($"Llamando mï¿½todo ObtenerAgrupacionesComerciales");
 
             resultado = await _presupuestosRepository.ObtenerAgrupacionesComerciales(codigosMedios);
 
@@ -169,62 +161,48 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<AgrupacionComercialConMedio> resultado;
 
-            _logger.Trace($"Llamando método ObtenerAgrupacionesComercialesConMedio");
+            _logger.Trace($"Llamando mï¿½todo ObtenerAgrupacionesComercialesConMedio");
 
             resultado = await _presupuestosRepository.ObtenerAgrupacionesComercialesConMedio();
 
             return resultado;
         }
 
-
         public async Task<List<CodigoDescripcion>> ObtenerEditorialesPorAgrupacionComercial(int codigoAgrupacionComercial)
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"AjustesService.ObtenerEditorialesPorAgrupacionComercial");
+            _logger.Trace($"MaestrosService.ObtenerEditorialesPorAgrupacionComercial");
 
             resultado = await _presupuestosRepository.ObtenerEditorialesPorAgrupacionComercial(codigoAgrupacionComercial);
 
             return resultado;
         }
 
-        //public async Task<List<EditorialConAgrupacionComercial>> ObtenerEditorialesConAgrupacionComercial()
-        //{
-        //    List<EditorialConAgrupacionComercial> resultado;
-
-        //    _logger.Trace($"AjustesService.ObtenerEditorialesConAgrupacionComercial");
-
-        //    resultado = await _presupuestosRepository.ObtenerEditorialesConAgrupacionComercial();
-
-        //    return resultado;
-        //}
-
         public async Task<List<EditorialConAgrupacionComercialAndMedio>> ObtenerEditorialesConAgrupacionComercialAndMedio()
         {
             List<EditorialConAgrupacionComercialAndMedio> resultado;
-            _logger.Trace($"AjustesService.ObtenerEditorialesConAgrupacionComercialAndMedio");
+            _logger.Trace($"MaestrosService.ObtenerEditorialesConAgrupacionComercialAndMedio");
 
             resultado = await _presupuestosRepository.ObtenerEditorialesConAgrupacionComercialAndMedio();
             return resultado;
         }
 
-
-
-       
         public async Task<List<CodigoDescripcion>> ObtenerTiposDisciplinas()
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerDisciplinas");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDisciplinas");
             resultado = await _presupuestosRepository.ObtenerTiposDisciplina();
 
             return resultado;
         }
+
         public async Task<List<CodigoDescripcion>> ObtenerDisciplinasGrupos()
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando método ObtenerDisciplinasGrupos");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDisciplinasGrupos");
             resultado = await _presupuestosRepository.ObtenerDisciplinasGrupos();
 
             return resultado;
@@ -233,45 +211,43 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <summary>
         /// Obtiene lista de meses cerrados
         /// </summary>
-        /// <param name="year">Año de filtro</param>
+        /// <param name="year">Aï¿½o de filtro</param>
         /// <returns>Lista de int</returns>
-        public async Task<List<int>> ObtenerMesCerradoList(int year )
+        public async Task<List<int>> ObtenerMesCerradoList(int year)
         {
             List<int> resultado;
 
-            _logger.Trace($"PresupuestosService.ObtenerMesCerradoList");
+            _logger.Trace($"MaestrosService.ObtenerMesCerradoList");
             resultado = await _presupuestosRepository.ObtenerMesCerradoList(year);
 
             return resultado;
         }
 
-
         /// <summary>
         /// Obtiene lista agrupaciones editoriales de un medio
         /// </summary>
-        /// <param name="codeMedio">Código de medio</param>
+        /// <param name="codeMedio">Cï¿½digo de medio</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetAgrupacionEditorialListByMedio(int codeMedio)
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"PresupuestosService.GetAgrupacionEditorialListByMedio");
+            _logger.Trace($"MaestrosService.GetAgrupacionEditorialListByMedio");
             resultado = await _presupuestosRepository.GetAgrupacionEditorialListByMedio(codeMedio);
 
             return resultado;
         }
 
-
         /// <summary>
         /// Obtiene lista editoriales de un medio
         /// </summary>
-        /// <param name="codeMedio">Código de medio</param>
+        /// <param name="codeMedio">Cï¿½digo de medio</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByMedio(int codeMedio)
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"PresupuestosService.GetEditorialListByMedio");
+            _logger.Trace($"MaestrosService.GetEditorialListByMedio");
             resultado = await _presupuestosRepository.GetEditorialListByMedio(codeMedio);
 
             return resultado;
@@ -280,24 +256,23 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <summary>
         /// Obtiene lista editoriales de una agrupacion
         /// </summary>
-        /// <param name="codeAgrupacionEditorial">Código de Agrupación Editorial</param>
+        /// <param name="codeAgrupacionEditorial">Cï¿½digo de Agrupaciï¿½n Editorial</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByAgrupacionEditorial(int codeAgrupacionEditorial)
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"PresupuestosService.GetEditorialListByAgrupacionEditorial");
+            _logger.Trace($"MaestrosService.GetEditorialListByAgrupacionEditorial");
             resultado = await _presupuestosRepository.GetEditorialListByAgrupacionEditorial(codeAgrupacionEditorial);
 
             return resultado;
         }
 
-
         public async Task<CodigoDescripcion?> ObtenerMedio(int codigoMedio)
         {
             CodigoDescripcion? resultado;
 
-            _logger.Trace($"PresupuestosService.ObtenerMedio");
+            _logger.Trace($"MaestrosService.ObtenerMedio");
             resultado = await _presupuestosRepository.ObtenerMedio(codigoMedio);
 
             return resultado;
@@ -307,7 +282,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             CodigoDescripcion? resultado;
 
-            _logger.Trace($"PresupuestosService.ObtenerAgrupacionComercial");
+            _logger.Trace($"MaestrosService.ObtenerAgrupacionComercial");
             resultado = await _presupuestosRepository.ObtenerAgrupacionComercial(codigoAgrupacionComercial);
 
             return resultado;
@@ -317,7 +292,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             CodigoDescripcion? resultado;
 
-            _logger.Trace($"PresupuestosService.ObtenerEditorial");
+            _logger.Trace($"MaestrosService.ObtenerEditorial");
             resultado = await _presupuestosRepository.ObtenerEditorial(codigoEditorial);
 
             return resultado;
@@ -327,11 +302,10 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"PresupuestosService.GetEditorialListByAgrupacionEditorial");
-            resultado = await _presupuestosRepository.ObtenerConceptosNMD(codigoMedio, concepto,valores);
+            _logger.Trace($"MaestrosService.ObtenerConceptosNMD");
+            resultado = await _presupuestosRepository.ObtenerConceptosNMD(codigoMedio, concepto, valores);
 
             return resultado;
         }
     }
 }
-
