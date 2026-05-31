@@ -23,7 +23,7 @@
 
 ```
 HM.Presupuestos.Domain          → Entidades, enums, excepciones de dominio
-HM.Presupuestos.Application     → Interfaces de servicios (casos de uso)
+HM.Presupuestos.Application     → Implementaciones de casos de uso (servicios)
 HM.Presupuestos.Infrastructure  → Implementaciones, repositorios, acceso a datos
 HM.Presupuestos.Web             → Blazor Server: páginas, componentes, layout
 HM.Presupuestos.E2ETest         → Tests end-to-end con Playwright + NUnit
@@ -32,7 +32,11 @@ HM.Presupuestos.E2ETest         → Tests end-to-end con Playwright + NUnit
 ### Responsabilidades clave
 
 - **Domain**: entidades puras (`Indicador`, `IdiomaIndicador`, `VersionResumen`...), enums (`CodigosMenu`, `EstadoEntidad`), excepciones (`ValidacionException`, `ExcepcionBaseDatos`)
-- **Application**: interfaces de servicios (`IIndicadoresService`, `IVersionesService`...). Nunca depende de Infrastructure.
+- **Application**: interfaces e implementaciones de los casos de uso (`IIndicadoresService` / `IndicadoresService`, `IVersionesService` / `VersionesService`...). Nunca depende de Infrastructure.
+  > **Nota de diseño:** En arquitectura hexagonal estricta, los puertos primarios (`IXxxService`) podrían vivir en Domain. 
+  En este proyecto se ha optado por colocarlos junto a su implementación en `Application/CasosDeUso/`, siguiendo el patrón de Clean Architecture (Uncle Bob).
+  Esto es un compromiso pragmático válido: `Web` sigue sin referenciar `Infrastructure`, y `Domain` permanece sin dependencias externas. 
+  Los puertos secundarios (`IXxxRepository`) sí viven en `Domain/Puertos/Repositorios/` porque definen contratos que el dominio necesita conocer.
 - **Infrastructure**: implementa las interfaces de Application. Llama a la API HM.CORE o base de datos.
 - **Web**: consume Application vía DI. Nunca referencia Infrastructure directamente.
 
