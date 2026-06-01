@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
     {
         Task<List<Vigencia>> ObtenerVigencias(CondicionFiltro filtro);
 
-        Task InsertarVigencia(Vigencia item);
+        Task InsertarVigencia(Vigencia vigencia);
 
         Task ActualizarVigencia(Vigencia vigencia);
 
