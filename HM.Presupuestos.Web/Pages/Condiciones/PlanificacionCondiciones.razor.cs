@@ -74,19 +74,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #region Grid Condiciones
 
         private DxGrid GridCondiciones { get; set; } = new DxGrid();
-        private List<CondicionDto> _condiciones = [];
-        private List<CondicionDto> _condicionesCache = [];
+        private List<CondicionViewModel> _condiciones = [];
+        private List<CondicionViewModel> _condicionesCache = [];
 
         private List<CodigoDescripcion> _indicadoresDevolucion = [];
-        private Dictionary<CondicionDto, DatosCondicionCambiados> _condicionesNoGuardados { get; } = [];
+        private Dictionary<CondicionViewModel, DatosCondicionCambiados> _condicionesNoGuardados { get; } = [];
 
         #endregion
 
         #region Grid Excepciones
 
         private DxGrid GridExcepciones { get; set; } = new DxGrid();
-        private List<ExcepcionDto> _excepciones = [];
-        private List<ExcepcionDto> _excepcionesCache = [];
+        private List<ExcepcionCondicionViewModel> _excepciones = [];
+        private List<ExcepcionCondicionViewModel> _excepcionesCache = [];
 
         private List<CodigoDescripcion> _alcances = [];
         private List<CodigoDescripcion> _disciplinas = [];
@@ -95,12 +95,12 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         private List<CodigoDescripcion> _tiposCompra = [];
         private List<CodigoDescripcion> _tiposDisciplina = [];
         private List<CodigoDescripcion> _disciplinasGrupo = [];
-        private Dictionary<ExcepcionDto, DatosExcepcionesCondicionCambiados> ExcepcionesNoGuardadas { get; } = [];
+        private Dictionary<ExcepcionCondicionViewModel, DatosExcepcionesCondicionCambiados> ExcepcionesNoGuardadas { get; } = [];
 
         private string _tituloGridExcepciones = string.Empty;
 
         // Cach? para optimizar b?squedas de condiciones por medio
-        private Dictionary<int, List<CondicionDto>>? _condicionesPorMedio;
+        private Dictionary<int, List<CondicionViewModel>>? _condicionesPorMedio;
 
         private enum AccionJerarquias
         {
@@ -379,8 +379,17 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 LayerOverlayService.Start();
-                _condiciones = await CondicionesService.ObtenerCondicionesPorVigencia(codigoVigencia, _networkSeleccionado!.Codigo);
-                _condiciones.ForEach(m => m.DescripcionMedio = StringHelper.Capitalize(m.DescripcionMedio));
+                var condicionesDto = await CondicionesService.ObtenerCondicionesPorVigencia(codigoVigencia, _networkSeleccionado!.Codigo);
+                _condiciones = [.. condicionesDto.Select(dto => new CondicionViewModel
+                {
+                    CodigoMedio = dto.CodigoMedio,
+                    DescripcionMedio = StringHelper.Capitalize(dto.DescripcionMedio),
+                    PctSAG = dto.PctSAG,
+                    PctManPower = dto.PctManPower,
+                    PctDevolucion = dto.PctDevolucion,
+                    IndicadorCalculoDevolucion = dto.IndicadorCalculoDevolucion,
+                    NumeroExcepciones = dto.NumeroExcepciones
+                })];
 
                 ActualizarCondicionesConMedioAccesible();
 
@@ -409,11 +418,28 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task ObtenerExcepciones(int codigoVigencia)
         {
-            _excepciones = await CondicionesService.ObtenerExcepcionesCondiciones(codigoVigencia);
-            _excepciones.ForEach(m => m.DescripcionMedio = StringHelper.Capitalize(m.DescripcionMedio));
+            var excepcionesDto = await CondicionesService.ObtenerExcepcionesCondiciones(codigoVigencia);
+            _excepciones = [.. excepcionesDto.Select(dto => new ExcepcionCondicionViewModel
+            {
+                CodigoMedio = dto.CodigoMedio,
+                Jerarquia = dto.Jerarquia,
+                CodigoCondicionMedio = dto.CodigoCondicionMedio,
+                DescripcionMedio = StringHelper.Capitalize(dto.DescripcionMedio),
+                PctSAG = dto.PctSAG,
+                PctManPower = dto.PctManPower,
+                PctDevolucion = dto.PctDevolucion,
+                IndicadorCalculoDevolucion = dto.IndicadorCalculoDevolucion,
+                CodigoAlcance = dto.CodigoAlcance,
+                CodigoDisciplina = dto.CodigoDisciplina,
+                CodigoDiversified = dto.CodigoDiversified,
+                CodigoObjetivo = dto.CodigoObjetivo,
+                CodigoTipoCompra = dto.CodigoTipoCompra,
+                CodigoTipoDisciplina = dto.CodigoTipoDisciplina,
+                CodigoDisciplinaGrupo = dto.CodigoDisciplinaGrupo
+            })];
 
             //Actualiza el indicador de Base de calculo de las excepciones a partir del indicador de Base de calculo de la Condicion del mismo Medio
-            foreach (CondicionDto condicion in _condiciones)
+            foreach (CondicionViewModel condicion in _condiciones)
             {
                 int indicadorCalculoDevolucion = condicion.IndicadorCalculoDevolucion;
                 _excepciones.Where(c => c.CodigoMedio == condicion.CodigoMedio).ToList().ForEach(c => c.IndicadorCalculoDevolucion = indicadorCalculoDevolucion);
@@ -550,7 +576,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private void AñadirVigencia()
+        private void AÃ±adirVigencia()
         {
             _vigenciaNueva.CodigoNetWork = _filtroCondiciones.CodigoNetwork;
             _vigenciaNueva.CodigoVersion = _filtroCondiciones.CodigoVersion;
@@ -681,7 +707,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAñadida:label"));
+                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAï¿½adida:label"));
                 }
                 else
                 {
@@ -734,7 +760,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             if (ea.ElementType != GridElementType.DataCell) return;
 
             var column = (IGridDataColumn)ea.Column;
-            var condicion = (CondicionDto)GridCondiciones.GetDataItem(ea.VisibleIndex);
+            var condicion = (CondicionViewModel)GridCondiciones.GetDataItem(ea.VisibleIndex);
 
             if (condicion == null) return;
           
@@ -782,7 +808,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private bool HaCambiadoValorConceptoCondiciones(CondicionDto item, ConceptosCondiciones concepto)
+        private bool HaCambiadoValorConceptoCondiciones(CondicionViewModel item, ConceptosCondiciones concepto)
         {
             var medio = _condicionesCache.Find(c => c.CodigoMedio == item.CodigoMedio);
             if (medio == null)
@@ -799,11 +825,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private async void Condicion_SetPct(CondicionDto itemEditable, CondicionDto itemDestino, ConceptosCondiciones concepto, decimal? value)
+        private async void Condicion_SetPct(CondicionViewModel itemEditable, CondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
         {
             try 
             { 
-                CondicionDto? itemToActualizar = _condiciones.Find(c => c.CodigoMedio == itemEditable.CodigoMedio);
+                CondicionViewModel? itemToActualizar = _condiciones.Find(c => c.CodigoMedio == itemEditable.CodigoMedio);
 
                 switch (concepto)
                 {
@@ -846,7 +872,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async void Condicion_SetDev(CondicionDto itemEditable, CondicionDto itemDestino, int? value)
+        private async void Condicion_SetDev(CondicionViewModel itemEditable, CondicionViewModel itemDestino, int? value)
         {
             try
             {
@@ -890,7 +916,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task ControlarCambiosCondiciones(CondicionDto itemEditable, CondicionDto itemDestino)
+        private async Task ControlarCambiosCondiciones(CondicionViewModel itemEditable, CondicionViewModel itemDestino)
         {
             var itemOrigen = _condicionesCache.Find(c => c.CodigoMedio == itemEditable.CodigoMedio)!;
             var camposConCambios = DatosHelper.ObtenerCamposModificados(itemEditable, itemOrigen);
@@ -930,7 +956,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 var column = (IGridDataColumn)ea.Column;
-                var excepcion = (ExcepcionDto)GridExcepciones.GetDataItem(ea.VisibleIndex);
+                var excepcion = (ExcepcionCondicionViewModel)GridExcepciones.GetDataItem(ea.VisibleIndex);
 
                 if (excepcion == null) return;
                 var itemOriginal = _excepcionesCache.Find(x => x.Key == excepcion.Key);
@@ -1008,7 +1034,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private bool HaCambiadoValorExcepciones(ExcepcionDto item, ConceptosCondicionesNMD concepto)
+        private bool HaCambiadoValorExcepciones(ExcepcionCondicionViewModel item, ConceptosCondicionesNMD concepto)
         {
             var excepcion = _excepcionesCache.Find(c => c.CodigoCondicionMedio == item.CodigoCondicionMedio);
 
@@ -1030,7 +1056,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private bool HaCambiadoValorExcepciones(ExcepcionDto item, ConceptosCondiciones concepto)
+        private bool HaCambiadoValorExcepciones(ExcepcionCondicionViewModel item, ConceptosCondiciones concepto)
         {
             var excepcion = _excepcionesCache.Find(c => c.CodigoCondicionMedio == item.CodigoCondicionMedio);
             if (excepcion == null)
@@ -1046,7 +1072,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private bool HaCambiadoValorJerarquia(ExcepcionDto item)
+        private bool HaCambiadoValorJerarquia(ExcepcionCondicionViewModel item)
         {
             var excepcion = _excepcionesCache.Find(c => c.CodigoCondicionMedio == item.CodigoCondicionMedio);
             if (excepcion == null)
@@ -1056,11 +1082,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             return item.Jerarquia != excepcion.Jerarquia;
         }
 
-        private async void ExcepcionMedioCondicion_SetConceptosNMD(ExcepcionDto itemEditable, ExcepcionDto itemDestino, ConceptosCondicionesNMD concepto, int? value)
+        private async void ExcepcionMedioCondicion_SetConceptosNMD(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondicionesNMD concepto, int? value)
         {
             try
             { 
-                ExcepcionDto? itemToActualizar = _excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
+                ExcepcionCondicionViewModel? itemToActualizar = _excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
 
                 int valor = value ?? 0;
 
@@ -1139,11 +1165,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async void MedioCondicionExcepcion_SetPct(ExcepcionDto itemEditable, ExcepcionDto itemDestino, ConceptosCondiciones concepto, decimal? value)
+        private async void MedioCondicionExcepcion_SetPct(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
         {
             try
             {
-                ExcepcionDto? itemToActualizar = _excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
+                ExcepcionCondicionViewModel? itemToActualizar = _excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
                 switch (concepto)
                 {
                     case ConceptosCondiciones.Sag:
@@ -1187,7 +1213,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task ControlarCambiosExcepciones(ExcepcionDto itemEditable, ExcepcionDto itemDestino, bool aplicarCambios = true)
+        private async Task ControlarCambiosExcepciones(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, bool aplicarCambios = true)
         {
             var itemOrigen = _excepcionesCache.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio)!;
 
@@ -1219,7 +1245,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             StateHasChanged();
         }
 
-        private async void AñadirExcepcion()
+        private async void AÃ±adirExcepcion()
         {
             if (_codigoMedioleccionadoParaFiltro.HasValue)
             {
@@ -1228,7 +1254,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     LayerOverlayService.Start();
                     int codigoMedio = _codigoMedioleccionadoParaFiltro!.Value;
 
-                    var nuevaExcepcion = new ExcepcionDto();
+                    var nuevaExcepcion = new ExcepcionCondicionViewModel();
                     nuevaExcepcion.MedioAccesible = true;
 
                     string codigoCondicion = ObtenerNuevoCodigoExcepcion();
@@ -1258,7 +1284,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                     _excepciones.Insert(jerarquia - 1, nuevaExcepcion);
 
-                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
+                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
 
                     GridExcepciones.Reload();
                     await ActualizarEstadoCambios(true);
@@ -1303,7 +1329,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             return nuevoCodigoNumerico.ToString();
         }
 
-        private async Task MoverJerarquia(ExcepcionDto item, AccionJerarquias accion)
+        private async Task MoverJerarquia(ExcepcionCondicionViewModel item, AccionJerarquias accion)
         {
             try
             {
@@ -1356,7 +1382,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
                 if (!confirmar) return;
 
-                var item = (ExcepcionDto)dataItem;
+                var item = (ExcepcionCondicionViewModel)dataItem;
 
                 //Si el codigo empieza por -, es que es excepcion nueva y solo lo eliminamos de la lista
                 if (item.CodigoCondicionMedio.StartsWith('-'))
@@ -1373,7 +1399,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                     if (_codigoMedioleccionadoParaFiltro != null)
                     {
-                        CondicionDto? medio = _condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
+                        CondicionViewModel? medio = _condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
                         if (medio != null)
                         {
                             await FiltrarExcepcionesPorMedio(medio);
@@ -1398,14 +1424,14 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Filtro excepciones por medio
 
-        private async Task FiltrarExcepcionesPorMedio(CondicionDto item)
+        private async Task FiltrarExcepcionesPorMedio(CondicionViewModel item)
         {
             if (_codigoMedioleccionadoParaFiltro == item.CodigoMedio)
             {
                 //Hay que a?adir las excepciones que se han quitado al hacer el filtro por medio
-                foreach (ExcepcionDto excepcion in _excepcionesCache)
+                foreach (ExcepcionCondicionViewModel excepcion in _excepcionesCache)
                 {
-                    ExcepcionDto? exc = _excepciones.Find(c => c.CodigoCondicionMedio == excepcion.CodigoCondicionMedio);
+                    ExcepcionCondicionViewModel? exc = _excepciones.Find(c => c.CodigoCondicionMedio == excepcion.CodigoCondicionMedio);
                     if (exc == null)
                     {
                         _excepciones.Add(excepcion);
@@ -1483,7 +1509,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
             // Validaci?n de duplicados optimizada con HashSet
             var excepcionesVistas = new HashSet<string>();
-            ExcepcionDto? primerDuplicado = null;
+            ExcepcionCondicionViewModel? primerDuplicado = null;
 
             foreach (var excepcion in _excepciones)
             {
@@ -1589,7 +1615,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         /// <summary>
         /// Obtiene las condiciones agrupadas por medio usando cach? para optimizar b?squedas
         /// </summary>
-        private Dictionary<int, List<CondicionDto>> ObtenerCondicionesPorMedio()
+        private Dictionary<int, List<CondicionViewModel>> ObtenerCondicionesPorMedio()
         {
             if (_condicionesPorMedio == null)
             {
@@ -1604,7 +1630,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         /// Valida si existe una condici?n con el porcentaje especificado para un medio (O(1) con cach?)
         /// </summary>
         private bool ValidarPorcentajeExcepcion(decimal? porcentaje, int codigoMedio, 
-    Func<CondicionDto, decimal?> selector)
+    Func<CondicionViewModel, decimal?> selector)
         {
             if (!porcentaje.HasValue) return true;
 
@@ -1643,7 +1669,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     }
                 }
                 LayerOverlayService.Start();
-                await CondicionesService.GrabarCondicionesExcepciones(_condicionesNoGuardados, ExcepcionesNoGuardadas, _vigenciaSeleccionada!.Codigo);
+                var condicionesParaGrabar = _condicionesNoGuardados
+                    .ToDictionary(kvp => (CondicionDto)kvp.Key, kvp => kvp.Value);
+                var excepcionesParaGrabar = ExcepcionesNoGuardadas
+                    .ToDictionary(kvp => (ExcepcionDto)kvp.Key, kvp => kvp.Value);
+                await CondicionesService.GrabarCondicionesExcepciones(condicionesParaGrabar, excepcionesParaGrabar, _vigenciaSeleccionada!.Codigo);
                
                 await ObtenerCondicionesExcepciones(_vigenciaSeleccionada!.Codigo);
                 await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Common.DatosGrabados));
@@ -1663,9 +1693,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #endregion
 
 
-        #region Popup Añadir Excepcion
+        #region Popup AÃ±adir Excepcion
 
-        private async Task AñadirExcepcionDesdePopup()
+        private async Task AÃ±adirExcepcionDesdePopup()
         {
             try
             {
@@ -1673,7 +1703,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 int codigoMedio = _medioSeleccionadoDesdePopup!.Codigo;
                 string codigoCondicion = ObtenerNuevoCodigoExcepcion();
 
-                var nuevaExcepcion = new ExcepcionDto();
+                var nuevaExcepcion = new ExcepcionCondicionViewModel();
                 nuevaExcepcion.CodigoCondicionMedio = codigoCondicion;
                 nuevaExcepcion.CodigoMedio = codigoMedio;
                 nuevaExcepcion.DescripcionMedio = _medioSeleccionadoDesdePopup.Descripcion;
@@ -1705,7 +1735,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 OrdenarExcepciones();
 
-                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
+                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
 
                 GridExcepciones.Reload(); //Porque si no desplaza la ultima fila y no se ve
                 await ActualizarEstadoCambios(true);
@@ -1792,8 +1822,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
             if (_codigoMedioleccionadoParaFiltro != null)
             {
-                CondicionDto? condicion = new CondicionDto();
-                condicion = _condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
+                CondicionViewModel? condicion = _condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
                 if (condicion != null)
                 {
                     await FiltrarExcepcionesPorMedio(condicion);
@@ -1826,7 +1855,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         }
 
 
-        private async Task CargarConceptosNMD(ExcepcionDto fila, ConceptosCondicionesNMD concepto)
+        private async Task CargarConceptosNMD(ExcepcionCondicionViewModel fila, ConceptosCondicionesNMD concepto)
         {
             try
             {
@@ -1851,7 +1880,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         }
 
 
-        private void AsignarConceptosAFila(ExcepcionDto fila, ConceptosCondicionesNMD concepto, List<CodigoDescripcion> datos)
+        private void AsignarConceptosAFila(ExcepcionCondicionViewModel fila, ConceptosCondicionesNMD concepto, List<CodigoDescripcion> datos)
         {
             var listaFinal = new List<CodigoDescripcion>
             {
@@ -1882,7 +1911,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     break;
             }
         }
-        private async Task<List<CodigoDescripcion>> ObtenerConceptosNMD(ExcepcionDto excepcion, ConceptosCondicionesNMD concepto)
+        private async Task<List<CodigoDescripcion>> ObtenerConceptosNMD(ExcepcionCondicionViewModel excepcion, ConceptosCondicionesNMD concepto)
         {
             try
             {

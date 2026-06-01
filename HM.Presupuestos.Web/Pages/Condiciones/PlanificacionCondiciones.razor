@@ -217,11 +217,11 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                             Enabled="@(ValidarCamposObligatoriosFiltro() && !HayCambiosPendientes)"
-                            Id="btnAñadirVigencia"
+                            Id="btnAÃ±adirVigencia"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Anadir)"
+                            Text="@ObtenerTexto(AppResources.Botones.AÃ±adir)"
                             IconCssClass="fa-solid fa-add"
-                            Click="@AñadirVigencia" />
+                            Click="@AÃ±adirVigencia" />
                         </div>
                     </DxFormLayoutItem>
 
@@ -383,7 +383,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var dataItem = (CondicionDto)context.DataItem;
+                                            var dataItem = (CondicionViewModel)context.DataItem;
                                             string toolTip = dataItem.MedioAccesible ? "" : "Medio no accesible para el NetWork seleccinado";
                                         }
                                         <span class="dxgrid-readonly-cell" title="@toolTip">@context.DisplayText</span>
@@ -393,7 +393,7 @@
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
-                                                  FieldName="@nameof(CondicionDto.PctSAG)" 
+                                                  FieldName="@nameof(CondicionViewModel.PctSAG)" 
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="10%"
@@ -405,7 +405,7 @@
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is CondicionDto item)
+                                        @if (context.DataItem is CondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -430,8 +430,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((CondicionDto)context.EditModel);
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = ((CondicionViewModel)context.EditModel);
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctSAG"
                                                         ShowSpinButtons="false"
@@ -448,7 +448,7 @@
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
-                                                  FieldName="@nameof(CondicionDto.PctManPower)"
+                                                  FieldName="@nameof(CondicionViewModel.PctManPower)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="10%"
@@ -460,7 +460,7 @@
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is CondicionDto item)
+                                        @if (context.DataItem is CondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -485,8 +485,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((CondicionDto)context.EditModel);
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = ((CondicionViewModel)context.EditModel);
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctManPower"
                                                         ShowSpinButtons="false"
@@ -501,7 +501,7 @@
                                 </DxGridDataColumn>
 
 
-                                <DxGridDataColumn FieldName="@nameof(CondicionDto.IndicadorCalculoDevolucion)"
+                                <DxGridDataColumn FieldName="@nameof(CondicionViewModel.IndicadorCalculoDevolucion)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.BCDevolucion)"
                                                   Width="13%"
@@ -510,7 +510,7 @@
                                     <CellDisplayTemplate>
 
                                         @{
-                                            var item = (CondicionDto)context.DataItem;
+                                            var item = (CondicionViewModel)context.DataItem;
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -530,8 +530,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (CondicionDto)context.EditModel;
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = (CondicionViewModel)context.EditModel;
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.IndicadorCalculoDevolucion != dataItem.IndicadorCalculoDevolucion ? "grid-modified-cell" : "";
                                         }
@@ -545,7 +545,7 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(CondicionDto.PctDevolucion)"
+                                <DxGridDataColumn FieldName="@nameof(CondicionViewModel.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="10%"
@@ -557,7 +557,7 @@
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is CondicionDto item)
+                                        @if (context.DataItem is CondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -583,8 +583,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((CondicionDto)context.EditModel);
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = ((CondicionViewModel)context.EditModel);
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctDevolucion"
                                                         ShowSpinButtons="false"
@@ -599,7 +599,7 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(CondicionDto.NumeroExcepciones)"
+                                <DxGridDataColumn FieldName="@nameof(CondicionViewModel.NumeroExcepciones)"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.NumExcepciones)"
                                                   ReadOnly="true"
                                                   Width="11%"
@@ -619,7 +619,7 @@
                                     </FilterRowCellTemplate>
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (CondicionDto)context.DataItem;
+                                            var item = (CondicionViewModel)context.DataItem;
                                             var isSelected = _codigoMedioleccionadoParaFiltro == item.CodigoMedio; 
                                             var clase = isSelected ? "valor-filtrado" : "";
                                             string toolTip = isSelected ? ObtenerTexto(AppResources.Common.FiltroQuitar) : ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.FiltroPorMedio);
@@ -679,7 +679,7 @@
                                     <DxButton CssClass="toolbarButtonCustom"
                                             RenderStyle=ButtonRenderStyle.None
                                             Text="@ObtenerTexto(AppResources.Common.Nuevo)"
-                                            Click="AñadirExcepcion"
+                                            Click="AÃ±adirExcepcion"
                                               Enabled=@ActivarBotonNuevaExcepcion 
                                             IconCssClass="fa-solid fa-plus" />
                                 </div>
@@ -696,7 +696,7 @@
 
                             <Columns>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.Jerarquia)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.Jerarquia)"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Jerarquia)"
                                                   ReadOnly="true"
                                                   Width="8%"
@@ -705,7 +705,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             if (item.MedioAccesible)
                                             {
                                                 if (item.Jerarquia != 1)
@@ -739,7 +739,7 @@
                                         
                                     <CellEditTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             if (item.MedioAccesible)
                                             {
                                                 if (item.Jerarquia != 1)
@@ -773,7 +773,7 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.DescripcionMedio)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.DescripcionMedio)"
                                                   Caption="@ObtenerTexto("Pages:PlanificacionCondiciones:Medio:label")"
                                                   ReadOnly="true"
                                                   Width="13%"
@@ -784,7 +784,7 @@
                                     </CellDisplayTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionDto.PctSAG)"
+                                <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionCondicionViewModel.PctSAG)"
                                                   FilterRowEditorVisible="true"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="8%"
@@ -795,7 +795,7 @@
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is ExcepcionDto item)
+                                        @if (context.DataItem is ExcepcionCondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -819,8 +819,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((ExcepcionDto)context.EditModel);
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = ((ExcepcionCondicionViewModel)context.EditModel);
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctSAG"
                                                         ShowSpinButtons="false"
@@ -837,7 +837,7 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctManPower)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.PctManPower)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="8%"
@@ -849,7 +849,7 @@
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is ExcepcionDto item)
+                                        @if (context.DataItem is ExcepcionCondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -874,8 +874,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((ExcepcionDto)context.EditModel);
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = ((ExcepcionCondicionViewModel)context.EditModel);
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctManPower"
                                                         ShowSpinButtons="false"
@@ -892,7 +892,7 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctDevolucion)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="8%"
@@ -904,7 +904,7 @@
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is ExcepcionDto item)
+                                        @if (context.DataItem is ExcepcionCondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -929,8 +929,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((ExcepcionDto)context.EditModel);
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = ((ExcepcionCondicionViewModel)context.EditModel);
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctDevolucion"
                                                         ShowSpinButtons="false"
@@ -946,7 +946,7 @@
                                   
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoAlcance)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoAlcance)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Alcance)"
                                                   Width="11%"
@@ -955,7 +955,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             var descripcion = _alcances.FirstOrDefault(o => o.Codigo == item.CodigoAlcance)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -974,8 +974,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             var css = editItem.CodigoAlcance != dataItem.CodigoAlcance ? "grid-modified-cell" : "";
                                             bool soloLectura = !dataItem.MedioAccesible;
                                          }
@@ -990,7 +990,7 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoDisciplina)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoTipoDisciplina)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoDisciplina)"
                                                   Width="11%"
@@ -999,7 +999,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             // var descripcion = TiposDisciplina.FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
                                             var descripcion = (item.TiposDisciplinaDisponibles ?? _tiposDisciplina).FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
 
@@ -1019,8 +1019,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoTipoDisciplina != dataItem.CodigoTipoDisciplina ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.TiposDisciplinaDisponibles ?? _tiposDisciplina;
@@ -1037,7 +1037,7 @@
                                 </DxGridDataColumn>
 
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplinaGrupo)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDisciplinaGrupo)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DisciplinaGrupo)"
                                                   Width="11%"
@@ -1046,7 +1046,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _disciplinasGrupo.FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
                                             var descripcion = (item.DisciplinasGrupoDisponibles ?? _disciplinasGrupo).FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
@@ -1065,8 +1065,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDisciplinaGrupo != dataItem.CodigoDisciplinaGrupo ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.DisciplinasGrupoDisponibles ?? _disciplinasGrupo;
@@ -1084,7 +1084,7 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplina)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDisciplina)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Disciplina)"
                                                   Width="11%"
@@ -1093,7 +1093,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             var descripcion = (item.DisciplinasDisponibles ?? _disciplinas).FirstOrDefault(o => o.Codigo == item.CodigoDisciplina)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -1110,8 +1110,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDisciplina != dataItem.CodigoDisciplina ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.DisciplinasDisponibles ?? _disciplinas;
@@ -1129,7 +1129,7 @@
 
                                 </DxGridDataColumn>
 
-                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDiversified)"
+                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDiversified)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Diversified)"
                                                   Width="11%"
@@ -1137,7 +1137,7 @@
                                                   TextAlignment="GridTextAlignment.Left">
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             var descripcion = _diversifieds.FirstOrDefault(o => o.Codigo == item.CodigoDiversified)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -1156,8 +1156,8 @@
                                     <CellEditTemplate>
                                        
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDiversified != dataItem.CodigoDiversified ? "grid-modified-cell" : "";
                                         }
@@ -1171,7 +1171,7 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoObjetivo)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoObjetivo)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Objetivo)"
                                                   Width="11%"
@@ -1180,7 +1180,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _objetivos.FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
                                             var descripcion = (item.ObjetivosDisponibles ?? _objetivos).FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
@@ -1198,8 +1198,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoObjetivo != dataItem.CodigoObjetivo ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.ObjetivosDisponibles ?? _objetivos;
@@ -1215,7 +1215,7 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoCompra)"
+                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoTipoCompra)"
                                                   FilterRowEditorVisible="false"
                                                   Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoCompra)"
                                                   Width="11%"
@@ -1224,7 +1224,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _tiposCompra.FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
                                             var descripcion = (item.TiposCompraDisponibles ?? _tiposCompra).FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
@@ -1243,8 +1243,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoTipoCompra != dataItem.CodigoTipoCompra ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.TiposCompraDisponibles ?? _tiposCompra;
@@ -1327,7 +1327,7 @@
         @* POPUP EDIT MEDIOS *@
         <DxPopup Visible="@_popupMediosVisible"
                  ShowFooter="true"
-                 HeaderText="Selección de medios para nueva Excepción"
+                 HeaderText="Selecciï¿½n de medios para nueva Excepciï¿½n"
                  ShowCloseButton="false"
                  Width="500px"
                  Height="Auto"
@@ -1366,7 +1366,7 @@
                               Text="@ObtenerTexto(AppResources.Common.Aceptar)"
                               IconCssClass="fa-solid fa-save"
                               Enabled="@(_medioSeleccionadoDesdePopup != null)"
-                              Click="@AñadirExcepcionDesdePopup" />
+                              Click="@AÃ±adirExcepcionDesdePopup" />
 
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None

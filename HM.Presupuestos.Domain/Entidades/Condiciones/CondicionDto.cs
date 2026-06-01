@@ -35,7 +35,5 @@ namespace HM.Presupuestos.Domain.Entidades
 
         public int NumeroExcepciones { get; set; }
 
-        public bool MedioAccesible { get; set; }
-
     }
 }

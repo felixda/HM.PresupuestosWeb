@@ -16,7 +16,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         public static class Botones
         {
             /// <summary>Añadir</summary>
-            public const string Anadir = "Botones:Anadir:label";
+            public const string Añadir = "Botones:Añadir:label";
 
             /// <summary>Cancelar</summary>
             public const string Cancelar = "Botones:Cancelar:label";
