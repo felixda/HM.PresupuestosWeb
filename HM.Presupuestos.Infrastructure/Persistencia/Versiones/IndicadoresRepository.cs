@@ -511,7 +511,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             }
         }
 
-        public ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
+        public new ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
 
     }
 }

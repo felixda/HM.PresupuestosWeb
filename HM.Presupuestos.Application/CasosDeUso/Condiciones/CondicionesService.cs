@@ -140,7 +140,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         public Task<bool> ExistenCondicionesVigencias(int codigoVigencia)
         {
             _logger.LogTrace("Llamando método ExistenCondicionesVigencias");
-            return _condicionesRepository.ExistenCondicionesVigencias(codigoVigencia);
+            return _condicionesRepository.LaVigenciaTieneCondiciones(codigoVigencia);
         }
 
         #endregion
@@ -161,7 +161,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             _logger.LogTrace("Llamando método ObtenerCondicionesPorVigencia");
 
-            List<CondicionDto> resultado = await _condicionesRepository.ObtenerCondicionesPorVigencia(codigoVigencia);
+            List<CondicionDto> resultado = await _condicionesRepository.ObtenerCondicionesDeLaVigencia(codigoVigencia);
 
             if (resultado.Count > 0) return resultado;
 
@@ -178,7 +178,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         public Task<List<ExcepcionDto>> ObtenerExcepcionesCondiciones(int codigoVigencia)
         {
             _logger.LogTrace("Llamando método ObtenerExcepcionesCondiciones");
-            return _condicionesRepository.ObtenerExcepcionesCondiciones(codigoVigencia);
+            return _condicionesRepository.ObtenerExcepcionesDeLaVigencia(codigoVigencia);
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             _logger.LogTrace("Llamando método GrabarCondicionesExcepciones");
 
-            List<ConceptoCondicion> conceptos = await _condicionesRepository.ObtenerConceptos();
+            List<ConceptoCondicion> conceptos = await _condicionesRepository.ObtenerConceptosDeCondicion();
 
             using var transaction = _condicionesRepository.ObtenerTransaccion();
 
@@ -349,14 +349,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
                 {
                     foreach (var concepto in Enum.GetValues<ConceptosCondicionesNMD>())
                     {
-                        await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigos.CodigoCondicion, concepto);
+                        await _condicionesRepository.EliminarConceptoDeExcepcion(codigos.CodigoCondicion, concepto);
                     }
 
                     await _condicionesRepository.EliminarExcepcionCondicion(codigos.CodigoCondicion);
                 }
 
                 // Ajustar jerarquías de excepciones posteriores
-                var excepciones = await _condicionesRepository.ObtenerExcepcionesCondiciones(codigoVigencia);
+                var excepciones = await _condicionesRepository.ObtenerExcepcionesDeLaVigencia(codigoVigencia);
 
                 // Filtrar por el medio y cogemos las que tengan la jerarquía mayor que la eliminada
                 var excepcionesFiltradas = excepciones
@@ -392,14 +392,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
             }
             else
             {
-                await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigoCondicionMedio, conceptoNMD);
+                await _condicionesRepository.EliminarConceptoDeExcepcion(codigoCondicionMedio, conceptoNMD);
             }
         }
 
         private async Task TratarExcepcion(Condicion excepcion, ExcepcionDto itemModificado, HashSet<string> camposConCambios)
         {
             // Buscar excepción existente
-            var excepcionBD = await _condicionesRepository.ObtenerExcepcionOrCondicion(excepcion.CodigoCondicion);
+            var excepcionBD = await _condicionesRepository.ObtenerCondicionPorCodigo(excepcion.CodigoCondicion);
 
             // Caso 1: No existe ? insertar si porcentaje no es null 
             if (excepcionBD == null)
@@ -433,7 +433,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
                     // Eliminar conceptos y excepción
                     foreach (var concepto in Enum.GetValues<ConceptosCondicionesNMD>())
                     {
-                        await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigoCondicion, concepto);
+                        await _condicionesRepository.EliminarConceptoDeExcepcion(codigoCondicion, concepto);
                     }
 
                     await _condicionesRepository.EliminarExcepcionCondicion(codigoCondicion);
@@ -475,7 +475,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         private async Task TratarCondicion(Condicion condicion)
         {
             // Buscar condición  
-            Condicion? condicionBD = await _condicionesRepository.ObtenerExcepcionOrCondicion(condicion);
+            Condicion? condicionBD = await _condicionesRepository.ObtenerCondicionPorClave(condicion);
 
             // Caso 1: No existe ? grabar solo si tiene porcentaje
             if (condicionBD == null)
@@ -509,13 +509,13 @@ namespace HM.Presupuestos.Application.CasosDeUso
             if (condicion.Porcentaje == null)
             {
                 // Buscar códigos de excepciones del medio
-                List<int> codigos = await _condicionesRepository.ObtenerCodigosExcepcionesCondiciones(condicion);
+                List<int> codigos = await _condicionesRepository.ObtenerCodigosDeExcepcionesDeCondicion(condicion);
 
                 foreach (var codigo in codigos)
                 {
                     foreach (var concepto in Enum.GetValues<ConceptosCondicionesNMD>())
                     {
-                        await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigo, concepto);
+                        await _condicionesRepository.EliminarConceptoDeExcepcion(codigo, concepto);
                     }
                     await _condicionesRepository.EliminarExcepcionCondicion(codigo);
                 }
