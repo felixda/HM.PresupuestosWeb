@@ -1,0 +1,57 @@
+schema: spec-driven
+
+context: |
+  Tech stack: TypeScript, Bun, React 19, Vite 7, Hono 4, PostgreSQL 18 / Drizzle ORM
+  Monorepo with Bun workspaces: common, backend, frontend
+  Architecture: Hexagonal with vertical slicing by business module
+  Layers: Domain (entities, VOs, repos) → Application (use cases, DTOs) → Infrastructure (adapters, UI)
+  Auth: Email-based OTP authentication
+  Testing: Vitest (unit/integration), Testing Library (components), Playwright (e2e)
+  Always use "bun run test", never "bun test" (Bun native runner is incompatible with Vitest)
+  All code, comments, and documentation in English
+
+  Project guidelines (source of truth): All artifact creation and implementation
+  MUST read and follow the guidelines in .claude/skills/guidelines/:
+  - guidelines/architecture-hexagonal — layers, module structure, ports and adapters
+  - guidelines/design-principles — naming, functions, classes, error handling
+  - guidelines/testing-standards — test naming, structure, FIRST principles, mocks
+  - guidelines/xp-tdd-practices — TDD 5-step cycle, TPP, inside-out
+  - guidelines/frontend-patterns — components, hooks, CSS Modules, store layer
+  - guidelines/git-strategy — feature branching, conventional commits
+
+rules:
+  proposal:
+    - Always include a Non-goals section
+    - Reference affected modules and workspaces (common, backend, frontend)
+  specs:
+    - Write scenarios in Given/When/Then format
+    - Organize by business module matching project structure
+    - Include edge cases and error scenarios
+  design:
+    - Read .claude/skills/guidelines/architecture-hexagonal/ references before designing
+    - Read .claude/skills/guidelines/frontend-patterns/ references for frontend design
+    - Map components to hexagonal layers (domain, application, infrastructure)
+    - Identify ports (domain interfaces) and adapters (infrastructure implementations)
+    - Frontend state separation
+    - React Context is dependency injection only (provide use cases to store hooks, one context per vertical slice). Never for shared state
+    - React Query store hooks are server state — use case results with caching. Queries and mutations must expose domain helpers, never raw React Query internals (pending refactor on mutations)
+    - useState custom hooks are view state — local UI state grouped in a single useState per hook
+    - Dependency flow is Factory → AppProviders → Context → Store hooks → Components
+    - Context scope — global in AppProviders for cross-cutting concerns (auth, profile), page-scoped provider for module-specific use cases (users, health)
+  tasks:
+    - Read .claude/skills/guidelines/xp-tdd-practices/ references before creating tasks
+    - Read .claude/skills/guidelines/testing-standards/ references for test types per layer
+    - Tasks with behavior (entities, use cases, services, hooks, components) use TDD format — RED write failing test for X → GREEN implement X → COMMIT (conventional commit) → REFACTOR
+    - Tasks without behavior (types, interfaces, DTOs, config, wiring) are plain tasks without TDD format
+    - Order tasks inside-out — domain first, then application, then infrastructure
+    - Keep tasks small enough for one TDD cycle
+    - Testing strategy per layer
+    - Domain (entities, VOs, domain services) — unit tests (.test.ts)
+    - Application (use cases) — unit tests with InMemoryRepositories (.test.ts)
+    - Infrastructure DB/service adapters — integration tests with real DB (.integration.test.ts)
+    - Infrastructure HTTP/controllers — e2e tests, full HTTP stack (.e2e.test.ts)
+    - Frontend components and hooks — unit tests with Testing Library (.test.ts)
+    - Frontend user journeys — e2e tests with Playwright (.e2e.test.ts)
+    - Use InMemoryRepositories for use case tests. Stubs and spies are allowed on application ports (EmailSender, TokenGenerator). Never mock without consulting Tech Lead first
+    - Always include a final validation group — run /task-validate, /task-code-review, /task-architecture-review, /task-testing-review, and for frontend changes /task-frontend-review
+    - Always include a final task — commit all changes with a conventional commit message
