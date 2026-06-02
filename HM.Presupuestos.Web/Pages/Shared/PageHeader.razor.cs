@@ -114,7 +114,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// <returns>HashSet con los códigos de menús favoritos</returns>
         private async Task<HashSet<string>> ObtenerListaFavoritos()
         {
-            var favoritosTexto = await ClienteApiCore.ObtenerCodigosDeMenusFavoritos(Usuario!.Jwt);
+            var favoritosTexto = await ClienteApiCore.ObtenerCodigosDeMenusFavoritos();
 
             if (string.IsNullOrWhiteSpace(favoritosTexto))
             {
@@ -139,7 +139,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
                 Valor = string.Join(",", favoritos)
             };
 
-            await ClienteApiCore.GuardarCodigosDeMenusFavoritos(Usuario!.Jwt, configuracion);
+            await ClienteApiCore.GuardarCodigosDeMenusFavoritos(configuracion);
         }
 
         /// <summary>
