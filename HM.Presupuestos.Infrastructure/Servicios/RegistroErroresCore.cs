@@ -28,7 +28,7 @@ namespace HM.Presupuestos.Infrastructure.Servicios
             //    Observaciones = string.Empty,
             //    DominioAplicacion = string.Empty
 
-            await ApiCoreCli.SaveLog(jwtToken, registroError);
+            await ClienteApiCore.RegistrarLog(jwtToken, registroError);
         }
     }
 }

@@ -75,8 +75,8 @@ configuration.Bind(configuracionCore);
 
 builder.Services.AddTransient<IUserProvider, AzureAdProvider>();
 
-ApiCoreCli.ConfigurarUrlBaseCore(urlBaseCore ?? String.Empty);
-ApiCoreCli.ConfigurarLogger(new NLogLogger(new LogUtility()));
+ClienteApiCore.ConfigurarUrlBase(urlBaseCore ?? String.Empty);
+ClienteApiCore.ConfigurarLogger(new NLogLogger(new LogUtility()));
 
 builder.Services.AddControllers();
 

@@ -213,7 +213,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
                 DominioAplicacion = _configuration.GetValue<string>("AppSettings:AppDomain")
             };
 
-            await ApiCoreCli.SaveLog(usuario.Jwt, data);
+            await ClienteApiCore.RegistrarLog(usuario.Jwt, data);
         }
 
 
