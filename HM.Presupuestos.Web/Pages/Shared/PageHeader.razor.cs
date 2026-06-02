@@ -8,6 +8,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         #region Inyecciones de Dependencias
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected IAlmacenSesionUsuario AlmacenSesionUsuario { get; set; } = default!;
+        [Inject] protected IClienteApiCore ClienteApiCore { get; set; } = default!;
         #endregion
 
         #region Campos Privados
@@ -113,7 +114,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// <returns>HashSet con los códigos de menús favoritos</returns>
         private async Task<HashSet<string>> ObtenerListaFavoritos()
         {
-            var favoritosTexto = await ClienteApiCore.ObtenerCodigosFavoritos(Usuario!.Jwt);
+            var favoritosTexto = await ClienteApiCore.ObtenerCodigosDeMenusFavoritos(Usuario!.Jwt);
 
             if (string.IsNullOrWhiteSpace(favoritosTexto))
             {
@@ -138,7 +139,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
                 Valor = string.Join(",", favoritos)
             };
 
-            await ClienteApiCore.GuardarCodigosFavoritos(Usuario!.Jwt, configuracion);
+            await ClienteApiCore.GuardarCodigosDeMenusFavoritos(Usuario!.Jwt, configuracion);
         }
 
         /// <summary>

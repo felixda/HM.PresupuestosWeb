@@ -1,6 +1,5 @@
 using HM.Core.Comun.v6.Agentes;
 using HM.Core.Comun.v6.Agentes.Interfaces;
-using HM.Core.Comun.v6.Loggers;
 using HM.Core.Comun.v6.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Servidor.v6;
@@ -31,7 +30,7 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>(optional: true)
     .Build();
 
-var urlBaseCore = configuration.GetValue<string>("ServicioCore:Core");
+var urlBaseCore = configuration.GetValue<string>("ServicioCore:UrlBase");
 var urlBase = configuration.GetValue<string>("Presupuestos:UrlBaseApi");
 var hoursExpired = configuration.GetValue<int>("Presupuestos:CookieJwtExpire");
 var puerto = configuration.GetValue<int>("Hosting:PuertoHttp");
@@ -75,8 +74,7 @@ configuration.Bind(configuracionCore);
 
 builder.Services.AddTransient<IUserProvider, AzureAdProvider>();
 
-ClienteApiCore.ConfigurarUrlBase(urlBaseCore ?? String.Empty);
-ClienteApiCore.ConfigurarLogger(new NLogLogger(new LogUtility()));
+builder.Services.AddHttpClient<IClienteApiCore, ClienteApiCore>();
 
 builder.Services.AddControllers();
 

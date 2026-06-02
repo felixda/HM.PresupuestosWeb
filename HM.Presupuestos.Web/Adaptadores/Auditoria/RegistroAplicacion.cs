@@ -36,6 +36,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         private readonly ISesionUsuario _sesionUsuario;
         private readonly IRutasNavegacion _rutasNavegacion;
         private readonly ILogAccionesService _logAccionesService;
+        private readonly IClienteApiCore _clienteApiCore;
 
         #endregion
 
@@ -45,13 +46,15 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             IAlmacenSesionUsuario almacenSesionUsuario, 
             ISesionUsuario sesionUsuario, 
             IRutasNavegacion rutasNavegacion, 
-            ILogAccionesService logAccionesService )
+            ILogAccionesService logAccionesService,
+            IClienteApiCore clienteApiCore)
         {
             _configuration = configuracion;
             _almacenSesionService = almacenSesionUsuario;
             _sesionUsuario = sesionUsuario;
             _rutasNavegacion = rutasNavegacion;
             _logAccionesService = logAccionesService;
+            _clienteApiCore = clienteApiCore;
         }
 
         #endregion
@@ -213,7 +216,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
                 DominioAplicacion = _configuration.GetValue<string>("AppSettings:AppDomain")
             };
 
-            await ClienteApiCore.RegistrarLog(usuario.Jwt, data);
+            await _clienteApiCore.RegistrarLog(usuario.Jwt, data);
         }
 
 

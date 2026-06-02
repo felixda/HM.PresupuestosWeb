@@ -4,8 +4,10 @@ using HM.Presupuestos.Domain.Puertos;
 
 namespace HM.Presupuestos.Infrastructure.Servicios
 {
-    public class RegistroErroresCore : IRegistroErroresCore
+    public class RegistroErroresCore(IClienteApiCore clienteApiCore) : IRegistroErroresCore
     {
+        private readonly IClienteApiCore _clienteApiCore = clienteApiCore;
+
         public async Task RegistrarErrorSaveLog(string jwtToken, DetalleError error)
         {
             var registroError = new DatosPeticionLogData
@@ -16,19 +18,7 @@ namespace HM.Presupuestos.Infrastructure.Servicios
                 StackTrace = error.StackTrace
             };
 
-
-            //CodigoAplicacion = 0,
-            //    CodigoPais = 0,
-            //    CodigoCompania = 0,
-            //    UserName = error.UserName,
-            //    Fecha = error.Fecha,
-            //    Categoria = string.Empty,
-            //    Mensaje = error.Mensaje,
-            //    StackTrace = error.StackTrace,
-            //    Observaciones = string.Empty,
-            //    DominioAplicacion = string.Empty
-
-            await ClienteApiCore.RegistrarLog(jwtToken, registroError);
+            await _clienteApiCore.RegistrarLog(jwtToken, registroError);
         }
     }
 }
