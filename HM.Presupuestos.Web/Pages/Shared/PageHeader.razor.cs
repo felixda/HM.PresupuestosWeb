@@ -1,5 +1,4 @@
-using HM.Core.Comun.v6.Entidades.Configuracion;
-using HM.Presupuestos.Infrastructure.Servicios;
+using HM.Presupuestos.Application.CasosDeUso;
 
 namespace HM.Presupuestos.Web.Pages.Shared
 {
@@ -8,7 +7,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         #region Inyecciones de Dependencias
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected IAlmacenSesionUsuario AlmacenSesionUsuario { get; set; } = default!;
-        [Inject] protected IClienteApiCore ClienteApiCore { get; set; } = default!;
+        [Inject] protected IMenuFavoritosService MenuFavoritosService { get; set; } = default!;
         #endregion
 
         #region Campos Privados
@@ -114,17 +113,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// <returns>HashSet con los códigos de menús favoritos</returns>
         private async Task<HashSet<string>> ObtenerListaFavoritos()
         {
-            var favoritosTexto = await ClienteApiCore.ObtenerCodigosDeMenusFavoritos();
-
-            if (string.IsNullOrWhiteSpace(favoritosTexto))
-            {
-                return [];
-            }
-
-            return favoritosTexto
-                .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .ToHashSet<string>(StringComparer.Ordinal);
+            return await MenuFavoritosService.ObtenerFavoritos();
         }
 
         /// <summary>
@@ -133,13 +122,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// <param name="favoritos">HashSet con códigos de menús favoritos</param>
         private async Task GuardarListaFavoritos(HashSet<string> favoritos)
         {
-            var configuracion = new ElementoConfiguracion
-            {
-                Nombre = Constantes.UserConfiguration.MENU_FAVORITES,
-                Valor = string.Join(",", favoritos)
-            };
-
-            await ClienteApiCore.GuardarCodigosDeMenusFavoritos(configuracion);
+            await MenuFavoritosService.GuardarFavoritos(favoritos);
         }
 
         /// <summary>

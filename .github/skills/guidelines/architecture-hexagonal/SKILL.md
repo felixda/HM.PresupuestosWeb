@@ -113,6 +113,25 @@ Definen el contrato de persistencia. El dominio los necesita; Infrastructure los
 Definen el caso de uso. Web los consume; Application los implementa.
 Se colocan en Application (no en Domain) siguiendo el patrón Clean Architecture.
 
+### ¿Domain o Application? Criterio para ubicar una interfaz de servicio
+
+La capa donde vive una interfaz depende de **quién la necesita** para funcionar:
+
+| Criterio | Capa | Ejemplo |
+|----------|------|---------|
+| La lógica de negocio del dominio la necesita directamente | **Domain** | `IRegistroErroresCore` — el dominio necesita registrar errores sin saber nada de HTTP |
+| Es un caso de uso que orquesta servicios externos o infraestructura | **Application** | `IMenuFavoritosService` — orquesta llamadas a la API externa para gestionar preferencias de UI |
+
+```
+Domain
+  └── Puertos/IRegistroErroresCore     ← el dominio NECESITA esto para funcionar
+
+Application
+  └── CasosDeUso/IMenuFavoritosService ← la app ORQUESTA esto como caso de uso
+```
+
+En ambos casos, **Infrastructure implementa la interfaz** y **Web solo ve Application y Domain**, nunca Infrastructure directamente.
+
 **Adaptadores secundarios — XxxRepository** (en `Infrastructure/Persistencia/[Modulo]/`):
 Implementaciones concretas de `IXxxRepository`. Llaman a la API HM.CORE.
 

@@ -9,12 +9,13 @@ using HM.Presupuestos.Domain.Extensiones;
 
 namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
 {
-    public class LogAccionesService(ILogger logger, IJwt jwt, ILogAccionesRepository logAccionesRepository, IRegistroErroresCore coreLoggerService) : ILogAccionesService
+    public class LogAccionesService(ILogger logger, IJwt jwt, ILogAccionesRepository logAccionesRepository, 
+        IRegistroErroresCore registroErroresCore) : ILogAccionesService
     {
         private readonly ILogger _logger = logger;
         private readonly IJwt _jwt = jwt;
         private readonly ILogAccionesRepository _logAccionesRepository = logAccionesRepository;
-        private readonly IRegistroErroresCore _coreLoggerService = coreLoggerService;
+        private readonly IRegistroErroresCore _registroErroresCore = registroErroresCore;
 
         private int CodigoUsuario => _jwt.Usuario.CodigoUsuario;
 
@@ -94,7 +95,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
                 StackTrace = exception.StackTrace ?? string.Empty
             };
 
-            await _coreLoggerService.RegistrarErrorSaveLog(data);
+            await _registroErroresCore.RegistrarErrorSaveLog(data);
         }
     }
 }

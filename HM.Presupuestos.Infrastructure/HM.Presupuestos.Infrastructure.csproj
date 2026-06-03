@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
     <ProjectReference Include="..\HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj" />
   </ItemGroup>
 

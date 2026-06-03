@@ -163,6 +163,7 @@ builder.Services.AddScoped<IIndicadoresService, IndicadoresService>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<ILogAccionesService, LogAccionesService>();
+builder.Services.AddScoped<IMenuFavoritosService, MenuFavoritosService>();
 builder.Services.AddScoped<IRegistroErroresCore, RegistroErroresCore>();
 
 
