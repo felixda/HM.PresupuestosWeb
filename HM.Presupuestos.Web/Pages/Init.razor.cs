@@ -27,10 +27,10 @@ namespace HM.Presupuestos.Web.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            InicializarIdiomaDesdeoCookie();
+            InicializarIdiomaDesdeCookie();
         }
 
-        private void InicializarIdiomaDesdeoCookie()
+        private void InicializarIdiomaDesdeCookie()
         {
             try
             {
@@ -89,7 +89,7 @@ namespace HM.Presupuestos.Web.Pages
             }
         }
 
-        public async Task<bool> CrearPerfilUsuario()
+        private async Task<bool> CrearPerfilUsuario()
         {
             var authorized = false;
             var usuarioSSO = await SesionUsuario.AutenticarUsuarioSSOAsync();

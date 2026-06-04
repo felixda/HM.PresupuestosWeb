@@ -124,7 +124,7 @@ builder.Services.AddScoped<IApiCoreClient, ApiCoreClient>(client => new ApiCoreC
 builder.Services.AddScoped<IControlador, Controlador>();
 builder.Services.AddHttpContextAccessor();
 
-// ===== SERVICIOS DE APLICACIÓN =====
+// ===== ADAPTADORES DE APLICACIÓN =====
 builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<MaestrosService>();
 builder.Services.AddScoped<VersionesService>();
