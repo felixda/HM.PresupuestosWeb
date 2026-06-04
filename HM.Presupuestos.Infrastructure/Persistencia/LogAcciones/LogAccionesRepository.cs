@@ -3,7 +3,6 @@ using HM.Core.Servidor.v6.DAL;
 using HM.Core.Servidor.v6.DAL.Interfaces;
 using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Puertos;
-using System.Text;
 
 namespace HM.Presupuestos.Infrastructure.Persistencia
 {
@@ -13,17 +12,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
     {
         public async Task Insertar(LogAccion logAccion)
         {
-            StringBuilder query = new();
-            query.Append("INSERT INTO PPT_ACCION_LOG (COD_USUARIO, ");
-            query.Append("                   DES_PROCESO, ");
-            query.Append("                   FECHA_INICIO, ");
-            query.Append("                   PARAMETROS) ");
-            query.Append("     VALUES ( :CodigoUsuario, ");
-            query.Append("             :DesProceso, ");
-            query.Append("             :Fecha, ");
-            query.Append("             :Parametros ) ");
+            const string query = @"
+                INSERT INTO PPT_ACCION_LOG (COD_USUARIO, DES_PROCESO, FECHA_INICIO, PARAMETROS)
+                VALUES (:CodigoUsuario, :DesProceso, :Fecha, :Parametros)";
 
-            dah.GetSqlStringComando(query.ToString());
+            dah.GetSqlStringComando(query);
 
             dah.AddParameter("CodigoUsuario", CodigoUsuario);
             dah.AddParameter("DesProceso", logAccion.Accion);

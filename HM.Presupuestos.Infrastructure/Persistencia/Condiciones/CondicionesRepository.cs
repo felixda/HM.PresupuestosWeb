@@ -412,7 +412,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task EliminarCondicion(Condicion condicion)
         {
-            var query = @"
+            const string query = @"
                 DELETE FROM PPT_CONDICION_MEDIO
                 WHERE COD_PAIS = :CodigoPais
                   AND COD_MEDIO = :CodigoMedio
@@ -544,7 +544,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             string tabla = ObtenerTablaConceptosNMD(concepto);
 
-            var query = $@"
+            string query = $@"
                 DELETE FROM {tabla}
                 WHERE COD_CONDICION_MEDIO = :CodigoCondicionMedio";
 
@@ -580,7 +580,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             string tabla = ObtenerTablaConceptosNMD(codigoConceptoNMD);
             string campo = ObtenerCampoConceptosNMD(codigoConceptoNMD);
 
-            var query = $@"
+            string query = $@"
                 MERGE INTO {tabla} T
                 USING DUAL
                 ON (T.COD_CONDICION_MEDIO = :CodigoCondicionMedio)
