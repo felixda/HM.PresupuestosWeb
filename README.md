@@ -27,7 +27,7 @@ Aplicación web de gestión de presupuestos construida con **Blazor Server** y *
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - Acceso a Azure AD (tenant configurado en `appsettings.json`)
 - Acceso a la API HM.CORE (URL configurada en `appsettings.json`)
-- Visual Studio 2022 / VS Code con extensión C# Dev Kit
+- Visual Studio 2026 / VS Code con extensión C# Dev Kit
 
 ---
 
