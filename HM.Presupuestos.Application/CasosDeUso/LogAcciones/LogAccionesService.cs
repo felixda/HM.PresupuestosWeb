@@ -17,7 +17,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
         private readonly ILogAccionesRepository _logAccionesRepository = logAccionesRepository;
         private readonly IRegistroErroresCore _registroErroresCore = registroErroresCore;
 
-        private int CodigoUsuario => _jwt.Usuario.CodigoUsuario;
+        private int CodigoUsuario => _jwt.Usuario?.CodigoUsuario ?? 0;
 
         /// <summary>
         /// Registra una acción de auditoría con un mensaje personalizado
@@ -50,10 +50,9 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
             }
             catch (Exception ex)
             {
-                await InsertErrorLog(this.GetType().Name,ex, CodigoUsuario);
+                await InsertErrorLog(ex, CodigoUsuario);
             }
         }
-
 
         /// <summary>
         /// Registra una acción de auditoría utilizando un enum de acciones predefinidas
@@ -81,17 +80,17 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
             }
             catch (Exception ex)
             {
-                await InsertErrorLog(this.GetType().Name, ex, logAccion.CodigoUsuario);
+                await InsertErrorLog( ex, logAccion.CodigoUsuario);
             }
         }
 
 
-        private async Task InsertErrorLog(string methodName, Exception exception, int codigoUsuario)
+        private async Task InsertErrorLog(Exception exception, int codigoUsuario, [CallerMemberName] string nombreMetodoLlamador = "")
         {
             var data = new DetalleError
             {
                 UserName = codigoUsuario.ToString(),
-                Mensaje = $"{methodName} > {exception.Message[..Math.Min(exception.Message.Length, 1500)]}",
+                Mensaje = $"{nombreMetodoLlamador} > {exception.Message[..Math.Min(exception.Message.Length, 1500)]}",
                 StackTrace = exception.StackTrace ?? string.Empty
             };
 

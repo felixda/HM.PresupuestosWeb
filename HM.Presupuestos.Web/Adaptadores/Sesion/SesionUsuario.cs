@@ -230,7 +230,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
         /// <param name="usuario">Usuario original</param>
         /// <param name="accion">Acción del log</param>
         /// <returns>LogAccion configurado y listo para insertar</returns>
-        private LogAccion CrearRegistroAccionUsuario(UsuarioEntidad usuario, AccionesLog accion)
+        private static LogAccion CrearRegistroAccionUsuario(UsuarioEntidad usuario, AccionesLog accion)
         {
             // Crear copia del usuario sin datos sensibles para el log
             var usuarioCopia = DatosHelper.ClonarObjeto(usuario);
@@ -240,7 +240,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             return new LogAccion
             {
                 CodigoUsuario = usuario.CodigoUsuario,
-                Accion = $"(UsuarioServicio) -> {accion.ObtenerDescripcion()}",
+                Accion = $"[{(int)accion}](UsuarioServicio) -> {accion.ObtenerDescripcion()}",
                 Parametros = JsonSerializer.Serialize(usuarioCopia, new JsonSerializerOptions { WriteIndented = true })
             };
         }
@@ -298,6 +298,11 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
 
             LogAccion logAccion = CrearRegistroAccionUsuario(usuario, accionLog);
+
+            // Asignar _jwt.Usuario antes del log para que LogAccionesService
+            // pueda acceder al usuario activo durante la inserción de auditoría.
+            // Init.razor.cs asigna Jwt.Usuario después del await, demasiado tarde.
+            _jwt.Usuario = usuario;
 
             await _registroAcciones.Insertar(logAccion);
 
