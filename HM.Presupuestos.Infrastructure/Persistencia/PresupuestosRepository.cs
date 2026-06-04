@@ -32,7 +32,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -73,7 +73,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -114,7 +114,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -155,7 +155,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -196,7 +196,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -239,7 +239,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -281,7 +281,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -332,7 +332,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -371,7 +371,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -410,7 +410,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
   
                 await Task.Run(() =>
                 {
@@ -451,7 +451,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -489,7 +489,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -540,7 +540,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -574,7 +574,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             dah.GetSqlStringComando(query);
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -614,7 +614,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             dah.GetSqlStringComando(query.ToString());
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -648,7 +648,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.GetSqlStringComando(query);
             
             dah.AddParameter("CodigoAgrupacionEditorial", codigoAgrupacionComercial);
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -691,7 +691,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoAgrupacionEditorial", codigoAgrupacionComercial);
             dah.AddParameter("CodigoMedio", codigoMedio);
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -731,7 +731,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             dah.GetSqlStringComando(query.ToString());
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
                 {
@@ -768,7 +768,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -811,7 +811,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -841,7 +841,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <summary>
         /// Obtiene lista de meses cerrados
         /// </summary>
-        /// <param name="year">AÒo de filtro</param>
+        /// <param name="year">A√±o de filtro</param>
         /// <returns>Lista de int</returns>
         public async Task<List<int>> ObtenerMesCerradoList(int year)
         {
@@ -858,7 +858,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.AddParameter("Year", year);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -882,7 +882,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <summary>
         /// Obtiene lista agrupaciones editoriales de un medio
         /// </summary>
-        /// <param name="codeMedio">CÛdigo de medio</param>
+        /// <param name="codeMedio">C√≥digo de medio</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetAgrupacionEditorialListByMedio(int codeMedio)
         {
@@ -900,7 +900,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("codeMedio", codeMedio);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -936,7 +936,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <summary>
         /// Obtiene lista editoriales de un medio
         /// </summary>
-        /// <param name="codeMedio">CÛdigo de medio</param>
+        /// <param name="codeMedio">C√≥digo de medio</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByMedio(int codeMedio)
         {
@@ -954,7 +954,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("codeMedio", codeMedio);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -989,7 +989,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <summary>
         /// Obtiene lista editoriales de un medio
         /// </summary>
-        /// <param name="codeAgrupacionEditorial">CÛdigo de AgrupaciÛn Editorial</param>
+        /// <param name="codeAgrupacionEditorial">C√≥digo de Agrupaci√≥n Editorial</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByAgrupacionEditorial(int codeAgrupacionEditorial)
         {
@@ -1007,7 +1007,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("codeAgrupacionEditorial", codeAgrupacionEditorial);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -1052,7 +1052,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             dah.AddParameter("CodigoMedio", codigoMedio);
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -1083,7 +1083,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.GetSqlStringComando(query);
             dah.AddParameter("codigoAgrupacionComercial", codigoAgrupacionComercial);
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -1114,7 +1114,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("CodigoEditorial", codigoEditorial);
 
-                await AÒadirParametroMulticompania(dah);
+                await A√±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -1141,7 +1141,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<CodigoDescripcion> resultado = [];
 
 
-            // Campos seg˙n el concepto solicitado
+            // Campos seg√∫n el concepto solicitado
             string campos = concepto switch
             {
                 ConceptosCondicionesNMD.Disciplina => "COD_DISCIPLINA CODIGO, DES_DISCIPLINA DESCRIPCION",
@@ -1152,7 +1152,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 _ => throw new ArgumentOutOfRangeException(nameof(concepto))
             };
 
-            // ConstrucciÛn din·mica del WHERE
+            // Construcci√≥n din√°mica del WHERE
             var filtros = new List<string>
             {
                 "COD_MEDIO = :codigoMedio"
@@ -1191,7 +1191,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             if (concepto != ConceptosCondicionesNMD.DisciplinaGrupo)
                 dah.AddParameter("codigoDisciplinaGrupo", valores.CodigoDisciplinaGrupo);
 
-            await AÒadirParametroMulticompania(dah);
+            await A√±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {

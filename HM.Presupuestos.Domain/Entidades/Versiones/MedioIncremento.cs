@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+ï»¿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace HM.Presupuestos.Domain.Entidades
@@ -13,7 +13,7 @@ namespace HM.Presupuestos.Domain.Entidades
         private decimal _incrementoPorcentaje;
     
         /// <summary>
-        /// Neto de venta origen (valor base para cálculos)
+        /// Neto de venta origen (valor base para cÃ¡lculos)
         /// </summary>
         public decimal NetoVentaOrigen
         {
@@ -31,14 +31,14 @@ namespace HM.Presupuestos.Domain.Entidades
 
         /// <summary>
         /// Porcentaje de incremento (cuando cambia, recalcula el Importe)
-        /// Mantiene precisión de máximo 6 decimales
+        /// Mantiene precisiÃ³n de mÃ¡ximo 6 decimales
         /// </summary>
         public decimal IncrementoPorcentaje
         {
             get => _incrementoPorcentaje;
             set
             {
-                // Limitar a 6 decimales máximo
+                // Limitar a 6 decimales mÃ¡ximo
                 var valorLimitado = Math.Round(value, 6);
 
                 if (_incrementoPorcentaje != valorLimitado)
@@ -56,7 +56,7 @@ namespace HM.Presupuestos.Domain.Entidades
         }
 
         /// <summary>
-        /// Importe de variación (cuando cambia, recalcula el Porcentaje)
+        /// Importe de variaciÃ³n (cuando cambia, recalcula el Porcentaje)
         /// </summary>
         public decimal Importe
         {
@@ -86,7 +86,7 @@ namespace HM.Presupuestos.Domain.Entidades
         }
 
         /// <summary>
-        /// Neto de venta total (calculado automáticamente)
+        /// Neto de venta total (calculado automÃ¡ticamente)
         /// </summary>
         public decimal NetoVentaTotal
         {

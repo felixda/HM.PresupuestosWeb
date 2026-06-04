@@ -2,7 +2,7 @@ namespace HM.Presupuestos.Web.Layout
 {
     public partial class MainLayout
     {
-        #region Inactividad — Propiedades de binding
+        #region Inactividad â€” Propiedades de binding
 
         /// <summary>
         /// Controla la visibilidad del modal de advertencia de inactividad
@@ -10,23 +10,23 @@ namespace HM.Presupuestos.Web.Layout
         private bool MostrarAvisoInactividad { get; set; } = false;
 
         /// <summary>
-        /// Tiempo restante en milisegundos para la cuenta atrás
+        /// Tiempo restante en milisegundos para la cuenta atrÃ¡s
         /// </summary>
         private int TiempoRestante { get; set; }
 
         /// <summary>
-        /// Título del modal de advertencia
+        /// TÃ­tulo del modal de advertencia
         /// </summary>
         private string TituloAvisoInactividad { get; set; } = string.Empty;
 
         /// <summary>
-        /// Texto para la cuenta atrás
+        /// Texto para la cuenta atrÃ¡s
         /// </summary>
         private string TextoCuentaAtras { get; set; } = string.Empty;
 
         #endregion
 
-        #region Inactividad — Lógica
+        #region Inactividad â€” LÃ³gica
 
         private async Task ActualizarSubscripcionesInactividad()
         {
@@ -85,7 +85,7 @@ namespace HM.Presupuestos.Web.Layout
             InvokeAsync(StateHasChanged);
         }
 
-        /// <summary>Handler: Actualiza la cuenta atrás del modal</summary>
+        /// <summary>Handler: Actualiza la cuenta atrÃ¡s del modal</summary>
         private void ActualizarCuentaAtras(object? sender, int tiempoMs)
         {
             TiempoRestante = tiempoMs;

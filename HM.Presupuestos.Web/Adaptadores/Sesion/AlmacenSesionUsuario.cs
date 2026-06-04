@@ -7,51 +7,51 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
     public interface IAlmacenSesionUsuario
     {
         /// <summary>
-        /// Obtiene la información del usuario autenticado mediante SSO de Azure AD de la sesión protegida del navegador.
+        /// Obtiene la informaciÃ³n del usuario autenticado mediante SSO de Azure AD de la sesiÃ³n protegida del navegador.
         /// </summary>
-        /// <remarks>Utilice este método para acceder a los detalles del usuario actual tras una
-        /// autenticación SSO exitosa. El resultado puede incluir información como identificadores, roles y permisos
+        /// <remarks>Utilice este mÃ©todo para acceder a los detalles del usuario actual tras una
+        /// autenticaciÃ³n SSO exitosa. El resultado puede incluir informaciÃ³n como identificadores, roles y permisos
         /// asociados al usuario.</remarks>
         /// <returns>Un objeto <see cref="UsuarioEntidad"/> que contiene los datos del usuario autenticado.</returns>
         Task<UsuarioEntidad> ObtenerUsuarioSSO();
 
         /// <summary>
-        /// Guarda la información de un usuario autenticado mediante SSO en la sesion protegida del navegador. 
-        /// Este método se utiliza para almacenar los datos del usuario después de una autenticación SSO exitosa, permitiendo que la aplicación acceda a esta información durante la sesión del usuario.
+        /// Guarda la informaciÃ³n de un usuario autenticado mediante SSO en la sesion protegida del navegador. 
+        /// Este mÃ©todo se utiliza para almacenar los datos del usuario despuÃ©s de una autenticaciÃ³n SSO exitosa, permitiendo que la aplicaciÃ³n acceda a esta informaciÃ³n durante la sesiÃ³n del usuario.
         /// </summary>
         /// <param name="usuario">La entidad de usuario que contiene los datos a almacenar. No puede ser null.</param>
-        /// <returns>Una tarea que representa la operación asincrónica de guardado.</returns>
+        /// <returns>Una tarea que representa la operaciÃ³n asincrÃ³nica de guardado.</returns>
         Task GuardarUsuarioSSO(UsuarioEntidad usuario);
         
         /// <summary>
-        /// Guarda la información del usuario que se está suplantando para su uso en la sesión actual.
+        /// Guarda la informaciÃ³n del usuario que se estÃ¡ suplantando para su uso en la sesiÃ³n actual.
         /// </summary>
         /// <param name="usuario">La entidad de usuario que se va a guardar como usuario suplantado. No puede ser null.</param>
-        /// <returns>Una tarea que representa la operación asincrónica de guardado.</returns>
+        /// <returns>Una tarea que representa la operaciÃ³n asincrÃ³nica de guardado.</returns>
         Task GuardarUsuarioImpersonado(UsuarioEntidad usuario);
 
         /// <summary>
-        /// Obtiene la información del usuario actualmente impersonado de la sesión protegida del navegador. 
-        /// Este método se utiliza para acceder a los detalles del usuario que ha sido impersonado, 
-        /// lo que puede ser útil en escenarios donde un administrador o un sistema necesita actuar en nombre de otro usuario.
+        /// Obtiene la informaciÃ³n del usuario actualmente impersonado de la sesiÃ³n protegida del navegador. 
+        /// Este mÃ©todo se utiliza para acceder a los detalles del usuario que ha sido impersonado, 
+        /// lo que puede ser Ãºtil en escenarios donde un administrador o un sistema necesita actuar en nombre de otro usuario.
         /// </summary>
         /// <returns>Un objeto <see cref="UsuarioEntidad"/> que contiene los datos del usuario impersonado, o null si no hay usuario impersonado.</returns>
         Task<UsuarioEntidad?> ObtenerUsuarioImpersonado();
 
         /// <summary>
-        /// Elimina la información del usuario impersonado de la sesión protegida del navegador.
+        /// Elimina la informaciÃ³n del usuario impersonado de la sesiÃ³n protegida del navegador.
         /// </summary>
-        /// <returns>Una tarea que representa la operación asincrónica de eliminación.</returns>
+        /// <returns>Una tarea que representa la operaciÃ³n asincrÃ³nica de eliminaciÃ³n.</returns>
         Task EliminarUsuarioImpersonado();
     }
 
     /// <summary>
-    /// Servicio para gestionar la sesión del usuario usando ProtectedSessionStorage.
+    /// Servicio para gestionar la sesiÃ³n del usuario usando ProtectedSessionStorage.
     /// 
     /// VENTAJAS vs IMemoryCache:
     /// ? Persiste con F5 (NO se pierde al recargar)
-    /// ? Más simple (menos código)
-    /// ? Cifrado automático
+    /// ? MÃ¡s simple (menos cÃ³digo)
+    /// ? Cifrado automÃ¡tico
     /// ? Bajo consumo de memoria
     /// ? Escala mejor
     /// </summary>
@@ -89,7 +89,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener usuario SSO de sesión");
+                _logger.LogError(ex, "Error al obtener usuario SSO de sesiÃ³n");
             }
             return result;
         }
@@ -108,7 +108,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener usuario Impersonado de sesión");
+                _logger.LogError(ex, "Error al obtener usuario Impersonado de sesiÃ³n");
 
             }
             return result;

@@ -3,12 +3,12 @@
 namespace HM.Presupuestos.Web.Pages.Configuracion
 {
     /// <summary>
-    /// Página de configuración del año del diario de presupuestos
-    /// Permite seleccionar el año activo para operaciones diarias
+    /// PÃ¡gina de configuraciÃ³n del aÃ±o del diario de presupuestos
+    /// Permite seleccionar el aÃ±o activo para operaciones diarias
     /// </summary>
     public partial class AnioDiario : ContextProtegido
     {
-        #region Inyección de Dependencias
+        #region InyecciÃ³n de Dependencias
 
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
         [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
@@ -23,22 +23,22 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         private string TextoToolTipAyuda { get; set; } = string.Empty;
         
         /// <summary>
-        /// Lista de años disponibles (año anterior, actual y posterior)
+        /// Lista de aÃ±os disponibles (aÃ±o anterior, actual y posterior)
         /// </summary>
         private List<CodigoDescripcion> Anios { get; set; } = [];
         
         /// <summary>
-        /// Año actualmente seleccionado por el usuario
+        /// AÃ±o actualmente seleccionado por el usuario
         /// </summary>
         private CodigoDescripcion? AnioSeleccionado { get; set; }
         
         /// <summary>
-        /// Año original guardado en base de datos
+        /// AÃ±o original guardado en base de datos
         /// </summary>
         private CodigoDescripcion? AnioOriginal { get; set; }
         
         /// <summary>
-        /// Indica si el año seleccionado es diferente al año original (hay cambios pendientes)
+        /// Indica si el aÃ±o seleccionado es diferente al aÃ±o original (hay cambios pendientes)
         /// </summary>
         private bool HayCambiosPendientes => 
             AnioSeleccionado is not null && 
@@ -52,7 +52,7 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         #region Ciclo de Vida del Componente
 
         /// <summary>
-        /// Se ejecuta cuando el usuario no tiene permisos para acceder a la página
+        /// Se ejecuta cuando el usuario no tiene permisos para acceder a la pÃ¡gina
         /// </summary>
         protected override Task OnPermisoDenegadoAsync()
         {
@@ -61,8 +61,8 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         }
 
         /// <summary>
-        /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
-        /// Inicializa la página y carga los datos necesarios
+        /// Se ejecuta cuando el usuario tiene permisos vÃ¡lidos para acceder
+        /// Inicializa la pÃ¡gina y carga los datos necesarios
         /// </summary>
         //protected override async Task OnPermisoValidadoAsync()
         //{
@@ -93,23 +93,23 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
 
 
         /// <summary>
-        /// ? Solo implementas la lógica específica de inicialización
-        /// El try-catch-finally, overlay y logging se manejan automáticamente
+        /// ? Solo implementas la lÃ³gica especÃ­fica de inicializaciÃ³n
+        /// El try-catch-finally, overlay y logging se manejan automÃ¡ticamente
         /// </summary>
         protected override async Task InicializarPaginaAsync()
         {
             TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.AnioDiario.ToolTip);
 
-            // Generar lista de años: año anterior, actual y posterior
-            int añoActual = DateTime.Now.Year;
-            Anios.Add(CrearAnio(añoActual + 1));
-            Anios.Add(CrearAnio(añoActual));
-            Anios.Add(CrearAnio(añoActual - 1));
+            // Generar lista de aÃ±os: aÃ±o anterior, actual y posterior
+            int aÃ±oActual = DateTime.Now.Year;
+            Anios.Add(CrearAnio(aÃ±oActual + 1));
+            Anios.Add(CrearAnio(aÃ±oActual));
+            Anios.Add(CrearAnio(aÃ±oActual - 1));
 
-            // Cargar año guardado en configuración
+            // Cargar aÃ±o guardado en configuraciÃ³n
             AnioOriginal = await ConfiguracionService.ObtenerAnioDiario();
 
-            // Seleccionar el año original por defecto
+            // Seleccionar el aÃ±o original por defecto
             if (Anios.Count > 0)
             {
                 AnioSeleccionado = Anios.Find(c => c.Codigo == AnioOriginal?.Codigo);
@@ -118,8 +118,8 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
 
 
         /// <summary>
-        /// Inicializa la página cargando el año actual desde la configuración
-        /// y generando la lista de años disponibles (anterior, actual, posterior)
+        /// Inicializa la pÃ¡gina cargando el aÃ±o actual desde la configuraciÃ³n
+        /// y generando la lista de aÃ±os disponibles (anterior, actual, posterior)
         /// </summary>      
         //private async Task InicializarPaginaAsync()
         //{
@@ -127,16 +127,16 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         //    {
         //        TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.AnioDiario.ToolTip);
 
-        //        // Generar lista de años: año anterior, actual y posterior
-        //        int añoActual = DateTime.Now.Year;
-        //        Anios.Add(CrearAnio(añoActual + 1));
-        //        Anios.Add(CrearAnio(añoActual));
-        //        Anios.Add(CrearAnio(añoActual - 1));
+        //        // Generar lista de aÃ±os: aÃ±o anterior, actual y posterior
+        //        int aÃ±oActual = DateTime.Now.Year;
+        //        Anios.Add(CrearAnio(aÃ±oActual + 1));
+        //        Anios.Add(CrearAnio(aÃ±oActual));
+        //        Anios.Add(CrearAnio(aÃ±oActual - 1));
 
-        //        // Cargar año guardado en configuración
+        //        // Cargar aÃ±o guardado en configuraciÃ³n
         //        AnioOriginal = await ConfiguracionService.ObtenerAnioDiario();
 
-        //        // Seleccionar el año original por defecto
+        //        // Seleccionar el aÃ±o original por defecto
         //        if (Anios.Count > 0)
         //        {
         //            AnioSeleccionado = Anios.Find(c => c.Codigo == AnioOriginal?.Codigo);
@@ -151,16 +151,16 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         //}
 
         /// <summary>
-        /// Crea un objeto CodigoDescripcion para un año específico
+        /// Crea un objeto CodigoDescripcion para un aÃ±o especÃ­fico
         /// </summary>
-        /// <param name="año">Año a crear</param>
-        /// <returns>Objeto CodigoDescripcion con código y descripción del año</returns>
-        private static CodigoDescripcion CrearAnio(int año)
+        /// <param name="aÃ±o">AÃ±o a crear</param>
+        /// <returns>Objeto CodigoDescripcion con cÃ³digo y descripciÃ³n del aÃ±o</returns>
+        private static CodigoDescripcion CrearAnio(int aÃ±o)
         {
             return new CodigoDescripcion
             {
-                Codigo = año,
-                Descripcion = año.ToString()
+                Codigo = aÃ±o,
+                Descripcion = aÃ±o.ToString()
             };
         }
        
@@ -169,8 +169,8 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         #region Eventos
 
         /// <summary>
-        /// Maneja el evento de clic en el botón Grabar
-        /// Actualiza el año del diario en la configuración
+        /// Maneja el evento de clic en el botÃ³n Grabar
+        /// Actualiza el aÃ±o del diario en la configuraciÃ³n
         /// </summary>
         private async Task Grabar_Click()
         {
@@ -180,7 +180,7 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
                 
                 await ConfiguracionService.ActualizarAnioDiario(AnioSeleccionado!.Codigo);
                 
-                // Actualizar año original después del guardado exitoso
+                // Actualizar aÃ±o original despuÃ©s del guardado exitoso
                 AnioOriginal = AnioSeleccionado;
                 
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));

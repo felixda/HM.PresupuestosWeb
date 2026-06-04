@@ -96,7 +96,7 @@ namespace HM.Presupuestos.Domain.Entidades
         public bool IndMostrar { get; set;}
 
         /// <summary>
-        /// Si es 1, no puede haber mas versiones con ese estado para el mismo año. Y si es 0, si
+        /// Si es 1, no puede haber mas versiones con ese estado para el mismo aÃ±o. Y si es 0, si
         /// </summary>
         public bool IndVersionUnica { get; set;}
 

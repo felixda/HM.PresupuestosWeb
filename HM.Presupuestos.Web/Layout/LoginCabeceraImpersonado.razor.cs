@@ -20,7 +20,7 @@ public partial class LoginCabeceraImpersonado
 
     #endregion
 
-    #region Métodos privados
+    #region MÃ©todos privados
 
     private async Task OnCerrarSesion()
     {

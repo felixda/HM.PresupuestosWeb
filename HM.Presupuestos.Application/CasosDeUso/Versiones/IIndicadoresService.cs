@@ -3,40 +3,40 @@ using HM.Presupuestos.Domain.Entidades;
 namespace HM.Presupuestos.Application.CasosDeUso
 {
     /// <summary>
-    /// Interfaz del servicio de gesti髇 de indicadores de versiones de presupuestos
+    /// Interfaz del servicio de gesti贸n de indicadores de versiones de presupuestos
     /// </summary>
     public interface IIndicadoresService
     {
         /// <summary>
         /// Obtiene la lista completa de indicadores con sus traducciones en todos los idiomas disponibles
         /// </summary>
-        /// <param name="descripcion">Filtro opcional por descripci髇 del indicador (b鷖queda parcial)</param>
+        /// <param name="descripcion">Filtro opcional por descripci贸n del indicador (b煤squeda parcial)</param>
         /// <returns>Lista de objetos Indicador con sus traducciones (IdiomaIndicador) asociadas</returns>
         /// <remarks>
         /// Cada indicador incluye:
-        /// - Datos base: C骴igo, Descripci髇, BitAnd, Orden, IndMostrar, IndVersionUnica
-        /// - Lista de traducciones (Idiomas): para cada idioma disponible con descripci髇, abreviatura y leyenda
-        /// Si se proporciona un filtro de descripci髇, solo devuelve indicadores que coincidan parcialmente
+        /// - Datos base: C贸digo, Descripci贸n, BitAnd, Orden, IndMostrar, IndVersionUnica
+        /// - Lista de traducciones (Idiomas): para cada idioma disponible con descripci贸n, abreviatura y leyenda
+        /// Si se proporciona un filtro de descripci贸n, solo devuelve indicadores que coincidan parcialmente
         /// </remarks>
         Task<List<Indicador>> ObtenerIndicadoresConIdiomas(string? descripcion = null);
 
         /// <summary>
-        /// Guarda un indicador con sus traducciones en idiomas, realizando inserci髇 o actualizaci髇 seg鷑 el estado
+        /// Guarda un indicador con sus traducciones en idiomas, realizando inserci贸n o actualizaci贸n seg煤n el estado
         /// </summary>
         /// <param name="indicador">Indicador a guardar (puede ser nuevo o existente)</param>
         /// <param name="idiomasNuevos">Lista de idiomas a insertar asociados al indicador</param>
         /// <param name="idiomasActualizar">Lista de idiomas existentes a actualizar</param>
         /// <param name="idiomasEliminar">Lista de idiomas a eliminar del indicador</param>
-        /// <exception cref="ValidacionException">Si el indicador tiene valores duplicados (Descripci髇, Orden o BitAnd)</exception>
-        /// <exception cref="Exception">Si ocurre un error durante el guardado o el rollback de la transacci髇</exception>
+        /// <exception cref="ValidacionException">Si el indicador tiene valores duplicados (Descripci贸n, Orden o BitAnd)</exception>
+        /// <exception cref="Exception">Si ocurre un error durante el guardado o el rollback de la transacci贸n</exception>
         /// <remarks>
-        /// Este m閠odo realiza las siguientes operaciones en una transacci髇:
-        /// 1. Valida que no existan duplicados de Descripci髇, Orden o BitAnd
-        /// 2. Inserta o actualiza el indicador seg鷑 su estado (Nuevo/Modificado)
-        /// 3. Elimina los idiomas marcados para eliminaci髇
+        /// Este m茅todo realiza las siguientes operaciones en una transacci贸n:
+        /// 1. Valida que no existan duplicados de Descripci贸n, Orden o BitAnd
+        /// 2. Inserta o actualiza el indicador seg煤n su estado (Nuevo/Modificado)
+        /// 3. Elimina los idiomas marcados para eliminaci贸n
         /// 4. Inserta los nuevos idiomas asociados
         /// 5. Actualiza los idiomas existentes modificados
-        /// 6. Registra la acci髇 de auditor韆 despu閟 del commit exitoso
+        /// 6. Registra la acci贸n de auditor铆a despu茅s del commit exitoso
         /// </remarks>
         Task Grabar(Indicador indicador,
             List<IdiomaIndicador> idiomasNuevos,
@@ -46,15 +46,15 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <summary>
         /// Elimina un indicador y actualiza el estado de todas las versiones relacionadas
         /// </summary>
-        /// <param name="indicador">Indicador a eliminar con su c骴igo y datos asociados</param>
-        /// <exception cref="Exception">Si ocurre un error durante la eliminaci髇 o el rollback de la transacci髇</exception>
+        /// <param name="indicador">Indicador a eliminar con su c贸digo y datos asociados</param>
+        /// <exception cref="Exception">Si ocurre un error durante la eliminaci贸n o el rollback de la transacci贸n</exception>
         /// <remarks>
-        /// Este m閠odo realiza las siguientes operaciones en una transacci髇:
+        /// Este m茅todo realiza las siguientes operaciones en una transacci贸n:
         /// 1. Elimina los idiomas asociados al indicador
         /// 2. Elimina el indicador de la base de datos
         /// 3. Actualiza el campo IndEstado de todas las versiones restando el BitAnd del indicador eliminado
-        /// 4. Registra la acci髇 de auditor韆 despu閟 del commit exitoso
-        /// Nota: La obtenci髇 de versiones se realiza fuera de la transacci髇 principal por limitaciones del repositorio
+        /// 4. Registra la acci贸n de auditor铆a despu茅s del commit exitoso
+        /// Nota: La obtenci贸n de versiones se realiza fuera de la transacci贸n principal por limitaciones del repositorio
         /// </remarks>
         Task Eliminar(Indicador indicador);
 

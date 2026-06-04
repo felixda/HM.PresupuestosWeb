@@ -58,12 +58,12 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
         #endregion
 
 
-        #region Métodos
+        #region MÃ©todos
 
         /// <summary>
         /// Cambia el idioma actual y notifica a los suscriptores
         /// </summary>
-        /// <param name="nuevoIdioma">Código ISO del nuevo idioma (es, en, pt)</param>
+        /// <param name="nuevoIdioma">CÃ³digo ISO del nuevo idioma (es, en, pt)</param>
         public async Task CambiarIdioma(string nuevoIdioma)
         {
             if (IdiomaActual != nuevoIdioma)

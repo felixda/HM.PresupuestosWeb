@@ -9,7 +9,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
 {
     public partial class MesesBloqueados
     {
-        #region Inyección de Dependencias
+        #region InyecciÃ³n de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IAdminService AdminService { get; set; } = default!;

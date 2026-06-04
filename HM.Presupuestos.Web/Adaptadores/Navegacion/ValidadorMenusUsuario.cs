@@ -46,28 +46,28 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
                         if (!_rutasBlazor.ContainsKey(rutaNormalizada))
                         {
                             _rutasBlazor.Add(rutaNormalizada, tipo.FullName ?? tipo.Name);
-                            _logger.LogDebug($"[MenuValidation] P·gina encontrada: {rutaNormalizada} -> {tipo.Name}");
+                            _logger.LogDebug($"[MenuValidation] P√°gina encontrada: {rutaNormalizada} -> {tipo.Name}");
                         }
                     }
                 }
 
-                _logger.LogInformation($"[MenuValidation] ? Se encontraron {_rutasBlazor.Count} p·ginas Blazor");
+                _logger.LogInformation($"[MenuValidation] ? Se encontraron {_rutasBlazor.Count} p√°ginas Blazor");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "[MenuValidation] ? Error al cargar p·ginas Blazor");
+                _logger.LogError(ex, "[MenuValidation] ? Error al cargar p√°ginas Blazor");
             }
         }
 
         /// <summary>
-        /// Normaliza una ruta eliminando par·metros y caracteres especiales
+        /// Normaliza una ruta eliminando par√°metros y caracteres especiales
         /// </summary>
         private static string NormalizarRuta(string ruta)
         {
             if (string.IsNullOrWhiteSpace(ruta))
                 return string.Empty;
 
-            // Eliminar par·metros de ruta como {id}, {codigo}, etc.
+            // Eliminar par√°metros de ruta como {id}, {codigo}, etc.
             var rutaLimpia = System.Text.RegularExpressions.Regex.Replace(
                 ruta,
                 @"\{[^}]+\}",
@@ -81,12 +81,12 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
                 "/"
             );
 
-            // Convertir a min˙sculas y eliminar barra final
+            // Convertir a min√∫sculas y eliminar barra final
             return rutaLimpia.ToLowerInvariant().TrimEnd('/');
         }
 
         /// <summary>
-        /// Valida SOLO los men˙s hijos (submen˙s) con IdPadre != 0
+        /// Valida SOLO los men√∫s hijos (submen√∫s) con IdPadre != 0
         /// </summary>
         public async Task<List<ResultadoValidacionSubmenu>> ValidarSubmenusDe(UsuarioEntidad usuario)
         {
@@ -94,20 +94,20 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 
             if (usuario?.Menus == null || usuario.Menus.Count == 0)
             {
-                _logger.LogWarning("[MenuValidation] ?? Usuario sin men˙s para validar");
+                _logger.LogWarning("[MenuValidation] ?? Usuario sin men√∫s para validar");
                 return resultados;
             }
 
-            // Filtrar SOLO men˙s hijos
+            // Filtrar SOLO men√∫s hijos
             var menusHijos = usuario.Menus.Where(m => m.TienePadre()).ToList();
 
             if (menusHijos.Count == 0)
             {
-                _logger.LogWarning($"[MenuValidation] ?? Usuario {usuario.Login} no tiene men˙s hijos");
+                _logger.LogWarning($"[MenuValidation] ?? Usuario {usuario.Login} no tiene men√∫s hijos");
                 return resultados;
             }
 
-            _logger.LogInformation($"[MenuValidation] ?? Validando {menusHijos.Count} men˙s hijos del usuario {usuario.Login}");
+            _logger.LogInformation($"[MenuValidation] ?? Validando {menusHijos.Count} men√∫s hijos del usuario {usuario.Login}");
 
             foreach (var menu in menusHijos)
             {
@@ -125,35 +125,35 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 
                     resultado.UrlOriginal = url;
 
-                    // TambiÈn puedes obtener otros datos del men˙
+                    // Tambi√©n puedes obtener otros datos del men√∫
                     //var label = _resourceService.ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(menu.Id));
                     //var icono = _resourceService.ObtenerTexto(AppResources.Menu.ObtenerIcono(menu.Id));
 
                     if (string.IsNullOrWhiteSpace(url))
                     {
                         resultado.Existe = false;
-                        resultado.Mensaje = "?? URL vacÌa o no encontrada en recursos";
-                        _logger.LogWarning($"[MenuValidation] ?? Men˙ hijo {menu.Id} ({menu.NombreMenu}) sin URL");
+                        resultado.Mensaje = "?? URL vac√≠a o no encontrada en recursos";
+                        _logger.LogWarning($"[MenuValidation] ?? Men√∫ hijo {menu.Id} ({menu.NombreMenu}) sin URL");
                     }
                     else
                     {
-                        // Normalizar URL para comparaciÛn
+                        // Normalizar URL para comparaci√≥n
                         var urlNormalizada = NormalizarRuta(url);
                         resultado.UrlNormalizada = urlNormalizada;
 
-                        // Verificar si existe la p·gina
+                        // Verificar si existe la p√°gina
                         if (_rutasBlazor.TryGetValue(urlNormalizada, out string? value))
                         {
                             resultado.Existe = true;
                             resultado.ComponenteBlazor = value;
-                            resultado.Mensaje = "? P·gina Blazor encontrada";
-                            _logger.LogDebug($"[MenuValidation] ? Men˙ hijo {menu.Id} ({menu.NombreMenu}) -> URL v·lida: {url}");
+                            resultado.Mensaje = "? P√°gina Blazor encontrada";
+                            _logger.LogDebug($"[MenuValidation] ? Men√∫ hijo {menu.Id} ({menu.NombreMenu}) -> URL v√°lida: {url}");
                         }
                         else
                         {
                             resultado.Existe = false;
-                            resultado.Mensaje = $"? P·gina Blazor NO encontrada";
-                            _logger.LogWarning($"[MenuValidation] ? Men˙ hijo {menu.Id} ({menu.NombreMenu}) -> URL inv·lida: {url}");
+                            resultado.Mensaje = $"? P√°gina Blazor NO encontrada";
+                            _logger.LogWarning($"[MenuValidation] ? Men√∫ hijo {menu.Id} ({menu.NombreMenu}) -> URL inv√°lida: {url}");
 
                             // Buscar URLs similares para ayudar a corregir
                             var urlsSimilares = BuscarUrlsSimilares(urlNormalizada);
@@ -169,7 +169,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
                 {
                     resultado.Existe = false;
                     resultado.Mensaje = $"? Error al validar: {ex.Message}";
-                    _logger.LogError(ex, $"[MenuValidation] ? Error validando men˙ hijo {menu.Id}");
+                    _logger.LogError(ex, $"[MenuValidation] ? Error validando men√∫ hijo {menu.Id}");
                 }
 
                 resultados.Add(resultado);
@@ -179,12 +179,12 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             var menusValidos = resultados.Count(r => r.Existe);
             var menusInvalidos = resultados.Count(r => !r.Existe);
 
-            _logger.LogInformation($"[MenuValidation] ?? Resumen: {menusValidos} v·lidos, {menusInvalidos} inv·lidos de {menusHijos.Count} men˙s hijos");
+            _logger.LogInformation($"[MenuValidation] ?? Resumen: {menusValidos} v√°lidos, {menusInvalidos} inv√°lidos de {menusHijos.Count} men√∫s hijos");
 
-            // Log de men˙s inv·lidos
+            // Log de men√∫s inv√°lidos
             if (menusInvalidos > 0)
             {
-                _logger.LogWarning($"[MenuValidation] ?? Men˙s hijos con URLs inv·lidas:");
+                _logger.LogWarning($"[MenuValidation] ?? Men√∫s hijos con URLs inv√°lidas:");
                 foreach (var resultado in resultados.Where(r => !r.Existe))
                 {
                     _logger.LogWarning($"   - ID: {resultado.CodigoMenu}, Nombre: {resultado.NombreMenu}, URL: {resultado.UrlOriginal}");
@@ -248,7 +248,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         }
 
         /// <summary>
-        /// Obtiene todas las p·ginas Blazor registradas
+        /// Obtiene todas las p√°ginas Blazor registradas
         /// </summary>
         public List<string> ObtenerRutasDisponibles()
         {
@@ -257,7 +257,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
     }
 
     /// <summary>
-    /// Resultado de la validaciÛn de un men˙ hijo
+    /// Resultado de la validaci√≥n de un men√∫ hijo
     /// </summary>
     public class ResultadoValidacionSubmenu
     {

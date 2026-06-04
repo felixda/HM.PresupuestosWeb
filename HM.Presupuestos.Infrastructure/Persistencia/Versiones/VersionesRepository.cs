@@ -36,7 +36,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -71,7 +71,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <summary>
         /// Devuelve una lista de versiones resumen filtrada
         /// </summary>
-        /// <param name="anio">Filtro opcional para el año (null = todos los años)</param>
+        /// <param name="anio">Filtro opcional para el aÃ±o (null = todos los aÃ±os)</param>
         /// <param name="estadoIncluido">Filtro para buscar por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos</param>
         /// <param name="estadoExcluido">Filtro para buscar excluyendo por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos</param>
         /// <returns>Lista de versiones</returns>
@@ -120,7 +120,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                     dah.AddParameter("indEstadoQuitar", estadoExcluido.Value);
                 }
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -152,7 +152,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <summary>
         /// Devuelve una lista de versiones filtrada
         /// </summary>
-        /// <param name="anio">Filtro para el año</param>
+        /// <param name="anio">Filtro para el aÃ±o</param>
         /// <param name="estadoIncluido">Filtro para buscar por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos en binario</param>
         /// <returns>Lista de versiones</returns>
         public async Task<List<Version>> ObtenerVersiones( int anio, int? estadoIncluido = null)
@@ -182,7 +182,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                     dah.AddParameter("indEstado", estadoIncluido.Value);
                 }
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -225,7 +225,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -289,7 +289,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
+                // Obtener el valor del parÃ¡metro de salida
                 version.Codigo = Convert.ToInt32(dah.Comando.Parameters["CodigoVersion"].Value);
                 result = version.Codigo;
             }
@@ -365,7 +365,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("CodigoVersion", codigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -393,7 +393,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("CodigoVersion", codigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -421,7 +421,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
                 dah.AddParameter("CodigoVersion", codigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);

@@ -1,22 +1,22 @@
 namespace HM.Presupuestos.Web.Componentes.Base
 {
     /// <summary>
-    /// Clase de recursos fuertemente tipada generada automáticamente desde app.es.json
-    /// Ordenada alfabéticamente para facilitar búsquedas y mantenimiento
-    /// Proporciona IntelliSense completo y validación en tiempo de compilación
+    /// Clase de recursos fuertemente tipada generada automÃ¡ticamente desde app.es.json
+    /// Ordenada alfabÃ©ticamente para facilitar bÃºsquedas y mantenimiento
+    /// Proporciona IntelliSense completo y validaciÃ³n en tiempo de compilaciÃ³n
     /// ? Usa ':' como separador para compatibilidad con ResourceService
     /// 
-    /// IMPORTANTE: Esta clase se regenera automáticamente. No editar manualmente.
-    /// Última actualización: 2026-04-09 00:00
+    /// IMPORTANTE: Esta clase se regenera automÃ¡ticamente. No editar manualmente.
+    /// Ãšltima actualizaciÃ³n: 2026-04-09 00:00
     /// </summary>
     public static class AppResources
     {
-        #region Botones (Alfabético)
+        #region Botones (AlfabÃ©tico)
 
         public static class Botones
         {
-            /// <summary>Añadir</summary>
-            public const string Añadir = "Botones:Añadir:label";
+            /// <summary>AÃ±adir</summary>
+            public const string AÃ±adir = "Botones:AÃ±adir:label";
 
             /// <summary>Cancelar</summary>
             public const string Cancelar = "Botones:Cancelar:label";
@@ -39,17 +39,17 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         #endregion
 
-        #region Common (Alfabético)
+        #region Common (AlfabÃ©tico)
 
         public static class Common
         {
             /// <summary>Aceptar</summary>
             public const string Aceptar = "Common:Aceptar:label";
 
-            /// <summary>Agrupación Comercial</summary>
+            /// <summary>AgrupaciÃ³n Comercial</summary>
             public const string AgrupacionComercial = "Common:AgrupacionComercial:label";
 
-            /// <summary>Año</summary>
+            /// <summary>AÃ±o</summary>
             public const string Anio = "Common:Anio:label";
 
             /// <summary>Presupuestos</summary>
@@ -67,16 +67,16 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Cancelar</summary>
             public const string Cancelar = "Common:Cancelar:label";
 
-            /// <summary>Código</summary>
+            /// <summary>CÃ³digo</summary>
             public const string Codigo = "Common:Codigo:label";
 
             /// <summary>Datos grabados correctamente</summary>
             public const string DatosGrabados = "Common:DatosGrabados:label";
 
-            /// <summary>Descripción</summary>
+            /// <summary>DescripciÃ³n</summary>
             public const string Descripcion = "Common:Descripcion:label";
 
-            /// <summary>Descripción Abreviada</summary>
+            /// <summary>DescripciÃ³n Abreviada</summary>
             public const string DescripcionAbreviada = "Common:DescripcionAbreviada:label";
 
             /// <summary>Desmarcar de favoritos</summary>
@@ -85,7 +85,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Detalle</summary>
             public const string Detalle = "Common:Detalle:label";
 
-            /// <summary>Edición</summary>
+            /// <summary>EdiciÃ³n</summary>
             public const string Edit = "Common:Edit:label";
 
             /// <summary>Editorial</summary>
@@ -97,7 +97,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Eliminar registro</summary>
             public const string EliminarRegistro = "Common:EliminarRegistro:label";
 
-            /// <summary>Escriba el texto de búsqueda...</summary>
+            /// <summary>Escriba el texto de bÃºsqueda...</summary>
             public const string EscribaTextoBusqueda = "Common:EscribaTextoBusqueda:label";
 
             /// <summary>Filtros</summary>
@@ -115,7 +115,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Acceso Prohibido</summary>
             public const string Http403 = "Common:Http403:label";
 
-            /// <summary>Página No Encontrada</summary>
+            /// <summary>PÃ¡gina No Encontrada</summary>
             public const string Http404 = "Common:Http404:label";
 
             /// <summary>Error interno de servidor</summary>
@@ -166,7 +166,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Orden</summary>
             public const string Orden = "Common:Orden:label";
 
-            /// <summary>Parámetros</summary>
+            /// <summary>ParÃ¡metros</summary>
             public const string Parametros = "Common:Parametros:label";
 
             /// <summary>Porcentaje</summary>
@@ -178,7 +178,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Guardar</summary>
             public const string Save = "Common:Save:label";
 
-            /// <summary>Sí</summary>
+            /// <summary>SÃ­</summary>
             public const string Si = "Common:Si:label";
 
             /// <summary>Todo</summary>
@@ -190,7 +190,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Usuario no autorizado</summary>
             public const string UnauthorizedUser = "Common:UnauthorizedUser:label";
 
-            /// <summary>Versión</summary>
+            /// <summary>VersiÃ³n</summary>
             public const string Version = "Common:Version:label";
 
             public static class LogActions
@@ -201,7 +201,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Error al guardar datos</summary>
                 public const string ErrorGuardandoDatos = "Common:LogActions:ErrorGuardandoDatos:label";
 
-                /// <summary>Acceso a página</summary>
+                /// <summary>Acceso a pÃ¡gina</summary>
                 public const string AccesoPagina= "Common:LogActions:AccesoPagina:label";
 
                 /// <summary>Datos eliminados correctamente</summary>
@@ -220,21 +220,21 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         #endregion
 
-        #region Language (Alfabético)
+        #region Language (AlfabÃ©tico)
 
         public static class Language
         {
-            /// <summary>Inglés</summary>
+            /// <summary>InglÃ©s</summary>
             public const string EN = "Language:EN:label";
             /// <summary>en</summary>
             public const string EN_Code = "Language:EN:code";
 
-            /// <summary>Español</summary>
+            /// <summary>EspaÃ±ol</summary>
             public const string ES = "Language:ES:label";
             /// <summary>es</summary>
             public const string ES_Code = "Language:ES:code";
 
-            /// <summary>Portugués</summary>
+            /// <summary>PortuguÃ©s</summary>
             public const string PT = "Language:PT:label";
             /// <summary>pt</summary>
             public const string PT_Code = "Language:PT:code";
@@ -242,7 +242,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         #endregion
 
-        #region MensajeErrorBD (Alfabético)
+        #region MensajeErrorBD (AlfabÃ©tico)
 
         public static class MensajeErrorBD
         {
@@ -250,77 +250,77 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         #endregion
 
-        #region Mensajes (Alfabético)
+        #region Mensajes (AlfabÃ©tico)
 
         public static class Mensajes
         {
-            /// <summary>Hay cambios sin guardar. ¿Desea continuar y perder dichos cambios?</summary>
+            /// <summary>Hay cambios sin guardar. Â¿Desea continuar y perder dichos cambios?</summary>
             public const string AvisoAntesCancelar = "Mensajes:AvisoAntesCancelar:label";
 
-            /// <summary>Hay cambios sin guardar. ¿Desea continuar y perder dichos cambios?</summary>
+            /// <summary>Hay cambios sin guardar. Â¿Desea continuar y perder dichos cambios?</summary>
             public const string AvisoCambiosPendientes = "Mensajes:AvisoCambiosPendientes:Label";
 
-            /// <summary>Va a importar Condiciones con los parámetros indicados. Las actuales se eliminarán. ¿Desea continuar?</summary>
+            /// <summary>Va a importar Condiciones con los parÃ¡metros indicados. Las actuales se eliminarÃ¡n. Â¿Desea continuar?</summary>
             public const string AvisoImportarCondiciones = "Mensajes:AvisoImportarCondiciones:label";
 
             /// <summary>El campo {0} debe ser mayor que 0</summary>
             public const string CampoMayorQueCero = "Mensajes:CampoMayorQueCero:label";
 
-            /// <summary>La Descripción de la Versión es un campo obligatorio</summary>
+            /// <summary>La DescripciÃ³n de la VersiÃ³n es un campo obligatorio</summary>
             public const string CampoVersionObligatorio = "Mensajes:CampoVersionObligatorio:label";
 
             /// <summary>Por favor, rellene todos los campos indicados como obligatorios.</summary>
             public const string CamposObligatorios = "Mensajes:CamposObligatorios:label";
 
-            /// <summary>Hay cambios sin guardar. ¿Desea continuar y perder estos cambios?</summary>
+            /// <summary>Hay cambios sin guardar. Â¿Desea continuar y perder estos cambios?</summary>
             public const string Cancelar = "Mensajes:Cancelar:label";
 
-            /// <summary>Va a eliminar el registro seleccionado. ¿Desea continuar?</summary>
+            /// <summary>Va a eliminar el registro seleccionado. Â¿Desea continuar?</summary>
             public const string ConfirmacionEliminar = "Mensajes:ConfirmacionEliminar:label";
 
             /// <summary>Error inicializando la pantalla. Por favor, consulte con soporte.</summary>
             public const string ErrorAbriendoPantalla = "Mensajes:ErrorAbriendoPantalla:label";
 
-            /// <summary>El proceso no se ha realizado con éxito. Pruebe a volver a intentar guardar...</summary>
+            /// <summary>El proceso no se ha realizado con Ã©xito. Pruebe a volver a intentar guardar...</summary>
             public const string ErrorAlGrabar = "Mensajes:ErrorAlGrabar:label";
 
             /// <summary>Ha ocurrido un problema y el registro no ha sido eliminado. Por favor, consulte con Soporte</summary>
             public const string ErrorDelete = "Mensajes:ErrorDelete:label";
 
-            /// <summary>Proceso completado con errores en la actualización de datos en pantalla. Consulte con soporte</summary>
+            /// <summary>Proceso completado con errores en la actualizaciÃ³n de datos en pantalla. Consulte con soporte</summary>
             public const string ErrorDespuesDeGrabar = "Mensajes:ErrorDespuesDeGrabar:label";
 
-            /// <summary>El proceso no se ha realizado con éxito. Por favor, consulte con soporte.</summary>
+            /// <summary>El proceso no se ha realizado con Ã©xito. Por favor, consulte con soporte.</summary>
             public const string ErrorGeneral = "Mensajes:ErrorGeneral:label";
 
             /// <summary>Existen Idiomas duplicados.</summary>
             public const string IdiomasDuplicados = "Mensajes:IdiomasDuplicados:label";
 
-            /// <summary>La importación de Condiciones se ha realizado con éxito.</summary>
+            /// <summary>La importaciÃ³n de Condiciones se ha realizado con Ã©xito.</summary>
             public const string ImportacionCondicionesFinalizada = "Mensajes:ImportacionCondicionesFinalizada:label";
 
-            /// <summary>Si la versión tiene el indicador {0} activo, el indicador {1} tiene que estar activo.</summary>
+            /// <summary>Si la versiÃ³n tiene el indicador {0} activo, el indicador {1} tiene que estar activo.</summary>
             public const string IndicadorCerradaConIndicadorReal = "Mensajes:IndicadorCerradaConIndicadorReal:label";
 
-            /// <summary>El indicador {0} solo puede estar seleccionado para una versión.</summary>
+            /// <summary>El indicador {0} solo puede estar seleccionado para una versiÃ³n.</summary>
             public const string IndicadorUnico = "Mensajes:IndicadorUnico:label";
 
-            /// <summary>Por favor, revise la información introducida, está sobrepasando el límite de caracteres aceptado en el campo</summary>
+            /// <summary>Por favor, revise la informaciÃ³n introducida, estÃ¡ sobrepasando el lÃ­mite de caracteres aceptado en el campo</summary>
             public const string LongitudCaracteres = "Mensajes:LongitudCaracteres:Label";
 
             /// <summary>Campo obligatorio</summary>
             public const string MandatoryField = "Mensajes:MandatoryField:Label";
 
-            /// <summary>No tiene los permisos necesarios para realizar la operación indicada</summary>
+            /// <summary>No tiene los permisos necesarios para realizar la operaciÃ³n indicada</summary>
             public const string PermisosInsuficientes = "Mensajes:PermisosInsuficientes:label";
 
-            /// <summary>El registro ha sido eliminado con éxito.</summary>
+            /// <summary>El registro ha sido eliminado con Ã©xito.</summary>
             public const string RegistroEliminado = "Mensajes:RegistroEliminado:label";
 
-            /// <summary>El registro ha sido grabado con éxito.</summary>
+            /// <summary>El registro ha sido grabado con Ã©xito.</summary>
             public const string RegistroGrabado = "Mensajes:RegistroGrabado:label";
 
-            /// <summary>No se han encontrado registros con los parámetros de búsqueda indicados.</summary>
+            /// <summary>No se han encontrado registros con los parÃ¡metros de bÃºsqueda indicados.</summary>
             public const string RegistrosNoEncontrados = "Mensajes:RegistrosNoEncontrados:label";
 
             /// <summary>No hay cambios para guardar.</summary>
@@ -332,7 +332,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Sobreprima duplicada. Revisa los datos</summary>
             public const string SobreprimaDuplicated = "Mensajes:SobreprimaDuplicated:Label";
 
-            /// <summary>El valor introducido para el campo BitAnd no tiene un único 1 en binario ({0}).</summary>
+            /// <summary>El valor introducido para el campo BitAnd no tiene un Ãºnico 1 en binario ({0}).</summary>
             public const string ValidarBitAnd = "Mensajes:ValidarBitAnd:label";
 
             /// <summary>El valor {1} del campo {0} ya existe.</summary>
@@ -350,12 +350,12 @@ namespace HM.Presupuestos.Web.Componentes.Base
         #region Menu (Completo con Labels, URLs, Iconos, Visible, Code y Helpers)
 
         /// <summary>
-        /// Recursos del sistema de menús con acceso completo a todas las propiedades
-        /// Incluye métodos helper para acceso dinámico por código de menú
+        /// Recursos del sistema de menÃºs con acceso completo a todas las propiedades
+        /// Incluye mÃ©todos helper para acceso dinÃ¡mico por cÃ³digo de menÃº
         /// </summary>
         public static class Menu
         {
-            #region Constantes Individuales por Menú
+            #region Constantes Individuales por MenÃº
 
             #region Menu_0 - Inicio
 
@@ -387,9 +387,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_2 - Importación Versiones
+            #region Menu_2 - ImportaciÃ³n Versiones
 
-            /// <summary>Importación Versiones</summary>
+            /// <summary>ImportaciÃ³n Versiones</summary>
             public const string Menu_2_Label = "Menu:Menu_2:label";
             /// <summary>/gestion/importacion-versiones</summary>
             public const string Menu_2_Url = "Menu:Menu_2:url";
@@ -421,22 +421,22 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             /// <summary>Reportes</summary>
             public const string Menu_4_Label = "Menu:Menu_4:label";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_4_Url = "Menu:Menu_4:url";
-            /// <summary>(vacío)</summary>
+            /// <summary>(vacÃ­o)</summary>
             public const string Menu_4_Icono = "Menu:Menu_4:icono";
             /// <summary>false</summary>
             public const string Menu_4_Visible = "Menu:Menu_4:visible";
             /// <summary>4</summary>
             public const string Menu_4_Code = "Menu:Menu_4:code";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_4_Image = "Menu:Menu_4:image";
 
             #endregion
 
-            #region Menu_5 - Planificación de Condiciones
+            #region Menu_5 - PlanificaciÃ³n de Condiciones
 
-            /// <summary>Planificación de Condiciones</summary>
+            /// <summary>PlanificaciÃ³n de Condiciones</summary>
             public const string Menu_5_Label = "Menu:Menu_5:label";
             /// <summary>/gestion/planificacion-condiciones</summary>
             public const string Menu_5_Url = "Menu:Menu_5:url";
@@ -479,13 +479,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_9 - Procesos Automáticos
+            #region Menu_9 - Procesos AutomÃ¡ticos
 
-            /// <summary>Procesos Automáticos</summary>
+            /// <summary>Procesos AutomÃ¡ticos</summary>
             public const string Menu_9_Label = "Menu:Menu_9:label";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_9_Url = "Menu:Menu_9:url";
-            /// <summary>(vacío)</summary>
+            /// <summary>(vacÃ­o)</summary>
             public const string Menu_9_Icono = "Menu:Menu_9:icono";
             /// <summary>true</summary>
             public const string Menu_9_Visible = "Menu:Menu_9:visible";
@@ -509,9 +509,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_11 - NV y NC de Acuerdos a Previsión
+            #region Menu_11 - NV y NC de Acuerdos a PrevisiÃ³n
 
-            /// <summary>NV y NC de Acuerdos a Previsión</summary>
+            /// <summary>NV y NC de Acuerdos a PrevisiÃ³n</summary>
             public const string Menu_11_Label = "Menu:Menu_11:label";
             /// <summary>/copiarinversiones</summary>
             public const string Menu_11_Url = "Menu:Menu_11:url";
@@ -539,9 +539,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_13 - Importación Condiciones
+            #region Menu_13 - ImportaciÃ³n Condiciones
 
-            /// <summary>Importación Condiciones</summary>
+            /// <summary>ImportaciÃ³n Condiciones</summary>
             public const string Menu_13_Label = "Menu:Menu_13:label";
             /// <summary>/gestion/importacion-condiciones</summary>
             public const string Menu_13_Url = "Menu:Menu_13:url";
@@ -575,9 +575,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             /// <summary>Mantenimientos</summary>
             public const string Menu_15_Label = "Menu:Menu_15:label";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_15_Url = "Menu:Menu_15:url";
-            /// <summary>(vacío)</summary>
+            /// <summary>(vacÃ­o)</summary>
             public const string Menu_15_Icono = "Menu:Menu_15:icono";
             /// <summary>true</summary>
             public const string Menu_15_Visible = "Menu:Menu_15:visible";
@@ -586,9 +586,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_16 - Importación Sobreprimas
+            #region Menu_16 - ImportaciÃ³n Sobreprimas
 
-            /// <summary>Importación Sobreprimas</summary>
+            /// <summary>ImportaciÃ³n Sobreprimas</summary>
             public const string Menu_16_Label = "Menu:Menu_16:label";
             /// <summary>/gestion/importacion-sobreprimas</summary>
             public const string Menu_16_Url = "Menu:Menu_16:url";
@@ -601,13 +601,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_17 - Gestión
+            #region Menu_17 - GestiÃ³n
 
-            /// <summary>Gestión</summary>
+            /// <summary>GestiÃ³n</summary>
             public const string Menu_17_Label = "Menu:Menu_17:label";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_17_Url = "Menu:Menu_17:url";
-            /// <summary>(vacío)</summary>
+            /// <summary>(vacÃ­o)</summary>
             public const string Menu_17_Icono = "Menu:Menu_17:icono";
             /// <summary>true</summary>
             public const string Menu_17_Visible = "Menu:Menu_17:visible";
@@ -646,13 +646,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_20 - Administración
+            #region Menu_20 - AdministraciÃ³n
 
-            /// <summary>Administración</summary>
+            /// <summary>AdministraciÃ³n</summary>
             public const string Menu_20_Label = "Menu:Menu_20:label";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_20_Url = "Menu:Menu_20:url";
-            /// <summary>(vacío)</summary>
+            /// <summary>(vacÃ­o)</summary>
             public const string Menu_20_Icono = "Menu:Menu_20:icono";
             /// <summary>true</summary>
             public const string Menu_20_Visible = "Menu:Menu_20:visible";
@@ -661,9 +661,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_21 - Envío mensajes informativos
+            #region Menu_21 - EnvÃ­o mensajes informativos
 
-            /// <summary>Envío mensajes informativos</summary>
+            /// <summary>EnvÃ­o mensajes informativos</summary>
             public const string Menu_21_Label = "Menu:Menu_21:label";
             /// <summary>/administracion/avisos</summary>
             public const string Menu_21_Url = "Menu:Menu_21:url";
@@ -676,9 +676,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_22 - Impersonación
+            #region Menu_22 - ImpersonaciÃ³n
 
-            /// <summary>Impersonación</summary>
+            /// <summary>ImpersonaciÃ³n</summary>
             public const string Menu_22_Label = "Menu:Menu_22:label";
             /// <summary>/administracion/impersonacion</summary>
             public const string Menu_22_Url = "Menu:Menu_22:url";
@@ -706,13 +706,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_24 - Configuración
+            #region Menu_24 - ConfiguraciÃ³n
 
-            /// <summary>Configuración</summary>
+            /// <summary>ConfiguraciÃ³n</summary>
             public const string Menu_24_Label = "Menu:Menu_24:label";
-            /// <summary>(vacía)</summary>
+            /// <summary>(vacÃ­a)</summary>
             public const string Menu_24_Url = "Menu:Menu_24:url";
-            /// <summary>(vacío)</summary>
+            /// <summary>(vacÃ­o)</summary>
             public const string Menu_24_Icono = "Menu:Menu_24:icono";
             /// <summary>true</summary>
             public const string Menu_24_Visible = "Menu:Menu_24:visible";
@@ -721,9 +721,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Menu_25 - Año para diario
+            #region Menu_25 - AÃ±o para diario
 
-            /// <summary>Año para diario</summary>
+            /// <summary>AÃ±o para diario</summary>
             public const string Menu_25_Label = "Menu:Menu_25:label";
             /// <summary>/configuracion/anio-diario</summary>
             public const string Menu_25_Url = "Menu:Menu_25:url";
@@ -738,13 +738,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
-            #region Métodos Helper Dinámicos
+            #region MÃ©todos Helper DinÃ¡micos
 
             /// <summary>
-            /// Obtiene la clave de recurso para el label de un menú por su código
+            /// Obtiene la clave de recurso para el label de un menÃº por su cÃ³digo
             /// </summary>
-            /// <param name="codigoMenu">Código del menú (0-25)</param>
-            /// <returns>Clave de recurso: "Menu:Menu_{código}:label"</returns>
+            /// <param name="codigoMenu">CÃ³digo del menÃº (0-25)</param>
+            /// <returns>Clave de recurso: "Menu:Menu_{cÃ³digo}:label"</returns>
             /// <example>
             /// <code>
             /// var labelKey = Menu.ObtenerEtiqueta(12); // "Menu:Menu_12:label"
@@ -754,10 +754,10 @@ namespace HM.Presupuestos.Web.Componentes.Base
             public static string ObtenerEtiqueta(int codigoMenu) => $"Menu:Menu_{codigoMenu}:label";
 
             /// <summary>
-            /// Obtiene la clave de recurso para la URL de un menú por su código
+            /// Obtiene la clave de recurso para la URL de un menÃº por su cÃ³digo
             /// </summary>
-            /// <param name="codigoMenu">Código del menú (0-25)</param>
-            /// <returns>Clave de recurso: "Menu:Menu_{código}:url"</returns>
+            /// <param name="codigoMenu">CÃ³digo del menÃº (0-25)</param>
+            /// <returns>Clave de recurso: "Menu:Menu_{cÃ³digo}:url"</returns>
             /// <example>
             /// <code>
             /// var urlKey = Menu.ObtenerUrl(12); // "Menu:Menu_12:url"
@@ -767,10 +767,10 @@ namespace HM.Presupuestos.Web.Componentes.Base
             public static string ObtenerUrl(int codigoMenu) => $"Menu:Menu_{codigoMenu}:url";
 
             /// <summary>
-            /// Obtiene la clave de recurso para el icono de un menú por su código
+            /// Obtiene la clave de recurso para el icono de un menÃº por su cÃ³digo
             /// </summary>
-            /// <param name="codigoMenu">Código del menú (0-25)</param>
-            /// <returns>Clave de recurso: "Menu:Menu_{código}:icono"</returns>
+            /// <param name="codigoMenu">CÃ³digo del menÃº (0-25)</param>
+            /// <returns>Clave de recurso: "Menu:Menu_{cÃ³digo}:icono"</returns>
             /// <example>
             /// <code>
             /// var iconoKey = Menu.ObtenerIcono(12); // "Menu:Menu_12:icono"
@@ -780,24 +780,24 @@ namespace HM.Presupuestos.Web.Componentes.Base
             public static string ObtenerIcono(int codigoMenu) => $"Menu:Menu_{codigoMenu}:icono";
 
             /// <summary>
-            /// Obtiene la clave de recurso para la visibilidad de un menú por su código
+            /// Obtiene la clave de recurso para la visibilidad de un menÃº por su cÃ³digo
             /// </summary>
-            /// <param name="codigoMenu">Código del menú (0-25)</param>
-            /// <returns>Clave de recurso: "Menu:Menu_{código}:visible"</returns>
+            /// <param name="codigoMenu">CÃ³digo del menÃº (0-25)</param>
+            /// <returns>Clave de recurso: "Menu:Menu_{cÃ³digo}:visible"</returns>
             public static string ObtenerVisible(int codigoMenu) => $"Menu:Menu_{codigoMenu}:visible";
 
             /// <summary>
-            /// Obtiene la clave de recurso para el code de un menú por su código
+            /// Obtiene la clave de recurso para el code de un menÃº por su cÃ³digo
             /// </summary>
-            /// <param name="codigoMenu">Código del menú (0-25)</param>
-            /// <returns>Clave de recurso: "Menu:Menu_{código}:code"</returns>
+            /// <param name="codigoMenu">CÃ³digo del menÃº (0-25)</param>
+            /// <returns>Clave de recurso: "Menu:Menu_{cÃ³digo}:code"</returns>
             public static string ObtenerCode(int codigoMenu) => $"Menu:Menu_{codigoMenu}:code";
 
             /// <summary>
-            /// Obtiene la clave de recurso para la imagen de un menú por su código
+            /// Obtiene la clave de recurso para la imagen de un menÃº por su cÃ³digo
             /// </summary>
-            /// <param name="codigoMenu">Código del menú (0-25)</param>
-            /// <returns>Clave de recurso: "Menu:Menu_{código}:image"</returns>
+            /// <param name="codigoMenu">CÃ³digo del menÃº (0-25)</param>
+            /// <returns>Clave de recurso: "Menu:Menu_{cÃ³digo}:image"</returns>
             public static string ObtenerImage(int codigoMenu) => $"Menu:Menu_{codigoMenu}:image";
 
             #endregion
@@ -805,7 +805,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         #endregion
 
-        #region Meses (Alfabético)
+        #region Meses (AlfabÃ©tico)
 
         public static class Meses
         {
@@ -813,7 +813,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         #endregion
 
-        #region Pages (Alfabético)
+        #region Pages (AlfabÃ©tico)
 
         public static class Pages
         {
@@ -821,7 +821,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class AnioDiario
             {
-                /// <summary>Permite seleccionar año para el Diario de presupuestos</summary>
+                /// <summary>Permite seleccionar aÃ±o para el Diario de presupuestos</summary>
                 public const string ToolTip = "Pages:AnioDiario:ToolTip:label";
             }
 
@@ -866,7 +866,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class GestionVersiones
             {
-                /// <summary>Permite transferir datos de inversión entre versiones...</summary>
+                /// <summary>Permite transferir datos de inversiÃ³n entre versiones...</summary>
                 public const string ToolTip = "Pages:GestionVersiones:ToolTip:label";
 
                 public static class TypeVersionSource
@@ -897,10 +897,10 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Ver Condiciones importadas</summary>
                 public const string LinkCondiciones = "Pages:ImportacionCondiciones:LinkCondiciones:label";
 
-                /// <summary>Navegar a página de Condiciones filtrando por importación realizada</summary>
+                /// <summary>Navegar a pÃ¡gina de Condiciones filtrando por importaciÃ³n realizada</summary>
                 public const string LinkCondicionesHelp = "Pages:ImportacionCondiciones:LinkCondicionesHelp:label";
 
-                /// <summary>Permite importar las condiciones desde MMS filtrando por unos parámetros dados.</summary>
+                /// <summary>Permite importar las condiciones desde MMS filtrando por unos parÃ¡metros dados.</summary>
                 public const string ToolTip = "Pages:ImportacionCondiciones:ToolTip:label";
             }
 
@@ -918,19 +918,19 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class Impersonation
             {
-                /// <summary>Introduzca el nombre de usuario y contraseña a impersonar</summary>
+                /// <summary>Introduzca el nombre de usuario y contraseÃ±a a impersonar</summary>
                 public const string Description = "Pages:Impersonation:Description:label";
 
                 /// <summary>Ha ocurrido un error y el proceso no se ha completado</summary>
                 public const string Error = "Pages:Impersonation:Error:label";
 
-                /// <summary>Contraseña de usuario</summary>
+                /// <summary>ContraseÃ±a de usuario</summary>
                 public const string Password = "Pages:Impersonation:Password:label";
 
-                /// <summary>Rellene el nombre de usuario y contraseña</summary>
+                /// <summary>Rellene el nombre de usuario y contraseÃ±a</summary>
                 public const string RellenarDatosUsuario = "Pages:Impersonation:RellenarDatosUsuario:label";
 
-                /// <summary>Acceso a la aplicación suplantando a otro usuario</summary>
+                /// <summary>Acceso a la aplicaciÃ³n suplantando a otro usuario</summary>
                 public const string ToolTip = "Pages:Impersonation:ToolTip:label";
 
                 /// <summary>Nombre de usuario</summary>
@@ -939,7 +939,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>El usuario a impersonar debe ser distinto al usuario autenticado</summary>
                 public const string UsuarioImpersonadoIgual = "Pages:Impersonation:UsuarioImpersonadoIgual:label";
 
-                /// <summary>El usuario no está autorizado para acceder a la aplicación</summary>
+                /// <summary>El usuario no estÃ¡ autorizado para acceder a la aplicaciÃ³n</summary>
                 public const string UsuarioNoAutorizado = "Pages:Impersonation:UsuarioNoAutorizado:label";
             }
 
@@ -967,7 +967,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Mantenimiento de Indicadores de estado para las Versiones</summary>
                 public const string ToolTip = "Pages:Indicadores:ToolTip:label";
 
-                /// <summary>Versión única</summary>
+                /// <summary>VersiÃ³n Ãºnica</summary>
                 public const string VersionUnica = "Pages:Indicadores:VersionUnica:label";
             }
 
@@ -977,7 +977,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class Index
             {
-                /// <summary>Bienvenido a la aplicación de Presupuestos</summary>
+                /// <summary>Bienvenido a la aplicaciÃ³n de Presupuestos</summary>
                 public const string Bienvenida = "Pages:Index:Bienvenida:label";
 
                 /// <summary>Hola</summary>
@@ -1008,7 +1008,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class Login
             {
-                /// <summary>Cerrar sesión</summary>
+                /// <summary>Cerrar sesiÃ³n</summary>
                 public const string CerrarSesion = "Pages:Login:CerrarSesion:label";
             }
 
@@ -1029,7 +1029,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Meses Bloqueados</summary>
                 public const string Titulo = "Pages:MesesBloqueados:MesesBloqueados:label";
 
-                /// <summary>Permite seleccionar meses en un año seleccionado para bloquearlos)</summary>
+                /// <summary>Permite seleccionar meses en un aÃ±o seleccionado para bloquearlos)</summary>
                 public const string ToolTip = "Pages:MesesBloqueados:ToolTip:label";
             }
 
@@ -1055,13 +1055,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Alcance</summary>
                 public const string Alcance = "Pages:PlanificacionCondiciones:Alcance:label";
 
-                /// <summary>Base Cálculo DEV.</summary>
+                /// <summary>Base CÃ¡lculo DEV.</summary>
                 public const string BCDevolucion = "Pages:PlanificacionCondiciones:BCDevolucion:label";
 
-                /// <summary>Planificación Condiciones</summary>
+                /// <summary>PlanificaciÃ³n Condiciones</summary>
                 public const string Condiciones = "Pages:PlanificacionCondiciones:Condiciones:label";
 
-                /// <summary>Planificación Condiciones Acuerdos</summary>
+                /// <summary>PlanificaciÃ³n Condiciones Acuerdos</summary>
                 public const string CondicionesAcuerdos = "Pages:PlanificacionCondiciones:CondicionesAcuerdos:label";
 
                 /// <summary>0</summary>
@@ -1097,7 +1097,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Filtrar por Medio</summary>
                 public const string FiltroPorMedio = "Pages:PlanificacionCondiciones:FiltroPorMedio:label";
 
-                /// <summary>Jerarquía</summary>
+                /// <summary>JerarquÃ­a</summary>
                 public const string Jerarquia = "Pages:PlanificacionCondiciones:Jerarquia:label";
 
                 /// <summary>% MNP</summary>
@@ -1109,7 +1109,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Nueva Vigencia</summary>
                 public const string NuevaVigencia = "Pages:PlanificacionCondiciones:NuevaVigencia:label";
 
-                /// <summary>Nº Excepciones</summary>
+                /// <summary>NÂº Excepciones</summary>
                 public const string NumExcepciones = "Pages:PlanificacionCondiciones:NumExcepciones:label";
 
                 /// <summary>Objetivo</summary>
@@ -1127,10 +1127,10 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Naturaleza</summary>
                 public const string TipoDisciplina = "Pages:PlanificacionCondiciones:TipoDisciplina:label";
 
-                /// <summary>Permite introducir el servicio de agencia y la devolución del grupo seleccionado.</summary>
+                /// <summary>Permite introducir el servicio de agencia y la devoluciÃ³n del grupo seleccionado.</summary>
                 public const string ToolTip = "Pages:PlanificacionCondiciones:ToolTip:label";
 
-                /// <summary>Porcentaje Devolución</summary>
+                /// <summary>Porcentaje DevoluciÃ³n</summary>
                 public const string ToolTipDevolucionTpc = "Pages:PlanificacionCondiciones:ToolTipDevolucionTpc:label";
 
                 /// <summary>Porcentaje Manpower</summary>
@@ -1147,13 +1147,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
                     /// <summary>No se puede filtrar por medio por haber cambios en las excepciones de dicho medio sin guardar</summary>
                     public const string AlFiltrarExcepcionesConCambios = "Pages:PlanificacionCondiciones:Mensajes:AlFiltrarExcepcionesConCambios:label";
 
-                    /// <summary>Por favor, al haber introducido una Base de Cálculo en las condiciones tiene que introducir un Porcentaje.</summary>
+                    /// <summary>Por favor, al haber introducido una Base de CÃ¡lculo en las condiciones tiene que introducir un Porcentaje.</summary>
                     public const string BCCondicionSinPctDevolucion = "Pages:PlanificacionCondiciones:Mensajes:BCCondicionSinPctDevolucion:label";
 
-                    /// <summary>Hay cambios sin guardar en las Condiciones. ¿Desea continuar y perder estos cambios?</summary>
+                    /// <summary>Hay cambios sin guardar en las Condiciones. Â¿Desea continuar y perder estos cambios?</summary>
                     public const string CancelarCambiosCondiciones = "Pages:PlanificacionCondiciones:Mensajes:CancelarCambiosCondiciones:label";
 
-                    /// <summary>Hay cambios sin guardar en las Excepciones. ¿Desea continuar y perder estos cambios?</summary>
+                    /// <summary>Hay cambios sin guardar en las Excepciones. Â¿Desea continuar y perder estos cambios?</summary>
                     public const string CancelarCambiosExcepciones = "Pages:PlanificacionCondiciones:Mensajes:CancelarCambiosExcepciones:label";
 
                     /// <summary>Todas las excepciones deben tener al menos un Concepto NMD seleccionado</summary>
@@ -1168,10 +1168,10 @@ namespace HM.Presupuestos.Web.Componentes.Base
                     /// <summary>El Medio {0} tiene datos duplicados en las excepciones.</summary>
                     public const string MedioExcepcionConDatosDuplicados = "Pages:PlanificacionCondiciones:Mensajes:MedioExcepcionConDatosDuplicados:label";
 
-                    /// <summary>Por favor, al haber introducido un %Devolución en las condiciones tiene que seleccionar una Base de Cálculo</summary>
+                    /// <summary>Por favor, al haber introducido un %DevoluciÃ³n en las condiciones tiene que seleccionar una Base de CÃ¡lculo</summary>
                     public const string PctDevCondicionSinBC = "Pages:PlanificacionCondiciones:Mensajes:PctDevCondicionSinBC:label";
 
-                    /// <summary>Por favor, al haber introducido un %Devolución en las excepciones tiene que seleccionar un indicador del BC</summary>
+                    /// <summary>Por favor, al haber introducido un %DevoluciÃ³n en las excepciones tiene que seleccionar un indicador del BC</summary>
                     public const string PctDevExcepcionSinBD = "Pages:PlanificacionCondiciones:Mensajes:PctDevExcepcionSinBD:label";
 
                     /// <summary>Todas las excepciones deben tener al menos un porcentaje.</summary>
@@ -1186,7 +1186,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                     /// <summary>Por favor, al haber introducido un % en las excepciones tiene que tener un % en la condicion para el mismo medio</summary>
                     public const string PctExcepcionSinPctSAGCondicion = "Pages:PlanificacionCondiciones:Mensajes:PctExcepcionSinPctSAGCondicion:label";
 
-                    /// <summary>La Vigencia seleccionada tiene Condiciones asociadas que se eliminarán. ¿Desea continuar?</summary>
+                    /// <summary>La Vigencia seleccionada tiene Condiciones asociadas que se eliminarÃ¡n. Â¿Desea continuar?</summary>
                     public const string VigenciaConCondiciones = "Pages:PlanificacionCondiciones:Mensajes:VigenciaConCondiciones:label";
 
                     /// <summary>Vigencia modificada</summary>
@@ -1245,7 +1245,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             public static class Versiones
             {
-                /// <summary>La Versión no se puede borrar porque hay datos relacionados con la misma</summary>
+                /// <summary>La VersiÃ³n no se puede borrar porque hay datos relacionados con la misma</summary>
                 public const string HayDatosRelacionadosConLaVersion = "Pages:Versiones:HayDatosRelacionadosConLaVersion:label";
 
                 /// <summary>Indicadores</summary>
@@ -1254,7 +1254,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Leyendas Indicadores</summary>
                 public const string LeyendasIndicadores = "Pages:Versiones:LeyendasIndicadores:label";
 
-                /// <summary>La descripción de la Versión {0} coincide con la de otra versión...</summary>
+                /// <summary>La descripciÃ³n de la VersiÃ³n {0} coincide con la de otra versiÃ³n...</summary>
                 public const string Message_VersionDescriptionError = "Pages:Versiones:Message_VersionDescriptionError:label";
 
                 /// <summary>Nombre de Indicador</summary>
@@ -1263,7 +1263,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Tipo</summary>
                 public const string Tipo = "Pages:Versiones:Tipo:label";
 
-                /// <summary>Versión</summary>
+                /// <summary>VersiÃ³n</summary>
                 public const string Version = "Pages:Versiones:Version:label";
 
                 /// <summary>Versiones</summary>

@@ -63,10 +63,10 @@ namespace HM.Presupuestos.Web.Pages
 
         #endregion
 
-        #region Métodos Privados
+        #region MÃ©todos Privados
 
         /// <summary>
-        /// Actualiza los menús favoritos del usuario
+        /// Actualiza los menÃºs favoritos del usuario
         /// </summary>
         private void ObtenerFavoritos(UsuarioEntidad usuario)
         {

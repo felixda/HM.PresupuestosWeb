@@ -1,4 +1,4 @@
-﻿
+ï»¿
 using HM.Core.Comun.v6.Entidades.Configuracion;
 using HM.Core.Comun.v6.Entidades.Logger;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Infrastructure.Servicios
 
         private string JwtUsuarioActual =>
             _jwt.Usuario?.Jwt
-            ?? throw new InvalidOperationException("No hay un usuario autenticado con token JWT válido.");
+            ?? throw new InvalidOperationException("No hay un usuario autenticado con token JWT vÃ¡lido.");
 
         /// <summary>
         /// Obtiene los codigos de menus favoritos del usuario desde la API de HM.CORE.
@@ -72,14 +72,14 @@ namespace HM.Presupuestos.Infrastructure.Servicios
         /// Envia una entrada de auditoria/log a la API de HM.CORE para su persistencia.
         /// </summary>
         /// <param name="jwtUsuario">
-        /// Token JWT del usuario autenticado. Se recibe explícitamente en lugar de obtenerlo
-        /// del servicio <see cref="IJwt"/> inyectado porque este método puede ser invocado durante
-        /// el flujo de autenticación inicial (ej: desde <c>RegistroAplicacion</c>), momento en el
-        /// que <c>IJwt.Usuario</c> todavía es null. Pasar el token desde el caller —que ya dispone
-        /// del usuario cargado— evita la <see cref="InvalidOperationException"/> que de otro modo
-        /// redirigiría a <c>/Unauthorized</c>.
+        /// Token JWT del usuario autenticado. Se recibe explÃ­citamente en lugar de obtenerlo
+        /// del servicio <see cref="IJwt"/> inyectado porque este mÃ©todo puede ser invocado durante
+        /// el flujo de autenticaciÃ³n inicial (ej: desde <c>RegistroAplicacion</c>), momento en el
+        /// que <c>IJwt.Usuario</c> todavÃ­a es null. Pasar el token desde el caller â€”que ya dispone
+        /// del usuario cargadoâ€” evita la <see cref="InvalidOperationException"/> que de otro modo
+        /// redirigirÃ­a a <c>/Unauthorized</c>.
         /// </param>
-        /// <param name="datosLog">Datos de la acción a registrar (acción, parámetros, usuario, etc.).</param>
+        /// <param name="datosLog">Datos de la acciÃ³n a registrar (acciÃ³n, parÃ¡metros, usuario, etc.).</param>
         public async Task RegistrarLog(string jwtUsuario, DatosPeticionLogData datosLog)
         {
             string urlEndpoint = $"{_urlBaseApi}/api/v6/core/Log/guardarlog";
@@ -88,8 +88,8 @@ namespace HM.Presupuestos.Infrastructure.Servicios
 
         /// <summary>
         /// Realiza una peticion POST autenticada a la API de HM.CORE serializando el cuerpo como JSON.
-        /// Si no se proporciona token explícito, lo obtiene del usuario autenticado en el circuito actual.
-        /// El header de autorización se establece por petición para evitar problemas con HttpClient compartido.
+        /// Si no se proporciona token explÃ­cito, lo obtiene del usuario autenticado en el circuito actual.
+        /// El header de autorizaciÃ³n se establece por peticiÃ³n para evitar problemas con HttpClient compartido.
         /// </summary>
         private async Task EnviarPostJsonAsync<T>(string urlEndpoint, T cuerpo, string? jwtUsuario = null)
         {

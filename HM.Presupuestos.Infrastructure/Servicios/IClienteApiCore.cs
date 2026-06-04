@@ -6,31 +6,31 @@ namespace HM.Presupuestos.Infrastructure.Servicios
     public interface IClienteApiCore
     {
         /// <summary>
-        /// Obtiene los códigos de menús favoritos del usuario desde la API de HM.CORE.
+        /// Obtiene los cÃ³digos de menÃºs favoritos del usuario desde la API de HM.CORE.
         /// El token JWT se obtiene internamente del usuario autenticado en el circuito actual.
         /// </summary>
-        /// <returns>Cadena con los códigos de menú favoritos separados por coma.</returns>
+        /// <returns>Cadena con los cÃ³digos de menÃº favoritos separados por coma.</returns>
         Task<string> ObtenerCodigosDeMenusFavoritos();
 
         /// <summary>
-        /// Persiste en la API de HM.CORE los códigos de menús favoritos del usuario.
+        /// Persiste en la API de HM.CORE los cÃ³digos de menÃºs favoritos del usuario.
         /// El token JWT se obtiene internamente del usuario autenticado en el circuito actual.
         /// </summary>
-        /// <param name="configuracionFavoritos">Objeto con los códigos favoritos a guardar.</param>
+        /// <param name="configuracionFavoritos">Objeto con los cÃ³digos favoritos a guardar.</param>
         Task GuardarCodigosDeMenusFavoritos(ElementoConfiguracion configuracionFavoritos);
 
         /// <summary>
-        /// Envía una entrada de auditoría/log a la API de HM.CORE para su persistencia.
+        /// EnvÃ­a una entrada de auditorÃ­a/log a la API de HM.CORE para su persistencia.
         /// </summary>
         /// <param name="jwtUsuario">
-        /// Token JWT del usuario autenticado. Se recibe explícitamente en lugar de obtenerlo
-        /// del servicio <see cref="IJwt"/> inyectado porque este método puede invocarse durante
-        /// el flujo de autenticación inicial (ej: desde <c>RegistroAplicacion</c>), momento en el
-        /// que <c>IJwt.Usuario</c> todavía es null. Pasar el token desde el caller —que ya dispone
-        /// del usuario cargado— evita una <see cref="InvalidOperationException"/> que redirigiría a
+        /// Token JWT del usuario autenticado. Se recibe explÃ­citamente en lugar de obtenerlo
+        /// del servicio <see cref="IJwt"/> inyectado porque este mÃ©todo puede invocarse durante
+        /// el flujo de autenticaciÃ³n inicial (ej: desde <c>RegistroAplicacion</c>), momento en el
+        /// que <c>IJwt.Usuario</c> todavÃ­a es null. Pasar el token desde el caller â€”que ya dispone
+        /// del usuario cargadoâ€” evita una <see cref="InvalidOperationException"/> que redirigirÃ­a a
         /// <c>/Unauthorized</c>.
         /// </param>
-        /// <param name="datosLog">Datos de la acción a registrar (acción, parámetros, usuario, etc.).</param>
+        /// <param name="datosLog">Datos de la acciÃ³n a registrar (acciÃ³n, parÃ¡metros, usuario, etc.).</param>
         Task RegistrarLog(string jwtUsuario, DatosPeticionLogData datosLog);
     }
 }

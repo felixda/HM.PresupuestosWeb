@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             dah.GetSqlStringComando(query);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {

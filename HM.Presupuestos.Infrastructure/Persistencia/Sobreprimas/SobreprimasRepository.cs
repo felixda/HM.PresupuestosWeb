@@ -50,7 +50,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.AddParameter("CodigoVersion", filterSobreprima.CodigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -231,7 +231,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.AddParameter("CodigoVersion", filterSobreprima.CodigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);

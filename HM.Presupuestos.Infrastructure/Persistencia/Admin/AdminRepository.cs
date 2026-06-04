@@ -25,7 +25,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.GetSqlStringComando(query);
 
             dah.AddParameter("anio", anio);
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {

@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IProveedorRecursosJson _proveedorJson;
 
-        // Caché de valores resueltos por clave compuesta (idioma:expresión)
+        // CachÃ© de valores resueltos por clave compuesta (idioma:expresiÃ³n)
         private readonly ConcurrentDictionary<string, string> _cacheValoresResueltos = new();
 
         private readonly string _idiomaPorDefecto;
@@ -44,7 +44,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
             _gestorIdiomas.IdiomaCambiado += () =>
             {
-                Console.WriteLine("[LocalizadorRecursos] ?? IdiomaEntidad cambiado, limpiando caché de valores...");
+                Console.WriteLine("[LocalizadorRecursos] ?? IdiomaEntidad cambiado, limpiando cachÃ© de valores...");
                 _cacheValoresResueltos.Clear();
                 return Task.CompletedTask;
             };
@@ -52,7 +52,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
         #endregion
 
-        #region Métodos privados
+        #region MÃ©todos privados
 
         private string NormalizarCodigoIdioma(string? codigoIdioma)
         {
@@ -83,7 +83,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
         #endregion
 
-        #region Métodos públicos
+        #region MÃ©todos pÃºblicos
 
         public string ObtenerTexto(string claveRecurso, string? codigoIdioma = null)
         {
@@ -234,7 +234,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[LocalizadorRecursos] ? Error al insertar excepción: {ex.Message}");
+                Console.WriteLine($"[LocalizadorRecursos] ? Error al insertar excepciÃ³n: {ex.Message}");
             }
         }
 

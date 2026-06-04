@@ -64,7 +64,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         public async Task RegistrarAccesoAPagina(string tituloPagina)
         {
             var urlActual = _rutasNavegacion.ObtenerRutaActual();
-            var accion = $"Acceso a página {tituloPagina} [{urlActual}]";
+            var accion = $"Acceso a pÃ¡gina {tituloPagina} [{urlActual}]";
             await _logAccionesService.Insertar(accion);
         }
 
@@ -109,7 +109,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         {
             // Extraer nombre de la clase desde el FilePath
             var category = ExtraerNombreClaseDesdeFilePath(callerFilePath);
-            // Llamar al método original
+            // Llamar al mÃ©todo original
             await RegistrarExcepcion(category, exception, comments, logLevel, insertDBLog, insertFileLog);
         }
 
@@ -123,7 +123,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             if (string.IsNullOrEmpty(filePath))
                 return "Unknown";
 
-            // Obtener nombre del archivo sin extensión
+            // Obtener nombre del archivo sin extensiÃ³n
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 
             // Si termina en .razor (archivos .razor.cs), eliminar ese sufijo
@@ -221,7 +221,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
 
 
         /// <summary>
-        /// Inserta log en archivo según nivel
+        /// Inserta log en archivo segÃºn nivel
         /// </summary>
         private void RegistrarEnArchivo(NivelRegistro logLevel, string userName, string category, string message, string stackTraceText, string comments)
         {
@@ -256,7 +256,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         /// <summary>
         /// Obtener instancia de logger configurada para el tipo de log (log o err)
         /// </summary>
-        /// <param name="extension">Extensión del archivo de log (log o err)</param>
+        /// <param name="extension">ExtensiÃ³n del archivo de log (log o err)</param>
         /// <returns>Instancia de Logger configurada</returns>
         private static Logger ObtenerLogger(string extension = "log")
         {

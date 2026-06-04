@@ -1,4 +1,4 @@
-﻿using HM.Presupuestos.Domain.Entidades;
+ï»¿using HM.Presupuestos.Domain.Entidades;
 using Version = HM.Presupuestos.Domain.Entidades.Version;
 
 namespace HM.Presupuestos.Domain.Puertos
@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Domain.Puertos
         /// <summary>
         /// Devuelve una lista de versiones filtrada
         /// </summary>
-        /// <param name="anio">Filtro para el año</param>
+        /// <param name="anio">Filtro para el aÃ±o</param>
         /// <param name="estadoIncluido">Filtro para buscar por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos en binario</param>
         /// <returns>Lista de versiones</returns>
         Task<List<Version>> ObtenerVersiones(int anio, int? estadoIncluido = null);
@@ -36,7 +36,7 @@ namespace HM.Presupuestos.Domain.Puertos
         /// <summary>
         /// Devuelve una lista de versiones resumen filtrada
         /// </summary>
-        /// <param name="anio">Filtro opcional para el año (null = todos los años)</param>
+        /// <param name="anio">Filtro opcional para el aÃ±o (null = todos los aÃ±os)</param>
         /// <param name="estadoIncluido">Filtro para buscar por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos</param>
         /// <param name="estadoExcluido">Filtro para buscar excluyendo por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos</param>
         /// <returns>Lista de versiones</returns>

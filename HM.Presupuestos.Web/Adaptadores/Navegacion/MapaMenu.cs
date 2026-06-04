@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
     /// <summary>
-    /// Clase para mapear códigos de menú a URLs, etiquetas, iconos y visibilidad.
+    /// Clase para mapear cÃ³digos de menÃº a URLs, etiquetas, iconos y visibilidad.
     /// </summary>
     public interface IMapaMenu
     {
@@ -61,7 +61,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MapaMenu] ❌ Error en ObtenerUrlMenu({codigoMenu}): {ex.Message}");
+                Console.WriteLine($"[MapaMenu] âŒ Error en ObtenerUrlMenu({codigoMenu}): {ex.Message}");
                 return null;
             }
         }
@@ -102,7 +102,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MapaMenu] ❌ Error en ObtenerCodigoMenuPorUrl: {ex.Message}");
+                Console.WriteLine($"[MapaMenu] âŒ Error en ObtenerCodigoMenuPorUrl: {ex.Message}");
             }
 
             return result;

@@ -3,7 +3,7 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
     public static class StringHelper
     {
         /// <summary>
-        /// Funcion para poner la primera leta de una cadena en mayúsculas y las demas en minúsculas
+        /// Funcion para poner la primera leta de una cadena en mayÃºsculas y las demas en minÃºsculas
         /// </summary>
         /// <param name="input">Cadena a modificar</param>
         /// <returns></returns>

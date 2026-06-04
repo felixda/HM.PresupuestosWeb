@@ -44,7 +44,7 @@ namespace HM.Presupuestos.Web.Pages
                 }
                 else
                 {
-                    Console.WriteLine($"[Init] Cookie de idioma leída: {languageCode}");
+                    Console.WriteLine($"[Init] Cookie de idioma leÃ­da: {languageCode}");
                 }
             }
             catch (Exception ex)

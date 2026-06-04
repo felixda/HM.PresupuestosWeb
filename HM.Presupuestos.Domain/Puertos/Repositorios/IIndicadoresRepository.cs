@@ -1,4 +1,4 @@
-﻿using HM.Presupuestos.Domain.Entidades;
+ï»¿using HM.Presupuestos.Domain.Entidades;
 
 namespace HM.Presupuestos.Domain.Puertos
 {
@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Domain.Puertos
         /// <summary>
         /// Obtener los indicadores de las versiones con una lista de sus descripciones, abreviaturas y leyendas en los diferentes idiomas
         /// </summary>
-        /// <param name="descripcion">Filtro opcinal para la búsqueda</param>
+        /// <param name="descripcion">Filtro opcinal para la bÃºsqueda</param>
         /// <returns></returns>
         Task<List<Indicador>> ObtenerIndicadoresConIdiomas(string? descripcion = null);
 

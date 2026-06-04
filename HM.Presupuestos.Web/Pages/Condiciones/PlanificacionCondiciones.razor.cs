@@ -576,7 +576,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private void AñadirVigencia()
+        private void AÃ±adirVigencia()
         {
             _vigenciaNueva.CodigoNetWork = _filtroCondiciones.CodigoNetwork;
             _vigenciaNueva.CodigoVersion = _filtroCondiciones.CodigoVersion;
@@ -707,7 +707,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaA�adida:label"));
+                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAï¿½adida:label"));
                 }
                 else
                 {
@@ -1245,7 +1245,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             StateHasChanged();
         }
 
-        private async void AñadirExcepcion()
+        private async void AÃ±adirExcepcion()
         {
             if (_codigoMedioleccionadoParaFiltro.HasValue)
             {
@@ -1284,7 +1284,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                     _excepciones.Insert(jerarquia - 1, nuevaExcepcion);
 
-                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
+                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
 
                     GridExcepciones.Reload();
                     await ActualizarEstadoCambios(true);
@@ -1693,9 +1693,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #endregion
 
 
-        #region Popup Añadir Excepcion
+        #region Popup AÃ±adir Excepcion
 
-        private async Task AñadirExcepcionDesdePopup()
+        private async Task AÃ±adirExcepcionDesdePopup()
         {
             try
             {
@@ -1735,7 +1735,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 OrdenarExcepciones();
 
-                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
+                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
 
                 GridExcepciones.Reload(); //Porque si no desplaza la ultima fila y no se ve
                 await ActualizarEstadoCambios(true);

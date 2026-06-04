@@ -6,7 +6,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
 {
     public partial class Avisos
     {
-        #region Inyección de Dependencias
+        #region InyecciÃ³n de Dependencias
 
         [Inject] protected IAvisosService AvisosService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
@@ -57,7 +57,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #endregion
 
-        #region Métodos Privados
+        #region MÃ©todos Privados
 
         private async Task EnviarAviso()
         {

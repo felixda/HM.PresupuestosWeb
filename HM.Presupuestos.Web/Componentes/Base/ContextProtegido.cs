@@ -15,14 +15,14 @@ public abstract class ContextProtegido : Context
     #region Propiedades para UI
 
     /// <summary>
-    /// Indica si se est· validando los permisos del usuario
-    /// ⁄til para mostrar spinner/mensaje de carga en UI
+    /// Indica si se est√° validando los permisos del usuario
+    /// √ötil para mostrar spinner/mensaje de carga en UI
     /// </summary>
     protected bool ValidandoPermisos { get; private set; } = true;
 
     /// <summary>
-    /// Indica si el usuario tiene permiso para acceder a la p·gina
-    /// Se actualiza despuÈs de validar permisos
+    /// Indica si el usuario tiene permiso para acceder a la p√°gina
+    /// Se actualiza despu√©s de validar permisos
     /// </summary>
     protected bool? TienePermiso { get; private set; } = null;
 
@@ -31,13 +31,13 @@ public abstract class ContextProtegido : Context
     #region Propiedades Abstractas
 
     /// <summary>
-    /// CÛdigo del men˙ asociado a la p·gina (para validaciÛn de permisos)
+    /// C√≥digo del men√∫ asociado a la p√°gina (para validaci√≥n de permisos)
     /// </summary>
    // protected abstract CodigosMenu CodigoMenuPermiso { get; }
 
     #endregion
 
-    #region Ciclo de Vida con ValidaciÛn de Permisos
+    #region Ciclo de Vida con Validaci√≥n de Permisos
 
     protected override async Task OnUsuarioDisponibleAsync()
     {
@@ -45,7 +45,7 @@ public abstract class ContextProtegido : Context
 
         Console.WriteLine($"[ContextProtegido] ?? OnUsuarioDisponibleAsync - Usuario: {Usuario?.Login ?? "NULL"}, UsuarioCargado: {UsuarioCargado}");
 
-        // VerificaciÛn estricta: Usuario DEBE existir
+        // Verificaci√≥n estricta: Usuario DEBE existir
         if (ContextoUsuario == null || Usuario == null || !UsuarioCargado)
         {
             Console.WriteLine($"[ContextProtegido] ?? Usuario no disponible, esperando...");
@@ -55,7 +55,7 @@ public abstract class ContextProtegido : Context
 
             if (ContextoUsuario == null || Usuario == null)
             {
-                Console.WriteLine($"[ContextProtegido] ? Usuario sigue NULL despuÈs de esperar");
+                Console.WriteLine($"[ContextProtegido] ? Usuario sigue NULL despu√©s de esperar");
                 return;
             }
         }
@@ -64,11 +64,11 @@ public abstract class ContextProtegido : Context
     }
 
     /// <summary>
-    /// Valida si el usuario tiene permisos para acceder a la p·gina
+    /// Valida si el usuario tiene permisos para acceder a la p√°gina
     /// </summary>
     private async Task ValidarPermisosAsync()
     {
-        //+++++++++++ VerificaciÛn adicional de seguridad
+        //+++++++++++ Verificaci√≥n adicional de seguridad
         if (ContextoUsuario == null || Usuario == null)
         {
             Console.WriteLine($"[ContextProtegido] ?? Abortando ValidarPermisosAsync - Usuario NULL");
@@ -115,9 +115,9 @@ public abstract class ContextProtegido : Context
     #region Template Methods - Ciclo de Vida con Permisos
 
     /// <summary>
-    /// ? MÈtodo plantilla que encapsula el patrÛn completo de inicializaciÛn
-    /// Maneja autom·ticamente: tÌtulo, overlay, logging, errores
-    /// ? NO sobrescribir en p·ginas hijas, usar InicializarPaginaAsync() en su lugar
+    /// ? M√©todo plantilla que encapsula el patr√≥n completo de inicializaci√≥n
+    /// Maneja autom√°ticamente: t√≠tulo, overlay, logging, errores
+    /// ? NO sobrescribir en p√°ginas hijas, usar InicializarPaginaAsync() en su lugar
     /// </summary>
     protected virtual async Task OnPermisoValidadoAsync()
     {
@@ -126,7 +126,7 @@ public abstract class ContextProtegido : Context
             // 1. Mostrar overlay con mensaje de carga
             MostrarOverlayCarga(TituloPagina);
 
-            // 2. Ejecutar inicializaciÛn especÌfica de la p·gina (hook point)
+            // 2. Ejecutar inicializaci√≥n espec√≠fica de la p√°gina (hook point)
             await InicializarPaginaAsync();
 
             // 3. Notificar cambio de estado
@@ -146,7 +146,7 @@ public abstract class ContextProtegido : Context
     /// <summary>
     /// Muestra el overlay con mensaje de carga personalizado
     /// </summary>
-    /// <param name="tituloPagina">TÌtulo de la p·gina</param>
+    /// <param name="tituloPagina">T√≠tulo de la p√°gina</param>
     protected virtual void MostrarOverlayCarga(string tituloPagina)
     {
         var mensajeCarga = $"{ObtenerTexto(AppResources.Common.Loading)} {tituloPagina}";
@@ -154,10 +154,10 @@ public abstract class ContextProtegido : Context
     }
 
     /// <summary>
-    /// ? HOOK METHOD: Implementar en cada p·gina para su inicializaciÛn especÌfica
-    /// Se ejecuta autom·ticamente con gestiÛn de errores y overlay
+    /// ? HOOK METHOD: Implementar en cada p√°gina para su inicializaci√≥n espec√≠fica
+    /// Se ejecuta autom√°ticamente con gesti√≥n de errores y overlay
     /// </summary>
-    /// <returns>Task de inicializaciÛn</returns>
+    /// <returns>Task de inicializaci√≥n</returns>
     protected abstract Task InicializarPaginaAsync();
 
     /// <summary>

@@ -18,7 +18,7 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
         }
 
         /// <summary>
-        /// Devuelve una lista con los meses del año en el idioma actual de la aplicacion
+        /// Devuelve una lista con los meses del aÃ±o en el idioma actual de la aplicacion
         /// </summary>
         /// <returns></returns>
         public async Task<List<CodigoDescripcion>> ObtenerMeses()

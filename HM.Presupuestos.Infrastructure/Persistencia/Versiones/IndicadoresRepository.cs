@@ -41,7 +41,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                     dah.AddParameter("Descripcion", descripcion);
                 }
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -152,7 +152,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.AddParameter("Descripcion", indicador.Descripcion.ToUpper());
                 dah.AddParameter("Codigo", indicador.Codigo ?? -1);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -181,7 +181,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.AddParameter("Orden", indicador.Orden);
                 dah.AddParameter("Codigo", indicador.Codigo ?? -1);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -209,7 +209,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.AddParameter("BitAnd", indicador.BitAnd);
                 dah.AddParameter("Codigo", indicador.Codigo ?? -1);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -253,7 +253,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
+                // Obtener el valor del parÃ¡metro de salida
                 indicador.Codigo = Convert.ToInt32(dah.Comando.Parameters["Codigo"].Value);
                 result = indicador.Codigo.Value;
             }
@@ -323,7 +323,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
+                // Obtener el valor del parÃ¡metro de salida
                 idiomaIndicador.Codigo = Convert.ToInt32(dah.Comando.Parameters["Codigo"].Value);
             }
             catch (Exception ex)
@@ -395,7 +395,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -426,7 +426,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query.ToString());
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -460,7 +460,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.GetSqlStringComando(query.ToString());
 
                 dah.AddParameter("CodigoIndicador", codigoIndicador);
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {

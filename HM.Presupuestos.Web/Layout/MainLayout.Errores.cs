@@ -2,7 +2,7 @@ namespace HM.Presupuestos.Web.Layout
 {
     public partial class MainLayout
     {
-        #region Errores — Propiedades de binding
+        #region Errores â€” Propiedades de binding
 
         private bool MostrarError { get; set; }
         private string MensajeError { get; set; } = string.Empty;
@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Web.Layout
 
         #endregion
 
-        #region Errores — Lógica
+        #region Errores â€” LÃ³gica
 
         /// <summary>
         /// Muestra un popup si se ha producido un error en la carga de la pantalla.

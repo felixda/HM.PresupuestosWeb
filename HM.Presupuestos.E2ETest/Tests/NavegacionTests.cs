@@ -15,7 +15,7 @@ public class NavegacionTests : E2ETestBase
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         Assert.That(response?.Status ?? 0, Is.LessThan(500),
-            $"La ruta /home devolvió HTTP {response?.Status}");
+            $"La ruta /home devolviÃ³ HTTP {response?.Status}");
     }
 
     [Test]
@@ -26,7 +26,7 @@ public class NavegacionTests : E2ETestBase
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         Assert.That(response?.Status ?? 0, Is.LessThan(500),
-            $"La ruta /index devolvió HTTP {response?.Status}");
+            $"La ruta /index devolviÃ³ HTTP {response?.Status}");
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class NavegacionTests : E2ETestBase
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
         var contenidoIndex = await Page.ContentAsync();
 
-        // Ambas rutas deberían cargar la misma página Index
+        // Ambas rutas deberÃ­an cargar la misma pÃ¡gina Index
         Assert.That(contenidoHome, Is.Not.Empty);
         Assert.That(contenidoIndex, Is.Not.Empty);
     }
@@ -54,6 +54,6 @@ public class NavegacionTests : E2ETestBase
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         Assert.That(response?.Status ?? 0, Is.Not.EqualTo(500),
-            "Una ruta inexistente devolvió error 500 interno del servidor");
+            "Una ruta inexistente devolviÃ³ error 500 interno del servidor");
     }
 }

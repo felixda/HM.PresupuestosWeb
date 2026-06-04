@@ -16,7 +16,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerTipolog�as");
+            _logger.Trace($"Llamando mï¿½todo ObtenerTipologï¿½as");
             resultado = await _presupuestosRepository.ObtenerTipologias();
 
             return resultado;
@@ -26,7 +26,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerAlcances");
+            _logger.Trace($"Llamando mï¿½todo ObtenerAlcances");
             resultado = await _presupuestosRepository.ObtenerAlcances();
 
             return resultado;
@@ -36,7 +36,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerDiversifiedsNCB");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDiversifiedsNCB");
             resultado = await _presupuestosRepository.ObtenerDiversifiedsNCB();
 
             return resultado;
@@ -46,7 +46,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerDisciplinas");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDisciplinas");
             resultado = await _presupuestosRepository.ObtenerDisciplinas();
 
             return resultado;
@@ -56,7 +56,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerTiposCompra");
+            _logger.Trace($"Llamando mï¿½todo ObtenerTiposCompra");
             resultado = await _presupuestosRepository.ObtenerTiposCompra();
 
             return resultado;
@@ -66,7 +66,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerObjetivos");
+            _logger.Trace($"Llamando mï¿½todo ObtenerObjetivos");
             resultado = await _presupuestosRepository.ObtenerObjetivos();
 
             return resultado;
@@ -76,7 +76,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerMedios");
+            _logger.Trace($"Llamando mï¿½todo ObtenerMedios");
 
             resultado = await _presupuestosRepository.ObtenerMedios();
 
@@ -85,7 +85,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
 
         public async Task<List<CodigoDescripcion>> ObtenerMediosPorNetWork(string codigosNetwork)
         {
-            _logger.Trace($"Llamando m�todo ObtenerMediosPorNetWork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerMediosPorNetWork");
             List<CodigoDescripcion> resultado = await _presupuestosRepository.ObtenerMediosPorNetWork(codigosNetwork);
             return resultado;
         }
@@ -94,7 +94,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerNetworks");
+            _logger.Trace($"Llamando mï¿½todo ObtenerNetworks");
 
             resultado = await _presupuestosRepository.ObtenerNetworks();
 
@@ -105,7 +105,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerGruposClientes");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientes");
 
             resultado = await _presupuestosRepository.ObtenerGruposClientes();
 
@@ -114,13 +114,13 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
 
         public async Task<List<CodigoDescripcion>> ObtenerGruposClientePorNetwork(int codigoNetwork)
         {
-            _logger.Trace($"Llamando m�todo ObtenerGruposClientePorNetwork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientePorNetwork");
             return await _presupuestosRepository.ObtenerGruposClientePorNetworks(codigoNetwork.ToString());
         }
 
         public async Task<List<CodigoDescripcion>> ObtenerGruposClientePorNetworks(string codigosNetworks)
         {
-            _logger.Trace($"Llamando m�todo ObtenerGruposClientePorNetwork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientePorNetwork");
             return await _presupuestosRepository.ObtenerGruposClientePorNetworks(codigosNetworks);
         }
 
@@ -128,7 +128,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<GrupoClientesConNetwork> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerGruposClientesConNetwork");
+            _logger.Trace($"Llamando mï¿½todo ObtenerGruposClientesConNetwork");
 
             resultado = await _presupuestosRepository.ObtenerGruposClientesConNetwork();
 
@@ -150,7 +150,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerAgrupacionesComerciales");
+            _logger.Trace($"Llamando mï¿½todo ObtenerAgrupacionesComerciales");
 
             resultado = await _presupuestosRepository.ObtenerAgrupacionesComerciales(codigosMedios);
 
@@ -161,7 +161,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<AgrupacionComercialConMedio> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerAgrupacionesComercialesConMedio");
+            _logger.Trace($"Llamando mï¿½todo ObtenerAgrupacionesComercialesConMedio");
 
             resultado = await _presupuestosRepository.ObtenerAgrupacionesComercialesConMedio();
 
@@ -192,7 +192,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerDisciplinas");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDisciplinas");
             resultado = await _presupuestosRepository.ObtenerTiposDisciplina();
 
             return resultado;
@@ -202,7 +202,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         {
             List<CodigoDescripcion> resultado;
 
-            _logger.Trace($"Llamando m�todo ObtenerDisciplinasGrupos");
+            _logger.Trace($"Llamando mï¿½todo ObtenerDisciplinasGrupos");
             resultado = await _presupuestosRepository.ObtenerDisciplinasGrupos();
 
             return resultado;
@@ -211,7 +211,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         /// <summary>
         /// Obtiene lista de meses cerrados
         /// </summary>
-        /// <param name="year">A�o de filtro</param>
+        /// <param name="year">Aï¿½o de filtro</param>
         /// <returns>Lista de int</returns>
         public async Task<List<int>> ObtenerMesCerradoList(int year)
         {
@@ -226,7 +226,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         /// <summary>
         /// Obtiene lista agrupaciones editoriales de un medio
         /// </summary>
-        /// <param name="codeMedio">C�digo de medio</param>
+        /// <param name="codeMedio">Cï¿½digo de medio</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetAgrupacionEditorialListByMedio(int codeMedio)
         {
@@ -241,7 +241,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         /// <summary>
         /// Obtiene lista editoriales de un medio
         /// </summary>
-        /// <param name="codeMedio">C�digo de medio</param>
+        /// <param name="codeMedio">Cï¿½digo de medio</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByMedio(int codeMedio)
         {
@@ -256,7 +256,7 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         /// <summary>
         /// Obtiene lista editoriales de una agrupacion
         /// </summary>
-        /// <param name="codeAgrupacionEditorial">C�digo de Agrupaci�n Editorial</param>
+        /// <param name="codeAgrupacionEditorial">Cï¿½digo de Agrupaciï¿½n Editorial</param>
         /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByAgrupacionEditorial(int codeAgrupacionEditorial)
         {

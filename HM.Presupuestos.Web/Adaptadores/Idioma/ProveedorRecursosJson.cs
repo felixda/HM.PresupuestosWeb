@@ -20,7 +20,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
         private readonly IConfiguration _configuracion;
         private readonly IWebHostEnvironment _entornoWeb;
 
-        // Caché nivel 1: JsonDocument por idioma
+        // CachÃ© nivel 1: JsonDocument por idioma
         private readonly ConcurrentDictionary<string, JsonDocument> _recursosPorIdioma = new();
 
         public ProveedorRecursosJson(IConfiguration configuracion, IWebHostEnvironment entornoWeb)
@@ -30,7 +30,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
         }
 
         /// <summary>
-        /// Devuelve el JsonDocument del idioma indicado, cargándolo si no estaba en memoria.
+        /// Devuelve el JsonDocument del idioma indicado, cargÃ¡ndolo si no estaba en memoria.
         /// </summary>
         public JsonDocument? ObtenerDocumento(string codigoIdioma)
         {
@@ -43,16 +43,16 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
         }
 
         /// <summary>
-        /// Limpia la caché interna de documentos JSON (útil al cambiar idioma).
+        /// Limpia la cachÃ© interna de documentos JSON (Ãºtil al cambiar idioma).
         /// </summary>
         //public void LimpiarCacheValores()
         //{
         //    // Los JsonDocuments son inmutables; no necesitan limpiarse.
-        //    // Expuesto para que LocalizadorRecursos pueda limpiar su propia caché de valores.
+        //    // Expuesto para que LocalizadorRecursos pueda limpiar su propia cachÃ© de valores.
         //}
 
         /// <summary>
-        /// Busca una propiedad en un JsonElement sin distinción de mayúsculas/minúsculas.
+        /// Busca una propiedad en un JsonElement sin distinciÃ³n de mayÃºsculas/minÃºsculas.
         /// </summary>
         public bool IntentarObtenerPropiedadIgnorandoMayusculas(JsonElement elemento, 
             string propiedad, out JsonElement valorPropiedad)
@@ -87,7 +87,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
                 if (languageConfigKey.Key == null)
                 {
-                    Console.WriteLine($"[ProveedorRecursosJson] ⚠️ Idioma no encontrado en configuración: {codigoIdioma}");
+                    Console.WriteLine($"[ProveedorRecursosJson] âš ï¸ Idioma no encontrado en configuraciÃ³n: {codigoIdioma}");
                     return;
                 }
 
@@ -97,7 +97,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
                 if (string.IsNullOrEmpty(pathJsonFile))
                 {
-                    Console.WriteLine($"[ProveedorRecursosJson] ⚠️ No se encontró ruta del archivo de recursos para: {codigoIdioma}");
+                    Console.WriteLine($"[ProveedorRecursosJson] âš ï¸ No se encontrÃ³ ruta del archivo de recursos para: {codigoIdioma}");
                     return;
                 }
 
@@ -105,7 +105,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
                 if (!File.Exists(fullPath))
                 {
-                    Console.WriteLine($"[ProveedorRecursosJson] ⚠️ Archivo de recursos no existe: {fullPath}");
+                    Console.WriteLine($"[ProveedorRecursosJson] âš ï¸ Archivo de recursos no existe: {fullPath}");
                     return;
                 }
 
@@ -113,11 +113,11 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
                 var jsonDoc = JsonDocument.Parse(content);
                 _recursosPorIdioma.TryAdd(codigoIdioma, jsonDoc);
 
-                Console.WriteLine($"[ProveedorRecursosJson] ✅ Idioma cargado en memoria: {codigoIdioma}");
+                Console.WriteLine($"[ProveedorRecursosJson] âœ… Idioma cargado en memoria: {codigoIdioma}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ProveedorRecursosJson] ❌ Error cargando idioma {codigoIdioma}: {ex.Message}");
+                Console.WriteLine($"[ProveedorRecursosJson] âŒ Error cargando idioma {codigoIdioma}: {ex.Message}");
             }
         }
     }

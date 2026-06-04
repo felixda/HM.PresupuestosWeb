@@ -5,12 +5,12 @@ using HM.Presupuestos.Application.CasosDeUso.Compartido;
 namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 {
     /// <summary>
-    /// P·gina de gestiÛn de sobreprimas comerciales
+    /// P√°gina de gesti√≥n de sobreprimas comerciales
     /// Gestiona los tres conceptos de sobreprimas: Default, SLA y HVP
     /// </summary>
     public partial class Sobreprimas : ContextProtegido
     {
-        #region InyecciÛn de Dependencias
+        #region Inyecci√≥n de Dependencias
 
         [Inject] protected ISobreprimasService SobreprimasService { get; set; } = default!;
         [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
@@ -24,7 +24,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         #region Propiedades Privadas
 
-        #region P·gina
+        #region P√°gina
 
         private string CaptionIzquierda { get; set; } = string.Empty;
         private string CaptionDerecha { get; set; } = string.Empty;
@@ -43,8 +43,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         private bool _desdePaginaImportarMMS = false;
         private SobreprimaFiltro _filtroSobreprima = new();
 
-        private List<CodigoDescripcion> AÒosMaestros { get; set; } = [];
-        private CodigoDescripcion? AÒoSeleccionado { get; set; }
+        private List<CodigoDescripcion> A√±osMaestros { get; set; } = [];
+        private CodigoDescripcion? A√±oSeleccionado { get; set; }
         private List<VersionResumen> VersionesMaestras { get; set; } = [];
         private VersionResumen? VersionSeleccionada { get; set; }
         private List<CodigoDescripcion> NetworksMaestros { get; set; } = [];
@@ -144,7 +144,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         #region Ciclo de Vida del Componente
 
         /// <summary>
-        /// Se ejecuta cuando el usuario no tiene permisos para acceder a la p·gina
+        /// Se ejecuta cuando el usuario no tiene permisos para acceder a la p√°gina
         /// </summary>
         protected override Task OnPermisoDenegadoAsync()
         {
@@ -161,7 +161,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
             CaptionIzquierda = ObtenerTexto(AppResources.Pages.Sobreprimas.Titulo);
 
-            AÒosMaestros = await VersionesService.ObtenerAniosConVersiones();
+            A√±osMaestros = await VersionesService.ObtenerAniosConVersiones();
             NetworksMaestros = await PresupuestosService.ObtenerNetworks();
 
             string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
@@ -180,8 +180,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Se ejecuta cuando el usuario tiene permisos v·lidos para acceder
-        /// Inicializa la p·gina y carga los datos necesarios
+        /// Se ejecuta cuando el usuario tiene permisos v√°lidos para acceder
+        /// Inicializa la p√°gina y carga los datos necesarios
         /// </summary>
         //protected override async Task OnPermisoValidadoAsync()
         //{
@@ -206,13 +206,13 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         //}
 
         /// <summary>
-        /// Inicializa la p·gina cargando datos maestros
+        /// Inicializa la p√°gina cargando datos maestros
         /// </summary>
         //private async Task InicializarPaginaAsync()
         //{
         //    CaptionIzquierda = ObtenerTexto(AppResources.Pages.Sobreprimas.Titulo);
 
-        //    AÒosMaestros = await VersionesService.ObtenerAniosConVersiones();
+        //    A√±osMaestros = await VersionesService.ObtenerAniosConVersiones();
         //    NetworksMaestros = await PresupuestosService.ObtenerNetworks();
 
         //    string codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
@@ -236,7 +236,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         /// <summary>
         /// Inicializa los valores del filtro
-        /// Preselecciona el ˙nico network si solo hay uno disponible
+        /// Preselecciona el √∫nico network si solo hay uno disponible
         /// </summary>
         private void InicializarFiltro()
         {
@@ -247,10 +247,10 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Maneja el cambio de aÒo seleccionado
-        /// Carga las versiones del aÒo seleccionado
+        /// Maneja el cambio de a√±o seleccionado
+        /// Carga las versiones del a√±o seleccionado
         /// </summary>
-        private async Task ComboBoxAÒo_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task ComboBoxA√±o_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.DataItem != null)
             {
@@ -393,7 +393,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     LayerOverlayService.Start();
                     string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
 
-                    // Obtener las agrupaciones en funciÛn de los medios seleccionados
+                    // Obtener las agrupaciones en funci√≥n de los medios seleccionados
                     AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
                     await ComprobarAgrupacionesYEditoriales(codigosMedios);
                 }
@@ -414,14 +414,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Comprueba y ajusta las agrupaciones y editoriales seleccionadas seg˙n los medios filtrados
+        /// Comprueba y ajusta las agrupaciones y editoriales seleccionadas seg√∫n los medios filtrados
         /// </summary>
         private async Task ComprobarAgrupacionesYEditoriales(string codigosMedios)
         {
             FiltroEditoriales filtro = new();
             filtro.CodigosMedios = codigosMedios;
 
-            // ? Casting seguro con patrÛn as + ??
+            // ? Casting seguro con patr√≥n as + ??
             if (AgrupacionesComercialesSeleccionadas != null)
             {
                 var lista = ComprobarListaSeleccionadas(
@@ -474,7 +474,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <param name="listaSeleccionadas">Lista de items seleccionados para buscar</param>
         /// <returns>Lista con solo los items que existen en ambas listas</returns>
         /// <remarks>
-        /// Para que el combo mantenga la selecciÛn, los objetos devueltos deben ser 
+        /// Para que el combo mantenga la selecci√≥n, los objetos devueltos deben ser 
         /// los mismos que los de la lista maestra asignada
         /// </remarks>
         private List<CodigoDescripcion> ComprobarListaSeleccionadas(List<CodigoDescripcion> listaDondeBuscar, List<CodigoDescripcion> listaSeleccionadas)
@@ -546,7 +546,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Valida que se haya seleccionado una versiÛn (campo obligatorio)
+        /// Valida que se haya seleccionado una versi√≥n (campo obligatorio)
         /// </summary>
         private bool ValidarCamposObligatoriosFiltro()
         {
@@ -554,7 +554,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Obtiene la lista de sobreprimas seg˙n los filtros aplicados
+        /// Obtiene la lista de sobreprimas seg√∫n los filtros aplicados
         /// Convierte la lista a SobreprimaGridModel para mostrar en el grid
         /// </summary>
         private async Task AplicarFiltro()
@@ -569,7 +569,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 LayerOverlayService.Start();
                 SobreprimasGrid = [];
 
-                _filtroSobreprima.Anio = AÒoSeleccionado!.Codigo;
+                _filtroSobreprima.Anio = A√±oSeleccionado!.Codigo;
                 _filtroSobreprima.CodigoVersion = VersionSeleccionada!.Codigo;
                 _filtroSobreprima.CodigoNetworkList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_networksSeleccionados, x => x.Codigo, ",");
                 _filtroSobreprima.CodigoMedioList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(_mediosSeleccionados, x => x.Codigo, ",");
@@ -592,7 +592,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     GridSobreprimas.SetFocusedRowIndex(0);
                 }
 
-                CaptionDerecha = $"[{AÒoSeleccionado?.Descripcion ?? ""}, {VersionSeleccionada!.Descripcion}]";
+                CaptionDerecha = $"[{A√±oSeleccionado?.Descripcion ?? ""}, {VersionSeleccionada!.Descripcion}]";
             }
             catch (Exception ex)
             {
@@ -607,7 +607,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Limpia todos los filtros y reinicia el estado de la p·gina
+        /// Limpia todos los filtros y reinicia el estado de la p√°gina
         /// </summary>
         private async Task LimpiarFiltro()
         {
@@ -615,7 +615,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             {
                 LayerOverlayService.Start();
                 _filtroSobreprima = new();
-                AÒoSeleccionado = null;
+                A√±oSeleccionado = null;
                 VersionSeleccionada = null;
                 NetworksSeleccionados = null;
                 MediosSeleccionados = null;
@@ -647,7 +647,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         /// <summary>
         /// Maneja el doble clic en una fila del grid
-        /// Abre el popup de ediciÛn si el medio es accesible
+        /// Abre el popup de edici√≥n si el medio es accesible
         /// </summary>
         private async Task GridSobreprimas_DobleClick(GridRowClickEventArgs e)
         {
@@ -662,7 +662,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Crea una nueva sobreprima y abre el popup de ediciÛn
+        /// Crea una nueva sobreprima y abre el popup de edici√≥n
         /// </summary>
         private async Task NuevaSobreprima()
         {
@@ -684,8 +684,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Muestra el popup de ediciÛn de sobreprima
-        /// Inicializa las listas maestras del popup seg˙n el modo de operaciÛn
+        /// Muestra el popup de edici√≥n de sobreprima
+        /// Inicializa las listas maestras del popup seg√∫n el modo de operaci√≥n
         /// </summary>
         private async Task MostrarPopupEdicion(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion)
         {
@@ -744,7 +744,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Elimina una sobreprima previa confirmaciÛn del usuario
+        /// Elimina una sobreprima previa confirmaci√≥n del usuario
         /// </summary>
         private async Task EliminarSobreprima(SobreprimaGridModel sobreprima)
         {
@@ -774,7 +774,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Oculta el popup de ediciÛn de sobreprima
+        /// Oculta el popup de edici√≥n de sobreprima
         /// </summary>
         private void OcultarPopupEdicion()
         {
@@ -783,10 +783,10 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         #endregion
 
-        #region Popup EdiciÛn - Eventos ComboBox
+        #region Popup Edici√≥n - Eventos ComboBox
 
         /// <summary>
-        /// Maneja el cambio de agrupaciÛn comercial en el popup
+        /// Maneja el cambio de agrupaci√≥n comercial en el popup
         /// Actualiza la lista de editoriales disponibles
         /// </summary>
         private async Task PopupComboBoxAgrupacion_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
@@ -913,13 +913,13 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         /// <summary>
         /// Convierte un SobreprimaGridModel en una lista de Sobreprimas (una por concepto)
-        /// Solo incluye los conceptos que han cambiado (optimizaciÛn)
+        /// Solo incluye los conceptos que han cambiado (optimizaci√≥n)
         /// </summary>
         public List<Sobreprima> ConvertirModeloGridEnSobreprimas(SobreprimaGridModel sobreprimaGrid)
         {
             List<Sobreprima> lista = [];
 
-            // Si cambiÛ la clave compuesta (Network, Medio, AgrupaciÛn, Editorial) ? enviar todos los conceptos
+            // Si cambi√≥ la clave compuesta (Network, Medio, Agrupaci√≥n, Editorial) ? enviar todos los conceptos
             if (sobreprimaGrid.KeyGrid != _sobreprimaOriginal.KeyGrid)
             {
                 var sobreprimaDefault = CrearSobreprimaBase(sobreprimaGrid);
@@ -975,7 +975,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Verifica si la sobreprima est· duplicada en base de datos
+        /// Verifica si la sobreprima est√° duplicada en base de datos
         /// </summary>
         private async Task<bool> SobreprimaEstaDuplicada(SobreprimaGridModel sobreprima)
         {
@@ -1045,7 +1045,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     return;
                 }
 
-                // Validar duplicados en lista local (inserciÛn)
+                // Validar duplicados en lista local (inserci√≥n)
                 if (_sobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
                     && SobreprimasGrid.Find(x => x.KeyGrid == _sobreprimaEnEdicion.KeyGrid) != null)
                 {
@@ -1053,7 +1053,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     return;
                 }
 
-                // Validar duplicados en lista local (ediciÛn)
+                // Validar duplicados en lista local (edici√≥n)
                 if (_sobreprimaEnEdicion.ModoOperacion != ModoOperacion.Insertar
                     && SobreprimasGrid.Find(x => x.KeyGrid == _sobreprimaEnEdicion.KeyGrid
                                                 && x.Codigo != _sobreprimaEnEdicion.Codigo) != null)
@@ -1088,9 +1088,9 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 List<Sobreprima> sobreprimas = ConvertirModeloGridEnSobreprimas(_sobreprimaEnEdicion);
                 await SobreprimasService.GrabarSobreprimas(sobreprimas);
 
-                grabacionExitosa = true; // Marcamos que la grabaciÛn fue correcta
+                grabacionExitosa = true; // Marcamos que la grabaci√≥n fue correcta
 
-                // Actualizar cÛdigos de conceptos insertados (devueltos por el servicio)
+                // Actualizar c√≥digos de conceptos insertados (devueltos por el servicio)
                 foreach (var sobreprima in sobreprimas)
                 {
                     switch (sobreprima.CodigoConcepto)
@@ -1107,10 +1107,10 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     }
                 }
 
-                // Actualizar grid seg˙n modo de operaciÛn
+                // Actualizar grid seg√∫n modo de operaci√≥n
                 if (_sobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar)
                 {
-                    // Obtener el cÛdigo mayor para asignar a la nueva fila
+                    // Obtener el c√≥digo mayor para asignar a la nueva fila
                     int codigoMayor = 0;
                     if (SobreprimasGrid.Count > 0)
                     {
@@ -1129,7 +1129,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     var indice = SobreprimasGrid.FindIndex(x => x.Codigo == _sobreprimaEnEdicion.Codigo);
                     if (indice >= 0)
                     {
-                        // Si todos los porcentajes son 0, se habr· eliminado de BD
+                        // Si todos los porcentajes son 0, se habr√° eliminado de BD
                         bool todosLosConceptosEnCero =
                             _sobreprimaEnEdicion.ConceptoDefaul.Porcentaje == 0 &&
                             _sobreprimaEnEdicion.ConceptoSLA.Porcentaje == 0 &&
@@ -1157,7 +1157,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (grabacionExitosa)
                 {
-                    // Error despuÈs de grabar: mensaje especial y recargar
+                    // Error despu√©s de grabar: mensaje especial y recargar
                     await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDespuesDeGrabar));
                     OcultarPopupEdicion();
                     await AplicarFiltro();
@@ -1251,7 +1251,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 .ThenBy(x => x.DescripcionEditorial)
                 .ToList();
 
-            // Asignar cÛdigos secuenciales para identificaciÛn en el grid
+            // Asignar c√≥digos secuenciales para identificaci√≥n en el grid
             for (int i = 0; i < agrupados.Count; i++)
             {
                 agrupados[i].Codigo = i + 1;
@@ -1262,7 +1262,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             {
                 item.MedioAccesible = false;
 
-                // Obtener descripciÛn del medio
+                // Obtener descripci√≥n del medio
                 if (item.CodigoMedio.HasValue)
                 {
                     var medio = await PresupuestosService.ObtenerMedio(item.CodigoMedio.Value);
@@ -1273,18 +1273,18 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     item.DescripcionMedio = "Sin Medio";
                 }
 
-                // Obtener descripciÛn de agrupaciÛn comercial
+                // Obtener descripci√≥n de agrupaci√≥n comercial
                 if (item.CodigoAgrupacionComercial.HasValue)
                 {
                     var agrupacion = await PresupuestosService.ObtenerAgrupacionComercial(item.CodigoAgrupacionComercial.Value);
-                    item.DescripcionAgrupacionComercial = agrupacion?.Descripcion ?? "Sin AgrupaciÛn comercial";
+                    item.DescripcionAgrupacionComercial = agrupacion?.Descripcion ?? "Sin Agrupaci√≥n comercial";
                 }
                 else
                 {
-                    item.DescripcionAgrupacionComercial = "Sin AgrupaciÛn comercial";
+                    item.DescripcionAgrupacionComercial = "Sin Agrupaci√≥n comercial";
                 }
 
-                // Obtener descripciÛn de editorial
+                // Obtener descripci√≥n de editorial
                 if (item.CodigoEditorial.HasValue)
                 {
                     var editorial = await PresupuestosService.ObtenerEditorial(item.CodigoEditorial.Value);
@@ -1300,7 +1300,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         }
 
         /// <summary>
-        /// Verifica si hay una versiÛn seleccionada en el filtro
+        /// Verifica si hay una versi√≥n seleccionada en el filtro
         /// </summary>
         private bool HayVersionSeleccionada()
         {
@@ -1309,11 +1309,11 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         #endregion
 
-        #region NavegaciÛn
+        #region Navegaci√≥n
 
         /// <summary>
-        /// Maneja la navegaciÛn desde la p·gina de importaciÛn de sobreprimas de MMS
-        /// Aplica autom·ticamente los filtros recibidos
+        /// Maneja la navegaci√≥n desde la p√°gina de importaci√≥n de sobreprimas de MMS
+        /// Aplica autom√°ticamente los filtros recibidos
         /// </summary>
         private async Task ManajarRequest()
         {
@@ -1326,10 +1326,10 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (datos is SobreprimaImportarFiltro filtro)
                 {
-                    AÒoSeleccionado = AÒosMaestros.FirstOrDefault(n => n.Codigo == filtro.Anio);
-                    if (AÒoSeleccionado != null)
+                    A√±oSeleccionado = A√±osMaestros.FirstOrDefault(n => n.Codigo == filtro.Anio);
+                    if (A√±oSeleccionado != null)
                     {
-                        VersionesMaestras = await ObtenerVersionesPorPermisos(AÒoSeleccionado.Codigo);
+                        VersionesMaestras = await ObtenerVersionesPorPermisos(A√±oSeleccionado.Codigo);
                     }
                     VersionSeleccionada = VersionesMaestras.FirstOrDefault(n => n.Codigo == filtro.CodigoVersion);
 
@@ -1358,8 +1358,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                     StateHasChanged();
 
-                    // Aplicar filtro autom·ticamente si todos los campos est·n completos
-                    if (AÒoSeleccionado != null && NetworksSeleccionados != null && VersionSeleccionada != null && MediosSeleccionados != null)
+                    // Aplicar filtro autom√°ticamente si todos los campos est√°n completos
+                    if (A√±oSeleccionado != null && NetworksSeleccionados != null && VersionSeleccionada != null && MediosSeleccionados != null)
                     {
                         _desdePaginaImportarMMS = true;
                         await AplicarFiltro();

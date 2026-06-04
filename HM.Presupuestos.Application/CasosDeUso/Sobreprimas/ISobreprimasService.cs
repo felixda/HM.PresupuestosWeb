@@ -4,56 +4,56 @@ using HM.Presupuestos.Domain.Entidades;
 namespace HM.Presupuestos.Application.CasosDeUso
 {
     /// <summary>
-    /// Interfaz del servicio de gesti髇 de sobreprimas comerciales
+    /// Interfaz del servicio de gesti贸n de sobreprimas comerciales
     /// </summary>
     public interface ISobreprimasService
     {
         Task<List<Sobreprima>> ObtenerSobreprimas(SobreprimaFiltro filterSobreprima);
 
         /// <summary>
-        /// Verifica si existen sobreprimas que coincidan con el filtro, excluyendo opcionalmente c骴igos espec韋icos
+        /// Verifica si existen sobreprimas que coincidan con el filtro, excluyendo opcionalmente c贸digos espec铆ficos
         /// </summary>
-        /// <param name="filterSobreprima">Filtro para buscar sobreprimas (pa韘, versi髇, etc.)</param>
-        /// <param name="sobreprima">Sobreprima opcional con conceptos (Default, HVP, SLA) a excluir de la b鷖queda</param>
-        /// <returns>True si existen sobreprimas que coincidan (excluyendo los c骴igos especificados), false en caso contrario</returns>
+        /// <param name="filterSobreprima">Filtro para buscar sobreprimas (pa铆s, versi贸n, etc.)</param>
+        /// <param name="sobreprima">Sobreprima opcional con conceptos (Default, HVP, SLA) a excluir de la b煤squeda</param>
+        /// <returns>True si existen sobreprimas que coincidan (excluyendo los c贸digos especificados), false en caso contrario</returns>
         /// <remarks>
-        /// L骻ica del m閠odo:
+        /// L贸gica del m茅todo:
         /// 1. Si NO se proporciona sobreprima ? busca sin exclusiones
-        /// 2. Si se proporciona sobreprima ? construye lista de c骴igos a excluir de los 3 conceptos (Default, HVP, SLA)
-        /// 3. Solo incluye en la exclusi髇 los conceptos con c骴igo > 0
-        /// 趖il para validar duplicados excluyendo el registro actual en ediciones
+        /// 2. Si se proporciona sobreprima ? construye lista de c贸digos a excluir de los 3 conceptos (Default, HVP, SLA)
+        /// 3. Solo incluye en la exclusi贸n los conceptos con c贸digo > 0
+        /// 脷til para validar duplicados excluyendo el registro actual en ediciones
         /// </remarks>
         Task<bool> ExistenSobreprimas(SobreprimaFiltro filterSobreprima, SobreprimaGridModel? sobreprima = null);
 
         /// <summary>
-        /// Elimina los tres conceptos de sobreprimas (Default, SLA, HVP) en una 鷑ica transacci髇
+        /// Elimina los tres conceptos de sobreprimas (Default, SLA, HVP) en una 煤nica transacci贸n
         /// </summary>
-        /// <param name="sobreprima">Modelo de grid con los c骴igos de los tres conceptos a eliminar</param>
+        /// <param name="sobreprima">Modelo de grid con los c贸digos de los tres conceptos a eliminar</param>
         /// <remarks>
-        /// Este m閠odo elimina en una transacci髇:
-        /// - ConceptoDefault (si c骴igo != 0)
-        /// - ConceptoSLA (si c骴igo != 0)
-        /// - ConceptoHVP (si c骴igo != 0)
-        /// Solo elimina los conceptos que tengan c骴igo asignado (existen en BD)
-        /// Si cualquier eliminaci髇 falla, hace rollback de toda la operaci髇
+        /// Este m茅todo elimina en una transacci贸n:
+        /// - ConceptoDefault (si c贸digo != 0)
+        /// - ConceptoSLA (si c贸digo != 0)
+        /// - ConceptoHVP (si c贸digo != 0)
+        /// Solo elimina los conceptos que tengan c贸digo asignado (existen en BD)
+        /// Si cualquier eliminaci贸n falla, hace rollback de toda la operaci贸n
         /// </remarks>
         Task EliminarSobreprimas(SobreprimaGridModel sobreprima);
 
         /// <summary>
-        /// Guarda una lista de sobreprimas aplicando l骻ica condicional seg鷑 c骴igo y porcentaje
+        /// Guarda una lista de sobreprimas aplicando l贸gica condicional seg煤n c贸digo y porcentaje
         /// </summary>
         /// <param name="items">Lista de sobreprimas a procesar</param>
-        /// <param name="nombreMetodoLlamador">Nombre del m閠odo llamador (se obtiene autom醫icamente con CallerMemberName)</param>
+        /// <param name="nombreMetodoLlamador">Nombre del m茅todo llamador (se obtiene autom谩ticamente con CallerMemberName)</param>
         /// <remarks>
-        /// Este m閠odo aplica la siguiente l骻ica para cada sobreprima en una transacci髇:
+        /// Este m茅todo aplica la siguiente l贸gica para cada sobreprima en una transacci贸n:
         /// 
         /// 1. Si Codigo == 0 Y Porcentaje > 0 ? INSERTAR (nueva sobreprima)
         /// 2. Si Codigo > 0 Y Porcentaje == 0 ? ELIMINAR (limpiar sobreprima)
         /// 3. Si Codigo > 0 Y Porcentaje > 0 ? ACTUALIZAR (modificar existente)
         /// 4. Si Codigo == 0 Y Porcentaje == 0 ? IGNORAR (no hacer nada)
         /// 
-        /// Se registra en auditor韆 el inicio de la operaci髇 antes de la transacci髇.
-        /// Si cualquier operaci髇 falla, hace rollback de todos los cambios.
+        /// Se registra en auditor铆a el inicio de la operaci贸n antes de la transacci贸n.
+        /// Si cualquier operaci贸n falla, hace rollback de todos los cambios.
         /// </remarks>
         Task GrabarSobreprimas(List<Sobreprima> items, string nombreMetodoLlamador = "");
     }

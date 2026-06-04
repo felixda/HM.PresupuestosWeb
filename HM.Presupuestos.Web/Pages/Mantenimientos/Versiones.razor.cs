@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 {
     public partial class Versiones
     {
-        #region Inyección de Dependencias
+        #region InyecciÃ³n de Dependencias
 
         [Inject] protected IndicadoresService IndicadoresService { get; set; } = default!;
         [Inject] protected TraduccionesHelper TraduccionesHelper { get; set; } = default!;

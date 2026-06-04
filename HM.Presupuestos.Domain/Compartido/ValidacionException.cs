@@ -12,7 +12,7 @@ namespace HM.Presupuestos.Domain.Compartido
         /// <param name="campoValidado">Tipo del campo que se esta validando</param>
         /// <param name="valor">Valor que se comprueba y que ya existe</param>
         public ValidacionException(CampoErrorValidacion campoValidado, string valor)
-       : base("Error de validación") //Se pone un texto para que no salga vacio en la excepcion, pero la descripcion se pone luego con el texto en el idioma correspondiente
+       : base("Error de validaciÃ³n") //Se pone un texto para que no salga vacio en la excepcion, pero la descripcion se pone luego con el texto en el idioma correspondiente
         {
             CampoValidado = campoValidado;
             Valor = valor;

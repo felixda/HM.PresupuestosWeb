@@ -27,7 +27,7 @@ public partial class SelectorDeIdioma
 
     #endregion
 
-    #region Métodos privados
+    #region MÃ©todos privados
 
     private void CargarIdiomaActual()
     {

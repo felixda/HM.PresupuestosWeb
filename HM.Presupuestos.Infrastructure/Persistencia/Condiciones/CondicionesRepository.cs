@@ -28,7 +28,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.GetSqlStringComando(query);
             dah.Comando.Parameters.Clear();
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -73,7 +73,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoGrupo", filtro.CodigoGrupoCliente);
             dah.AddParameter("IndAcuerdo", filtro.IndicadorAcuerdo);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -142,7 +142,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoUsuarioAlta", CodigoUsuario);
             dah.AddParameter("CodigoUsuarioModificacion", CodigoUsuario);
 
-            // Parámetro de salida
+            // ParÃ¡metro de salida
             dah.AddParameter("CodigoVigencia", item.Codigo, DbType.Int32, ParameterDirection.Output, 10);
 
             await Task.Run(() => dah.ExecuteNonQuery());
@@ -256,7 +256,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
             dah.AddParameter("CodigoVigencia", codigoVigencia);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -346,7 +346,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("Porcentaje", condicion.Porcentaje);
             dah.AddParameter("CodigoUsuario", CodigoUsuario);
 
-            // Parámetro de salida
+            // ParÃ¡metro de salida
             dah.AddParameter("CodigoCondicionMedio", condicion.CodigoCondicion, DbType.Int32, ParameterDirection.Output, 10);
 
             await Task.Run(() => dah.ExecuteNonQuery());
@@ -451,7 +451,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
             dah.AddParameter("CodigoVigencia", codigoVigencia);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -628,7 +628,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoVigencia", condicion.CodigoVigencia);
             dah.AddParameter("CodigoConcepto", (int)condicion.CodigoConcepto);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -667,7 +667,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoConcepto", (int)condicion.CodigoConcepto);
             dah.AddParameter("Jerarquia", condicion.Jerarquia);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -702,7 +702,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
             dah.AddParameter("CodigoCondicionMedio", codigoCondicion);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {

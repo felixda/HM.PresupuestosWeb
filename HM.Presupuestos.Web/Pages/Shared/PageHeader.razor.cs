@@ -16,7 +16,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         #endregion
 
-        #region Parámetros
+        #region ParÃ¡metros
 
         [Parameter]
         public CodigosMenu CodigoMenu { get; set; }
@@ -32,8 +32,8 @@ namespace HM.Presupuestos.Web.Pages.Shared
         #region Ciclo de Vida del Componente
 
         /// <summary>
-        /// Se ejecuta cuando el usuario está disponible y cargado
-        /// Inicializa el estado de favorito del menú actual
+        /// Se ejecuta cuando el usuario estÃ¡ disponible y cargado
+        /// Inicializa el estado de favorito del menÃº actual
         /// </summary>
         protected override async Task OnUsuarioDisponibleAsync()
         {
@@ -50,7 +50,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         #region Eventos de Botones
 
         /// <summary>
-        /// Maneja el clic en el botón de favorito
+        /// Maneja el clic en el botÃ³n de favorito
         /// Alterna el estado y actualiza la interfaz
         /// </summary>
         private async Task OnFavorito()
@@ -61,7 +61,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
         }
 
         /// <summary>
-        /// Navega a la página anterior usando el historial del navegador
+        /// Navega a la pÃ¡gina anterior usando el historial del navegador
         /// </summary>
         private async Task OnVolver()
         {
@@ -71,11 +71,11 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         #endregion
 
-        #region Gestión de Favoritos
+        #region GestiÃ³n de Favoritos
 
         /// <summary>
-        /// Gestiona los favoritos del usuario: agrega o elimina el menú actual
-        /// Actualiza tanto la base de datos como la sesión del usuario
+        /// Gestiona los favoritos del usuario: agrega o elimina el menÃº actual
+        /// Actualiza tanto la base de datos como la sesiÃ³n del usuario
         /// </summary>
         /// <param name="esFavorito">True para marcar como favorito, False para desmarcar</param>
         public async Task GestionarFavorito(bool esFavorito)
@@ -87,7 +87,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
             // Obtener lista actual de favoritos
             var favoritos = await ObtenerListaFavoritos();
 
-            // Actualizar lista según la acción
+            // Actualizar lista segÃºn la acciÃ³n
             if (esFavorito)
             {
                 favoritos.Add(codigoMenuActual);
@@ -100,17 +100,17 @@ namespace HM.Presupuestos.Web.Pages.Shared
             // Guardar en base de datos
             await GuardarListaFavoritos(favoritos);
 
-            // Actualizar estado del menú en sesión
+            // Actualizar estado del menÃº en sesiÃ³n
             ActualizarEstadoMenu(codigoMenuActual, esFavorito);
 
-            // Persistir cambios en sesión del usuario SSO. Del impersonado no se pueden modificar los favoritos
+            // Persistir cambios en sesiÃ³n del usuario SSO. Del impersonado no se pueden modificar los favoritos
             await AlmacenSesionUsuario.GuardarUsuarioSSO(Usuario);
         }
 
         /// <summary>
-        /// Obtiene la lista de códigos de menús favoritos del usuario
+        /// Obtiene la lista de cÃ³digos de menÃºs favoritos del usuario
         /// </summary>
-        /// <returns>HashSet con los códigos de menús favoritos</returns>
+        /// <returns>HashSet con los cÃ³digos de menÃºs favoritos</returns>
         private async Task<HashSet<string>> ObtenerListaFavoritos()
         {
             return await MenuFavoritosService.ObtenerFavoritos();
@@ -119,16 +119,16 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// <summary>
         /// Guarda la lista de favoritos en el perfil del usuario en base de datos
         /// </summary>
-        /// <param name="favoritos">HashSet con códigos de menús favoritos</param>
+        /// <param name="favoritos">HashSet con cÃ³digos de menÃºs favoritos</param>
         private async Task GuardarListaFavoritos(HashSet<string> favoritos)
         {
             await MenuFavoritosService.GuardarFavoritos(favoritos);
         }
 
         /// <summary>
-        /// Actualiza el estado de favorito del menú actual en la colección de menús del usuario
+        /// Actualiza el estado de favorito del menÃº actual en la colecciÃ³n de menÃºs del usuario
         /// </summary>
-        /// <param name="codigoMenu">Código del menú a actualizar</param>
+        /// <param name="codigoMenu">CÃ³digo del menÃº a actualizar</param>
         /// <param name="esFavorito">Nuevo estado de favorito</param>
         private void ActualizarEstadoMenu(string codigoMenu, bool esFavorito)
         {

@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Domain.Compartido
     {
         SinCambios,
         Modificados,
-        A馻didos,
+        A帽adidos,
         Eliminados
     }
 
@@ -16,7 +16,7 @@ namespace HM.Presupuestos.Domain.Compartido
         SinCambios,
         Eliminados,
         Modificados,
-        A馻didos
+        A帽adidos
     }
 
     public enum CodigosMenu
@@ -130,12 +130,12 @@ namespace HM.Presupuestos.Domain.Compartido
 
     public enum AccionesLog
     {
-        [Description("Impersonaci髇 de Usuario")]
+        [Description("Impersonaci贸n de Usuario")]
         ImpersonacionUsuario,
-        [Description("Impersonaci髇 de Usuario inv醠ida")]
+        [Description("Impersonaci贸n de Usuario inv谩lida")]
         ImpersonacionUsuarioInvalida,
-        [Description("Bloquear meses del a駉")]
-        BloquearMesesA駉,
+        [Description("Bloquear meses del a帽o")]
+        BloquearMesesA帽o,
         [Description("Modificar Vigencia")]
         ModificarVigencia,
         [Description("Eliminar Vigencia")]
@@ -155,25 +155,25 @@ namespace HM.Presupuestos.Domain.Compartido
         CopiarVersionesFinalizado,
         [Description("Entrar en la aplicacion Presupuestos Web con SSO")]
         EntrarEnPresupuestosWebSSO,
-        [Description("Desimpersonaci髇 de Usuario")]
+        [Description("Desimpersonaci贸n de Usuario")]
         DesimpersonacionUsuario,
         [Description("Actualizacion de Usuario")]
         ActualizacionUsuario,
-        [Description("Actualizaci髇 de Sobreprimas")]
+        [Description("Actualizaci贸n de Sobreprimas")]
         ActualizarSobreprimas,
         [Description("Eliminar Sobreprima")]
         EliminarSobreprima,
         [Description("Lanzar proceso importar sobreprimas de MMS (PKG_CARGA_DATOS_SOBREPRIMAS.SET_CARGA_SOBREPRIMAS_MMS)")]
         ImportarSobreprimasMMS,
-        [Description("Recuperar sesi髇 despu閟 de F5 con SSO")]
+        [Description("Recuperar sesi贸n despu茅s de F5 con SSO")]
         RecuperarSesionDespuesDeF5SSO,
-        [Description("Intento de acceso no autorizado a la p醙ina -> (mirar campo Par醡etros)")]
+        [Description("Intento de acceso no autorizado a la p谩gina -> (mirar campo Par谩metros)")]
         IntentoAccesoNoAutorizado,
-        [Description("Entrar en la aplicacion Presupuestos Web con Impersonaci髇")]
+        [Description("Entrar en la aplicacion Presupuestos Web con Impersonaci贸n")]
         EntrarEnPresupuestosWebImpersonacion,
-        [Description("Recuperar sesi髇 despu閟 de F5 con Impersonaci髇")]
+        [Description("Recuperar sesi贸n despu茅s de F5 con Impersonaci贸n")]
         RecuperarSesionDespuesDeF5Impersonacion,
-        [Description("Cerrar sesi髇 de usuario Impersonado")]
+        [Description("Cerrar sesi贸n de usuario Impersonado")]
         CerrarSesionUsuarioLogin,
         [Description("Volver a la aplicacion Presupuestos Web con SSO")]
         VolverEntrarEnPresupuestosWebSSO,

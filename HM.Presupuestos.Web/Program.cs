@@ -53,7 +53,7 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.WebHost.UseConfiguration(configuration);
 
 
-// SSO authentication - ESTE ORDEN ES CRÍTICO
+// SSO authentication - ESTE ORDEN ES CRÃTICO
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AppSettings:AzureAd"));
@@ -124,7 +124,7 @@ builder.Services.AddScoped<IApiCoreClient, ApiCoreClient>(client => new ApiCoreC
 builder.Services.AddScoped<IControlador, Controlador>();
 builder.Services.AddHttpContextAccessor();
 
-// ===== ADAPTADORES DE APLICACIÓN =====
+// ===== ADAPTADORES DE APLICACIÃ“N =====
 builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<MaestrosService>();
 builder.Services.AddScoped<VersionesService>();
@@ -189,7 +189,7 @@ builder.WebHost.UseWebRoot("wwwroot");
 
 
 
-// Agregar servicios de sesión
+// Agregar servicios de sesiÃ³n
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(3600); // Session expiration time
@@ -197,7 +197,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Set cookie using
 });
 
-// ===== LOCALIZACIÓN =====
+// ===== LOCALIZACIÃ“N =====
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[]
@@ -219,7 +219,7 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/HttpError", createScopeForErrors: true); // Redirige a la página de error en caso de una excepción no controlada
+    app.UseExceptionHandler("/HttpError", createScopeForErrors: true); // Redirige a la pÃ¡gina de error en caso de una excepciÃ³n no controlada
     app.UseHsts();  //Fuerza el uso de HTTPS en el navegador
     app.UseStatusCodePagesWithReExecute("/HttpError", "?StatusCode={0}");
 }
@@ -231,19 +231,19 @@ else
 }
 
 //Metodos DE ASP.NET Core
-app.UseHttpsRedirection();  // Redirige automáticamente HTTP a HTTPS
+app.UseHttpsRedirection();  // Redirige automÃ¡ticamente HTTP a HTTPS
 app.UseRouting();           // Habilita el enrutamiento
 app.UseAntiforgery();       // Protege los formularios contra CSRF (Cross-Site Request Forgery).
-app.UseSession();           // Habilita el soporte de sesiones en la aplicación
-app.UseAuthentication();    // Habilita autenticación y autorización
+app.UseSession();           // Habilita el soporte de sesiones en la aplicaciÃ³n
+app.UseAuthentication();    // Habilita autenticaciÃ³n y autorizaciÃ³n
 app.UseAuthorization();
 
 
 
-// Por defecto, ASP.NET Core solo permite servir archivos estáticos desde la carpeta wwwroot.
+// Por defecto, ASP.NET Core solo permite servir archivos estÃ¡ticos desde la carpeta wwwroot.
 // No se puede acceder a archivos fuera de esa carpeta sin configuraciones adicionales.
-// Como hay archivos estáticos que no cambian con frecuencia (por ejemplo, bibliotecas JavaScript o imágenes),
-// se configura el control de caché para mejorar el rendimiento.
+// Como hay archivos estÃ¡ticos que no cambian con frecuencia (por ejemplo, bibliotecas JavaScript o imÃ¡genes),
+// se configura el control de cachÃ© para mejorar el rendimiento.
 app.UseStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = context =>
@@ -253,13 +253,13 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 
-// Definimos los endpoints de la aplicación, o puntos
-// en los que se procesarán peticiones:
+// Definimos los endpoints de la aplicaciÃ³n, o puntos
+// en los que se procesarÃ¡n peticiones:
 app.MapControllers(); // Mapea los controladores API
-app.MapRazorComponents<App>()  // Mapea Blazor en toda la aplicación
+app.MapRazorComponents<App>()  // Mapea Blazor en toda la aplicaciÃ³n
 .AddInteractiveServerRenderMode(); // Habilita la interactividad en Blazor Server
 
-// Endpoint para que JavaScript obtenga textos localizados sin depender de interop estático
+// Endpoint para que JavaScript obtenga textos localizados sin depender de interop estÃ¡tico
 app.MapGet("/api/recursos/{expresion}/{idioma}", (string expresion, string idioma, ILocalizadorRecursos localizador) =>
     Results.Ok(localizador.ObtenerTexto(Uri.UnescapeDataString(expresion), idioma)))
     .AllowAnonymous();

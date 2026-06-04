@@ -4,7 +4,7 @@ using HM.Presupuestos.Domain.Entidades;
 namespace HM.Presupuestos.Application.CasosDeUso
 {
     /// <summary>
-    /// Interfaz del servicio de gestión de condiciones comerciales y excepciones
+    /// Interfaz del servicio de gestiÃ³n de condiciones comerciales y excepciones
     /// </summary>
     public interface ICondicionesService
     {
@@ -20,11 +20,11 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <param name="vigencia">Vigencia a validar con sus fechas desde/hasta</param>
         /// <returns>True si no hay solapamiento, false si existe al menos un solapamiento</returns>
         /// <remarks>
-        /// Este método realiza las siguientes validaciones:
-        /// 1. Busca vigencias con los mismos criterios (versión, grupo cliente, network, acuerdo)
-        /// 2. Excluye la propia vigencia si ya existe (comparación por código)
+        /// Este mÃ©todo realiza las siguientes validaciones:
+        /// 1. Busca vigencias con los mismos criterios (versiÃ³n, grupo cliente, network, acuerdo)
+        /// 2. Excluye la propia vigencia si ya existe (comparaciÃ³n por cÃ³digo)
         /// 3. Verifica solapamiento de rangos: [MesDesde..MesHasta]
-        /// La lógica de solapamiento: vigencia.MesDesde &lt;= existente.MesHasta AND existente.MesDesde &lt;= vigencia.MesHasta
+        /// La lÃ³gica de solapamiento: vigencia.MesDesde &lt;= existente.MesHasta AND existente.MesDesde &lt;= vigencia.MesHasta
         /// </remarks>
         Task<bool> ValidarSolapesVigencia(Vigencia vigencia);
 
@@ -37,22 +37,22 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// - Condiciones de la vigencia
         /// - Excepciones asociadas
         /// - Conceptos NMD de las excepciones
-        /// Se registra la acción de auditoría después de la eliminación exitosa
+        /// Se registra la acciÃ³n de auditorÃ­a despuÃ©s de la eliminaciÃ³n exitosa
         /// </remarks>
         Task EliminarVigencia(Vigencia vigencia);
 
         Task<bool> ExistenCondicionesVigencias(int codigoVigencia);
 
         /// <summary>
-        /// Obtiene las condiciones por vigencia o devuelve una colección vacía basada en medios del network
+        /// Obtiene las condiciones por vigencia o devuelve una colecciÃ³n vacÃ­a basada en medios del network
         /// </summary>
-        /// <param name="codigoVigencia">Código de la vigencia</param>
-        /// <param name="codigoNetwork">Código del network para obtener medios si no hay condiciones</param>
-        /// <returns>Lista de condiciones existentes o estructura vacía con medios del network</returns>
+        /// <param name="codigoVigencia">CÃ³digo de la vigencia</param>
+        /// <param name="codigoNetwork">CÃ³digo del network para obtener medios si no hay condiciones</param>
+        /// <returns>Lista de condiciones existentes o estructura vacÃ­a con medios del network</returns>
         /// <remarks>
-        /// Lógica del método:
+        /// LÃ³gica del mÃ©todo:
         /// 1. Si existen condiciones para la vigencia ? las devuelve
-        /// 2. Si NO existen condiciones ? devuelve una colección con CondicionDto vacíos para cada medio del network
+        /// 2. Si NO existen condiciones ? devuelve una colecciÃ³n con CondicionDto vacÃ­os para cada medio del network
         /// Esto permite que la UI muestre todos los medios disponibles aunque no tengan condiciones configuradas
         /// </remarks>
         Task<List<CondicionDto>> ObtenerCondicionesPorVigencia(int codigoVigencia, int codigoNetwork);
@@ -60,27 +60,27 @@ namespace HM.Presupuestos.Application.CasosDeUso
         Task<List<ExcepcionDto>> ObtenerExcepcionesCondiciones(int codigoVigencia);
 
         /// <summary>
-        /// Guarda condiciones y excepciones comerciales con sus conceptos asociados en una única transacción
+        /// Guarda condiciones y excepciones comerciales con sus conceptos asociados en una Ãºnica transacciÃ³n
         /// </summary>
         /// <param name="condicionesNoGuardadas">Diccionario de condiciones modificadas con sus campos cambiados</param>
         /// <param name="excepcionesNoGuardadas">Diccionario de excepciones modificadas con sus campos cambiados</param>
-        /// <param name="codigoVigencia">Código de la vigencia a la que pertenecen</param>
+        /// <param name="codigoVigencia">CÃ³digo de la vigencia a la que pertenecen</param>
         /// <remarks>
-        /// Este método realiza un proceso complejo en una transacción:
+        /// Este mÃ©todo realiza un proceso complejo en una transacciÃ³n:
         /// 
         /// CONDICIONES:
-        /// - Para cada condición procesa 3 conceptos: SAG, Manpower, Devolución
+        /// - Para cada condiciÃ³n procesa 3 conceptos: SAG, Manpower, DevoluciÃ³n
         /// - Inserta si es nueva y tiene porcentaje
-        /// - Actualiza si cambió el porcentaje o indicador de devolución
-        /// - Elimina si el porcentaje pasa a null (también elimina excepciones relacionadas)
+        /// - Actualiza si cambiÃ³ el porcentaje o indicador de devoluciÃ³n
+        /// - Elimina si el porcentaje pasa a null (tambiÃ©n elimina excepciones relacionadas)
         /// 
         /// EXCEPCIONES:
-        /// - Pre-tratamiento: Si cambió jerarquía, pone valores negativos temporales para evitar duplicados UK
-        /// - Para cada excepción procesa 3 conceptos: SAG, Manpower, Devolución
-        /// - Para cada excepción gestiona 7 conceptos NMD: Alcance, Objetivo, Disciplina, Diversified, TipoCompra, TipoDisciplina, DisciplinaGrupo
-        /// - Solo actualiza campos que cambiaron (optimización mediante HashSet CamposCambiados)
+        /// - Pre-tratamiento: Si cambiÃ³ jerarquÃ­a, pone valores negativos temporales para evitar duplicados UK
+        /// - Para cada excepciÃ³n procesa 3 conceptos: SAG, Manpower, DevoluciÃ³n
+        /// - Para cada excepciÃ³n gestiona 7 conceptos NMD: Alcance, Objetivo, Disciplina, Diversified, TipoCompra, TipoDisciplina, DisciplinaGrupo
+        /// - Solo actualiza campos que cambiaron (optimizaciÃ³n mediante HashSet CamposCambiados)
         /// 
-        /// Si cualquier operación falla, hace rollback de toda la transacción
+        /// Si cualquier operaciÃ³n falla, hace rollback de toda la transacciÃ³n
         /// </remarks>
         Task GrabarCondicionesExcepciones(
             Dictionary<CondicionDto, CondicionesService.DatosCondicionCambiados> condicionesNoGuardadas,
@@ -88,22 +88,22 @@ namespace HM.Presupuestos.Application.CasosDeUso
             int codigoVigencia);
 
         /// <summary>
-        /// Elimina una excepción de condición y ajusta las jerarquías de excepciones posteriores
+        /// Elimina una excepciÃ³n de condiciÃ³n y ajusta las jerarquÃ­as de excepciones posteriores
         /// </summary>
-        /// <param name="codigosConceptosCondiciones">Lista de códigos de conceptos a eliminar</param>
-        /// <param name="jerarquia">Jerarquía de la excepción eliminada</param>
-        /// <param name="codigoVigencia">Código de vigencia para buscar excepciones afectadas</param>
-        /// <param name="codigoMedio">Código de medio para filtrar excepciones del mismo medio</param>
-        /// <param name="codigoUsuario">Código de usuario que realiza la operación</param>
+        /// <param name="codigosConceptosCondiciones">Lista de cÃ³digos de conceptos a eliminar</param>
+        /// <param name="jerarquia">JerarquÃ­a de la excepciÃ³n eliminada</param>
+        /// <param name="codigoVigencia">CÃ³digo de vigencia para buscar excepciones afectadas</param>
+        /// <param name="codigoMedio">CÃ³digo de medio para filtrar excepciones del mismo medio</param>
+        /// <param name="codigoUsuario">CÃ³digo de usuario que realiza la operaciÃ³n</param>
         /// <remarks>
-        /// Este método realiza las siguientes operaciones en una transacción:
-        /// 1. Elimina los 7 conceptos NMD de cada condición (Alcance, Objetivo, Disciplina, etc.)
-        /// 2. Elimina las excepciones de condición
-        /// 3. Busca excepciones posteriores del mismo medio (jerarquía mayor)
-        /// 4. Decrementa en 1 la jerarquía de todas las excepciones posteriores
-        /// 5. Actualiza las jerarquías en base de datos
+        /// Este mÃ©todo realiza las siguientes operaciones en una transacciÃ³n:
+        /// 1. Elimina los 7 conceptos NMD de cada condiciÃ³n (Alcance, Objetivo, Disciplina, etc.)
+        /// 2. Elimina las excepciones de condiciÃ³n
+        /// 3. Busca excepciones posteriores del mismo medio (jerarquÃ­a mayor)
+        /// 4. Decrementa en 1 la jerarquÃ­a de todas las excepciones posteriores
+        /// 5. Actualiza las jerarquÃ­as en base de datos
         /// 
-        /// Esto mantiene la integridad de la jerarquía secuencial de excepciones por medio
+        /// Esto mantiene la integridad de la jerarquÃ­a secuencial de excepciones por medio
         /// </remarks>
         Task EliminarExcepcionCondicion(
             List<CodigosConceptoCondicion> codigosConceptosCondiciones,
@@ -113,18 +113,18 @@ namespace HM.Presupuestos.Application.CasosDeUso
             int codigoUsuario);
 
         /// <summary>
-        /// Importa condiciones desde MMS (Media Management System) registrando inicio y fin en auditoría
+        /// Importa condiciones desde MMS (Media Management System) registrando inicio y fin en auditorÃ­a
         /// </summary>
-        /// <param name="param">Parámetros de filtro para la importación desde MMS</param>
-        /// <param name="nombreMetodoLlamador">Nombre del método llamador (se obtiene automáticamente con CallerMemberName)</param>
+        /// <param name="param">ParÃ¡metros de filtro para la importaciÃ³n desde MMS</param>
+        /// <param name="nombreMetodoLlamador">Nombre del mÃ©todo llamador (se obtiene automÃ¡ticamente con CallerMemberName)</param>
         /// <remarks>
         /// Flujo del proceso:
-        /// 1. Registra en log de auditoría el inicio de la importación
-        /// 2. Ejecuta la importación en una transacción
-        /// 3. Si tiene éxito: registra en auditoría la finalización
-        /// 4. Si falla: hace rollback y propaga la excepción
+        /// 1. Registra en log de auditorÃ­a el inicio de la importaciÃ³n
+        /// 2. Ejecuta la importaciÃ³n en una transacciÃ³n
+        /// 3. Si tiene Ã©xito: registra en auditorÃ­a la finalizaciÃ³n
+        /// 4. Si falla: hace rollback y propaga la excepciÃ³n
         /// 
-        /// Los logs de auditoría quedan registrados incluso si falla la importación,
+        /// Los logs de auditorÃ­a quedan registrados incluso si falla la importaciÃ³n,
         /// lo que permite trazabilidad de intentos fallidos
         /// </remarks>
         Task ImportarCondicionesMMS(CondicionImportarFiltro param, string nombreMetodoLlamador = "");

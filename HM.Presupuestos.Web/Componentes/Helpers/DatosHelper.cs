@@ -54,7 +54,7 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
 
 
         /// <summary>
-        /// Funcion que serializa al objeto pasado por par·metro y luego lo deserializa para crear una copia profunda del objeto (deep copy)
+        /// Funcion que serializa al objeto pasado por par√°metro y luego lo deserializa para crear una copia profunda del objeto (deep copy)
         /// </summary>
         /// <typeparam name="T">Tipo del objeto a clonar</typeparam>
         /// <param name="objeto">Objeto a clonar</param>
@@ -65,7 +65,7 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
 
             string serializado = JsonSerializer.Serialize(objeto);
             var resultado = JsonSerializer.Deserialize<T>(serializado);
-            return resultado == null ? throw new InvalidOperationException("La deserializaciÛn devolviÛ un valor nulo.") : resultado;
+            return resultado == null ? throw new InvalidOperationException("La deserializaci√≥n devolvi√≥ un valor nulo.") : resultado;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
 
             var type = obj1.GetType();
 
-            // ComparaciÛn para strings o tipos simples
+            // Comparaci√≥n para strings o tipos simples
             if (type.IsPrimitive || type.IsEnum || type == typeof(string) || type.IsValueType)
             {
                 if (!obj1.Equals(obj2))
@@ -102,7 +102,7 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
                 return diferencias;
             }
 
-            // Si es una colecciÛn
+            // Si es una colecci√≥n
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
                 var list1 = ((IEnumerable)obj1).Cast<object?>().ToList();
