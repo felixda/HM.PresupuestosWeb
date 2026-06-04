@@ -102,7 +102,7 @@ Web → Application → Domain ← Infrastructure
 - Las dependencias apuntan siempre hacia el centro (Domain)
 - Domain no importa de ningún otro proyecto
 - Application no importa de Infrastructure ni Web
-- Web no importa de Infrastructure
+- Web no importa de Infrastructure **en páginas y componentes** (ver excepción en Composition Root)
 
 ## Puertos y Adaptadores
 
@@ -132,11 +132,30 @@ Application
 
 En ambos casos, **Infrastructure implementa la interfaz** y **Web solo ve Application y Domain**, nunca Infrastructure directamente.
 
+### Comparación completa de interfaces por capa (ejemplos del proyecto)
+
+| Interfaz | Capa | Por qué |
+|----------|------|---------|
+| `ICondicionesRepository` | **Domain** | El dominio define el contrato de persistencia de sus propias entidades |
+| `IRegistroErroresCore` | **Domain** | El dominio necesita registrar errores usando solo sus propios tipos (`DetalleError`) |
+| `ICondicionesService` | **Application** | Caso de uso que orquesta lógica de negocio; el dominio no necesita conocerlo para funcionar |
+| `IMenuFavoritosService` | **Application** | Orquesta preferencias de UI/favoritos; no es lógica de negocio central del dominio |
+| `IClienteApiCore` | **Infrastructure** | Adaptador técnico HTTP; sus métodos usan tipos de `HM.Core.Comun.v6` que Domain no puede referenciar |
+
+**Regla práctica:** ¿El dominio necesita este contrato para expresar sus reglas de negocio?
+- Sí, con tipos propios → **Domain**
+- Sí, pero con tipos externos → no puede ir a Domain; crear un puerto intermedio en Domain con tipos propios (patrón `IRegistroErroresCore` → `RegistroErroresCore` → `IClienteApiCore`)
+- No, es orquestación de casos de uso → **Application**
+- No, es un detalle técnico de infraestructura → **Infrastructure**
+
 **Adaptadores secundarios — XxxRepository** (en `Infrastructure/Persistencia/[Modulo]/`):
 Implementaciones concretas de `IXxxRepository`. Llaman a la API HM.CORE.
 
 **Adaptadores primarios — Páginas Blazor** (en `Web/Pages/[Modulo]/`):
 Consumen `IXxxService` vía DI. Punto de entrada del usuario al sistema.
+
+**Adaptadores primarios adicionales — REST API** (proyecto separado `HM.Presupuestos.Api`):
+Si se necesita exponer la funcionalidad como API REST, se crea un nuevo proyecto ASP.NET Core Web API que referencia `Application` y `Domain`, igual que `Web`. Los controladores llaman a `IXxxService` y nunca a `Infrastructure` directamente. El núcleo (Application + Domain) no cambia. La autenticación se configura con Bearer JWT en lugar de cookies. El único punto complejo es que `IJwt` debe resolverse desde `HttpContext` en lugar del circuito Blazor.
 
 ## Comunicación entre Módulos
 
@@ -166,19 +185,25 @@ Consumen `IXxxService` vía DI. Punto de entrada del usuario al sistema.
 - Nombre de fichero = nombre de clase (PascalCase)
 - Subcarpeta por módulo de negocio en todas las capas
 
-## Registro de Dependencias (DI)
+## Registro de Dependencias (DI) — Composition Root
 
-El único lugar que conoce todas las capas es `Web/Program.cs`. Es el único sitio donde se registran las implementaciones:
+`Web/Program.cs` actúa como la **raíz de composición** (Composition Root): es el único lugar del sistema que conoce todas las capas para cablear las implementaciones concretas en el contenedor de DI. Por eso `Web` tiene una `<ProjectReference>` a `Infrastructure`, y eso es **correcto e intencionado**.
+
+Esta referencia es la única excepción a la regla "Web no referencia Infrastructure": existe exclusivamente para registrar los bindings en el arranque de la aplicación. Ninguna página, componente ni adaptador de UI debe importar nada de Infrastructure.
 
 ```csharp
-// ✅ CORRECTO — en Program.cs
+// ✅ CORRECTO — en Program.cs (Composition Root)
 builder.Services.AddScoped<ICondicionesRepository, CondicionesRepository>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();
+
+// ❌ MAL — en una página Blazor
+@inject CondicionesRepository _repo  // nunca una clase concreta de Infrastructure
 ```
 
 ## Reglas No Negociables
 
-- ❌ Nunca referenciar `Infrastructure` desde `Web`
+- ❌ Nunca importar `Infrastructure` en páginas, componentes ni adaptadores de `Web` (solo se permite en `Program.cs` como Composition Root)
+- ❌ Nunca inyectar `IXxxRepository` en un adaptador primario (página Blazor, controlador REST...) — los adaptadores solo hablan con `IXxxService`
 - ❌ Nunca referenciar `Infrastructure` ni `Web` desde `Application`
 - ❌ Nunca referenciar ningún proyecto desde `Domain`
 - ❌ Nunca inyectar `IXxxRepository` de otro módulo en un servicio
