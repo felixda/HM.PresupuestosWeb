@@ -1,4 +1,3 @@
-ï»¿
 
 namespace HM.Presupuestos.Domain.Entidades
 {

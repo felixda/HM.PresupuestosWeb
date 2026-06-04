@@ -576,7 +576,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private void AÃ±adirVigencia()
+        private void AñadirVigencia()
         {
             _vigenciaNueva.CodigoNetWork = _filtroCondiciones.CodigoNetwork;
             _vigenciaNueva.CodigoVersion = _filtroCondiciones.CodigoVersion;
@@ -1245,7 +1245,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             StateHasChanged();
         }
 
-        private async void AÃ±adirExcepcion()
+        private async void AñadirExcepcion()
         {
             if (_codigoMedioleccionadoParaFiltro.HasValue)
             {
@@ -1284,7 +1284,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                     _excepciones.Insert(jerarquia - 1, nuevaExcepcion);
 
-                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
+                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
 
                     GridExcepciones.Reload();
                     await ActualizarEstadoCambios(true);
@@ -1693,9 +1693,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #endregion
 
 
-        #region Popup AÃ±adir Excepcion
+        #region Popup Añadir Excepcion
 
-        private async Task AÃ±adirExcepcionDesdePopup()
+        private async Task AñadirExcepcionDesdePopup()
         {
             try
             {
@@ -1735,7 +1735,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 OrdenarExcepciones();
 
-                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
+                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
 
                 GridExcepciones.Reload(); //Porque si no desplaza la ultima fila y no se ve
                 await ActualizarEstadoCambios(true);

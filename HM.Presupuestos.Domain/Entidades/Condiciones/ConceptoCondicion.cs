@@ -1,4 +1,4 @@
-ï»¿
+
 namespace HM.Presupuestos.Domain.Entidades
 {
     public  class ConceptoCondicion : CodigoDescripcion
