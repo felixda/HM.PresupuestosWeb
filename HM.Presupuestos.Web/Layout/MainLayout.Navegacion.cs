@@ -13,7 +13,7 @@ namespace HM.Presupuestos.Web.Layout
                 var urlNormalizada = RutasNavegacion.NormalizarRuta(e.Location);
                 if (urlNormalizada == _ultimaRutaVisitada)
                 {
-                    Console.WriteLine($"[MainLayout] â­ï¸ URL duplicada en navegaciÃ³n, saltando procesamiento: {urlNormalizada}");
+                    Console.WriteLine($"[MainLayout] URL duplicada en navegaciónn, saltando procesamiento: {urlNormalizada}");
                     return;
                 }
 
@@ -33,7 +33,7 @@ namespace HM.Presupuestos.Web.Layout
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MainLayout] âŒ Error en OnLocationChangedAsync: {ex.Message}");
+                Console.WriteLine($"[MainLayout] Error en OnLocationChangedAsync: {ex.Message}");
                 await RegistroAplicacion.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }

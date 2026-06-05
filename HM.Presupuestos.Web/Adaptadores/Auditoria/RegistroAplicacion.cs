@@ -1,4 +1,5 @@
 using HM.Core.Comun.v6.Entidades.Logger;
+using HM.Presupuestos.Domain.Extensiones;
 using HM.Presupuestos.Infrastructure.Servicios;
 using NLog;
 using NLog.Targets;
@@ -38,6 +39,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         private readonly ILogAccionesService _logAccionesService;
         private readonly IClienteApiCore _clienteApiCore;
 
+        private readonly IMapaMenu _mapaMenu;
+
         #endregion
 
         #region Constructor
@@ -47,7 +50,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             ISesionUsuario sesionUsuario, 
             IRutasNavegacion rutasNavegacion, 
             ILogAccionesService logAccionesService,
-            IClienteApiCore clienteApiCore)
+            IClienteApiCore clienteApiCore,
+            IMapaMenu mapaMenu)
         {
             _configuration = configuracion;
             _almacenSesionService = almacenSesionUsuario;
@@ -55,6 +59,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             _rutasNavegacion = rutasNavegacion;
             _logAccionesService = logAccionesService;
             _clienteApiCore = clienteApiCore;
+            _mapaMenu = mapaMenu;
         }
 
         #endregion
@@ -64,8 +69,11 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         public async Task RegistrarAccesoAPagina(string tituloPagina)
         {
             var urlActual = _rutasNavegacion.ObtenerRutaActual();
-            var accion = $"Acceso a página {tituloPagina} [{urlActual}]";
-            await _logAccionesService.Insertar(accion);
+            int codigoMenu = _mapaMenu.ObtenerCodigoMenuPorUrl(urlActual);
+            var accion = AccionesLog.AccesoAPagina.ObtenerDescripcion();
+
+            string accionConDetalle = $"[{(int)AccionesLog.AccesoAPagina}] {string.Format(accion.ToString(), tituloPagina)} [{urlActual}] [{codigoMenu}]";
+            await _logAccionesService.Insertar(accionConDetalle);
         }
 
 

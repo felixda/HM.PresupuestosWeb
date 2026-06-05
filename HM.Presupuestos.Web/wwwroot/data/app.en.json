@@ -392,6 +392,9 @@
                                                    "EditarVigencia":  {
                                                                           "label":  "Edit Validity"
                                                                       },
+                                                   "VigenciaSeleccion":  {
+                                                                              "label":  "Please select a validity period"
+                                                                          },
                                                    "FiltroPorMedio":  {
                                                                           "label":  "Filter by Media"
                                                                       },
@@ -455,7 +458,10 @@
                                                                                                    },
                                                                     "BCCondicionSinPctDevolucion":  {
                                                                                                         "label":  "Please, when entering a Calculation Base in conditions, you must enter a Percentage."
-                                                                                                    }
+                                                                                                    },
+                                                                    "VigenciaAñadida":  {
+                                                                                            "label":  "Validity added"
+                                                                                        }
                                                                 }
                                                },
                  
@@ -741,7 +747,7 @@
       }
                },
     "Botones":  {
-                    "Anadir":  {
+                    "Añadir":  {
                                    "label":  "Add"
                                },
                     "Cancelar":  {

@@ -110,9 +110,9 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 
         public string ObtenerEtiquetaMenuPorUrl(string url)
         {
-            int code = ObtenerCodigoMenuPorUrl(url);
-            if (code > 0)
-                return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{code}:label");
+            int codigoMenu = ObtenerCodigoMenuPorUrl(url);
+            if (codigoMenu > 0)
+                return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{codigoMenu}:label");
 
             return url;
         }

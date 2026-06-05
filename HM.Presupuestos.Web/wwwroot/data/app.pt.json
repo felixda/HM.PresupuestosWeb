@@ -392,6 +392,9 @@
                                                    "EditarVigencia":  {
                                                                           "label":  "Editar Vigencia"
                                                                       },
+                                                   "VigenciaSeleccion":  {
+                                                                              "label":  "Por favor, selecione uma vigência"
+                                                                          },
                                                    "FiltroPorMedio":  {
                                                                           "label":  "Filtrar por Media"
                                                                       },
@@ -455,7 +458,10 @@
                                                                                                    },
                                                                     "BCCondicionSinPctDevolucion":  {
                                                                                                         "label":  "Por favor, ao introduzir uma Base de Cálculo nas condiÁ§Áµes, voce deve introduzir uma Percentagem."
-                                                                                                    }
+                                                                                                    },
+                                                                    "VigenciaAñadida":  {
+                                                                                            "label":  "Vigência adicionada"
+                                                                                        }
                                                                 }
                                                },
                  
@@ -738,7 +744,7 @@
       }
                },
     "Botones":  {
-                    "Anadir":  {
+                    "Añadir":  {
                                    "label":  "Adicionar"
                                },
                     "Cancelar":  {

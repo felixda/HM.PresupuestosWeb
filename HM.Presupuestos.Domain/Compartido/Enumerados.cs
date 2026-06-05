@@ -131,60 +131,63 @@ namespace HM.Presupuestos.Domain.Compartido
     public enum AccionesLog
     {
         [Description("Impersonación de Usuario")]
-        ImpersonacionUsuario,
+        ImpersonacionUsuario = 1,
         [Description("Impersonación de Usuario inválida")]
-        ImpersonacionUsuarioInvalida,
+        ImpersonacionUsuarioInvalida = 2,
         [Description("Bloquear meses del año")]
-        BloquearMesesAño,
+        BloquearMesesAño = 3,
         [Description("Modificar Vigencia")]
-        ModificarVigencia,
+        ModificarVigencia = 4,
         [Description("Eliminar Vigencia")]
-        EliminarVigencia,
-        AccederAplicacion,
+        EliminarVigencia = 5,
+        [Description("Acceder a la aplicación")]
+        AccederAplicacion = 6,
         [Description("Lanzar proceso copia Inversiones (PKG_COPIAR_PREVISIONES.SET_COPIAR_PREVISIONES)")]
-        CopiarInversiones,
+        CopiarInversiones = 7,
         [Description("Poceso copia Inversiones finalizado (PKG_COPIAR_PREVISIONES.SET_COPIAR_PREVISIONES)")]
-        CopiarInversionesFinalizado,
+        CopiarInversionesFinalizado = 8,
         [Description("Lanzar proceso importar Condiciones de MMS (PKG_CARGA_DATOS_CONDICIONES.SET_CARGA_CONDICIONES_MMS)")]
-        ImportarCondicionesMMS,
+        ImportarCondicionesMMS = 9,
         [Description("Proceso importar Condiciones de MMS finalizado (PKG_CARGA_DATOS_CONDICIONES.SET_CARGA_CONDICIONES_MMS) ")]
-        ImportarCondicionesMMSFinalizado,
+        ImportarCondicionesMMSFinalizado = 10,
         [Description("Lanzar proceso copiar Versiones (PKG_CARGA_DATOS_VERSIONES.SET_COPIA)")]
-        CopiarVersiones,
+        CopiarVersiones = 11,
         [Description("Proceso copiar Versiones finalizado (PKG_CARGA_DATOS_VERSIONES.SET_COPIA)")]
-        CopiarVersionesFinalizado,
+        CopiarVersionesFinalizado = 12,
         [Description("Entrar en la aplicacion Presupuestos Web con SSO")]
-        EntrarEnPresupuestosWebSSO,
+        EntrarEnPresupuestosWebSSO = 13,
         [Description("Desimpersonación de Usuario")]
-        DesimpersonacionUsuario,
+        DesimpersonacionUsuario = 14,
         [Description("Actualizacion de Usuario")]
-        ActualizacionUsuario,
+        ActualizacionUsuario = 15,
         [Description("Actualización de Sobreprimas")]
-        ActualizarSobreprimas,
+        ActualizarSobreprimas = 16,
         [Description("Eliminar Sobreprima")]
-        EliminarSobreprima,
+        EliminarSobreprima = 17,
         [Description("Lanzar proceso importar sobreprimas de MMS (PKG_CARGA_DATOS_SOBREPRIMAS.SET_CARGA_SOBREPRIMAS_MMS)")]
-        ImportarSobreprimasMMS,
+        ImportarSobreprimasMMS = 18,
         [Description("Recuperar sesión después de F5 con SSO")]
-        RecuperarSesionDespuesDeF5SSO,
+        RecuperarSesionDespuesDeF5SSO = 19,
         [Description("Intento de acceso no autorizado a la página -> (mirar campo Parámetros)")]
-        IntentoAccesoNoAutorizado,
+        IntentoAccesoNoAutorizado = 20,
         [Description("Entrar en la aplicacion Presupuestos Web con Impersonación")]
-        EntrarEnPresupuestosWebImpersonacion,
+        EntrarEnPresupuestosWebImpersonacion = 21,
         [Description("Recuperar sesión después de F5 con Impersonación")]
-        RecuperarSesionDespuesDeF5Impersonacion,
+        RecuperarSesionDespuesDeF5Impersonacion = 22,
         [Description("Cerrar sesión de usuario Impersonado")]
-        CerrarSesionUsuarioLogin,
+        CerrarSesionUsuarioLogin = 23,
         [Description("Volver a la aplicacion Presupuestos Web con SSO")]
-        VolverEntrarEnPresupuestosWebSSO,
+        VolverEntrarEnPresupuestosWebSSO = 24,
         [Description("Eliminar Indicador")]
-        EliminarIndicador,
+        EliminarIndicador = 25,
         [Description("Grabar Indicador")]
-        GrabarIndicador,
+        GrabarIndicador = 26,
         [Description("Enviar aviso")]
-        EnviarAviso,
+        EnviarAviso = 27,
         [Description("Error al enviar aviso")]
-        ErrorAlEnviarAviso,
+        ErrorAlEnviarAviso = 28,
+        [Description("Acceso a la página: {0}")]
+        AccesoAPagina = 29,
     }
 
     public enum OrigenValidacionUsuario

@@ -197,7 +197,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             var usuarioLogin = UsuarioApp.UsuarioImpersonado;
             if (usuarioLogin == null)
             {
-                _logger.LogWarning("[UsuarioServicio] No hay usuario login para eliminar");
+                _logger.LogWarning("[SesionUsuario] No hay usuario login para eliminar");
                 return;
             }
 
@@ -240,7 +240,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             return new LogAccion
             {
                 CodigoUsuario = usuario.CodigoUsuario,
-                Accion = $"[{(int)accion}](UsuarioServicio) -> {accion.ObtenerDescripcion()}",
+                Accion = $"[{(int)accion}](SesionUsuario) -> {accion.ObtenerDescripcion()}",
                 Parametros = JsonSerializer.Serialize(usuarioCopia, new JsonSerializerOptions { WriteIndented = true })
             };
         }

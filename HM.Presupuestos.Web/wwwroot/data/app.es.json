@@ -383,6 +383,9 @@
       "EditarVigencia": {
         "label": "Editar Vigencia"
       },
+      "VigenciaSeleccion": {
+        "label": "Por favor, seleccione una vigencia"
+      },
       "FiltroPorMedio": {
         "label": "Filtrar por Medio"
       },
@@ -446,6 +449,9 @@
         },
         "BCCondicionSinPctDevolucion": {
           "label": "Por favor, al haber introducido una Base de Cálculo en las condiciones tiene que introducir un Porcentaje."
+        },
+        "VigenciaAñadida": {
+          "label": "Vigencia añadida"
         }
       }
     },
@@ -732,7 +738,7 @@
     }
   },
   "Botones": {
-    "Anadir": {
+    "Añadir": {
       "label": "Añadir"
     },
     "Cancelar": {

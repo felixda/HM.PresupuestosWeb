@@ -48,14 +48,14 @@ namespace HM.Presupuestos.Web.Layout
                 };
 
                 Menu.Add(menuPadre);
-                Console.WriteLine($"[NavMenu] ðŸ“ MenÃº padre creado: {menu.Id} - {menu.NombreMenu}");
+                Console.WriteLine($"[NavMenu] Menú padre creado: {menu.Id} - {menu.NombreMenu}");
             }
 
             foreach (var menu in menusHijos)
             {
                 var url = menu.Url(MapaMenu) ?? "";
 
-                ConfiguracionMenu menuHijo = new ConfiguracionMenu
+                ConfiguracionMenu menuHijo = new()
                 {
                     CodigoMenu = menu.Id,
                     CodigoMenuPadre = menu.IdPadre,
@@ -69,17 +69,17 @@ namespace HM.Presupuestos.Web.Layout
                 if (menuPadre != null)
                 {
                     menuPadre.Submenus.Add(menuHijo);
-                    Console.WriteLine($"[NavMenu] âœ… SubmenÃº agregado: {menu.Id} - {menu.NombreMenu} (Padre: {menu.IdPadre}, URL: {url})");
+                    Console.WriteLine($"[NavMenu] Submenú agregado: {menu.Id} - {menu.NombreMenu} (Padre: {menu.IdPadre}, URL: {url})");
                 }
                 else
                 {
-                    Console.WriteLine($"[NavMenu] âš ï¸ Padre no encontrado para submenÃº: {menu.Id} - IdPadre: {menu.IdPadre}");
+                    Console.WriteLine($"[NavMenu] Padre no encontrado para submenú: {menu.Id} - IdPadre: {menu.IdPadre}");
                 }
             }
 
             foreach (var menu in Menu)
             {
-                Console.WriteLine($"[NavMenu] ðŸ” MenÃº final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenÃºs");
+                Console.WriteLine($"[NavMenu] Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenÃºs");
             }
         }
 

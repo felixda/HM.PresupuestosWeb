@@ -177,8 +177,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
             TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTip);
             
-            LeftCaptionVigencias = ObtenerTexto("Pages: PlanificacionCondiciones: Vigencias: label");
-            LeftCaptionCondiciones = ObtenerTexto("Pages: PlanificacionCondiciones: Condiciones: label");
+            LeftCaptionVigencias = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Vigencias);
+            LeftCaptionCondiciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones);
 
             if (!String.IsNullOrEmpty(_radioGroupAcuerdoChecked))
             {
@@ -593,7 +593,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (_vigenciaSeleccionada == null)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:VigenciaSeleccion:label"));
+                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.VigenciaSeleccion));
                 return;
             }
 
@@ -707,7 +707,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAï¿½adida:label"));
+                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaAnadida));
                 }
                 else
                 {

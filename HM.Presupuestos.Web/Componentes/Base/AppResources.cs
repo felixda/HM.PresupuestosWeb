@@ -1142,6 +1142,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 /// <summary>Vigencias</summary>
                 public const string Vigencias = "Pages:PlanificacionCondiciones:Vigencias:label";
 
+                /// <summary>Por favor, seleccione una vigencia</summary>
+                public const string VigenciaSeleccion = "Pages:PlanificacionCondiciones:VigenciaSeleccion:label";
+
                 public static class Mensajes
                 {
                     /// <summary>No se puede filtrar por medio por haber cambios en las excepciones de dicho medio sin guardar</summary>
@@ -1185,6 +1188,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
                     /// <summary>Por favor, al haber introducido un % en las excepciones tiene que tener un % en la condicion para el mismo medio</summary>
                     public const string PctExcepcionSinPctSAGCondicion = "Pages:PlanificacionCondiciones:Mensajes:PctExcepcionSinPctSAGCondicion:label";
+
+                    /// <summary>Vigencia añadida</summary>
+                    public const string VigenciaAnadida = "Pages:PlanificacionCondiciones:Mensajes:VigenciaAñadida:label";
 
                     /// <summary>La Vigencia seleccionada tiene Condiciones asociadas que se eliminarán. ¿Desea continuar?</summary>
                     public const string VigenciaConCondiciones = "Pages:PlanificacionCondiciones:Mensajes:VigenciaConCondiciones:label";
