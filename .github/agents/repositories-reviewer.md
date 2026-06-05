@@ -1,11 +1,11 @@
 ---
-description: Revisor de queries SQL en repositorios de Infrastructure para HM.Presupuestos (.NET/Oracle). Úsalo tras cambios en repositorios para verificar que todas las queries siguen los patrones de infrastructure-repositories.md.
-tools: Read, Glob, Grep, Bash, Edit, Write
+description: Revisor de queries SQL en repositorios de Infrastructure para HM.Presupuestos (.NET/Oracle). Úsalo tras cambios en repositorios para verificar que todas las queries siguen los patrones de repositories.md.
+tools: read/getNotebookSummary, read/problems, read/readFile, read/viewImage, read/readNotebookCellOutput, read/terminalSelection, read/terminalLastCommand, read/getTaskOutput, edit/editFiles
 ---
 
 # Queries Review Agent — HM.Presupuestos
 
-Revisa todos los repositorios de `HM.Presupuestos.Infrastructure/Persistencia/` contra los patrones definidos en `.github/skills/guidelines/design-principles/references/infrastructure-repositories.md` y corrige todas las violaciones encontradas.
+Revisa todos los repositorios de `HM.Presupuestos.Infrastructure/Persistencia/` contra los patrones definidos en `.github/skills/guidelines/infrastructure/repositories.md` y corrige todas las violaciones encontradas.
 
 ## Pasos
 
@@ -14,7 +14,7 @@ Revisa todos los repositorios de `HM.Presupuestos.Infrastructure/Persistencia/` 
 Leer el contenido completo de:
 
 ```
-.github/skills/guidelines/design-principles/references/infrastructure-repositories.md
+.github/skills/guidelines/infrastructure/repositories.md
 ```
 
 Retener los 5 patrones y los antipatrones antes de continuar.
