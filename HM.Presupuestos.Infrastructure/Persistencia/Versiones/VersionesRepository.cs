@@ -148,7 +148,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             try
             {
                 string query = $@"
-                    SELECT COD_VERSION, DES_VERSION, MES_VERSION, IND_ESTADO_VERSION, ORDEN, COD_TIPO_VERSION
+                    SELECT COD_VERSION, DES_VERSION, MES_BLOQUEO, IND_ESTADO_VERSION, ORDEN, COD_TIPO_VERSION
                     FROM PPT_VERSIONES
                     WHERE ANIO = :Anio
                     {(estadoIncluido.HasValue ? "AND BITAND(IND_ESTADO_VERSION, :indEstado) = :indEstado" : "")}
@@ -177,7 +177,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                                 Descripcion = dr.GetString("DES_VERSION"),
                                 IndEstado = dr.GetInt32("IND_ESTADO_VERSION"),
                                 Anio = anio,
-                                Mes = dr.GetInt16("MES_VERSION"),
+                                Mes = dr.GetInt16("MES_BLOQUEO"),
                                 Orden = dr.GetInt16("ORDEN"),
                                 CodigoTipo = dr.GetInt16("COD_TIPO_VERSION"),
                             };

@@ -360,6 +360,13 @@ Reglas clave:
 
 Ver detalle completo: [references/css-modules.md](references/css-modules.md)
 
+## Creación de Nuevas Páginas
+
+Para crear una nueva página desde cero, consultar las guías especializadas:
+
+- Markup y componentes DevExpress: [references/blazor-razor.md](references/blazor-razor.md)
+- Lógica C# y ciclo de vida: [references/blazor-codebehind.md](references/blazor-codebehind.md)
+
 ## Reglas No Negociables
 
 - Nunca lógica de datos en `OnInitializedAsync`; siempre en `InicializarPaginaAsync`

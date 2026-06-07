@@ -269,7 +269,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             usuario.Login = nombreUsuario;
 
             // TODO: Eliminar esta línea cuando ya no sea necesario
-            usuario.Menus.RemoveAll(m => m.Id == 1);
+           // usuario.Menus.RemoveAll(m => m.Id == 1);
 
             // ? VALIDAR Y FILTRAR MENÚS CON URLs INVÁLIDAS
             await FiltrarMenusInvalidosAsync(usuario);
