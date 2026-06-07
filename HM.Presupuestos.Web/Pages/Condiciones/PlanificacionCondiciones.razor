@@ -5,16 +5,29 @@
 @using HM.Presupuestos.Web.Componentes.Base
 @using DevExpress.Blazor
 
-@inherits Context
+@inherits ContextProtegido
 
 @attribute [StreamRendering(true)]
 @attribute [Authorize]
 
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
 {
-    <PageTitle>@PageTitle</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.PlanificacionCondiciones" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+    @* Silencio mientras carga *@
+}
+else if (TienePermiso == false)
+{
+    <div class="alert alert-danger text-center m-5" role="alert">
+        <h4 class="alert-heading">❌ Acceso Denegado</h4>
+        <p>No tiene permisos para acceder a <strong>@TituloPagina</strong>.</p>
+        <hr>
+        <p class="mb-0">Contacte al administrador si cree que debería tener acceso.</p>
+    </div>
+}
+else
+{
+    <PageTitle>@TituloActual</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.PlanificacionCondiciones" Titulo="@TituloActual" TextoToolTipAyuda="@TextoToolTipAyuda" />
 
     <div class="layoutContainer">
         @* FILTER *@

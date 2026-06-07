@@ -24,9 +24,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Page
 
-        private bool _componentInitialized = false;
-        private string PageTitle { get; set; } = string.Empty;
         private string TextoToolTipAyuda { get; set; } = string.Empty;
+        private string TituloActual => string.IsNullOrEmpty(_radioGroupAcuerdoChecked) ? TituloPagina : _radioGroupAcuerdoChecked;
 
         private bool HayCambiosPendientes => _condicionesNoGuardados.Count > 0 || ExcepcionesNoGuardadas.Count > 0;
 
@@ -138,54 +137,25 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #endregion
 
 
-        #region Page
+        #region Ciclo de Vida del Componente
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override Task OnPermisoDenegadoAsync()
         {
-            if (firstRender)
-            {
-                await base.OnAfterRenderAsync(firstRender);
-                try
-                {
-                    PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.PlanificacionCondiciones}:label");
-                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {PageTitle}");
-                    await PageInitialize();
-                }
-                catch (Exception ex)
-                {
-                    await ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
-                    return;
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
-
-                if (!_componentInitialized)
-                {
-                    _componentInitialized = true;
-                    await InvokeAsync(StateHasChanged);
-                }
-            }
+            return Task.CompletedTask;
         }
 
-        private async Task PageInitialize()
+        protected override async Task InicializarPaginaAsync()
         {
-            _radioGroupAcuerdoButtonList = [ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones), 
+            LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
+
+            _radioGroupAcuerdoButtonList = [ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones),
                 ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.CondicionesAcuerdos)];
             _radioGroupAcuerdoChecked = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones);
 
             TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTip);
-            
+
             LeftCaptionVigencias = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Vigencias);
             LeftCaptionCondiciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones);
-
-            if (!String.IsNullOrEmpty(_radioGroupAcuerdoChecked))
-            {
-                PageTitle = _radioGroupAcuerdoChecked;
-            }
-
-           // Jwt.Usuario = User;
 
             _anios = await VersionesService.ObtenerAniosConVersiones();
             _networks = await PresupuestosService.ObtenerNetworks();
@@ -226,8 +196,6 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             _tituloGridExcepciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Excepciones);
 
             await ManageRequest();
-          
-           
         }
 
         #endregion
@@ -259,10 +227,6 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 return;
             }
             _radioGroupAcuerdoChecked = newValue;
-            if (!String.IsNullOrEmpty(_radioGroupAcuerdoChecked))
-            {
-                PageTitle = _radioGroupAcuerdoChecked;
-            }
         }
 
         private async Task ComboBoxNetwork_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
@@ -288,7 +252,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 catch (Exception ex)
                 {
                     await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
+                    await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
                 {
@@ -314,7 +278,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 catch (Exception ex)
                 {
                     await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
+                    await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
                 {
@@ -347,7 +311,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -408,7 +372,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -456,7 +420,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
                 return;
             }
             try
@@ -486,7 +450,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     _vigenciaSeleccionada = null;
                     if (!_desdePaginaImportarMMS)
                     {
-                        await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
                     }
                 }
                 else
@@ -543,7 +507,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -593,7 +557,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (_vigenciaSeleccionada == null)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.VigenciaSeleccion));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.VigenciaSeleccion));
                 return;
             }
 
@@ -620,7 +584,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task EliminarVigencia()
         {
-            bool confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+            bool confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
             if (!confirm) return;
 
             try
@@ -629,23 +593,23 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (await CondicionesService.ExistenCondicionesVigencias(codigoVigencia))
                 {
-                    confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaConCondiciones));
+                    confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaConCondiciones));
                     if (!confirm)  return;
                 }
                 LayerOverlayService.Start();
                 await CondicionesService.EliminarVigencia(_vigenciaSeleccionada);
                 _vigencias.Remove(_vigenciaSeleccionada);
                 SeleccionarVigencia();
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
             }
             catch (ExcepcionBaseDatos exBd)
             {
-                await TratarExcepcionGeneradaEnBD(exBd, PageTitle);
+                await TratarExcepcionGeneradaEnBD(exBd, TituloPagina);
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -680,7 +644,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (! await CondicionesService.ValidarSolapesVigencia(vigencia))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciasSolapadas));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciasSolapadas));
                     return;
                 }
 
@@ -707,11 +671,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaAnadida));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaAnadida));
                 }
                 else
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaModificada));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaModificada));
                 }
 
                 _popupVigenciaVisible = false;
@@ -721,7 +685,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -738,13 +702,13 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (_mesDesdeVigenciaSeleccionado == null || _mesHastaVigenciaSeleccionado == null)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaSinMeses));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaSinMeses));
                 return  false;
             }
 
             if (_mesDesdeVigenciaSeleccionado.Codigo > _mesHastaVigenciaSeleccionado.Codigo)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaValidacion));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaValidacion));
                 return false;
             }
             return true;
@@ -804,7 +768,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -868,7 +832,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -912,7 +876,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -1030,7 +994,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -1161,7 +1125,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -1209,7 +1173,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -1292,7 +1256,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 catch (Exception ex)
                 {
                     await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
+                    await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
                 {
@@ -1357,7 +1321,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -1379,7 +1343,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 LayerOverlayService.Start();
-                bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+                bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
                 if (!confirmar) return;
 
                 var item = (ExcepcionCondicionViewModel)dataItem;
@@ -1406,14 +1370,14 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                         }
                     }
 
-                    await MensajesHelper.MostrarMensajeExito(PageTitle, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                    await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
                 }
                 ExcepcionesNoGuardadas.Remove(item);
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
             }
             finally
             {
@@ -1447,7 +1411,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 if (ExcepcionesNoGuardadas.Count != 0)
                 {
                     
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.AlFiltrarExcepcionesConCambios));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.AlFiltrarExcepcionesConCambios));
                     return;
                 }
                 _codigoMedioleccionadoParaFiltro = item.CodigoMedio;
@@ -1480,7 +1444,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (itemModificado.IndicadorCalculoDevolucion < 1)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctDevCondicionSinBC));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctDevCondicionSinBC));
                         resultado = false;
                     }
                 }
@@ -1489,7 +1453,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (!itemModificado.PctDevolucion.HasValue)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.BCCondicionSinPctDevolucion));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.BCCondicionSinPctDevolucion));
                         resultado = false;
                     }
                 }
@@ -1503,7 +1467,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (CondicionesCacheTodasSinDatos() && _condicionesNoGuardados.Count == 0)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesSinCondiciones));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesSinCondiciones));
                 return false;
             }
 
@@ -1529,7 +1493,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             if (primerDuplicado != null)
             {
                 string mensaje = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.MedioExcepcionConDatosDuplicados);
-                await MensajesHelper.MostrarMensajeError(PageTitle, string.Format(mensaje, primerDuplicado.DescripcionMedio));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, string.Format(mensaje, primerDuplicado.DescripcionMedio));
                 return false;
             }
 
@@ -1539,14 +1503,14 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (itemModificado.PctSAG == null && itemModificado.PctManPower == null && itemModificado.PctDevolucion == null)
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctEnTodasExcepciones));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctEnTodasExcepciones));
                     return false;
                 }
                 if (itemModificado.CodigoAlcance == 0 && itemModificado.CodigoDisciplina == 0 && itemModificado.CodigoDiversified == 0 
                     && itemModificado.CodigoObjetivo == 0 && itemModificado.CodigoTipoCompra == 0
                     && itemModificado.CodigoTipoDisciplina == 0 && itemModificado.CodigoDisciplinaGrupo == 0)
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ConceptoNMDEnTodasExcepciones));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ConceptoNMDEnTodasExcepciones));
                     return false;
                 }
 
@@ -1566,7 +1530,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                         );
                     if (todasNull)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesConCondicionesEnMedio));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesConCondicionesEnMedio));
                         return false;
                     }
                 }
@@ -1575,7 +1539,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (itemModificado.IndicadorCalculoDevolucion < 1)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctDevExcepcionSinBD));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctDevExcepcionSinBD));
                         return false;
                     }
                 }
@@ -1583,19 +1547,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 // Validaciones de porcentajes optimizadas con cach?
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctSAG, codigoMedio, c => c.PctSAG))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctSAGCondicion));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctSAGCondicion));
                     return false;
                 }
 
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctManPower, codigoMedio, c => c.PctManPower))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctManPowerCondicion));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctManPowerCondicion));
                     return false;
                 }
 
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctDevolucion, codigoMedio, c => c.PctDevolucion))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctDEVCondicion));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctDEVCondicion));
                     return false;
                 }
             }
@@ -1647,7 +1611,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             {
                 if (_condicionesNoGuardados.Count == 0 && ExcepcionesNoGuardadas.Count == 0) 
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.SinModificaciones));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.SinModificaciones));
                     return;
                 }
 
@@ -1676,13 +1640,13 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 await CondicionesService.GrabarCondicionesExcepciones(condicionesParaGrabar, excepcionesParaGrabar, _vigenciaSeleccionada!.Codigo);
                
                 await ObtenerCondicionesExcepciones(_vigenciaSeleccionada!.Codigo);
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Common.DatosGrabados));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
                 await LimpiarCambiosPendientes();
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally
             {
@@ -1747,7 +1711,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
             }
             finally
             {
@@ -1767,7 +1731,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task CancelarCambiosCondiciones()
         {
-            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosCondiciones));
+            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosCondiciones));
             if (confirmar)
             {
                 LimpiarCambiosCondicionesPendientes();
@@ -1776,7 +1740,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task CancelarCambiosExcepciones()
         {
-            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosExcepciones));
+            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosExcepciones));
             if (confirmar)
             {
                 await LimpiarCambiosExcepcionesPendientes();
@@ -1787,7 +1751,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (HayCambiosPendientes)
             {
-                bool continuar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.AvisoAntesCancelar));
+                bool continuar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Mensajes.AvisoAntesCancelar));
                 if (continuar)
                 {
                     await LimpiarCambiosPendientes();
@@ -1837,7 +1801,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task CancelarCambios()
         {
-            if (await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.Cancelar)))
+            if (await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Mensajes.Cancelar)))
             {
                 await LimpiarCambiosPendientes();
             }
@@ -1930,7 +1894,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
                 return new List<CodigoDescripcion>();
             }
         }
@@ -1996,7 +1960,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
             }
         }
     }

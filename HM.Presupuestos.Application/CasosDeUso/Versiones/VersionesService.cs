@@ -201,27 +201,6 @@ namespace HM.Presupuestos.Application.CasosDeUso
         #region Métodos Deprecated
 
         // Deprecated - No referenciado
-        public async Task<bool> ExistenPrevisionesEnVersion(int codigoVersion)
-        {
-            _logger.LogTrace("Llamando método ExistenPrevisionesEnVersion");
-            return await _versionesRepository.ExistenPrevisionesEnVersion(codigoVersion);
-        }
-
-        // Deprecated - No referenciado
-        public async Task<bool> ExistenCondicionesEnVersion(int codigoVersion)
-        {
-            _logger.LogTrace("Llamando método ExistenCondicionesEnVersion");
-            return await _versionesRepository.ExistenCondicionesEnVersion(codigoVersion);
-        }
-
-        // Deprecated - No referenciado
-        public async Task<bool> ExistenSobreprimasEnVersion(int codigoVersion)
-        {
-            _logger.LogTrace("Llamando método ExistenSobreprimasEnVersion");
-            return await _versionesRepository.ExistenSobreprimasEnVersion(codigoVersion);
-        }
-
-        // Deprecated - No referenciado
         public async Task<bool> ExistenDatosRelacionadosConVersion(int codigoVersion)
         {
             _logger.LogTrace("Llamando método ExistenDatosRelacionadosConVersion");

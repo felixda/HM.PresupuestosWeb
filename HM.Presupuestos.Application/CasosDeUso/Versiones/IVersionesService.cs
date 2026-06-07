@@ -74,12 +74,6 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// </remarks>
         Task<bool> GrabarVersiones(List<Version> versionesNuevas, List<Version> versionesModificadas, int codigoPais);
 
-        Task<bool> ExistenPrevisionesEnVersion(int codigoVersion);
-        
-        Task<bool> ExistenCondicionesEnVersion(int codigoVersion);
-        
-        Task<bool> ExistenSobreprimasEnVersion(int codigoVersion);
-        
         Task<bool> ExistenDatosRelacionadosConVersion(int codigoVersion);
 
         /// <summary>

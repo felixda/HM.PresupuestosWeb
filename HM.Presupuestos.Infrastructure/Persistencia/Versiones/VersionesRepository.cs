@@ -318,91 +318,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             }
         }
 
-        //not referenced
-        //deprecated
-        public async Task<bool> ExistenPrevisionesEnVersion(int codigoVersion)
-        {
-            bool result = false;
-            try
-            {
-                const string query = @"
-                    SELECT COUNT(*)
-                    FROM PPT_PREVISIONES
-                    WHERE COD_VERSION = :CodigoVersion";
-
-                dah.GetSqlStringComando(query);
-                dah.AddParameter("CodigoVersion", codigoVersion);
-
-                await AñadirParametroMulticompania(dah);
-
-                int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
-                result = (cuantos > 0);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("VersionesRepository.ExistenPrevisionesEnVersion", ex);
-            }
-
-            return result;
-        }
-
-        //not referenced
-        //deprecated
-        public async Task<bool> ExistenCondicionesEnVersion(int codigoVersion)
-        {
-            bool result = false;
-            try
-            {
-                const string query = @"
-                    SELECT COUNT(*)
-                    FROM PPT_CONDICION_VIGENCIA
-                    WHERE COD_VERSION = :CodigoVersion";
-
-                dah.GetSqlStringComando(query);
-                dah.AddParameter("CodigoVersion", codigoVersion);
-
-                await AñadirParametroMulticompania(dah);
-
-                int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
-                result = (cuantos > 0);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("VersionesRepository.ExistenCondicionesEnVersion", ex);
-            }
-
-            return result;
-        }
-
-        //not referenced
-        //deprecated
-        public async Task<bool> ExistenSobreprimasEnVersion(int codigoVersion)
-        {
-            bool result = false;
-            try
-            {
-                const string query = @"
-                    SELECT COUNT(*)
-                    FROM PPT_SOBREPRIMAS_MEDIO
-                    WHERE COD_VERSION = :CodigoVersion";
-
-                dah.GetSqlStringComando(query);
-                dah.AddParameter("CodigoVersion", codigoVersion);
-
-                await AñadirParametroMulticompania(dah);
-
-                int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
-                result = (cuantos > 0);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("VersionesRepository.ExistenSobreprimasEnVersion", ex);
-            }
-
-            return result;
-        }
-
-
         /// <summary>
         /// Obtener importes de los medios
         /// </summary>
@@ -415,7 +330,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             string jsonString = JsonSerializer.Serialize(json);
 
             dah.GetStoredProcComando("PKG_CARGA_DATOS_VERSIONES.GET_IMPORTES");
-            dah.Comando.CommandType = CommandType.StoredProcedure;
 
             //IMPORTANTE: Los parametros deben ir en el mismo orden que en el procedimiento almacenado
             dah.AddParameter("p_jSonConf", jsonString);
@@ -482,18 +396,18 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             await Task.Run(() =>
             {
-                dah.ExecuteNonQuery(dah.Comando);
+                dah.ExecuteNonQuery();
             });
 
             int codigoResultado = Convert.ToInt32(resultadoInt.Value);
 
             if (codigoResultado < 0)
             {
-                string mensajeResultado = resultadoStr.Value != null 
-                    ? $"Error -> {Convert.ToString(resultadoStr.Value)}" 
+                string mensajeResultado = resultadoStr.Value != null
+                    ? $"Error -> {Convert.ToString(resultadoStr.Value)}"
                     : "Error de BD no especificado al ejecutar 'PKG_CARGA_DATOS_VERSIONES.SET_COPIA'";
 
-                throw new ExcepcionBaseDatos (codigoResultado, mensajeResultado );
+                throw new ExcepcionBaseDatos(codigoResultado, mensajeResultado);
             }
         }
 
@@ -505,7 +419,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// <returns>True when is data linked</returns>
         public async Task<bool> IsDataLinked(int codigoVersion)
         {
-            bool result=false;
+            bool result = false;
 
             try
             {
@@ -519,7 +433,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 await Task.Run(() =>
                 {
                     var output = dah.ExecuteScalar<int>(dah.Comando);
-                    result=(output==1);
+                    result = (output == 1);
                 });
             }
             catch (Exception ex)

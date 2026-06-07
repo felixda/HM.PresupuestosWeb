@@ -19,12 +19,6 @@ namespace HM.Presupuestos.Domain.Puertos
         Task ActualizarVersion(Version version);
         Task EliminarVersion(int codigoVersion);
 
-        Task<bool> ExistenPrevisionesEnVersion(int codigoVersion);
-
-        Task<bool> ExistenSobreprimasEnVersion(int codigoVersion);
-        Task<bool> ExistenCondicionesEnVersion(int codigoVersion);
-
-
         /// <summary>
         /// Obtener importes de los medios
         /// </summary>
