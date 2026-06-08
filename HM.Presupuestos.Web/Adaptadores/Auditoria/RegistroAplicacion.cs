@@ -72,8 +72,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             int codigoMenu = _mapaMenu.ObtenerCodigoMenuPorUrl(urlActual);
             var accion = AccionesLog.AccesoAPagina.ObtenerDescripcion();
 
-            string accionConDetalle = $"[{(int)AccionesLog.AccesoAPagina}] {string.Format(accion.ToString(), tituloPagina)} [{urlActual}] [{codigoMenu}]";
-            await _logAccionesService.Insertar(accionConDetalle);
+            string accionConDetalle = $"[{(int)AccionesLog.AccesoAPagina}](RegistrarAccesoAPagina) -> {string.Format(accion.ToString(), tituloPagina)} [{urlActual}] [{codigoMenu}]";
+            await _logAccionesService.Insertar(new LogAccion { Accion = accionConDetalle });
         }
 
 

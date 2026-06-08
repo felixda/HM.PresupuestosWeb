@@ -574,7 +574,10 @@
                                                  },
                                      "CamposObligatorios":  {
                                                                 "label":  "Deve selecionar o tipo de auditoria"
-                                                            }
+                                                            },
+                                     "Pagina":  {
+                                                    "label":  "Página"
+                                                }
                                  },
                   "AnioDiario":  {
                                      "ToolTip":  {

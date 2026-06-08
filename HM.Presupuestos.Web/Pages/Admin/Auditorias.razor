@@ -49,13 +49,37 @@ else
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ListRenderMode="ListRenderMode.Entire"
-                                        @bind-Value="@TipoAuditoriaSeleccionado">
+                                        Value="@TipoAuditoriaSeleccionado"
+                                        ValueChanged="@((int? v) => { TipoAuditoriaSeleccionado = v; if (v != (int)AccionesLog.AccesoAPagina) PaginaSeleccionada = null; })">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
                             </DxComboBox>
                         </Template>
                     </DxFormLayoutItem>
+
+                    @if (TipoAuditoriaSeleccionado == (int)AccionesLog.AccesoAPagina)
+                    {
+                        <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                                          Caption="@ObtenerTexto(AppResources.Pages.Auditorias.Pagina)"
+                                          CaptionPosition="CaptionPosition.Vertical">
+                            <Template>
+                                <DxComboBox Data="@PaginasNavegables"
+                                            TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                            ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                            SearchMode="@ListSearchMode.AutoSearch"
+                                            SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                            ListRenderMode="ListRenderMode.Entire"
+                                            NullText="@ObtenerTexto(AppResources.Common.Todos)"
+                                            @bind-Value="@PaginaSeleccionada">
+                                    <EditBoxDisplayTemplate Context="contexto">
+                                        @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                    </EditBoxDisplayTemplate>
+                                </DxComboBox>
+                            </Template>
+                        </DxFormLayoutItem>
+                    }
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaInicio)"

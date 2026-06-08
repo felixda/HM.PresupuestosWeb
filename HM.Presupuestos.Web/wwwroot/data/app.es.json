@@ -565,6 +565,9 @@
       },
       "CamposObligatorios": {
         "label": "Debe seleccionar el tipo de auditoría"
+      },
+      "Pagina": {
+        "label": "Página"
       }
     },
     "AnioDiario": {

@@ -35,7 +35,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             await Task.Run(() => dah.ExecuteNonQuery());
         }
 
-        public async Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin)
+        public async Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin, int? codigoPagina = null)
         {
             List<Auditoria> resultado = [];
 
@@ -45,6 +45,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                  WHERE DES_PROCESO LIKE :Patron
                        {(fechaInicio.HasValue ? "AND FECHA_INICIO >= :FechaInicio" : "")}
                        {(fechaFin.HasValue ? "AND FECHA_INICIO <= :FechaFin" : "")}
+                       {(codigoPagina.HasValue ? "AND DES_PROCESO LIKE :PatronPagina" : "")}
                  ORDER BY FECHA_INICIO DESC";
 
             dah.GetSqlStringComando(query);
@@ -56,6 +57,9 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             if (fechaFin.HasValue)
                 dah.AddParameter("FechaFin", fechaFin.Value);
+
+            if (codigoPagina.HasValue)
+                dah.AddParameter("PatronPagina", $"%[{codigoPagina.Value}]");
 
             await Task.Run(() =>
             {
@@ -78,8 +82,12 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         private static string QuitarPrefijoAccion(string descripcion)
         {
-            int pos = descripcion.IndexOf(']');
-            return pos >= 0 ? descripcion[(pos + 1)..].TrimStart() : descripcion;
+            int separador = descripcion.IndexOf("-> ", StringComparison.Ordinal);
+            if (separador >= 0)
+                return descripcion[(separador + 3)..].TrimStart();
+
+            int corchete = descripcion.IndexOf(']');
+            return corchete >= 0 ? descripcion[(corchete + 1)..].TrimStart() : descripcion;
         }
 
         private static string ExtraerUsuario(string parametrosJson)

@@ -838,6 +838,9 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
                 /// <summary>Debe seleccionar el tipo de auditoría</summary>
                 public const string CamposObligatorios = "Pages:Auditorias:CamposObligatorios:label";
+
+                /// <summary>Página</summary>
+                public const string Pagina = "Pages:Auditorias:Pagina:label";
             }
 
             #endregion

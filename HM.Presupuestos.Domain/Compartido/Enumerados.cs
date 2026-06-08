@@ -141,8 +141,6 @@ namespace HM.Presupuestos.Domain.Compartido
         ModificarVigencia = 4,
         [Description("Eliminar Vigencia")]
         EliminarVigencia = 5,
-        [Description("Acceder a la aplicación")]
-        AccederAplicacion = 6,
         [Description("Lanzar proceso copia Inversiones (PKG_COPIAR_PREVISIONES.SET_COPIAR_PREVISIONES)")]
         CopiarInversiones = 7,
         [Description("Poceso copia Inversiones finalizado (PKG_COPIAR_PREVISIONES.SET_COPIAR_PREVISIONES)")]

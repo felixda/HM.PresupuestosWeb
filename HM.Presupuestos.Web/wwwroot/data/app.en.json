@@ -574,7 +574,10 @@
                                                  },
                                      "CamposObligatorios":  {
                                                                 "label":  "You must select the audit type"
-                                                            }
+                                                            },
+                                     "Pagina":  {
+                                                    "label":  "Page"
+                                                }
                                  },
                   "AnioDiario":  {
                                      "ToolTip":  {

@@ -105,9 +105,9 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
         }
 
 
-        public async Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin)
+        public async Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin, int? codigoPagina = null)
         {
-            return await _logAccionesRepository.ObtenerAuditorias(tipo, fechaInicio, fechaFin);
+            return await _logAccionesRepository.ObtenerAuditorias(tipo, fechaInicio, fechaFin, codigoPagina);
         }
 
         private async Task InsertErrorLog(Exception exception, int codigoUsuario, [CallerMemberName] string nombreMetodoLlamador = "")

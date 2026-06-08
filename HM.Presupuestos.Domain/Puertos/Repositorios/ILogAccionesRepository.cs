@@ -8,7 +8,7 @@ namespace HM.Presupuestos.Domain.Puertos
     public interface ILogAccionesRepository
     {
         Task Insertar(LogAccion logAccion);
-        Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin);
+        Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin, int? codigoPagina = null);
     }
 }
 

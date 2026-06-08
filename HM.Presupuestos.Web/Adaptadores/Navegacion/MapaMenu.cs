@@ -14,6 +14,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         string ObtenerEtiquetaMenu(CodigosMenu codigoMenu);
         string ObtenerIconoMenu(CodigosMenu codigoMenu);
         string ObtenerVisibilidadMenu(CodigosMenu codigoMenu);
+        List<CodigoDescripcion> ObtenerPaginasNavegables();
     }
 
     public class MapaMenu : IMapaMenu
@@ -130,6 +131,42 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         public string ObtenerVisibilidadMenu(CodigosMenu codigoMenu)
         {
             return _localizadorRecursos.ObtenerTexto($"Menu:Menu_{(int)codigoMenu}:visible");
+        }
+
+        public List<CodigoDescripcion> ObtenerPaginasNavegables()
+        {
+            var resultado = new List<CodigoDescripcion>();
+            try
+            {
+                var doc = _proveedorJson.ObtenerDocumento(IdiomaActual);
+                if (doc == null) return resultado;
+
+                var root = doc.RootElement;
+                if (!root.TryGetProperty("Menu", out var menuSection)) return resultado;
+
+                foreach (var item in menuSection.EnumerateObject())
+                {
+                    var menuItem = item.Value;
+                    if (!menuItem.TryGetProperty("url", out var urlProp)) continue;
+                    var url = urlProp.GetString();
+                    if (string.IsNullOrEmpty(url)) continue;
+                    if (!menuItem.TryGetProperty("code", out var codeProp)) continue;
+                    if (!menuItem.TryGetProperty("label", out var labelProp)) continue;
+
+                    resultado.Add(new CodigoDescripcion
+                    {
+                        Codigo = codeProp.GetInt32(),
+                        Descripcion = labelProp.GetString() ?? string.Empty
+                    });
+                }
+
+                resultado = [.. resultado.OrderBy(x => x.Descripcion)];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MapaMenu] Error en ObtenerPaginasNavegables: {ex.Message}");
+            }
+            return resultado;
         }
     }
 }

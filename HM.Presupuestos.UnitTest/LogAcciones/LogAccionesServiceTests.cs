@@ -46,7 +46,7 @@ public class LogAccionesServiceTests
         };
 
         _repositoryMock
-            .Setup(r => r.ObtenerAuditorias(tipo, null, null))
+            .Setup(r => r.ObtenerAuditorias(tipo, null, null, null))
             .ReturnsAsync(auditorias);
 
         // Act
@@ -54,7 +54,7 @@ public class LogAccionesServiceTests
 
         // Assert
         Assert.That(resultado, Has.Count.EqualTo(2));
-        _repositoryMock.Verify(r => r.ObtenerAuditorias(tipo, null, null), Times.Once);
+        _repositoryMock.Verify(r => r.ObtenerAuditorias(tipo, null, null, null), Times.Once);
     }
 
     [Test]
@@ -66,14 +66,14 @@ public class LogAccionesServiceTests
         var fechaFin = new DateTime(2026, 6, 8);
 
         _repositoryMock
-            .Setup(r => r.ObtenerAuditorias(tipo, fechaInicio, fechaFin))
+            .Setup(r => r.ObtenerAuditorias(tipo, fechaInicio, fechaFin, null))
             .ReturnsAsync([]);
 
         // Act
         var resultado = await _sut.ObtenerAuditorias(tipo, fechaInicio, fechaFin);
 
         // Assert
-        _repositoryMock.Verify(r => r.ObtenerAuditorias(tipo, fechaInicio, fechaFin), Times.Once);
+        _repositoryMock.Verify(r => r.ObtenerAuditorias(tipo, fechaInicio, fechaFin, null), Times.Once);
     }
 
     [Test]
@@ -81,7 +81,7 @@ public class LogAccionesServiceTests
     {
         // Arrange
         _repositoryMock
-            .Setup(r => r.ObtenerAuditorias(It.IsAny<AccionesLog>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>()))
+            .Setup(r => r.ObtenerAuditorias(It.IsAny<AccionesLog>(), It.IsAny<DateTime?>(), It.IsAny<DateTime?>(), It.IsAny<int?>()))
             .ReturnsAsync(new List<Auditoria>());
 
         // Act
@@ -102,7 +102,7 @@ public class LogAccionesServiceTests
         };
 
         _repositoryMock
-            .Setup(r => r.ObtenerAuditorias(tipo, null, null))
+            .Setup(r => r.ObtenerAuditorias(tipo, null, null, null))
             .ReturnsAsync(auditorias);
 
         // Act
@@ -112,6 +112,46 @@ public class LogAccionesServiceTests
         Assert.That(resultado, Has.Count.EqualTo(1));
         Assert.That(resultado[0].Descripcion, Is.EqualTo("[1] -> Entrar"));
         Assert.That(resultado[0].Usuario, Is.EqualTo("Felix Davilla"));
+    }
+
+    [Test]
+    public async Task ObtenerAuditorias_ConCodigoPagina_DelegaEnRepositorioConCodigoPagina()
+    {
+        // Arrange
+        var tipo = AccionesLog.AccesoAPagina;
+        var codigoPagina = 26;
+        var auditorias = new List<Auditoria>
+        {
+            new() { Descripcion = "Acceso a la página: Auditorías", FechaInicio = new DateTime(2026, 6, 8), Usuario = "Felix Davilla" },
+        };
+
+        _repositoryMock
+            .Setup(r => r.ObtenerAuditorias(tipo, null, null, codigoPagina))
+            .ReturnsAsync(auditorias);
+
+        // Act
+        var resultado = await _sut.ObtenerAuditorias(tipo, null, null, codigoPagina);
+
+        // Assert
+        Assert.That(resultado, Has.Count.EqualTo(1));
+        _repositoryMock.Verify(r => r.ObtenerAuditorias(tipo, null, null, codigoPagina), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerAuditorias_SinCodigoPagina_DelegaEnRepositorioConCodigoPaginaNull()
+    {
+        // Arrange
+        var tipo = AccionesLog.AccesoAPagina;
+
+        _repositoryMock
+            .Setup(r => r.ObtenerAuditorias(tipo, null, null, null))
+            .ReturnsAsync([]);
+
+        // Act
+        var resultado = await _sut.ObtenerAuditorias(tipo, null, null);
+
+        // Assert
+        _repositoryMock.Verify(r => r.ObtenerAuditorias(tipo, null, null, null), Times.Once);
     }
 
     #endregion

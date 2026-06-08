@@ -8,6 +8,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
         #region Inyección de Dependencias
 
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
+        [Inject] protected IMapaMenu MapaMenu { get; set; } = default!;
 
         #endregion
 
@@ -18,6 +19,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
         private DateTime? FechaInicio { get; set; }
         private DateTime? FechaFin { get; set; }
         private List<Auditoria> ResultadoAuditorias { get; set; } = [];
+        private List<CodigoDescripcion> PaginasNavegables { get; set; } = [];
+        private int? PaginaSeleccionada { get; set; }
 
         #endregion
 
@@ -33,6 +36,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
                 })
                 .OrderBy(x => x.Descripcion)
                 .ToList();
+
+            PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
         }
 
         protected override Task OnPermisoDenegadoAsync()
@@ -57,7 +62,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
             await EjecutarAsync(async () =>
             {
                 AccionesLog tipo = (AccionesLog)TipoAuditoriaSeleccionado.Value;
-                ResultadoAuditorias = await LogAccionesService.ObtenerAuditorias(tipo, FechaInicio, FechaFin);
+                ResultadoAuditorias = await LogAccionesService.ObtenerAuditorias(tipo, FechaInicio, FechaFin, PaginaSeleccionada);
             });
         }
 
@@ -66,6 +71,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
             TipoAuditoriaSeleccionado = null;
             FechaInicio = null;
             FechaFin = null;
+            PaginaSeleccionada = null;
             ResultadoAuditorias = [];
             await InvokeAsync(StateHasChanged);
         }
