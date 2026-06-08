@@ -1,19 +1,30 @@
 @page "/admin/auditorias"
 
-@using HM.Presupuestos.Domain.Compartido
-@using HM.Presupuestos.Domain.Entidades
 @using HM.Presupuestos.Domain.Entidades.LogAcciones
-@using HM.Presupuestos.Web.Componentes.Base
 
-@inherits Context
+@inherits ContextProtegido
 
 @attribute [Authorize]
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
 {
-    <PageTitle>@ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Auditorias}:label")</PageTitle>
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    @* Estado: usuario sin permisos *@
+    <div class="alert alert-danger text-center m-5" role="alert">
+        <h4 class="alert-heading">❌ Acceso Denegado</h4>
+        <p>No tiene permisos para acceder a <strong>@TituloPagina</strong>.</p>
+        <hr>
+        <p class="mb-0">Contacte al administrador si cree que debería tener acceso.</p>
+    </div>
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
     <PageHeader CodigoMenu="@CodigosMenu.Auditorias"
-                Titulo="@ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Auditorias))"
+                Titulo="@TituloPagina"
                 TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Auditorias.ToolTip)" />
 
     <div class="layoutContainer">
@@ -31,14 +42,14 @@
                             <span>@ObtenerTexto(AppResources.Pages.Auditorias.TipoAuditoria)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_tiposAuditoria"
+                            <DxComboBox Data="@TiposAuditoria"
                                         TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                         ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ListRenderMode="ListRenderMode.Entire"
-                                        @bind-Value="@_tipoAuditoriaSeleccionado">
+                                        @bind-Value="@TipoAuditoriaSeleccionado">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -49,7 +60,7 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaInicio)"
                                       CaptionPosition="CaptionPosition.Vertical">
-                        <DxDateEdit @bind-Date="@_fechaInicio"
+                        <DxDateEdit @bind-Date="@FechaInicio"
                                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                     NullText="@ObtenerTexto(AppResources.Common.Todos)" />
                     </DxFormLayoutItem>
@@ -57,24 +68,24 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaFin)"
                                       CaptionPosition="CaptionPosition.Vertical">
-                        <DxDateEdit @bind-Date="@_fechaFin"
+                        <DxDateEdit @bind-Date="@FechaFin"
                                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                     NullText="@ObtenerTexto(AppResources.Common.Todos)" />
                     </DxFormLayoutItem>
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
                                       BeginRow="true">
-                        <div class="d-flex justify-content-start gap-2">
-                            <DxButton CssClass="toolbarButtonCustom"
-                                      RenderStyle="ButtonRenderStyle.None"
-                                      IconCssClass="fa-solid fa-eraser"
-                                      Text="@ObtenerTexto(AppResources.Common.Limpiar)"
-                                      Click="LimpiarFiltroAsync" />
-                            <DxButton CssClass="toolbarButtonCustom"
+                        <div class="d-flex justify-content-between">
+                            <DxButton CssClass="btnCustom"
                                       RenderStyle="ButtonRenderStyle.None"
                                       IconCssClass="fa-solid fa-magnifying-glass"
                                       Text="@ObtenerTexto(AppResources.Common.Buscar)"
                                       Click="BuscarAuditoriasAsync" />
+                            <DxButton CssClass="btnCustom"
+                                      RenderStyle="ButtonRenderStyle.None"
+                                      IconCssClass="fa-solid fa-eraser"
+                                      Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                                      Click="LimpiarFiltroAsync" />
                         </div>
                     </DxFormLayoutItem>
                 </Items>
@@ -82,7 +93,7 @@
         </DxFormLayout>
 
         @* RESULTADOS *@
-        <DxGrid Data="@_resultadoAuditorias"
+        <DxGrid Data="@ResultadoAuditorias"
                 PageSize="20"
                 ColumnResizeMode="GridColumnResizeMode.NextColumn"
                 TextWrapEnabled="false"

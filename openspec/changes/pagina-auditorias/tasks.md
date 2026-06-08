@@ -47,4 +47,4 @@
 
 ## 9. Commit
 
-- [ ] 9.1 Hacer commit con mensaje convencional: `feat(admin): añadir página de auditorías con consulta filtrada por tipo y fechas`
+- [x] 9.1 Hacer commit con mensaje convencional: `feat(admin): añadir página de auditorías con consulta filtrada por tipo y fechas`

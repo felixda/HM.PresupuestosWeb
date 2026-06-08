@@ -56,11 +56,65 @@ public partial class Versiones   // partial — se une con el .razor en compilac
 | Clase base | Cuándo usarla |
 |---|---|
 | `Context` | Componentes sin control de acceso: `PageHeader`, `NavMenu`, componentes compartidos |
-| `ContextProtegido` | Páginas con permisos: `Indicadores`, `Versiones`, `Condiciones`, cualquier página de negocio |
+| `ContextProtegido` | **Por defecto para cualquier página nueva.** Páginas con permisos: `Indicadores`, `Versiones`, `Condiciones`, Admin, etc. |
+
+> **Regla**: si no hay una razón explícita para usar `Context`, usar siempre `ContextProtegido`.
 
 `Context` proporciona: `MensajesHelper`, `NavigationManager`, `ObtenerTexto()`, `EjecutarAsync()`, `TituloPagina`, `ContextoUsuario`, `Usuario`.
 
 `ContextProtegido` añade: `TienePermiso`, `ValidandoPermisos`, y el hook `InicializarPaginaAsync()`.
+
+### Patrón de guard en el markup
+
+Las páginas que heredan de `ContextProtegido` **nunca usan `_componentInitialized`**. Usar el patrón de tres estados:
+
+```razor
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    @* Estado: usuario sin permisos *@
+    <div class="alert alert-danger text-center m-5" role="alert">
+        <h4 class="alert-heading">❌ Acceso Denegado</h4>
+        <p>No tiene permisos para acceder a <strong>@TituloPagina</strong>.</p>
+        <hr>
+        <p class="mb-0">Contacte al administrador si cree que debería tener acceso.</p>
+    </div>
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.MiPagina" Titulo="@TituloPagina" TextoToolTipAyuda="..." />
+    <div class="layoutContainer">
+        @* Contenido de la página *@
+    </div>
+}
+```
+
+### Code-behind de `ContextProtegido`
+
+La inicialización de datos va en `InicializarPaginaAsync()`. **No usar `OnAfterRenderAsync` ni `_componentInitialized`**:
+
+```csharp
+public partial class MiPagina
+{
+    [Inject] protected IMiServicio MiServicio { get; set; } = default!;
+
+    private List<MiEntidad> _datos = [];
+
+    protected override async Task InicializarPaginaAsync()
+    {
+        _datos = await MiServicio.ObtenerDatos();
+    }
+
+    protected override Task OnPermisoDenegadoAsync()
+    {
+        return Task.CompletedTask;
+    }
+}
+```
 
 ## Ciclo de Vida de Componentes
 
@@ -147,37 +201,99 @@ await EjecutarAsync(async () =>
 }, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
 ```
 
-## Estado de la Página — Campos Privados
+## Estado de la Página — Nomenclatura de Campos y Propiedades
 
-El estado de UI se almacena en campos `_privados` (prefijo `_`). Organizar con `#region`:
+La distinción es clave y **obligatoria**:
+
+| Tipo | Formato | Cuándo |
+|---|---|---|
+| Propiedad con `@bind-*` en el razor | `PascalCase` con `{ get; set; }` | Filtros, selecciones, valores de formulario, datos del grid |
+| Campo interno sin binding | `_camelCase` sin `{ get; set; }` | Flags, refs de componentes DevExpress, estado auxiliar no reactivo |
+| Propiedad calculada | `PascalCase` con `=>` | Derivada de otras propiedades |
 
 ```csharp
 #region Private Properties
 
-#region Filter
-private CodigoDescripcion? ItemYearSelected { get; set; }
+#region Filtro
+// ✅ Propiedades con binding — PascalCase
+private List<CodigoDescripcion> TiposAuditoria { get; set; } = [];
+private int? TipoAuditoriaSeleccionado { get; set; }
+private DateTime? FechaInicio { get; set; }
+private DateTime? FechaFin { get; set; }
+private List<Auditoria> ResultadoAuditorias { get; set; } = [];
 #endregion
 
-#region Grid Versiones
-private IGrid? GridVersiones { get; set; }
-private List<Version> _listVersion = [];
+#region Grid
+// ✅ Ref de componente — campo _camelCase
+private IGrid? _gridVersiones;
+// ✅ Estado interno sin binding — campo _camelCase
 private List<Version> _listOriginVersion = [];
-private List<Indicador> _listMasterIndicador = [];
 #endregion
 
-#region Popup Edición
+#region Popup
+// ✅ Visible del popup — propiedad PascalCase (bindeada con @bind-Visible)
 private bool EsPopupEdicionVisible { get; set; }
+// ✅ Objeto en edición — campo _camelCase (no bindeado directamente)
 private Version? _versionEnEdicion;
-private ModoEdicion _modoEdicion = ModoEdicion.Alta;
 #endregion
 
 #endregion
 
-// Propiedades computadas de estado
+// ✅ Propiedades calculadas — PascalCase con =>
 private bool HayCambios =>
-    JsonSerializer.Serialize(_listVersion) != JsonSerializer.Serialize(_listOriginVersion);
-private bool HayCambiosPendientes =>
-    _condicionesNoGuardados.Count > 0;
+    JsonSerializer.Serialize(ResultadoAuditorias) != JsonSerializer.Serialize(_listOriginVersion);
+```
+
+> **Regla práctica**: si aparece `@bind-Value`, `@bind-Date`, `@bind-Visible`, `Data="@..."` u otro binding en el `.razor`, la propiedad va en PascalCase. Si es solo estado interno del code-behind (flag, referencia a componente, caché), va como campo `_camelCase`.
+
+
+## DevExpress — DxFormLayout (Filtros)
+
+Los paneles de filtro siguen este patrón estándar:
+
+- Usar `DxFormLayoutGroup` con `Caption="@ObtenerTexto(AppResources.Common.Filtros)"`, `ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"` y `AnimationType="LayoutAnimationType.Slide"`
+- Los campos obligatorios usan `<CaptionTemplate>` con `<span class="mandatory"></span>` en lugar de `Caption`
+- Los botones de acción van en un `DxFormLayoutItem` al final, dentro de `<div class="d-flex justify-content-start gap-2">`
+- **Orden de botones**: siempre **Buscar primero**, Limpiar después
+- **Clase de botones**: usar `btnCustom` (no `toolbarButtonCustom`, que es para toolbars del grid)
+
+```razor
+<DxFormLayout>
+    <DxFormLayoutGroup CssClass="filterContainer"
+                       Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                       ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                       AnimationType="LayoutAnimationType.Slide">
+        <Items>
+            @* Campo obligatorio con asterisco *@
+            <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                              CaptionPosition="CaptionPosition.Vertical" BeginRow="true">
+                <CaptionTemplate>
+                    <span>@ObtenerTexto(AppResources.Pages.MiPagina.MiCampo)</span><span class="mandatory"></span>
+                </CaptionTemplate>
+                <Template>
+                    <DxComboBox ... />
+                </Template>
+            </DxFormLayoutItem>
+
+            @* Botones de filtro — Buscar PRIMERO, luego Limpiar *@
+            <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                              BeginRow="true">
+                <div class="d-flex justify-content-start gap-2">
+                    <DxButton CssClass="btnCustom"
+                              RenderStyle="ButtonRenderStyle.None"
+                              IconCssClass="fa-solid fa-magnifying-glass"
+                              Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                              Click="BuscarAsync" />
+                    <DxButton CssClass="btnCustom"
+                              RenderStyle="ButtonRenderStyle.None"
+                              IconCssClass="fa-solid fa-eraser"
+                              Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                              Click="LimpiarFiltroAsync" />
+                </div>
+            </DxFormLayoutItem>
+        </Items>
+    </DxFormLayoutGroup>
+</DxFormLayout>
 ```
 
 ## DevExpress — DxGrid

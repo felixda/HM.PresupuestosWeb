@@ -1,5 +1,4 @@
 using HM.Core.Comun.v6.Seguridad.Interfaces;
-using HM.Core.Servidor.v6.DAL;
 using HM.Core.Servidor.v6.DAL.Interfaces;
 using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
@@ -66,7 +65,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                     {
                         resultado.Add(new Auditoria
                         {
-                            Descripcion = dr.GetString("DES_PROCESO"),
+                            Descripcion = QuitarPrefijoAccion(dr.GetString("DES_PROCESO")),
                             FechaInicio = dr.GetDateTime("FECHA_INICIO"),
                             Usuario = ExtraerUsuario(dr.GetNullableString("PARAMETROS") ?? string.Empty)
                         });
@@ -75,6 +74,12 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             });
 
             return resultado;
+        }
+
+        private static string QuitarPrefijoAccion(string descripcion)
+        {
+            int pos = descripcion.IndexOf(']');
+            return pos >= 0 ? descripcion[(pos + 1)..].TrimStart() : descripcion;
         }
 
         private static string ExtraerUsuario(string parametrosJson)
