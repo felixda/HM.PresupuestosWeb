@@ -6,6 +6,20 @@ Ver la guía de markup en: [blazor-razor.md](blazor-razor.md)
 
 ---
 
+## 0. Convenciones de nomenclatura
+
+| Tipo de miembro | Convención | Ejemplo |
+|---|---|---|
+| Miembro **bindeado** en el razor (`@bind-Value`, `@bind-Date`, `Data=`, `Enabled=`, etc.) | `PascalCase` con `{ get; set; }` | `private int? TipoSeleccionado { get; set; }` |
+| Lista/colección que actúa como fuente de datos (`Data=`) | `PascalCase` con `{ get; set; }` | `private List<CodigoDescripcion> TiposAuditoria { get; set; } = [];` |
+| Campo **interno** no expuesto al razor | `_camelCase` | `private ModoEdicion _modoEdicion = ModoEdicion.Alta;` |
+| Propiedad computada (solo lectura) | `PascalCase` | `private bool HayCambios => ...;` |
+| Referencia a componente DevExpress (`@ref`) | `PascalCase` con `{ get; set; }` | `private DxGrid Grid { get; set; } = new DxGrid();` |
+
+> **Regla clave**: si el miembro aparece en el markup del `.razor` como valor de un atributo (aunque sea solo lectura desde el razor), debe ser una **propiedad PascalCase**. Esto garantiza que Blazor puede rastrear los cambios y el StateHasChanged funcione correctamente.
+
+---
+
 ## 1. Plantilla Completa — `MiPagina.razor.cs`
 
 ```csharp
@@ -27,21 +41,21 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
         #endregion
 
         #region Filtro
-        private List<CodigoDescripcion> _anios = [];
-        private CodigoDescripcion? _anioSeleccionado { get; set; }
+        private List<CodigoDescripcion> Anios { get; set; } = [];          // bindeado → PascalCase
+        private CodigoDescripcion? AnioSeleccionado { get; set; }          // bindeado → PascalCase
         #endregion
 
         #region Grid
-        private DxGrid Grid { get; set; } = new DxGrid();
-        private List<MiEntidad> _datos = [];
-        private List<MiEntidad> _datosOriginal = [];   // copia para detectar cambios
+        private DxGrid Grid { get; set; } = new DxGrid();                  // @ref → PascalCase
+        private List<MiEntidad> Datos { get; set; } = [];                  // Data= → PascalCase
+        private List<MiEntidad> _datosOriginal = [];                       // interno → _camelCase
         #endregion
 
         #region Popup Edición
-        private bool EsPopupVisible { get; set; }
+        private bool EsPopupVisible { get; set; }                          // bindeado → PascalCase
         private string TituloPopup { get; set; } = string.Empty;
-        private MiEntidad _entidadEnEdicion = new();
-        private ModoEdicion _modoEdicion = ModoEdicion.Alta;
+        private MiEntidad _entidadEnEdicion = new();                       // interno → _camelCase
+        private ModoEdicion _modoEdicion = ModoEdicion.Alta;               // interno → _camelCase
         #endregion
 
         #endregion

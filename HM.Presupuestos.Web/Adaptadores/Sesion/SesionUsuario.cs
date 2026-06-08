@@ -271,7 +271,18 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             // TODO: Eliminar esta línea cuando ya no sea necesario
            // usuario.Menus.RemoveAll(m => m.Id == 1);
 
-            // ? VALIDAR Y FILTRAR MENÚS CON URLs INVÁLIDAS
+            // TODO-TEMPORAL: Añadir menú 26 (Auditorías) como hijo de Administración (20) hasta que se configure en HM.CORE.
+            //                ELIMINAR este bloque cuando el menú esté dado de alta en el core.
+            usuario.Menus.Add(new Menu
+            {
+                Id = (int)CodigosMenu.Auditorias,
+                IdPadre = (int)CodigosMenu.Administracion,
+                NombreMenu = "Auditorías",
+                IndOrdenacion = 99
+            });
+            // FIN TODO-TEMPORAL
+
+            // ✅ VALIDAR Y FILTRAR MENÚS CON URLs INVÁLIDAS
             await FiltrarMenusInvalidosAsync(usuario);
 
 

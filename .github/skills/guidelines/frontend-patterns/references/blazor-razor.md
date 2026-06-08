@@ -307,19 +307,45 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
 
 ### Campo obligatorio con asterisco
 
+Cuando un campo del filtro o formulario es **obligatorio**, se marca visualmente usando `CaptionTemplate` con la clase CSS `mandatory`.
+
+> **Regla crítica**: en cuanto se usa `CaptionTemplate`, el control hijo **ya no puede ir suelto** dentro del `DxFormLayoutItem` — debe ir obligatoriamente dentro de `<Template>`. De lo contrario Blazor lanza `RZ9996: Unrecognized child content`.
+
 ```razor
 <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical">
     <CaptionTemplate>
         <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
     </CaptionTemplate>
-    <Template>
-        <DxComboBox Data="@_anios"
+    <Template>                                  ← obligatorio cuando hay CaptionTemplate
+        <DxComboBox Data="@Anios"
                     TextFieldName="Descripcion"
                     ValueFieldName="Codigo"
-                    @bind-Value="@_anioSeleccionado" />
+                    @bind-Value="@AnioSeleccionado" />
     </Template>
 </DxFormLayoutItem>
 ```
+
+El mismo patrón aplica a cualquier control (`DxDateEdit`, `DxTextBox`, `DxSpinEdit`, etc.):
+
+```razor
+<DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical">
+    <CaptionTemplate>
+        <span>Fecha inicio</span><span class="mandatory"></span>
+    </CaptionTemplate>
+    <Template>
+        <DxDateEdit @bind-Date="@FechaInicio" NullText="dd/mm/yyyy" />
+    </Template>
+</DxFormLayoutItem>
+```
+
+Campos **opcionales** no necesitan `CaptionTemplate` y pueden usar el atributo `Caption` directamente:
+
+```razor
+<DxFormLayoutItem Caption="Fecha fin" CaptionPosition="CaptionPosition.Vertical">
+    <DxDateEdit @bind-Date="@FechaFin" NullText="dd/mm/yyyy" />
+</DxFormLayoutItem>
+```
+
 
 ### DropDownBox con selección múltiple
 

@@ -1,4 +1,3 @@
-using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Presupuestos.Application.CasosDeUso.Compartido;
 using static HM.Presupuestos.Application.CasosDeUso.CondicionesService;
 

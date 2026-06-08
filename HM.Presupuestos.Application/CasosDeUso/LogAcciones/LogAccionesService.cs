@@ -67,7 +67,26 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
         /// </remarks>
         public async Task Insertar(AccionesLog accion, object? parametros = null, [CallerMemberName] string nombreMetodoLlamador = "")
         {
-            await Insertar(accion.ObtenerDescripcion(), parametros, nombreMetodoLlamador);
+            _logger.Trace($"Llamando método Insertar");
+            try
+            {
+                string parametrosJson = parametros != null
+                    ? System.Text.Json.JsonSerializer.Serialize(parametros)
+                    : string.Empty;
+
+                LogAccion logAccion = new()
+                {
+                    CodigoUsuario = CodigoUsuario,
+                    Accion = $"[{(int)accion}] ({nombreMetodoLlamador}) -> {accion.ObtenerDescripcion()} ",
+                    Parametros = parametrosJson
+                };
+
+                await _logAccionesRepository.Insertar(logAccion);
+            }
+            catch (Exception ex)
+            {
+                await InsertErrorLog(ex, CodigoUsuario);
+            }
         }
 
 

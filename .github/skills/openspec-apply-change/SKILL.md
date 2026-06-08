@@ -32,7 +32,29 @@ Implement tasks from an OpenSpec change.
    - `schemaName`: The workflow being used (e.g., "spec-driven")
    - Which artifact contains the tasks (typically "tasks" for spec-driven, check status for others)
 
-3. **Get apply instructions**
+3. **Verificar que se ha ejecutado openspec-propose antes de implementar**
+
+   Antes de continuar, comprobar que existen los artefactos mínimos del cambio:
+   - `proposal.md` — qué se va a hacer y por qué
+   - `design.md` — cómo, capas afectadas, entidades, puertos, textos de UI y auditoría
+   - `tasks.md` — lista de tareas ordenadas de dentro hacia fuera
+
+   Si alguno de estos ficheros **no existe**, detener la ejecución y avisar al usuario:
+
+   > ⚠️ **No se puede implementar sin pasar por openspec-propose.**
+   > 
+   > Faltan los artefactos: `<lista de los que faltan>`.
+   > 
+   > El flujo correcto es:
+   > 1. `/openspec-explore` — explorar y clarificar requisitos
+   > 2. `/openspec-propose` — generar `proposal.md`, `design.md` y `tasks.md`
+   > 3. `/openspec-apply-change` — implementar tarea a tarea
+   > 
+   > Ejecuta `/openspec-propose <nombre-del-cambio>` para generar los artefactos que faltan.
+
+   Solo continuar si los tres artefactos existen.
+
+4. **Get apply instructions**
 
    ```bash
    openspec instructions apply --change "<name>" --json

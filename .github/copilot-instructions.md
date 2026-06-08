@@ -1,25 +1,21 @@
 # Copilot Instructions — HM.Presupuestos
 
-## Tecnologías
-- .NET 10, Blazor Server (Interactive Server Components)
-- DevExpress Blazor UI (DxGrid, DxPopup, DxFormLayout, DxTreeView, DxDrawer...)
-- Autenticación SSO con Azure AD (Microsoft.Identity.Web + OpenIdConnect)
-- Arquitectura en capas: Domain, Application, Infrastructure, Web
+## Fuente de verdad
 
-## Convenciones de código
-- Los componentes Blazor heredan de `Context` o `ContextProtegido` (nunca de `ComponentBase` directamente)
-- El usuario está disponible en `OnUsuarioDisponibleAsync()`, nunca en `OnInitializedAsync()`
-- Las páginas con permisos implementan `InicializarPaginaAsync()` y `OnPermisoDenegadoAsync()`
-- Las operaciones async se envuelven en `EjecutarAsync(async () => { ... })` para overlay + manejo de errores
-- Los textos y traducciones se obtienen con `ObtenerTexto(AppResources.Seccion.Clave)`
-- Cuando una tarea requiera añadir etiquetas, mensajes o cualquier texto en la UI, seguir el proceso de `.github/prompts/anadir-traduccion.prompt.md`
-- Los menús y permisos vienen del objeto `UsuarioEntidad` obtenido de la API HM.CORE
+Toda convención, patrón de código, regla de arquitectura y proceso de trabajo está definido en:
 
-## Tests E2E
-- Framework: Playwright + NUnit en el proyecto `HM.Presupuestos.E2ETest`
-- La sesión SSO se guarda en `sesion_auth.json` (excluido del repositorio, generado con `GuardarSesion.ps1`)
-- Los tests heredan de `E2ETestBase` y usan `IrAUrl("ruta-relativa")` para navegar
-- La URL base se configura en `appsettings.json` sección `E2ETest:BaseUrl` (default: `https://localhost:7001`)
+- **`openspec/config.yaml`** — contexto del proyecto, convenciones, reglas de arquitectura y proceso OpenSpec
+- **`.github/skills/guidelines/`** — guías detalladas por área:
+  - `architecture-hexagonal/` — capas, estructura de módulos, puertos y adaptadores
+  - `design-principles/` — nomenclatura, funciones, clases, manejo de errores
+  - `testing-standards/` — nomenclatura de tests, estructura AAA, principios FIRST
+  - `xp-tdd-practices/` — ciclo TDD, TPP, inside-out
+  - `frontend-patterns/` — componentes Blazor, ciclo de vida, CSS isolation, DevExpress
+  - `infrastructure/repositories.md` — patrones de queries Oracle en repositorios
+  - `git-strategy/` — feature branching, conventional commits
+
+Antes de implementar cualquier artefacto, leer la guideline correspondiente a la capa afectada.
 
 ## Especificaciones técnicas
-Ver `.github/specs/technical-specs.md` para el stack completo, arquitectura, ciclo de vida de componentes, patrones de código, modelo de datos y estructura de tests.
+
+Ver `.github/specs/technical-specs.md` para diagramas de arquitectura, ejemplos de código por capa y modelo de datos.

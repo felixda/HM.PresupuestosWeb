@@ -246,6 +246,25 @@ public enum CodigosMenu
     Sobreprimas = 14,
     // ...
 }
+```
+
+> **Regla**: al añadir un nuevo valor a `CodigosMenu`, hay que añadir también la entrada `Menu_N` correspondiente en los tres ficheros de recursos JSON de la aplicación:
+> - `HM.Presupuestos.Web/wwwroot/data/app.es.json`
+> - `HM.Presupuestos.Web/wwwroot/data/app.en.json`
+> - `HM.Presupuestos.Web/wwwroot/data/app.pt.json`
+>
+> Estructura de la entrada:
+> ```json
+> "Menu_26": {
+>   "label": "Auditorías",
+>   "url": "/admin/auditorias",
+>   "icono": "fa-solid fa-magnifying-glass-chart",
+>   "visible": true,
+>   "code": 26
+> }
+> ```
+
+```csharp
 
 // Errores de validación tipados (usados con ValidacionException)
 public enum CampoErrorValidacion { Descripcion, Orden, BitAnd }
