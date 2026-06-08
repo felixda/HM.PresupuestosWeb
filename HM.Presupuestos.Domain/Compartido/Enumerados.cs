@@ -35,6 +35,7 @@ namespace HM.Presupuestos.Domain.Compartido
         Impersonacion = 22,
         MesesBloqueados = 23,
         AnioDiario = 25,
+        Auditorias = 26,
     }
 
     /// <summary>

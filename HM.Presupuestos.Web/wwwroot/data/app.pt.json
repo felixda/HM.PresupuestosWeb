@@ -190,6 +190,13 @@
                                  "icono":  "fa-solid fa-clock",
                                  "visible":  true,
                                  "code":  25
+                             },
+                 "Menu_26":  {
+                                 "label":  "Auditorias",
+                                 "url":  "/admin/auditorias",
+                                 "icono":  "fa-solid fa-magnifying-glass-chart",
+                                 "visible":  true,
+                                 "code":  26
                              }
              },
     "Pages":  {
@@ -549,6 +556,26 @@
                                                                   "label":  "Meses Bloqueados"
                                                               }
                                       },
+                  "Auditorias":  {
+                                     "ToolTip":  {
+                                                     "label":  "Auditorias do sistema"
+                                                 },
+                                     "TipoAuditoria":  {
+                                                           "label":  "Tipo de auditoria"
+                                                       },
+                                     "FechaInicio":  {
+                                                         "label":  "Data início"
+                                                     },
+                                     "FechaFin":  {
+                                                      "label":  "Data fim"
+                                                  },
+                                     "Usuario":  {
+                                                     "label":  "Utilizador"
+                                                 },
+                                     "CamposObligatorios":  {
+                                                                "label":  "Deve selecionar o tipo de auditoria"
+                                                            }
+                                 },
                   "AnioDiario":  {
                                      "ToolTip":  {
                                                      "label":  "Permite selecionar ano para o Diário de orÁ§amentos"

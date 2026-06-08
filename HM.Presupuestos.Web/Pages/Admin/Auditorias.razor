@@ -1,0 +1,111 @@
+@page "/admin/auditorias"
+
+@using HM.Presupuestos.Domain.Compartido
+@using HM.Presupuestos.Domain.Entidades
+@using HM.Presupuestos.Domain.Entidades.LogAcciones
+@using HM.Presupuestos.Web.Componentes.Base
+
+@inherits Context
+
+@attribute [Authorize]
+
+@if (_componentInitialized)
+{
+    <PageTitle>@ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Auditorias}:label")</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.Auditorias"
+                Titulo="@ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Auditorias))"
+                TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Auditorias.ToolTip)" />
+
+    <div class="layoutContainer">
+
+        @* FILTROS *@
+        <DxFormLayout>
+            <DxFormLayoutGroup CssClass="filterContainer"
+                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                               AnimationType="LayoutAnimationType.Slide">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                                      CaptionPosition="CaptionPosition.Vertical" BeginRow="true">
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(AppResources.Pages.Auditorias.TipoAuditoria)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxComboBox Data="@_tiposAuditoria"
+                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ListRenderMode="ListRenderMode.Entire"
+                                        @bind-Value="@_tipoAuditoriaSeleccionado">
+                                <EditBoxDisplayTemplate Context="contexto">
+                                    @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
+                                </EditBoxDisplayTemplate>
+                            </DxComboBox>
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaInicio)"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <DxDateEdit @bind-Date="@_fechaInicio"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                    NullText="@ObtenerTexto(AppResources.Common.Todos)" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaFin)"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <DxDateEdit @bind-Date="@_fechaFin"
+                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                    NullText="@ObtenerTexto(AppResources.Common.Todos)" />
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                                      BeginRow="true">
+                        <div class="d-flex justify-content-start gap-2">
+                            <DxButton CssClass="toolbarButtonCustom"
+                                      RenderStyle="ButtonRenderStyle.None"
+                                      IconCssClass="fa-solid fa-eraser"
+                                      Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                                      Click="LimpiarFiltroAsync" />
+                            <DxButton CssClass="toolbarButtonCustom"
+                                      RenderStyle="ButtonRenderStyle.None"
+                                      IconCssClass="fa-solid fa-magnifying-glass"
+                                      Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                                      Click="BuscarAuditoriasAsync" />
+                        </div>
+                    </DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+        @* RESULTADOS *@
+        <DxGrid Data="@_resultadoAuditorias"
+                PageSize="20"
+                ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                TextWrapEnabled="false"
+                HighlightRowOnHover="true">
+            <Columns>
+                <DxGridDataColumn FieldName="@nameof(Auditoria.Descripcion)"
+                                  Caption="@ObtenerTexto(AppResources.Common.Descripcion)"
+                                  Width="50%"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(Auditoria.FechaInicio)"
+                                  Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaInicio)"
+                                  Width="20%"
+                                  DisplayFormat="dd/MM/yyyy HH:mm:ss"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(Auditoria.Usuario)"
+                                  Caption="@ObtenerTexto(AppResources.Pages.Auditorias.Usuario)"
+                                  Width="30%"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+            </Columns>
+        </DxGrid>
+
+    </div>
+}

@@ -181,6 +181,13 @@
       "icono": "fa-solid fa-clock",
       "visible": true,
       "code": 25
+    },
+    "Menu_26": {
+      "label": "Auditorías",
+      "url": "/admin/auditorias",
+      "icono": "fa-solid fa-magnifying-glass-chart",
+      "visible": true,
+      "code": 26
     }
   },
   "Pages": {
@@ -538,6 +545,26 @@
       },
       "MesesBloqueados": {
         "label": "Meses Bloqueados"
+      }
+    },
+    "Auditorias": {
+      "ToolTip": {
+        "label": "Auditorías del sistema"
+      },
+      "TipoAuditoria": {
+        "label": "Tipo auditoria"
+      },
+      "FechaInicio": {
+        "label": "Fecha inicio"
+      },
+      "FechaFin": {
+        "label": "Fecha fin"
+      },
+      "Usuario": {
+        "label": "Usuario"
+      },
+      "CamposObligatorios": {
+        "label": "Debe seleccionar el tipo de auditoría"
       }
     },
     "AnioDiario": {

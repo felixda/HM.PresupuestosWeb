@@ -817,6 +817,31 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         public static class Pages
         {
+            #region Auditorias
+
+            public static class Auditorias
+            {
+                /// <summary>Auditorías del sistema</summary>
+                public const string ToolTip = "Pages:Auditorias:ToolTip:label";
+
+                /// <summary>Tipo auditoria</summary>
+                public const string TipoAuditoria = "Pages:Auditorias:TipoAuditoria:label";
+
+                /// <summary>Fecha inicio</summary>
+                public const string FechaInicio = "Pages:Auditorias:FechaInicio:label";
+
+                /// <summary>Fecha fin</summary>
+                public const string FechaFin = "Pages:Auditorias:FechaFin:label";
+
+                /// <summary>Usuario</summary>
+                public const string Usuario = "Pages:Auditorias:Usuario:label";
+
+                /// <summary>Debe seleccionar el tipo de auditoría</summary>
+                public const string CamposObligatorios = "Pages:Auditorias:CamposObligatorios:label";
+            }
+
+            #endregion
+
             #region AnioDiario
 
             public static class AnioDiario

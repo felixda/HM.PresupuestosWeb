@@ -4,6 +4,7 @@ using HM.Core.Comun.v6.Loggers.Interfaces;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
+using HM.Presupuestos.Domain.Entidades.LogAcciones;
 using System.Runtime.CompilerServices;
 using HM.Presupuestos.Domain.Extensiones;
 
@@ -103,6 +104,11 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
             }
         }
 
+
+        public async Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            return await _logAccionesRepository.ObtenerAuditorias(tipo, fechaInicio, fechaFin);
+        }
 
         private async Task InsertErrorLog(Exception exception, int codigoUsuario, [CallerMemberName] string nombreMetodoLlamador = "")
         {

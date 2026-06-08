@@ -190,6 +190,13 @@
                                  "icono":  "fa-solid fa-clock",
                                  "visible":  true,
                                  "code":  25
+                             },
+                 "Menu_26":  {
+                                 "label":  "Audits",
+                                 "url":  "/admin/auditorias",
+                                 "icono":  "fa-solid fa-magnifying-glass-chart",
+                                 "visible":  true,
+                                 "code":  26
                              }
              },
     "Pages":  {
@@ -549,6 +556,26 @@
                                                                   "label":  "Blocked Months"
                                                               }
                                       },
+                  "Auditorias":  {
+                                     "ToolTip":  {
+                                                     "label":  "System audits"
+                                                 },
+                                     "TipoAuditoria":  {
+                                                           "label":  "Audit type"
+                                                       },
+                                     "FechaInicio":  {
+                                                         "label":  "Start date"
+                                                     },
+                                     "FechaFin":  {
+                                                      "label":  "End date"
+                                                  },
+                                     "Usuario":  {
+                                                     "label":  "User"
+                                                 },
+                                     "CamposObligatorios":  {
+                                                                "label":  "You must select the audit type"
+                                                            }
+                                 },
                   "AnioDiario":  {
                                      "ToolTip":  {
                                                      "label":  "Allows selecting year for the Budgets Journal"
