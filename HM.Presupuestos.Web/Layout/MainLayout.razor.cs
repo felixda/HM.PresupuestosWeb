@@ -17,7 +17,7 @@ namespace HM.Presupuestos.Web.Layout
         [Inject] private IRegistroAplicacion RegistroAplicacion { get; set; } = default!;
         [Inject] private IGestorIdioma GestorIdioma { get; set; } = default!;
         [Inject] private IRutasNavegacion RutasNavegacion { get; set; } = default!;
-        [Inject] private IMapaMenu MapaMenu { get; set; } = default!;
+        [Inject] private IRecursosApp RecursosApp { get; set; } = default!;
 
         #endregion
 

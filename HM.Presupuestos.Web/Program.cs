@@ -133,7 +133,7 @@ builder.Services.AddScoped<CondicionesService>();
 builder.Services.AddScoped<IndicadoresService>();
 builder.Services.AddSingleton<IProveedorRecursosJson, ProveedorRecursosJson>();
 builder.Services.AddScoped<ILocalizadorRecursos, LocalizadorRecursos>();
-builder.Services.AddScoped<IMapaMenu, MapaMenu>();
+builder.Services.AddScoped<IRecursosApp, RecursosApp>();
 builder.Services.AddScoped<IGestorIdioma, GestorIdioma>();
 builder.Services.AddScoped<IAlmacenSesionUsuario, AlmacenSesionUsuario>();
 builder.Services.AddScoped<IRegistroAplicacion, RegistroAplicacion>();

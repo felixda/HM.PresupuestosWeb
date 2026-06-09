@@ -7,14 +7,14 @@ using HM.Presupuestos.Web.Adaptadores.Navegacion;
 namespace HM.Presupuestos.UnitTest.Navegacion;
 
 [TestFixture]
-[Category("MapaMenu")]
-public class MapaMenuTests
+[Category("RecursosApp")]
+public class RecursosAppTests
 {
     private Mock<IProveedorRecursosJson> _proveedorJsonMock;
     private Mock<IGestorIdioma> _gestorIdiomaMock;
     private Mock<ILocalizadorRecursos> _localizadorRecursosMock;
     private IConfiguration _configuracion;
-    private MapaMenu _sut;
+    private RecursosApp _sut;
 
     [SetUp]
     public void SetUp()
@@ -31,7 +31,7 @@ public class MapaMenuTests
             .SetupGet(g => g.IdiomaActual)
             .Returns("es");
 
-        _sut = new MapaMenu(
+        _sut = new RecursosApp(
             _proveedorJsonMock.Object,
             _gestorIdiomaMock.Object,
             _localizadorRecursosMock.Object,

@@ -53,7 +53,7 @@ namespace HM.Presupuestos.Web.Layout
 
             foreach (var menu in menusHijos)
             {
-                var url = menu.Url(MapaMenu) ?? "";
+                var url = menu.Url(RecursosApp) ?? "";
 
                 ConfiguracionMenu menuHijo = new()
                 {
@@ -89,7 +89,7 @@ namespace HM.Presupuestos.Web.Layout
 
             if (!string.IsNullOrEmpty(urlNormalizada))
             {
-                var codigoMenuActivo = MapaMenu.ObtenerCodigoMenuPorUrl(urlNormalizada);
+                var codigoMenuActivo = RecursosApp.ObtenerCodigoMenuPorUrl(urlNormalizada);
 
                 if (codigoMenuActivo > 0)
                 {

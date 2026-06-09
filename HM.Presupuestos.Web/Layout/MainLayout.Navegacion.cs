@@ -92,7 +92,7 @@ namespace HM.Presupuestos.Web.Layout
                     return;
                 }
 
-                string tituloParaLog = MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
+                string tituloParaLog = RecursosApp.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
 
                 await RegistroAplicacion.RegistrarAccesoAPagina(tituloParaLog);
 

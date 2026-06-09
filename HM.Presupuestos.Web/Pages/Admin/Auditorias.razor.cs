@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
         #region Inyección de Dependencias
 
         [Inject] private ILogAccionesService LogAccionesService { get; set; } = default!;
-        [Inject] private IMapaMenu MapaMenu { get; set; } = default!;
+        [Inject] private IRecursosApp RecursosApp { get; set; } = default!;
 
         #endregion
 
@@ -27,8 +27,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         protected override Task InicializarPaginaAsync()
         {
-            TiposAuditoria = MapaMenu.ObtenerAccionesLog();
-            PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
+            TiposAuditoria = RecursosApp.ObtenerAccionesLog();
+            PaginasNavegables = RecursosApp.ObtenerPaginasNavegables();
             return Task.CompletedTask;
         }
 
@@ -39,8 +39,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         protected override Task OnIdiomaActualizadoAsync()
         {
-            TiposAuditoria = MapaMenu.ObtenerAccionesLog();
-            PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
+            TiposAuditoria = RecursosApp.ObtenerAccionesLog();
+            PaginasNavegables = RecursosApp.ObtenerPaginasNavegables();
             return Task.CompletedTask;
         }
 

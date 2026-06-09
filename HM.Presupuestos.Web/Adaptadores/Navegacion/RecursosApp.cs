@@ -5,7 +5,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
     /// <summary>
     /// Clase para mapear cÃ³digos de menÃº a URLs, etiquetas, iconos y visibilidad.
     /// </summary>
-    public interface IMapaMenu
+    public interface IRecursosApp
     {
         string? ObtenerUrlMenu(int codigoMenu);
         string? ObtenerUrlMenu( CodigosMenu codigoMenu) => ObtenerUrlMenu((int)codigoMenu);
@@ -18,14 +18,14 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         List<CodigoDescripcion> ObtenerAccionesLog();
     }
 
-    public class MapaMenu : IMapaMenu
+    public class RecursosApp : IRecursosApp
     {
         private readonly IProveedorRecursosJson _proveedorJson;
         private readonly IGestorIdioma _gestorIdiomas;
         private readonly ILocalizadorRecursos _localizadorRecursos;
         private readonly string _idiomaPorDefecto;
 
-        public MapaMenu(IProveedorRecursosJson proveedorJson, IGestorIdioma gestorIdiomas,
+        public RecursosApp(IProveedorRecursosJson proveedorJson, IGestorIdioma gestorIdiomas,
             ILocalizadorRecursos localizadorRecursos, IConfiguration configuracion)
         {
             _proveedorJson = proveedorJson;
@@ -63,7 +63,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MapaMenu] âŒ Error en ObtenerUrlMenu({codigoMenu}): {ex.Message}");
+                Console.WriteLine($"[RecursosApp] âŒ Error en ObtenerUrlMenu({codigoMenu}): {ex.Message}");
                 return null;
             }
         }
@@ -104,7 +104,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MapaMenu] âŒ Error en ObtenerCodigoMenuPorUrl: {ex.Message}");
+                Console.WriteLine($"[RecursosApp] âŒ Error en ObtenerCodigoMenuPorUrl: {ex.Message}");
             }
 
             return result;
@@ -165,7 +165,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MapaMenu] Error en ObtenerPaginasNavegables: {ex.Message}");
+                Console.WriteLine($"[RecursosApp] Error en ObtenerPaginasNavegables: {ex.Message}");
             }
             return resultado;
         }
@@ -199,7 +199,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MapaMenu] Error en ObtenerAccionesLog: {ex.Message}");
+                Console.WriteLine($"[RecursosApp] Error en ObtenerAccionesLog: {ex.Message}");
             }
             return resultado;
         }

@@ -156,14 +156,14 @@ protected override async Task OnInitializedAsync()
 
 `Context.cs` expone el hook `protected virtual Task OnIdiomaActualizadoAsync()`. Se invoca automáticamente cuando el usuario cambia de idioma (antes del `StateHasChanged`). Por defecto es noop (devuelve `Task.CompletedTask`).
 
-**Cuándo sobreescribirlo**: solo cuando la página tiene combos o datos cargados desde los JSON de recursos (`IMapaMenu.ObtenerAccionesLog()`, `ObtenerPaginasNavegables()`, etc.) que deben reflejarse en el idioma nuevo sin necesidad de navegar.
+**Cuándo sobreescribirlo**: solo cuando la página tiene combos o datos cargados desde los JSON de recursos (`IRecursosApp.ObtenerAccionesLog()`, `ObtenerPaginasNavegables()`, etc.) que deben reflejarse en el idioma nuevo sin necesidad de navegar.
 
 ```csharp
 // ✅ CORRECTO — recarga de combos dependientes del idioma
 protected override Task OnIdiomaActualizadoAsync()
 {
-    TiposAuditoria = MapaMenu.ObtenerAccionesLog();
-    PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
+    TiposAuditoria = RecursosApp.ObtenerAccionesLog();
+    PaginasNavegables = RecursosApp.ObtenerPaginasNavegables();
     return Task.CompletedTask;
 }
 ```

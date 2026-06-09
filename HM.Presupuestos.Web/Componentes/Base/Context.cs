@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         [Inject] protected IControlCambiosNavegacion ControlCambios { get; set; } = default!;
         [Inject] protected ISesionUsuario SesionUsuario { get; set; } = default!;
         [Inject] protected ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
-        [Inject] protected IMapaMenu MapaMenu { get; set; } = default!;
+        [Inject] protected IRecursosApp RecursosApp { get; set; } = default!;
         [Inject] protected IGestorIdioma GestorIdioma { get; set; } = default!;
         [Inject] protected IRegistroAplicacion RegistroAplicacion { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
@@ -133,7 +133,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         {
             var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var urlNormalizada = RutasNavegacion.NormalizarRuta(url);
-            return MapaMenu.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
+            return RecursosApp.ObtenerEtiquetaMenuPorUrl(urlNormalizada);
         }
 
 

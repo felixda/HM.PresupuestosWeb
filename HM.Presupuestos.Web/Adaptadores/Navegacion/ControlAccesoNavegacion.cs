@@ -14,12 +14,12 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
     {
         private HashSet<string> _urlsPermitidas = [];
 
-        private readonly IMapaMenu _mapaMenu;
+        private readonly IRecursosApp _mapaMenu;
         private readonly ISesionUsuario _usuarioService;
 
-        public ControlAccesoNavegacion(IMapaMenu mapaMenu, ISesionUsuario usuarioService)
+        public ControlAccesoNavegacion(IRecursosApp RecursosApp, ISesionUsuario usuarioService)
         {
-            _mapaMenu = mapaMenu;
+            _mapaMenu = RecursosApp;
             _usuarioService = usuarioService;
         }
 

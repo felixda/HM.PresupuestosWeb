@@ -39,7 +39,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         private readonly ILogAccionesService _logAccionesService;
         private readonly IClienteApiCore _clienteApiCore;
 
-        private readonly IMapaMenu _mapaMenu;
+        private readonly IRecursosApp _recursosApp;
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             IRutasNavegacion rutasNavegacion, 
             ILogAccionesService logAccionesService,
             IClienteApiCore clienteApiCore,
-            IMapaMenu mapaMenu)
+            IRecursosApp recursosApp)
         {
             _configuration = configuracion;
             _almacenSesionService = almacenSesionUsuario;
@@ -59,7 +59,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             _rutasNavegacion = rutasNavegacion;
             _logAccionesService = logAccionesService;
             _clienteApiCore = clienteApiCore;
-            _mapaMenu = mapaMenu;
+            _recursosApp = recursosApp;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         public async Task RegistrarAccesoAPagina(string tituloPagina)
         {
             var urlActual = _rutasNavegacion.ObtenerRutaActual();
-            int codigoMenu = _mapaMenu.ObtenerCodigoMenuPorUrl(urlActual);
+            int codigoMenu = _recursosApp.ObtenerCodigoMenuPorUrl(urlActual);
             var accion = AccionesLog.AccesoAPagina.ObtenerDescripcion();
 
             string accionConDetalle = $"[{(int)AccionesLog.AccesoAPagina}](RegistrarAccesoAPagina) -> {string.Format(accion.ToString(), tituloPagina)} [{urlActual}] [{codigoMenu}]";
