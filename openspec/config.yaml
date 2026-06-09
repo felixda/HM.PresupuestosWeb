@@ -60,7 +60,7 @@ rules:
     - Indicar si requiere nuevos permisos (CodigosMenu)
 
   specs:
-    - Escribir escenarios en formato Dado/Cuando/Entonces (Given/When/Then)
+    - Escribir escenarios en formato Given/When/Then (Dado/Cuando/Entonces)
     - Organizar por módulo de negocio siguiendo la estructura de carpetas del proyecto
     - Incluir casos de error y edge cases
     - Especificar qué permisos son necesarios para cada operación
