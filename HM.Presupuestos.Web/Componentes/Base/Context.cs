@@ -36,8 +36,12 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
         private async Task ActualizarIdioma()
         {
+            TituloPagina = ObtenerTituloPagina();
+            await OnIdiomaActualizadoAsync();
             await InvokeAsync(StateHasChanged);
         }
+
+        protected virtual Task OnIdiomaActualizadoAsync() => Task.CompletedTask;
 
         protected async Task ActualizarEstadoCambios(bool conCambios = true)
         {

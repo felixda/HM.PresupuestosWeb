@@ -1,5 +1,4 @@
 using HM.Presupuestos.Domain.Entidades.LogAcciones;
-using HM.Presupuestos.Domain.Extensiones;
 
 namespace HM.Presupuestos.Web.Pages.Admin
 {
@@ -7,8 +6,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
     {
         #region Inyección de Dependencias
 
-        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
-        [Inject] protected IMapaMenu MapaMenu { get; set; } = default!;
+        [Inject] private ILogAccionesService LogAccionesService { get; set; } = default!;
+        [Inject] private IMapaMenu MapaMenu { get; set; } = default!;
 
         #endregion
 
@@ -26,22 +25,22 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #region Ciclo de Vida
 
-        protected override async Task InicializarPaginaAsync()
+        protected override Task InicializarPaginaAsync()
         {
-            TiposAuditoria = Enum.GetValues<AccionesLog>()
-                .Select(a => new CodigoDescripcion
-                {
-                    Codigo = (int)a,
-                    Descripcion = a.ObtenerDescripcion()
-                })
-                .OrderBy(x => x.Descripcion)
-                .ToList();
-
+            TiposAuditoria = MapaMenu.ObtenerAccionesLog();
             PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
+            return Task.CompletedTask;
         }
 
         protected override Task OnPermisoDenegadoAsync()
         {
+            return Task.CompletedTask;
+        }
+
+        protected override Task OnIdiomaActualizadoAsync()
+        {
+            TiposAuditoria = MapaMenu.ObtenerAccionesLog();
+            PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
             return Task.CompletedTask;
         }
 

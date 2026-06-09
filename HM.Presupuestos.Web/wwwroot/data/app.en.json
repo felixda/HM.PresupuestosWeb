@@ -891,6 +891,36 @@
                                              "label":  "Database manager warning"
                                          }
                  },
+    "AccionesLog": {
+        "ImpersonacionUsuario": { "label": "User impersonation", "visible": true },
+        "ImpersonacionUsuarioInvalida": { "label": "Invalid user impersonation", "visible": true },
+        "BloquearMesesAño": { "label": "Block months of the year", "visible": true },
+        "ModificarVigencia": { "label": "Modify validity period", "visible": true },
+        "EliminarVigencia": { "label": "Delete validity period", "visible": true },
+        "CopiarInversiones": { "label": "Launch investment copy process", "visible": true },
+        "CopiarInversionesFinalizado": { "label": "Investment copy process completed", "visible": false },
+        "ImportarCondicionesMMS": { "label": "Import MMS conditions", "visible": true },
+        "ImportarCondicionesMMSFinalizado": { "label": "MMS condition import process completed", "visible": false },
+        "CopiarVersiones": { "label": "Launch version copy process", "visible": true },
+        "CopiarVersionesFinalizado": { "label": "Version copy process completed", "visible": false },
+        "EntrarEnPresupuestosWebSSO": { "label": "Log into Presupuestos Web (SSO)", "visible": true },
+        "DesimpersonacionUsuario": { "label": "End user impersonation", "visible": true },
+        "ActualizacionUsuario": { "label": "Update user", "visible": true },
+        "ActualizarSobreprimas": { "label": "Update surcharges", "visible": true },
+        "EliminarSobreprima": { "label": "Delete surcharge", "visible": true },
+        "ImportarSobreprimasMMS": { "label": "Import MMS surcharges", "visible": true },
+        "RecuperarSesionDespuesDeF5SSO": { "label": "Recover session after F5 (SSO)", "visible": false },
+        "IntentoAccesoNoAutorizado": { "label": "Unauthorized access attempt", "visible": true },
+        "EntrarEnPresupuestosWebImpersonacion": { "label": "Log into Presupuestos Web (Impersonation)", "visible": true },
+        "RecuperarSesionDespuesDeF5Impersonacion": { "label": "Recover session after F5 (Impersonation)", "visible": false },
+        "CerrarSesionUsuarioLogin": { "label": "Close impersonated user session", "visible": true },
+        "VolverEntrarEnPresupuestosWebSSO": { "label": "Return to Presupuestos Web (SSO)", "visible": true },
+        "EliminarIndicador": { "label": "Delete indicator", "visible": true },
+        "GrabarIndicador": { "label": "Save indicator", "visible": true },
+        "EnviarAviso": { "label": "Send notice", "visible": true },
+        "ErrorAlEnviarAviso": { "label": "Error sending notice", "visible": false },
+        "AccesoAPagina": { "label": "Page access", "visible": true }
+    },
     "Meses":  {
 
               },

@@ -152,6 +152,26 @@ protected override async Task OnInitializedAsync()
 }
 ```
 
+### Hook `OnIdiomaActualizadoAsync` — recarga al cambiar idioma
+
+`Context.cs` expone el hook `protected virtual Task OnIdiomaActualizadoAsync()`. Se invoca automáticamente cuando el usuario cambia de idioma (antes del `StateHasChanged`). Por defecto es noop (devuelve `Task.CompletedTask`).
+
+**Cuándo sobreescribirlo**: solo cuando la página tiene combos o datos cargados desde los JSON de recursos (`IMapaMenu.ObtenerAccionesLog()`, `ObtenerPaginasNavegables()`, etc.) que deben reflejarse en el idioma nuevo sin necesidad de navegar.
+
+```csharp
+// ✅ CORRECTO — recarga de combos dependientes del idioma
+protected override Task OnIdiomaActualizadoAsync()
+{
+    TiposAuditoria = MapaMenu.ObtenerAccionesLog();
+    PaginasNavegables = MapaMenu.ObtenerPaginasNavegables();
+    return Task.CompletedTask;
+}
+```
+
+**No sobreescribirlo** si la página solo usa textos de `ObtenerTexto(AppResources....)` — esos se actualizan solos con el `StateHasChanged` que `Context` ya lanza.
+
+> El título de la página (`TituloPagina`) también se recalcula automáticamente en `ActualizarIdioma()` — no hace falta hacerlo manualmente en el override.
+
 ## Inyección de Dependencias con `[Inject]`
 
 Siempre `protected`, siempre `= default!`. Agrupar en `#region Inyección de Dependencias`:
@@ -493,3 +513,4 @@ Para crear una nueva página desde cero, consultar las guías especializadas:
 - Siempre `partial class` en el code-behind
 - Siempre `= default!` en propiedades `[Inject]`
 - Siempre `#region` para organizar campos de página por responsabilidad
+- Al añadir, modificar o eliminar un valor del enum `AccionesLog`, actualizar obligatoriamente la sección `AccionesLog` en `app.es.json`, `app.en.json` y `app.pt.json` con `label` y `visible`

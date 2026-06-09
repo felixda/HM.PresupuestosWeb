@@ -15,6 +15,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         string ObtenerIconoMenu(CodigosMenu codigoMenu);
         string ObtenerVisibilidadMenu(CodigosMenu codigoMenu);
         List<CodigoDescripcion> ObtenerPaginasNavegables();
+        List<CodigoDescripcion> ObtenerAccionesLog();
     }
 
     public class MapaMenu : IMapaMenu
@@ -165,6 +166,40 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             catch (Exception ex)
             {
                 Console.WriteLine($"[MapaMenu] Error en ObtenerPaginasNavegables: {ex.Message}");
+            }
+            return resultado;
+        }
+
+        public List<CodigoDescripcion> ObtenerAccionesLog()
+        {
+            var resultado = new List<CodigoDescripcion>();
+            try
+            {
+                var doc = _proveedorJson.ObtenerDocumento(IdiomaActual);
+                if (doc == null) return resultado;
+
+                var root = doc.RootElement;
+                if (!root.TryGetProperty("AccionesLog", out var accionesSection)) return resultado;
+
+                foreach (var item in accionesSection.EnumerateObject())
+                {
+                    var entry = item.Value;
+                    if (!entry.TryGetProperty("visible", out var visibleProp) || !visibleProp.GetBoolean()) continue;
+                    if (!entry.TryGetProperty("label", out var labelProp)) continue;
+                    if (!Enum.TryParse<AccionesLog>(item.Name, out var accion)) continue;
+
+                    resultado.Add(new CodigoDescripcion
+                    {
+                        Codigo = (int)accion,
+                        Descripcion = labelProp.GetString() ?? string.Empty
+                    });
+                }
+
+                resultado = [.. resultado.OrderBy(x => x.Descripcion)];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[MapaMenu] Error en ObtenerAccionesLog: {ex.Message}");
             }
             return resultado;
         }
