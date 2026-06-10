@@ -61,7 +61,10 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
             var usuario = new ContextoUsuario();
 
-            UsuarioEntidad usuarioSSO = await _sesionUsuario.ObtenerUsuarioSSO(); 
+            UsuarioEntidad? usuarioSSO = await _sesionUsuario.ObtenerUsuarioSSO();
+            if (usuarioSSO is null)
+                return;
+
             UsuarioEntidad? usuarioLogin = await _sesionUsuario.ObtenerUsuarioImpersonado();
 
             usuario.AsignarUsuarioAutenticado(usuarioSSO);
