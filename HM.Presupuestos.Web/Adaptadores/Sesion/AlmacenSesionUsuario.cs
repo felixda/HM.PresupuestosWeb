@@ -76,7 +76,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
         public async Task<UsuarioEntidad?> ObtenerUsuarioSSO()
         {
-            var userJson = await GetItemAsync(Constantes.Session.USER_SSO);
+            var userJson = await ObtenerItemAsync(Constantes.Session.USER_SSO);
             return String.IsNullOrEmpty(userJson)
                 ? null
                 : JsonSerializer.Deserialize<UsuarioEntidad>(userJson);
@@ -85,7 +85,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
         public async Task<UsuarioEntidad?> ObtenerUsuarioImpersonado()
         {
-            var userJson = await GetItemAsync(Constantes.Session.USER_LOGIN);
+            var userJson = await ObtenerItemAsync(Constantes.Session.USER_LOGIN);
             return String.IsNullOrEmpty(userJson)
                 ? null
                 : JsonSerializer.Deserialize<UsuarioEntidad>(userJson);
@@ -94,28 +94,28 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
         public async Task EliminarUsuarioImpersonado()
         {
-            await DeleteItemAsync(Constantes.Session.USER_LOGIN);
+            await EliminarItemAsync(Constantes.Session.USER_LOGIN);
         }
 
 
         #region Private Methods
 
         /// <summary>
-        /// Get item Session Storage value
+        /// Obtiene el valor de una clave del Session Storage.
         /// </summary>
-        /// <param name="key">Session key</param>
-        /// <returns>Session value</returns>
-        private async Task<string?> GetItemAsync(string key)
+        /// <param name="key">Clave de sesión</param>
+        /// <returns>Valor almacenado, o null si no existe</returns>
+        private async Task<string?> ObtenerItemAsync(string key)
         {
             var result = await _sessionStorage.GetAsync<string>(key);
             return result.Success ? result.Value : null;
         }
 
         /// <summary>
-        /// Delete item Session Storage value
+        /// Elimina una clave del Session Storage.
         /// </summary>
-        /// <param name="key">Session key</param>
-        private async Task DeleteItemAsync(string key)
+        /// <param name="key">Clave de sesión</param>
+        private async Task EliminarItemAsync(string key)
         {
             await _sessionStorage.DeleteAsync(key);
         }

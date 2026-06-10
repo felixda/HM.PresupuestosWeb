@@ -22,7 +22,7 @@ namespace HM.Presupuestos.Web.Pages
         private const string IDIOMA_POR_DEFECTO = "es";
 
         private bool _componentInitialized = false;
-        private UsuarioEntidad _user = new UsuarioEntidad();
+        private UsuarioEntidad _usuario = new UsuarioEntidad();
 
         protected override async Task OnInitializedAsync()
         {
@@ -96,8 +96,8 @@ namespace HM.Presupuestos.Web.Pages
 
             if (usuarioSSO != null)
             {
-                _user = usuarioSSO;
-                Jwt.Usuario = _user;
+                _usuario = usuarioSSO;
+                Jwt.Usuario = _usuario;
                 authorized = true;
             }
 

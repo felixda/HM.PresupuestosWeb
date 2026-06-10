@@ -413,7 +413,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
 
         /// <summary>
-        /// Checking there is data linked to version
+        /// Comprueba si existen datos vinculados a la versión
         /// </summary>
         /// <param name="codigoVersion">Version code</param>
         /// <returns>True when is data linked</returns>

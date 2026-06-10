@@ -408,7 +408,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Validate version data list from grid
         ///</summary>
-        private async Task<bool> ValidateData()
+        private async Task<bool> ValidarDatos()
         {
             //Cuando es nueva la vesion, la descripcion no la valida automaticamente
             if (_listVersion.Any(o => o.Descripcion.Trim().Length == 0))
@@ -498,14 +498,14 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Validate and save version data list from grid
         ///</summary>
-        private async Task SaveVersionData()
+        private async Task GuardarDatosVersion()
         {
             try
             {
                 if (!await UsuarioTienePermisos()) return;
 
                 LayerOverlayService.Start();
-                if (await ValidateData())
+                if (await ValidarDatos())
                 {
 
                     var newVersionList = new List<Version>();
