@@ -2,13 +2,10 @@ using System.Text.Json.Nodes;
 
 namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
-    /// <summary>
-    /// Clase para mapear cÃ³digos de menÃº a URLs, etiquetas, iconos y visibilidad.
-    /// </summary>
     public interface IRecursosApp
     {
         string? ObtenerUrlMenu(int codigoMenu);
-        string? ObtenerUrlMenu( CodigosMenu codigoMenu) => ObtenerUrlMenu((int)codigoMenu);
+        string? ObtenerUrlMenu(CodigosMenu codigoMenu) => ObtenerUrlMenu((int)codigoMenu);
         int ObtenerCodigoMenuPorUrl(string url);
         string ObtenerEtiquetaMenuPorUrl(string url);
         string ObtenerEtiquetaMenu(CodigosMenu codigoMenu);
@@ -18,21 +15,16 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         List<CodigoDescripcion> ObtenerAccionesLog();
     }
 
-    public class RecursosApp : IRecursosApp
+    public class RecursosApp(
+        IProveedorRecursosJson proveedorJson,
+        IGestorIdioma gestorIdiomas,
+        ILocalizadorRecursos localizadorRecursos,
+        IConfiguration configuracion) : IRecursosApp
     {
-        private readonly IProveedorRecursosJson _proveedorJson;
-        private readonly IGestorIdioma _gestorIdiomas;
-        private readonly ILocalizadorRecursos _localizadorRecursos;
-        private readonly string _idiomaPorDefecto;
-
-        public RecursosApp(IProveedorRecursosJson proveedorJson, IGestorIdioma gestorIdiomas,
-            ILocalizadorRecursos localizadorRecursos, IConfiguration configuracion)
-        {
-            _proveedorJson = proveedorJson;
-            _gestorIdiomas = gestorIdiomas;
-            _localizadorRecursos = localizadorRecursos;
-            _idiomaPorDefecto = configuracion.GetValue<string>("AppSettings:DefaultLanguage") ?? "es";
-        }
+        private readonly IProveedorRecursosJson _proveedorJson = proveedorJson;
+        private readonly IGestorIdioma _gestorIdiomas = gestorIdiomas;
+        private readonly ILocalizadorRecursos _localizadorRecursos = localizadorRecursos;
+        private readonly string _idiomaPorDefecto = configuracion.GetValue<string>("AppSettings:DefaultLanguage") ?? "es";
 
         private string IdiomaActual =>
             (_gestorIdiomas.IdiomaActual ?? _idiomaPorDefecto)

@@ -23,9 +23,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         Task RegistrarEvento(string category, string message, string? stackTrace, string comments, NivelRegistro logLevel = NivelRegistro.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task RegistrarExcepcion(string category, Exception exception, string comments = "", NivelRegistro logLevel = NivelRegistro.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task RegistrarExcepcion(Exception exception, string comments = "", NivelRegistro logLevel = NivelRegistro.Error, bool insertDBLog = true, bool insertFileLog = true, [CallerFilePath] string callerFilePath = "", [CallerMemberName] string callerMemberName = "");
-        Task RegistrarAccesoAPagina( string tituloPagina);
-
-        Task RegistrarIntentoAccesoNoAutorizado( string ruta);
+        Task RegistrarAccesoAPagina(string tituloPagina);
+        Task RegistrarIntentoAccesoNoAutorizado(string ruta);
     }
 
     public class RegistroAplicacion:IRegistroAplicacion
@@ -115,9 +114,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             [CallerFilePath] string callerFilePath = "", 
             [CallerMemberName] string callerMemberName = "")
         {
-            // Extraer nombre de la clase desde el FilePath
             var category = ExtraerNombreClaseDesdeFilePath(callerFilePath);
-            // Llamar al método original
             await RegistrarExcepcion(category, exception, comments, logLevel, insertDBLog, insertFileLog);
         }
 
@@ -131,12 +128,10 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             if (string.IsNullOrEmpty(filePath))
                 return "Unknown";
 
-            // Obtener nombre del archivo sin extensión
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 
-            // Si termina en .razor (archivos .razor.cs), eliminar ese sufijo
             if (fileName.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
-                fileName = fileName[..^6]; // Eliminar ".razor"
+                fileName = fileName[..^6];
 
             return fileName;
         }

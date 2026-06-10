@@ -6,7 +6,7 @@
 @* Componente modal para confirmar cambios *@
 <ModalControlCambios @ref="ModalConfirmacionCambios" />
 
-@* Para controlar los eventos de navegación *@
+@* Para controlar los eventos de navegaciï¿½n *@
 <NavigationLock OnBeforeInternalNavigation="@OnBeforeInternalNavigation"></NavigationLock>
 
 @* Modal de advertencia de inactividad *@
@@ -25,7 +25,7 @@
     </ChildContent>
 </DxPopup>
 
-@* Modal de error en inicialización *@
+@* Modal de error en inicializaciï¿½n *@
 <DxPopup @ref="ErrorPopup"
          HeaderText="@TituloVentanaError"
          Width="400px"
@@ -36,7 +36,7 @@
         <p style="color:red">@MensajeError</p>
         <div class="d-flex justify-content-end mt-3">
             <DxButton RenderStyle="ButtonRenderStyle.Primary"
-                      Text="Aceptar"
+                      Text="@LocalizadorRecursos.ObtenerTexto(AppResources.Common.Aceptar)"
                       Click="CerrarPopupError" />
         </div>
     </div>
@@ -91,12 +91,6 @@
     <LayerOverlay />
 </div>
 
-@* Para mostrar los diálogos para los mensajes *@
+@* Para mostrar los diï¿½logos para los mensajes *@
 <DxDialogProvider />
-
-@code {
-    // Código-behind en MainLayout.razor.cs
-}
-
-
 

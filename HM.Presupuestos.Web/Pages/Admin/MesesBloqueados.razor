@@ -1,10 +1,18 @@
 ﻿@page "/administracion/meses-bloqueados"
 
-@inherits Context
+@inherits ContextProtegido
 
 @attribute [Authorize]
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    @* Estado: usuario sin permisos *@
+}
+else
 {
     <PageHeader CodigoMenu="@CodigosMenu.MesesBloqueados" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
 

@@ -1,19 +1,21 @@
 @page "/administracion/avisos"
 
 @using HM.Presupuestos.Domain.Compartido
-@using Microsoft.AspNetCore.Components.Authorization
-@using HM.Core.Comun.v6.Seguridad.Interfaces
-@using HM.Presupuestos.Application.CasosDeUso
 @using HM.Presupuestos.Web.Componentes.Base
-@using HM.Presupuestos.Web.Adaptadores
-@using static HM.Presupuestos.Application.CasosDeUso.IndicadoresService
-@using System.Text.Json
 
-@inherits Context
+@inherits ContextProtegido
 
 @attribute [Authorize]
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    @* Estado: usuario sin permisos *@
+}
+else
 {
     <PageTitle>@ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Avisos}:label")</PageTitle>
     <PageHeader CodigoMenu="@CodigosMenu.Avisos" Titulo="@ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Avisos))" TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Avisos.ToolTip)" />
@@ -44,11 +46,6 @@
                 </InputRadioGroup>
             </div>
         </div>
-
-        @if (!string.IsNullOrEmpty(_error))
-        {
-            <div class="alert alert-danger">@_error</div>
-        }
 
         <DxButton CssClass="btnCustom"
             RenderStyle=ButtonRenderStyle.None

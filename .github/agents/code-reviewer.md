@@ -1,6 +1,6 @@
 ---
 description: Revisor de código experto para HM.Presupuestos (.NET/Blazor). Úsalo tras cambios en el código para revisar contra los principios de diseño del proyecto.
-tools: Read, Glob, Grep, Bash, Edit, Write
+tools: read/readFile, edit/editFiles, vscode/runCommands
 ---
 
 # Code Review Agent — HM.Presupuestos

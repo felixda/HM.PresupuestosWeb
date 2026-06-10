@@ -4,9 +4,9 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
     public static class MenuExtensions
     {
-        public static string? Url(this Menu menu, IRecursosApp RecursosApp)
+        public static string? Url(this Menu menu, IRecursosApp recursosApp)
         {
-            return RecursosApp.ObtenerUrlMenu(menu.Id);
+            return recursosApp.ObtenerUrlMenu(menu.Id);
         }
 
         public static bool TienePadre(this Menu menu) => menu.IdPadre != null;

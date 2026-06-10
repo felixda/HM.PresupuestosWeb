@@ -1,6 +1,6 @@
 ---
 description: Revisor de cumplimiento de arquitectura hexagonal para HM.Presupuestos (.NET/Blazor). Úsalo tras cambios en el código para verificar fronteras de capa y dependencias.
-tools: Read, Glob, Grep, Bash, Edit, Write
+tools: read/readFile, Glob, Grep, Bash, edit/editFiles, Write
 ---
 
 # Architecture Review Agent — HM.Presupuestos

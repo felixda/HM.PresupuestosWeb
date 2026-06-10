@@ -11,24 +11,16 @@ namespace HM.Presupuestos.Web.Pages.Admin
     {
         #region Inyección de Dependencias
 
-        [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IAdminService AdminService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-        [Inject] protected ILocalizadorRecursos ResourceService { get; set; } = default!;
         [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
-        [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
-        [Inject] protected IRegistroAplicacion LogService { get; set; } = default!;
-        [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
-        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
-        [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
 
         #endregion
 
 
         #region Private Properties
 
-        private bool _componentInitialized = false;
         private string PageTitle { get; set; } = string.Empty;
         private string TextoToolTipAyuda { get; set; } = string.Empty;
         private List<CodigoDescripcion> Anios = [];
@@ -46,62 +38,27 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #endregion
 
-        #region Page
+        #region Ciclo de Vida
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override Task OnPermisoDenegadoAsync()
         {
-            if (firstRender)
-            {
-                try
-                {
-                    //await InicializarAsync();
-                    PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.MesesBloqueados}:label");
-                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {PageTitle}");
-                    await PageInitialize();
-                }
-                catch (Exception ex)
-                {
-                    await ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
-                    return;
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
+            return Task.CompletedTask;
+        }
 
-                if (!_componentInitialized)
-                {
-                    _componentInitialized = true;
-                    await InvokeAsync(StateHasChanged);
-                }
+        protected override async Task InicializarPaginaAsync()
+        {
+            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.MesesBloqueados.ToolTip);
+            Meses = await Traducciones.ObtenerMeses();
+            Anios = await VersionesService.ObtenerAniosConVersiones(true);
+
+            if (Anios.Count > 0)
+            {
+                int anioActual = DateTime.Now.Year;
+                AnioSeleccionado = Anios.FirstOrDefault(x => x.Codigo == anioActual)
+                                ?? Anios.First();
             }
         }
 
-        private async Task PageInitialize()
-        {
-            try
-            {
-               // _Jwt.Usuario = User;
-                TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.MesesBloqueados.ToolTip);
-
-                Meses = await Traducciones.ObtenerMeses();
-                Anios = await VersionesService.ObtenerAniosConVersiones(true);
-
-                if (Anios.Count > 0)
-                {
-                    int anioActual = DateTime.Now.Year;
-                    AnioSeleccionado = Anios.FirstOrDefault(x => x.Codigo == anioActual)
-                                    ?? Anios.First();
-
-                }
-            }
-            catch (Exception ex)
-            {
-                await LogService.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
-            }
-        }
-       
         #endregion
 
         #region Eventos
@@ -111,23 +68,13 @@ namespace HM.Presupuestos.Web.Pages.Admin
             if (e.DataItem != null)
             {
                 int anioSeleccionado = e.DataItem.Codigo;
-                try
+                await EjecutarAsync(async () =>
                 {
-                    LayerOverlayService.Start();
                     List<int> mesesBloqueado = await AdminService.ObtenerMesesBloqueados(anioSeleccionado);
                     MesesSeleccionados = Meses
                        .Where(m => mesesBloqueado.Contains(m.Codigo))
                        .ToList();
-                }
-                catch (Exception ex)
-                {
-                    await LogService.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
+                });
             }
             else
             {
@@ -137,26 +84,16 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         private async Task Grabar_Click()
         {
-            try
+            await EjecutarAsync(async () =>
             {
-                LayerOverlayService.Start();
                 List<int> mesesSeleccionados = [
                         .. (MesesSeleccionados?.Cast<CodigoDescripcion>()
                                               .Select(x => x.Codigo) ?? [])
                     ];
 
                 await AdminService.InsertarMesesBloqueado(AnioSeleccionado!.Codigo, mesesSeleccionados);
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Common.DatosGrabados));
-            }
-            catch (Exception ex)
-            {
-                await LogService.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
+            });
         }
 
        

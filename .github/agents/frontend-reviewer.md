@@ -1,6 +1,6 @@
 ---
 description: Revisor de patrones de UI para HM.Presupuestos (Blazor Server + DevExpress). Úsalo tras cambios en páginas, componentes o CSS para revisar contra los patrones del proyecto.
-tools: Read, Glob, Grep, Bash, Edit, Write
+tools: read/readFile, Glob, Grep, Bash, edit/editFiles, Write
 ---
 
 # Frontend Review Agent — HM.Presupuestos

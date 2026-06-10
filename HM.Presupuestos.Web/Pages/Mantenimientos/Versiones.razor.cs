@@ -9,7 +9,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
     {
         #region InyecciÃ³n de Dependencias
 
-        [Inject] protected IndicadoresService IndicadoresService { get; set; } = default!;
+        [Inject] protected IIndicadoresService IndicadoresService { get; set; } = default!;
         [Inject] protected TraduccionesHelper TraduccionesHelper { get; set; } = default!;
 
         #endregion

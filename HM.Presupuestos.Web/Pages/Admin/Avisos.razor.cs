@@ -10,49 +10,26 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         [Inject] protected IAvisosService AvisosService { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
-        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-      
 
         #endregion
 
         #region Propiedades Privadas
 
-        private bool _componentInitialized = false;
-        private string _pageTitle { get; set; } = string.Empty;
         private string _mensaje = "";
-        private string _error = "";
         private TiposDeAviso TipoAviso { get; set; } = TiposDeAviso.Warning;
 
         #endregion
 
         #region Ciclo de Vida
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override Task InicializarPaginaAsync()
         {
-            if (firstRender)
-            {
-                try
-                {
-                   // await InicializarAsync();
-                    _pageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Avisos}:label");
-                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {_pageTitle}");
-                }
-                catch (Exception ex)
-                {
-                    await ErrorService.MostrarErrorInicializandoPagina(_pageTitle, ex);
-                    return;
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
+            return Task.CompletedTask;
+        }
 
-                if (!_componentInitialized)
-                {
-                    _componentInitialized = true;
-                    await InvokeAsync(StateHasChanged);
-                }
-            }
+        protected override Task OnPermisoDenegadoAsync()
+        {
+            return Task.CompletedTask;
         }
 
         #endregion
@@ -61,21 +38,11 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         private async Task EnviarAviso()
         {
-            try
+            await EjecutarAsync(async () =>
             {
-                LayerOverlayService.Start();
                 await AvisosService.ActivarAvisosAsync(_mensaje, TipoAviso);
                 await LogAccionesService.Insertar(AccionesLog.EnviarAviso, _mensaje);
-            }
-            catch (Exception ex)
-            {
-                await LogAccionesService.Insertar(AccionesLog.ErrorAlEnviarAviso, ex.Message);
-                _error = "Error al enviar el aviso: " + ex.Message;
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
         }
 
         #endregion

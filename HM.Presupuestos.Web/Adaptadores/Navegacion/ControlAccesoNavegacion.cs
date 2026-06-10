@@ -1,6 +1,4 @@
 using HM.Presupuestos.Web.Adaptadores.Sesion;
-using HM.Presupuestos.Web.Adaptadores.Navegacion;
-using HM.Presupuestos.Web.Adaptadores.Sesion;
 
 namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
@@ -10,18 +8,14 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         bool PuedeAccederA(string url);
     }
 
-    public class ControlAccesoNavegacion : IControlAccesoNavegacion
+    public class ControlAccesoNavegacion(
+        IRecursosApp recursosApp,
+        ISesionUsuario usuarioService) : IControlAccesoNavegacion
     {
         private HashSet<string> _urlsPermitidas = [];
 
-        private readonly IRecursosApp _mapaMenu;
-        private readonly ISesionUsuario _usuarioService;
-
-        public ControlAccesoNavegacion(IRecursosApp RecursosApp, ISesionUsuario usuarioService)
-        {
-            _mapaMenu = RecursosApp;
-            _usuarioService = usuarioService;
-        }
+        private readonly IRecursosApp _recursosApp = recursosApp;
+        private readonly ISesionUsuario _usuarioService = usuarioService;
 
 
         private void CargarUrlsPermitidasSiEsNecesario(ContextoUsuario usuarioApp)
@@ -31,7 +25,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 
             var urlsPermitidas = usuarioApp.UsuarioActivo.Menus
                 .Where(menu => menu.TienePadre())
-                .Select(menu => menu.Url(_mapaMenu))
+                .Select(menu => menu.Url(_recursosApp))
                 .Where(url => !string.IsNullOrWhiteSpace(url));
 
             _urlsPermitidas = new HashSet<string>(

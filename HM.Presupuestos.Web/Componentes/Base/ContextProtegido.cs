@@ -1,5 +1,3 @@
-using DocumentFormat.OpenXml.Spreadsheet;
-
 public abstract class ContextProtegido : Context
 {
     #region Servicios de Seguridad
