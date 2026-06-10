@@ -1,5 +1,4 @@
 using DevExpress.Blazor;
-using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Presupuestos.Application.CasosDeUso;
 using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
@@ -13,7 +12,6 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         [Inject] protected IAdminService AdminService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
 
         #endregion
 

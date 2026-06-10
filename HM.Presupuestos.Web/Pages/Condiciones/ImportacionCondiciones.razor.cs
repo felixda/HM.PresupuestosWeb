@@ -1,4 +1,3 @@
-using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Presupuestos.Application.CasosDeUso.Compartido;
 
 namespace HM.Presupuestos.Web.Pages.Condiciones
@@ -11,7 +10,6 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
         [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
