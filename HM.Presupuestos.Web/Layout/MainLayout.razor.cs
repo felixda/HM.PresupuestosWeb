@@ -87,6 +87,12 @@ namespace HM.Presupuestos.Web.Layout
                 {
                     await SesionUsuario.InicializarUsuarioAsync();
 
+                    if (SesionUsuario.UsuarioApp is null)
+                    {
+                        Navigation.NavigateTo("/", forceLoad: true);
+                        return;
+                    }
+
                     TituloAvisoInactividad = TextosApp.Pages.ModalInactividad.Titulo;
                     TextoCuentaAtras = TextosApp.Pages.ModalInactividad.CuentaAtras;
 
