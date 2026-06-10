@@ -741,6 +741,11 @@
     "UnauthorizedUser":{
       "label": "Usuario no autorizado"
     },
+    "AccesoDenegado": {
+      "Titulo": { "label": "Acceso Denegado" },
+      "Mensaje": { "label": "No tiene permisos para acceder a" },
+      "Contacto": { "label": "Contacte al administrador si cree que deber\u00eda tener acceso." }
+    },
     "Version": {
       "label": "Versión"
     },

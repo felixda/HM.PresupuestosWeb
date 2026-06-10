@@ -21,7 +21,7 @@
 }
 else if (TienePermiso == false)
 {
-    <p>No autorizado</p>
+    <AccesoDenegado Titulo="@TituloPagina" />
 }
 else
 {
@@ -41,15 +41,15 @@ else
                             <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@AñosMaestros"
+                            <DxComboBox Data="@AÃ±osMaestros"
                                         TextFieldName="Descripcion"
                                         ValueFieldName="Codigo"
-                                        @bind-Value="AñoSeleccionado"
+                                        @bind-Value="AÃ±oSeleccionado"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                                                                            ComboBoxAño_CambioSeleccion(args)">
+                                                                                                            ComboBoxAÃ±o_CambioSeleccion(args)">
                             <EditBoxDisplayTemplate Context="contexto">
                                 @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                             </EditBoxDisplayTemplate>

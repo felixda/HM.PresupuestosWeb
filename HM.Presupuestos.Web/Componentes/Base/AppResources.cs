@@ -190,6 +190,19 @@ namespace HM.Presupuestos.Web.Componentes.Base
             /// <summary>Usuario no autorizado</summary>
             public const string UnauthorizedUser = "Common:UnauthorizedUser:label";
 
+            /// <summary>Acceso Denegado</summary>
+            public static class AccesoDenegado
+            {
+                /// <summary>Acceso Denegado</summary>
+                public const string Titulo = "Common:AccesoDenegado:Titulo:label";
+
+                /// <summary>No tiene permisos para acceder a</summary>
+                public const string Mensaje = "Common:AccesoDenegado:Mensaje:label";
+
+                /// <summary>Contacte al administrador si cree que debería tener acceso.</summary>
+                public const string Contacto = "Common:AccesoDenegado:Contacto:label";
+            }
+
             /// <summary>Versión</summary>
             public const string Version = "Common:Version:label";
 

@@ -1,4 +1,4 @@
-﻿{
+{
 "Language":  {
                  "ES":  {
                             "label":  "Spanish",
@@ -750,6 +750,11 @@
                    "UnauthorizedUser":{
                                             "label":  "Unauthorized User"
                                         },
+                   "AccesoDenegado": {
+                       "Titulo": { "label": "Access Denied" },
+                       "Mensaje": { "label": "You do not have permission to access" },
+                       "Contacto": { "label": "Contact the administrator if you believe you should have access." }
+                   },
                    "Version":  {
                                    "label":  "Version"
                                },

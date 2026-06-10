@@ -27,7 +27,7 @@ Cada página usa el patrón **código-separado**: un archivo `.razor` (markup) y
 }
 else if (TienePermiso == false)
 {
-    <div class="alert alert-danger">Acceso Denegado</div>
+    <AccesoDenegado Titulo="@TituloPagina" />
 }
 else
 {
@@ -75,13 +75,7 @@ Las páginas que heredan de `ContextProtegido` **nunca usan `_componentInitializ
 }
 else if (TienePermiso == false)
 {
-    @* Estado: usuario sin permisos *@
-    <div class="alert alert-danger text-center m-5" role="alert">
-        <h4 class="alert-heading">❌ Acceso Denegado</h4>
-        <p>No tiene permisos para acceder a <strong>@TituloPagina</strong>.</p>
-        <hr>
-        <p class="mb-0">Contacte al administrador si cree que debería tener acceso.</p>
-    </div>
+    <AccesoDenegado Titulo="@TituloPagina" />
 }
 else
 {
