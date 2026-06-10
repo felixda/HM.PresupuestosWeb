@@ -9,7 +9,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
     /// IMPORTANTE: Esta clase se regenera automáticamente. No editar manualmente.
     /// Última actualización: 2026-04-09 00:00
     /// </summary>
-    public static class AppResources
+    public static class TextosApp
     {
         #region Botones (Alfabético)
 

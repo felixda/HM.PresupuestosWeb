@@ -111,7 +111,7 @@ HM.Presupuestos.sln
 │   │   ├── Base/
 │   │   │   ├── Context.cs            # Componente base (sin permisos)
 │   │   │   ├── ContextProtegido.cs   # Componente base con permisos
-│   │   │   └── AppResources.cs       # Claves de recursos/traducciones
+│   │   │   └── TextosApp.cs       # Claves de recursos/traducciones
 │   │   ├── Helpers/
 │   │   └── Ui/
 │   │       └── DrawerUtils.cs

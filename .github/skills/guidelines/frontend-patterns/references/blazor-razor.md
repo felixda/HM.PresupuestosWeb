@@ -51,14 +51,14 @@ else
 {
     <PageHeader CodigoMenu="@CodigosMenu.MiPagina"
                 Titulo="@TituloPagina"
-                TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.MiPagina.ToolTip)" />
+                TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.MiPagina.ToolTip)" />
 
     <div class="layoutContainer">
 
         @* === FILTROS === *@
         <DxFormLayout>
             <DxFormLayoutGroup CssClass="filterContainer"
-                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
                                ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                                AnimationType="LayoutAnimationType.Slide">
                 @* Combos y filtros aquí *@
@@ -67,7 +67,7 @@ else
 
         @* === GRID PRINCIPAL === *@
         <DxFormLayout>
-            <DxFormLayoutGroup Caption="@ObtenerTexto(AppResources.Pages.MiPagina.Titulo)"
+            <DxFormLayoutGroup Caption="@ObtenerTexto(TextosApp.Pages.MiPagina.Titulo)"
                                ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
                     <DxGrid @ref="Grid"
@@ -84,13 +84,13 @@ else
                         <ToolbarTemplate>
                             <DxButton CssClass="toolbarButtonCustom"
                                       RenderStyle="ButtonRenderStyle.None"
-                                      Text="@ObtenerTexto(AppResources.Botones.Añadir)"
+                                      Text="@ObtenerTexto(TextosApp.Botones.Añadir)"
                                       Click="NuevoAsync"
                                       IconCssClass="fa-solid fa-plus" />
                         </ToolbarTemplate>
                         <Columns>
                             <DxGridDataColumn FieldName="@nameof(MiEntidad.Codigo)"
-                                              Caption="@ObtenerTexto(AppResources.Common.Codigo)"
+                                              Caption="@ObtenerTexto(TextosApp.Common.Codigo)"
                                               Width="8%"
                                               ReadOnly="true"
                                               CaptionAlignment="GridTextAlignment.Right"
@@ -100,7 +100,7 @@ else
                                 </CellDisplayTemplate>
                             </DxGridDataColumn>
                             <DxGridDataColumn FieldName="@nameof(MiEntidad.Descripcion)"
-                                              Caption="@ObtenerTexto(AppResources.Common.Descripcion)"
+                                              Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
                                               CaptionAlignment="GridTextAlignment.Left" />
                             <DxGridCommandColumn Width="5%" NewButtonVisible="false">
                                 <CellDisplayTemplate>
@@ -108,7 +108,7 @@ else
                                         <DxButton IconCssClass="fas fa-trash"
                                                   RenderStyle="ButtonRenderStyle.Link"
                                                   aria-label="Delete"
-                                                  title="@ObtenerTexto(AppResources.Common.EliminarRegistro)"
+                                                  title="@ObtenerTexto(TextosApp.Common.EliminarRegistro)"
                                                   Click="@(() => EliminarAsync(context.DataItem))" />
                                     </div>
                                 </CellDisplayTemplate>
@@ -128,7 +128,7 @@ else
              CloseOnOutsideClick="false">
         <BodyContentTemplate>
             <DxFormLayout>
-                <DxFormLayoutItem Caption="@ObtenerTexto(AppResources.Common.Descripcion)"
+                <DxFormLayoutItem Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
                                   CaptionPosition="CaptionPosition.Vertical"
                                   ColSpanSm="12">
                     <DxTextBox @bind-Text="@_entidadEnEdicion.Descripcion" />
@@ -136,12 +136,12 @@ else
             </DxFormLayout>
         </BodyContentTemplate>
         <FooterContentTemplate>
-            <DxButton Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+            <DxButton Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
                       RenderStyle="ButtonRenderStyle.None"
                       CssClass="toolbarButtonCustom"
                       IconCssClass="fa-solid fa-save"
                       Click="GuardarAsync" />
-            <DxButton Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+            <DxButton Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                       RenderStyle="ButtonRenderStyle.None"
                       CssClass="toolbarButtonCustom"
                       IconCssClass="fa-solid fa-cancel"
@@ -203,12 +203,12 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
 <ToolbarTemplate>
     <DxButton CssClass="toolbarButtonCustom"
               RenderStyle="ButtonRenderStyle.None"
-              Text="@ObtenerTexto(AppResources.Botones.Añadir)"
+              Text="@ObtenerTexto(TextosApp.Botones.Añadir)"
               Click="NuevoAsync"
               IconCssClass="fa-solid fa-plus" />
     <DxButton CssClass="toolbarButtonCustom"
               RenderStyle="ButtonRenderStyle.None"
-              Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+              Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
               Click="CancelarAsync"
               IconCssClass="fa-solid fa-cancel"
               Enabled="@HayCambios" />
@@ -219,7 +219,7 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
 
 ```razor
 <DxGridDataColumn FieldName="@nameof(Entidad.Codigo)"
-                  Caption="@ObtenerTexto(AppResources.Common.Codigo)"
+                  Caption="@ObtenerTexto(TextosApp.Common.Codigo)"
                   Width="8%"
                   ReadOnly="true"
                   CaptionAlignment="GridTextAlignment.Right"
@@ -235,7 +235,7 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
 
 ```razor
 <DxGridDataColumn FieldName="@nameof(Entidad.CodigoTipo)"
-                  Caption="@ObtenerTexto(AppResources.Common.Tipo)"
+                  Caption="@ObtenerTexto(TextosApp.Common.Tipo)"
                   Width="12%">
     <FilterRowCellTemplate></FilterRowCellTemplate>
     <CellDisplayTemplate>
@@ -263,8 +263,8 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
                       RenderStyle="ButtonRenderStyle.Link"
                       Disabled="@entidad.TieneDatosRelacionados"
                       title="@(entidad.TieneDatosRelacionados
-                                    ? ObtenerTexto(AppResources.Pages.MiPagina.NoSePuedeBorrar)
-                                    : ObtenerTexto(AppResources.Common.EliminarRegistro))"
+                                    ? ObtenerTexto(TextosApp.Pages.MiPagina.NoSePuedeBorrar)
+                                    : ObtenerTexto(TextosApp.Common.EliminarRegistro))"
                       Click="@(() => EliminarAsync(context.DataItem))" />
         </div>
     </CellDisplayTemplate>
@@ -274,7 +274,7 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
 ### Band column (columnas agrupadas)
 
 ```razor
-<DxGridBandColumn Caption="@ObtenerTexto(AppResources.Pages.MiPagina.GrupoColumnas)"
+<DxGridBandColumn Caption="@ObtenerTexto(TextosApp.Pages.MiPagina.GrupoColumnas)"
                   Width="40%"
                   CaptionAlignment="GridTextAlignment.Center">
     <Columns>
@@ -314,7 +314,7 @@ Cuando un campo del filtro o formulario es **obligatorio**, se marca visualmente
 ```razor
 <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical">
     <CaptionTemplate>
-        <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
+        <span>@ObtenerTexto(TextosApp.Common.Anio)</span><span class="mandatory"></span>
     </CaptionTemplate>
     <Template>                                  ← obligatorio cuando hay CaptionTemplate
         <DxComboBox Data="@Anios"
@@ -354,10 +354,10 @@ Campos **opcionales** no necesitan `CaptionTemplate` y pueden usar el atributo `
                QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
                                                arg,
                                                x => x.Descripcion,
-                                               ObtenerTexto(AppResources.Common.Todos)
+                                               ObtenerTexto(TextosApp.Common.Todos)
                                            ))"
                DropDownWidthMode="DropDownWidthMode.EditorWidth"
-               NullText="@ObtenerTexto(AppResources.Common.Todos)">
+               NullText="@ObtenerTexto(TextosApp.Common.Todos)">
     <DropDownBodyTemplate>
         <DxListBox Data="@_listaMaestra"
                    TData="CodigoDescripcion"
@@ -382,12 +382,12 @@ El popup se sitúa **fuera** del `<div class="layoutContainer">`, al final del b
          CloseOnOutsideClick="false">
     <BodyContentTemplate>
         <DxFormLayout>
-            <DxFormLayoutItem Caption="@ObtenerTexto(AppResources.Common.Descripcion)"
+            <DxFormLayoutItem Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
                               CaptionPosition="CaptionPosition.Vertical"
                               ColSpanSm="12" ColSpanMd="6">
                 <DxTextBox @bind-Text="@_entidadEnEdicion.Descripcion" />
             </DxFormLayoutItem>
-            <DxFormLayoutItem Caption="@ObtenerTexto(AppResources.Common.Anio)"
+            <DxFormLayoutItem Caption="@ObtenerTexto(TextosApp.Common.Anio)"
                               CaptionPosition="CaptionPosition.Vertical"
                               ColSpanSm="12" ColSpanMd="3">
                 <DxComboBox Data="@_anios"
@@ -398,12 +398,12 @@ El popup se sitúa **fuera** del `<div class="layoutContainer">`, al final del b
         </DxFormLayout>
     </BodyContentTemplate>
     <FooterContentTemplate>
-        <DxButton Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+        <DxButton Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
                   CssClass="toolbarButtonCustom"
                   RenderStyle="ButtonRenderStyle.None"
                   IconCssClass="fa-solid fa-save"
                   Click="GuardarAsync" />
-        <DxButton Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+        <DxButton Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                   CssClass="toolbarButtonCustom"
                   RenderStyle="ButtonRenderStyle.None"
                   IconCssClass="fa-solid fa-cancel"
@@ -416,13 +416,13 @@ El popup se sitúa **fuera** del `<div class="layoutContainer">`, al final del b
 
 ## 8. Localización en Markup
 
-Todos los textos visibles se obtienen siempre con `ObtenerTexto(AppResources.*)`:
+Todos los textos visibles se obtienen siempre con `ObtenerTexto(TextosApp.*)`:
 
 ```razor
 @* ✅ CORRECTO *@
-<DxButton Text="@ObtenerTexto(AppResources.Botones.Grabar)" />
-<DxFormLayoutGroup Caption="@ObtenerTexto(AppResources.Common.Filtros)">
-<PageHeader TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.MiPagina.ToolTip)" />
+<DxButton Text="@ObtenerTexto(TextosApp.Botones.Grabar)" />
+<DxFormLayoutGroup Caption="@ObtenerTexto(TextosApp.Common.Filtros)">
+<PageHeader TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.MiPagina.ToolTip)" />
 
 @* ❌ INCORRECTO — texto literal no localizable *@
 <DxButton Text="Guardar" />
@@ -469,5 +469,5 @@ Ver detalle completo en: [css-modules.md](css-modules.md)
 - [ ] Filtros en `DxFormLayoutGroup` con `CssClass="filterContainer"`
 - [ ] Grid dentro de `DxFormLayout > DxFormLayoutGroup > DxFormLayoutItem`
 - [ ] Popup **fuera** de `layoutContainer`, al final del bloque `else`
-- [ ] Todos los textos via `ObtenerTexto(AppResources.*)`
+- [ ] Todos los textos via `ObtenerTexto(TextosApp.*)`
 - [ ] Fichero `.razor.css` creado junto al razor (aunque quede vacío)

@@ -6,7 +6,7 @@ context: |
   Architecture: Hexagonal por capas horizontales con organización vertical por módulo de negocio
   Layers: Domain (entidades, enums, puertos) → Application (casos de uso, servicios) → Infrastructure (repositorios, adaptadores) → Web (páginas Blazor, componentes)
   Testing: NUnit + Playwright (E2E), NUnit (unit tests)
-  Todo el código en C#. Textos de UI siempre a través del sistema de recursos multiidioma (ObtenerTexto / AppResources)
+  Todo el código en C#. Textos de UI siempre a través del sistema de recursos multiidioma (ObtenerTexto / TextosApp)
   Idioma de código y comentarios: castellano
 
   Project guidelines (fuente de verdad): toda creación de artefactos e implementación
@@ -55,7 +55,7 @@ rules:
   proposal:
     - Incluir siempre una sección "No incluido / Fuera de alcance"
     - Identificar qué capas se ven afectadas (Domain, Application, Infrastructure, Web)
-    - Indicar si requiere nuevas claves de traducción (AppResources)
+    - Indicar si requiere nuevas claves de traducción (TextosApp)
     - Indicar si requiere nuevas acciones de auditoría (AccionesLog)
     - Indicar si requiere nuevos permisos (CodigosMenu)
 
@@ -73,7 +73,7 @@ rules:
     - Identificar puertos (interfaces) y adaptadores (implementaciones) nuevos o modificados
     - Diseñar entidades nuevas siguiendo el modelo en Domain/Entidades/
     - Si la operación requiere auditoría, especificar el AccionesLog correspondiente
-    - Si la operación requiere textos en UI, listar las claves AppResources necesarias
+    - Si la operación requiere textos en UI, listar las claves TextosApp necesarias
     - Indicar si se necesitan nuevas entradas en CodigosMenu para gestión de permisos
     - Respetar el patrón de inyección con primary constructor (C# 12) en servicios
 

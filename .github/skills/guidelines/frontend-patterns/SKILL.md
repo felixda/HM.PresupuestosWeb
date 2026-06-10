@@ -131,7 +131,7 @@ protected override async Task InicializarPaginaAsync()
 
     if (DatosIndicadores.Count == 0)
         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-            ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+            ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
 }
 
 protected override Task OnPermisoDenegadoAsync()
@@ -162,7 +162,7 @@ protected override Task OnIdiomaActualizadoAsync()
 }
 ```
 
-**No sobreescribirlo** si la página solo usa textos de `ObtenerTexto(AppResources....)` — esos se actualizan solos con el `StateHasChanged` que `Context` ya lanza.
+**No sobreescribirlo** si la página solo usa textos de `ObtenerTexto(TextosApp....)` — esos se actualizan solos con el `StateHasChanged` que `Context` ya lanza.
 
 > El título de la página (`TituloPagina`) también se recalcula automáticamente en `ActualizarIdioma()` — no hace falta hacerlo manualmente en el override.
 
@@ -212,7 +212,7 @@ await EjecutarAsync(async () =>
     await IndicadoresService.Eliminar(indicador);
     DatosIndicadores.Remove(indicador);
     GridIndicadores.Reload();
-}, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
+}, ObtenerTexto(TextosApp.Mensajes.ErrorDelete));
 ```
 
 ## Estado de la Página — Nomenclatura de Campos y Propiedades
@@ -265,7 +265,7 @@ private bool HayCambios =>
 
 Los paneles de filtro siguen este patrón estándar:
 
-- Usar `DxFormLayoutGroup` con `Caption="@ObtenerTexto(AppResources.Common.Filtros)"`, `ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"` y `AnimationType="LayoutAnimationType.Slide"`
+- Usar `DxFormLayoutGroup` con `Caption="@ObtenerTexto(TextosApp.Common.Filtros)"`, `ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"` y `AnimationType="LayoutAnimationType.Slide"`
 - Los campos obligatorios usan `<CaptionTemplate>` con `<span class="mandatory"></span>` en lugar de `Caption`
 - Los botones de acción van en un `DxFormLayoutItem` al final, dentro de `<div class="d-flex justify-content-start gap-2">`
 - **Orden de botones**: siempre **Buscar primero**, Limpiar después
@@ -274,7 +274,7 @@ Los paneles de filtro siguen este patrón estándar:
 ```razor
 <DxFormLayout>
     <DxFormLayoutGroup CssClass="filterContainer"
-                       Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                       Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
                        ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                        AnimationType="LayoutAnimationType.Slide">
         <Items>
@@ -282,7 +282,7 @@ Los paneles de filtro siguen este patrón estándar:
             <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
                               CaptionPosition="CaptionPosition.Vertical" BeginRow="true">
                 <CaptionTemplate>
-                    <span>@ObtenerTexto(AppResources.Pages.MiPagina.MiCampo)</span><span class="mandatory"></span>
+                    <span>@ObtenerTexto(TextosApp.Pages.MiPagina.MiCampo)</span><span class="mandatory"></span>
                 </CaptionTemplate>
                 <Template>
                     <DxComboBox ... />
@@ -296,12 +296,12 @@ Los paneles de filtro siguen este patrón estándar:
                     <DxButton CssClass="btnCustom"
                               RenderStyle="ButtonRenderStyle.None"
                               IconCssClass="fa-solid fa-magnifying-glass"
-                              Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                              Text="@ObtenerTexto(TextosApp.Common.Buscar)"
                               Click="BuscarAsync" />
                     <DxButton CssClass="btnCustom"
                               RenderStyle="ButtonRenderStyle.None"
                               IconCssClass="fa-solid fa-eraser"
-                              Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                              Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
                               Click="LimpiarFiltroAsync" />
                 </div>
             </DxFormLayoutItem>
@@ -327,7 +327,7 @@ private DxGrid GridIndicadores { get; set; } = new DxGrid();
         EditMode="GridEditMode.EditCell"
         EditModelSaving="GridIndicadores_EditModelSaving">
     <Columns>
-        <DxGridDataColumn FieldName="Descripcion" Caption="@ObtenerTexto(AppResources.Common.Descripcion)" />
+        <DxGridDataColumn FieldName="Descripcion" Caption="@ObtenerTexto(TextosApp.Common.Descripcion)" />
     </Columns>
 </DxGrid>
 ```
@@ -376,8 +376,8 @@ private async Task CerrarPopupAsync()
         </DxFormLayout>
     </BodyContentTemplate>
     <FooterContentTemplate>
-        <DxButton Text="@ObtenerTexto(AppResources.Botones.Guardar)" Click="GuardarAsync" />
-        <DxButton Text="@ObtenerTexto(AppResources.Botones.Cancelar)" Click="CerrarPopupAsync" />
+        <DxButton Text="@ObtenerTexto(TextosApp.Botones.Guardar)" Click="GuardarAsync" />
+        <DxButton Text="@ObtenerTexto(TextosApp.Botones.Cancelar)" Click="CerrarPopupAsync" />
     </FooterContentTemplate>
 </DxPopup>
 ```
@@ -389,36 +389,36 @@ Siempre usar `MensajesHelper`, nunca alertas nativas de JavaScript ni mensajes i
 ```csharp
 // Información (sin resultados, aviso neutral)
 await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+    ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
 
 // Éxito (operación completada)
 await MensajesHelper.MostrarMensajeExito(TituloPagina,
-    ObtenerTexto(AppResources.Common.DatosGrabados));
+    ObtenerTexto(TextosApp.Common.DatosGrabados));
 
 // Advertencia (validación, estado inconsistente)
 await MensajesHelper.MostrarMensajeAviso(TituloPagina, mensajeValidacion);
 
 // Error (técnico o inesperado)
 await MensajesHelper.MostrarMensajeError(TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.ErrorGeneral));
+    ObtenerTexto(TextosApp.Mensajes.ErrorGeneral));
 
 // Confirmación (acción destructiva)
 bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
     TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+    ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar));
 if (!confirmado) return;
 ```
 
-## Localización — `ObtenerTexto` y `AppResources`
+## Localización — `ObtenerTexto` y `TextosApp`
 
-Todos los textos visibles al usuario se obtienen mediante `ObtenerTexto(clave)`. Las claves están centralizadas en `AppResources.cs`:
+Todos los textos visibles al usuario se obtienen mediante `ObtenerTexto(clave)`. Las claves están centralizadas en `TextosApp.cs`:
 
 ```csharp
-// ✅ CORRECTO — clave tipada desde AppResources
-ObtenerTexto(AppResources.Common.Descripcion)
-ObtenerTexto(AppResources.Botones.Guardar)
-ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados)
-ObtenerTexto(AppResources.Pages.Versiones.TipoVersion.User)
+// ✅ CORRECTO — clave tipada desde TextosApp
+ObtenerTexto(TextosApp.Common.Descripcion)
+ObtenerTexto(TextosApp.Botones.Guardar)
+ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados)
+ObtenerTexto(TextosApp.Pages.Versiones.TipoVersion.User)
 
 // ❌ INCORRECTO — string literal hardcodeado
 ObtenerTexto("Common:Descripcion:label")   // funciona pero no tipado
@@ -428,9 +428,9 @@ ObtenerTexto("Common:Descripcion:label")   // funciona pero no tipado
 
 En markup `.razor`:
 ```razor
-<DxButton Text="@ObtenerTexto(AppResources.Botones.Guardar)" />
+<DxButton Text="@ObtenerTexto(TextosApp.Botones.Guardar)" />
 <PageHeader Titulo="@TituloPagina"
-            TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Indicadores.ToolTip)" />
+            TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.Indicadores.ToolTip)" />
 ```
 
 ## ViewModels — Estado UI sobre DTOs
@@ -501,7 +501,7 @@ Para crear una nueva página desde cero, consultar las guías especializadas:
 
 - Nunca lógica de datos en `OnInitializedAsync`; siempre en `InicializarPaginaAsync`
 - Nunca código sin `EjecutarAsync` para operaciones async en páginas (excepto `InicializarPaginaAsync`, que ya está dentro del ciclo de overlay)
-- Nunca textos literales en la UI; siempre `ObtenerTexto(AppResources.*)`
+- Nunca textos literales en la UI; siempre `ObtenerTexto(TextosApp.*)`
 - Nunca ViewModels en la capa Application o Domain
 - Nunca alertas JavaScript nativas; siempre `MensajesHelper`
 - Siempre `partial class` en el code-behind

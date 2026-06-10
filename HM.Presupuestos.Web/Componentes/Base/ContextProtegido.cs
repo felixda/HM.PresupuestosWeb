@@ -147,7 +147,7 @@ public abstract class ContextProtegido : Context
     /// <param name="tituloPagina">Título de la página</param>
     protected virtual void MostrarOverlayCarga(string tituloPagina)
     {
-        var mensajeCarga = $"{ObtenerTexto(AppResources.Common.Loading)} {tituloPagina}";
+        var mensajeCarga = $"{ObtenerTexto(TextosApp.Common.Loading)} {tituloPagina}";
         LayerOverlayService.Start(mensajeCarga);
     }
 

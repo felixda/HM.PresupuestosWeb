@@ -19,7 +19,7 @@ namespace HM.Presupuestos.Web.Layout
         private async Task MostrarPopupError(string nombrePantalla, Exception ex)
         {
             TituloVentanaError = nombrePantalla;
-            MensajeError = await TraduccionesHelper.GetResourceValue("mensajes:ErrorAbriendoPantalla:label");
+            MensajeError = LocalizadorRecursos.ObtenerTexto("mensajes:ErrorAbriendoPantalla:label");
             MostrarError = true;
             await InvokeAsync(StateHasChanged);
             await RegistroAplicacion.RegistrarExcepcion(this.GetType().Name, ex);

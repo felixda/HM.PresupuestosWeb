@@ -34,7 +34,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
        // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Sobreprimas;
 
        // protected override string ObtenerTituloPagina() =>
-       //     ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
+       //     ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
 
         #endregion
 
@@ -155,11 +155,11 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         protected override async Task InicializarPaginaAsync()
         {
-           // TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
-            LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
+           // TituloPagina = ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
+            LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
 
 
-            CaptionIzquierda = ObtenerTexto(AppResources.Pages.Sobreprimas.Titulo);
+            CaptionIzquierda = ObtenerTexto(TextosApp.Pages.Sobreprimas.Titulo);
 
             AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
             NetworksMaestros = await PresupuestosService.ObtenerNetworks();
@@ -187,8 +187,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         //{
         //    try
         //    {
-        //        TituloPagina = ObtenerTexto(AppResources.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
-        //        LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
+        //        TituloPagina = ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
+        //        LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
 
         //        await InicializarPaginaAsync();
 
@@ -210,7 +210,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         //private async Task InicializarPaginaAsync()
         //{
-        //    CaptionIzquierda = ObtenerTexto(AppResources.Pages.Sobreprimas.Titulo);
+        //    CaptionIzquierda = ObtenerTexto(TextosApp.Pages.Sobreprimas.Titulo);
 
         //    AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
         //    NetworksMaestros = await PresupuestosService.ObtenerNetworks();
@@ -561,7 +561,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         {
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
                 return;
             }
             try
@@ -582,7 +582,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 {
                     if (!_desdePaginaImportarMMS)
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
                     }
                     GridSobreprimas.SetFocusedRowIndex(-1);
                 }
@@ -728,8 +728,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 if (_popupSobreprimas != null)
                 {
                     _tituloPopupEdicion = modoOperacion == ModoOperacion.Insertar
-                        ? ObtenerTexto(AppResources.Common.Nuevo)
-                        : ObtenerTexto(AppResources.Common.Edit);
+                        ? ObtenerTexto(TextosApp.Common.Nuevo)
+                        : ObtenerTexto(TextosApp.Common.Edit);
                 }
             }
             catch (Exception ex)
@@ -750,7 +750,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         {
             if (sobreprima == null) return;
 
-            if (!await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar)))
+            if (!await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar)))
             {
                 return;
             }
@@ -760,12 +760,12 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 LayerOverlayService.Start();
                 await SobreprimasService.EliminarSobreprimas(sobreprima);
                 SobreprimasGrid.Remove(sobreprima);
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistroEliminado));
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorDelete));
             }
             finally
             {
@@ -1012,7 +1012,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (noHayCambios)
                 {
-                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(AppResources.Mensajes.SinCambios));
+                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SinCambios));
                     return;
                 }
 
@@ -1021,14 +1021,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 // Validar campos obligatorios
                 var validaciones = new List<(bool Condicion, string ResourceKey)>
                 {
-                    (_sobreprimaEnEdicion.CodigoNetwork == 0, AppResources.Common.Network),
-                    (_sobreprimaEnEdicion.CodigoMedio == null, AppResources.Common.Medio),
-                    (_sobreprimaEnEdicion.CodigoEditorial == null, AppResources.Common.Editorial),
+                    (_sobreprimaEnEdicion.CodigoNetwork == 0, TextosApp.Common.Network),
+                    (_sobreprimaEnEdicion.CodigoMedio == null, TextosApp.Common.Medio),
+                    (_sobreprimaEnEdicion.CodigoEditorial == null, TextosApp.Common.Editorial),
                     (_sobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
                         && _sobreprimaEnEdicion.ConceptoDefaul.Porcentaje == 0
                         && _sobreprimaEnEdicion.ConceptoSLA.Porcentaje == 0
                         && _sobreprimaEnEdicion.ConceptoHVP.Porcentaje == 0,
-                        AppResources.Common.Porcentaje)
+                        TextosApp.Common.Porcentaje)
                 };
 
                 var campoError = validaciones
@@ -1040,7 +1040,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 {
                     await MensajesHelper.MostrarMensajeError(
                         TituloPagina,
-                        $"{ObtenerTexto(AppResources.Mensajes.MandatoryField)}: {campoError}"
+                        $"{ObtenerTexto(TextosApp.Mensajes.MandatoryField)}: {campoError}"
                     );
                     return;
                 }
@@ -1049,7 +1049,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 if (_sobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
                     && SobreprimasGrid.Find(x => x.KeyGrid == _sobreprimaEnEdicion.KeyGrid) != null)
                 {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.SobreprimaDuplicated));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
                     return;
                 }
 
@@ -1058,14 +1058,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     && SobreprimasGrid.Find(x => x.KeyGrid == _sobreprimaEnEdicion.KeyGrid
                                                 && x.Codigo != _sobreprimaEnEdicion.Codigo) != null)
                 {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.SobreprimaDuplicated));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
                     return;
                 }
 
                 // Validar duplicados en base de datos
                 if (await SobreprimaEstaDuplicada(_sobreprimaEnEdicion))
                 {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.SobreprimaDuplicated));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
                     return;
                 }
 
@@ -1121,7 +1121,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                     SobreprimasGrid.Insert(0, _sobreprimaEnEdicion);
                     GridSobreprimas.SetFocusedRowIndex(0);
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
                 }
                 else
                 {
@@ -1145,7 +1145,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                         }
                     }
 
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
                     GridSobreprimas.Reload();
                 }
 
@@ -1158,7 +1158,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 if (grabacionExitosa)
                 {
                     // Error después de grabar: mensaje especial y recargar
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorDespuesDeGrabar));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorDespuesDeGrabar));
                     OcultarPopupEdicion();
                     await AplicarFiltro();
                 }
@@ -1166,7 +1166,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 {
                     // Error antes de grabar: mensaje normal
                     OcultarPopupEdicion();
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorAlGrabar));
                 }
             }
             finally
@@ -1373,7 +1373,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Common.Messages.UndefinedError));
             }
         }
         #endregion

@@ -85,7 +85,7 @@ Regla de decisión rápida:
 #### Textos en la UI
 
 - ❌ Nunca strings literales visibles en la UI
-- ✅ Usar siempre `ObtenerTexto(AppResources.Seccion.Clave)`
+- ✅ Usar siempre `ObtenerTexto(TextosApp.Seccion.Clave)`
 - Si la clave no existe, seguir el proceso de `.github/prompts/anadir-traduccion.prompt.md`
 
 #### Auditoría

@@ -1,13 +1,13 @@
 Description
-Genera automáticamente la clase AppResources.cs con constantes fuertemente tipadas a
+Genera automáticamente la clase TextosApp.cs con constantes fuertemente tipadas a
 partir de archivos JSON de recursos de traducción
 Instructions
 Como experto en Blazor y .net necestio que a partir de un json con un formato dado crees
 una clase con contantes fuertemetne tipadas en funcion de las entradas del json.
 Seguir contexto general de aplicacion blazor.
-Lee el archivo `wwwrot/data/app.es.json` y genera el archivo `Helper/AppResources.cs` completo siguiendo
+Lee el archivo `wwwrot/data/app.es.json` y genera el archivo `Helper/TextosApp.cs` completo siguiendo
 todas estas reglas.
-## 1. Estructura General- Generar clase estática `AppResources` con regiones alfabéticas- Cada sección del JSON se convierte en una clase estática anidada- Usar `#region` para organizar las secciones- Incluir fecha de última actualización en formato `yyyy-MM-dd HH:mm`
+## 1. Estructura General- Generar clase estática `TextosApp` con regiones alfabéticas- Cada sección del JSON se convierte en una clase estática anidada- Usar `#region` para organizar las secciones- Incluir fecha de última actualización en formato `yyyy-MM-dd HH:mm`
 ## 2. Formato de Constantes- Las claves del JSON se transforman a: `"Sección:NombrePropiedad:tipo"`- Usar `:` como separador (compatible con ResourceService)- Los tipos comunes son: `label`, `code`, `url`, `icono`, `visible`, `image`, `const`- Las constantes deben ser `public const string`
 ## 3. Comentarios XML- Cada constante debe tener un `/// <summary>` con el valor en español del JSON- Para propiedades sin valor (vacías), usar: `/// <summary>(vacía)</summary>` o `///
 <summary>(vacío)</summary>`
@@ -22,5 +22,5 @@ Conocimiento de .NET para constantes fuertemente tipadas, estructura de clases e
 anidadas, convenciones de nomenclatura en C#, formato de comentarios XML
 documentation, y organización de código mediante regiones en archivos .cs
 Conversation Starters
-• Genera la clase AppResources.cs desde mi archivo app.es.json
-• Necesito actualizar AppResources.cs porque añadí nuevas etiquetas al JSON
+• Genera la clase TextosApp.cs desde mi archivo app.es.json
+• Necesito actualizar TextosApp.cs porque añadí nuevas etiquetas al JSON

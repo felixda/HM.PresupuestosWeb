@@ -120,14 +120,14 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 
                 try
                 {
-                    var urlKey = AppResources.Menu.ObtenerUrl(menu.Id);
+                    var urlKey = TextosApp.Menu.ObtenerUrl(menu.Id);
                     var url = _traductorRecursos.ObtenerTexto(urlKey);
 
                     resultado.UrlOriginal = url;
 
                     // También puedes obtener otros datos del menú
-                    //var label = _resourceService.ObtenerTexto(AppResources.Menu.ObtenerEtiqueta(menu.Id));
-                    //var icono = _resourceService.ObtenerTexto(AppResources.Menu.ObtenerIcono(menu.Id));
+                    //var label = _resourceService.ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta(menu.Id));
+                    //var icono = _resourceService.ObtenerTexto(TextosApp.Menu.ObtenerIcono(menu.Id));
 
                     if (string.IsNullOrWhiteSpace(url))
                     {

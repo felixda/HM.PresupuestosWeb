@@ -61,7 +61,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
             if (DatosIndicadores.Count == 0)
             {
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
             }
         }
 
@@ -163,7 +163,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
             {
                 bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
                     TituloPagina,
-                    ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+                    ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar));
 
                 if (!confirmado) return;
 
@@ -172,9 +172,9 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                 DatosIndicadores.Remove(indicador);
                 GridIndicadores.Reload();
 
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistroEliminado));
 
-            }, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
+            }, ObtenerTexto(TextosApp.Mensajes.ErrorDelete));
         
         }
 
@@ -231,19 +231,19 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                 var comparadores = new Dictionary<string, Func<(object? original, object? actual)>>()
                 {
                     {
-                        ObtenerTexto(AppResources.Common.Idioma),
+                        ObtenerTexto(TextosApp.Common.Idioma),
                         () => (originIdioma.CodigoIdioma, itemIdiomaEdit.CodigoIdioma)
                     },
                     {
-                        ObtenerTexto(AppResources.Common.Descripcion),
+                        ObtenerTexto(TextosApp.Common.Descripcion),
                         () => (originIdioma.Descripcion, itemIdiomaEdit.Descripcion)
                     },
                     {
-                        ObtenerTexto(AppResources.Common.DescripcionAbreviada),
+                        ObtenerTexto(TextosApp.Common.DescripcionAbreviada),
                         () => (originIdioma.DescripcionAbreviada, itemIdiomaEdit.DescripcionAbreviada)
                     },
                     {
-                        ObtenerTexto(AppResources.Common.Leyenda),
+                        ObtenerTexto(TextosApp.Common.Leyenda),
                         () => (originIdioma.Leyenda, itemIdiomaEdit.Leyenda)
                     }
                 };
@@ -318,45 +318,45 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                     if (!string.IsNullOrEmpty(descripcionCampoInvalido))
                     {
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                            ObtenerTexto(AppResources.Mensajes.LongitudCaracteres) + " " + descripcionCampoInvalido);
+                            ObtenerTexto(TextosApp.Mensajes.LongitudCaracteres) + " " + descripcionCampoInvalido);
                         return;
                     }
 
                     if (!ValidarCamposRequeridos())
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
                         return;
                     }
 
                     if (IndicadorEnEdicion.Orden <= 0)
                     {
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                            string.Format(ObtenerTexto(AppResources.Mensajes.CampoMayorQueCero), ObtenerTexto(AppResources.Common.Orden)));
+                            string.Format(ObtenerTexto(TextosApp.Mensajes.CampoMayorQueCero), ObtenerTexto(TextosApp.Common.Orden)));
                         return;
                     }
 
                     if (IndicadorEnEdicion.BitAnd <= 0)
                     {
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                            string.Format(ObtenerTexto(AppResources.Mensajes.CampoMayorQueCero), ObtenerTexto(AppResources.Common.BitAnd)));
+                            string.Format(ObtenerTexto(TextosApp.Mensajes.CampoMayorQueCero), ObtenerTexto(TextosApp.Common.BitAnd)));
                         return;
                     }
 
                     if (!EsBitAndValido())
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.ValidarBitAnd));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ValidarBitAnd));
                         return;
                     }
 
                     if (TieneIdiomasDuplicados())
                     {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.IdiomasDuplicados));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.IdiomasDuplicados));
                         return;
                     }
 
                     if (TieneDatosIdiomaIncompletos())
                     {
-                        await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(AppResources.Pages.Indicadores.LanguageDataIncompleted));
+                        await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(TextosApp.Pages.Indicadores.LanguageDataIncompleted));
                         return;
                     }
 
@@ -364,7 +364,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                 }
                 else
                 {
-                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(AppResources.Mensajes.SinModificaciones));
+                    await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SinModificaciones));
                 }
             }
             catch (ValidacionException exv)
@@ -390,7 +390,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         private string ObtenerMensajeValidacion(CampoErrorValidacion campo, string valor)
         {
             string nombreCampo = ObtenerTexto($"Common:{campo}:label");
-            return string.Format(ObtenerTexto(AppResources.Mensajes.ValorCampoRepetido), nombreCampo, valor);
+            return string.Format(ObtenerTexto(TextosApp.Mensajes.ValorCampoRepetido), nombreCampo, valor);
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                 {
                     bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
                         TituloPagina,
-                        ObtenerTexto(AppResources.Mensajes.AvisoAntesCancelar));
+                        ObtenerTexto(TextosApp.Mensajes.AvisoAntesCancelar));
 
                     if (confirmado)
                     {
@@ -472,22 +472,22 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         {
             if (IndicadorEnEdicion.Descripcion.Length > 50)
             {
-                return ObtenerTexto(AppResources.Common.Descripcion);
+                return ObtenerTexto(TextosApp.Common.Descripcion);
             }
 
             if (IndicadorEnEdicion.Idiomas.Any(o => o.Descripcion.Length > 50))
             {
-                return ObtenerTexto(AppResources.Common.Descripcion);
+                return ObtenerTexto(TextosApp.Common.Descripcion);
             }
 
             if (IndicadorEnEdicion.Idiomas.Any(o => o.DescripcionAbreviada.Length > 10))
             {
-                return ObtenerTexto(AppResources.Common.DescripcionAbreviada);
+                return ObtenerTexto(TextosApp.Common.DescripcionAbreviada);
             }
 
             if (IndicadorEnEdicion.Idiomas.Any(o => o.Leyenda.Length > 100))
             {
-                return ObtenerTexto(AppResources.Common.Leyenda);
+                return ObtenerTexto(TextosApp.Common.Leyenda);
             }
 
             return string.Empty;
@@ -558,7 +558,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
             }
 
             GridIndicadores.Reload();
-            await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistroGrabado));
+            await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistroGrabado));
         }
 
         /// <summary>

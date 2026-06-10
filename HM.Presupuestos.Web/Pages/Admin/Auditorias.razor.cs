@@ -54,7 +54,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
             {
                 await MensajesHelper.MostrarMensajeAviso(
                     TituloPagina,
-                    ObtenerTexto(AppResources.Pages.Auditorias.CamposObligatorios));
+                    ObtenerTexto(TextosApp.Pages.Auditorias.CamposObligatorios));
                 return;
             }
 

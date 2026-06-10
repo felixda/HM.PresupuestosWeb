@@ -315,9 +315,9 @@ Motivos: `@inject` genera propiedades públicas; el code-behind ofrece Intellise
 
 ```csharp
 // Obtener texto traducido
-ObtenerTexto(AppResources.Common.Descripcion)
-ObtenerTexto(AppResources.Pages.Indicadores.Mostrar)
-ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar)
+ObtenerTexto(TextosApp.Common.Descripcion)
+ObtenerTexto(TextosApp.Pages.Indicadores.Mostrar)
+ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar)
 
 // Verificar si existe una clave
 ExisteRecurso("MensajeErrorBD:-20001:label")

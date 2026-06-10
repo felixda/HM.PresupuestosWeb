@@ -206,5 +206,5 @@ Consultar la documentación interna en `.github/`:
 - El usuario se obtiene en `OnUsuarioDisponibleAsync()`, nunca en `OnInitializedAsync()`
 - Toda operación async se envuelve en `EjecutarAsync(async () => { ... })`
 - Inyección con `[Inject]` en `.razor.cs`, nunca `@inject` en `.razor`
-- Textos UI siempre con `ObtenerTexto(AppResources.Seccion.Clave)` — sin strings literales
+- Textos UI siempre con `ObtenerTexto(TextosApp.Seccion.Clave)` — sin strings literales
 - Auditoría registrada desde el servicio (Application), nunca desde la página

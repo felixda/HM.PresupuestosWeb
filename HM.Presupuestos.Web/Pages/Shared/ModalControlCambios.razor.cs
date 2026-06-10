@@ -5,7 +5,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
     {
         #region Inyección de Dependencias
 
-        [Inject] protected TraduccionesHelper TraduccionesHelper { get; set; } = default!;
+        [Inject] protected ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         public async Task<bool> Show(string mensaje)
         {
-            Si = await TraduccionesHelper.GetResourceValue("Common:Si:label");
+            Si = LocalizadorRecursos.ObtenerTexto(TextosApp.Common.Si);
             Mensaje = mensaje;
             Mostrar = true;
             StateHasChanged();

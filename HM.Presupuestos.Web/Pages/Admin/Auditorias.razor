@@ -19,21 +19,21 @@ else
     <PageTitle>@TituloPagina</PageTitle>
     <PageHeader CodigoMenu="@CodigosMenu.Auditorias"
                 Titulo="@TituloPagina"
-                TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Auditorias.ToolTip)" />
+                TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.Auditorias.ToolTip)" />
 
     <div class="layoutContainer">
 
         @* FILTROS *@
         <DxFormLayout>
             <DxFormLayoutGroup CssClass="filterContainer"
-                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
                                ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                                AnimationType="LayoutAnimationType.Slide">
                 <Items>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
                                       CaptionPosition="CaptionPosition.Vertical" BeginRow="true">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Pages.Auditorias.TipoAuditoria)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Pages.Auditorias.TipoAuditoria)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@TiposAuditoria"
@@ -55,7 +55,7 @@ else
                     @if (TipoAuditoriaSeleccionado == (int)AccionesLog.AccesoAPagina)
                     {
                         <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
-                                          Caption="@ObtenerTexto(AppResources.Pages.Auditorias.Pagina)"
+                                          Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Pagina)"
                                           CaptionPosition="CaptionPosition.Vertical">
                             <Template>
                                 <DxComboBox Data="@PaginasNavegables"
@@ -65,7 +65,7 @@ else
                                             SearchMode="@ListSearchMode.AutoSearch"
                                             SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                             ListRenderMode="ListRenderMode.Entire"
-                                            NullText="@ObtenerTexto(AppResources.Common.Todos)"
+                                            NullText="@ObtenerTexto(TextosApp.Common.Todos)"
                                             @bind-Value="@PaginaSeleccionada">
                                     <EditBoxDisplayTemplate Context="contexto">
                                         @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
@@ -76,19 +76,19 @@ else
                     }
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                      Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaInicio)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaInicio)"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <DxDateEdit @bind-Date="@FechaInicio"
                                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                    NullText="@ObtenerTexto(AppResources.Common.Todos)" />
+                                    NullText="@ObtenerTexto(TextosApp.Common.Todos)" />
                     </DxFormLayoutItem>
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                      Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaFin)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaFin)"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <DxDateEdit @bind-Date="@FechaFin"
                                     ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                    NullText="@ObtenerTexto(AppResources.Common.Todos)" />
+                                    NullText="@ObtenerTexto(TextosApp.Common.Todos)" />
                     </DxFormLayoutItem>
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
@@ -97,12 +97,12 @@ else
                             <DxButton CssClass="btnCustom"
                                       RenderStyle="ButtonRenderStyle.None"
                                       IconCssClass="fa-solid fa-magnifying-glass"
-                                      Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                                      Text="@ObtenerTexto(TextosApp.Common.Buscar)"
                                       Click="BuscarAuditoriasAsync" />
                             <DxButton CssClass="btnCustom"
                                       RenderStyle="ButtonRenderStyle.None"
                                       IconCssClass="fa-solid fa-eraser"
-                                      Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                                      Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
                                       Click="LimpiarFiltroAsync" />
                         </div>
                     </DxFormLayoutItem>
@@ -118,18 +118,18 @@ else
                 HighlightRowOnHover="true">
             <Columns>
                 <DxGridDataColumn FieldName="@nameof(Auditoria.Descripcion)"
-                                  Caption="@ObtenerTexto(AppResources.Common.Descripcion)"
+                                  Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
                                   Width="50%"
                                   CaptionAlignment="GridTextAlignment.Left"
                                   TextAlignment="GridTextAlignment.Left" />
                 <DxGridDataColumn FieldName="@nameof(Auditoria.FechaInicio)"
-                                  Caption="@ObtenerTexto(AppResources.Pages.Auditorias.FechaInicio)"
+                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaInicio)"
                                   Width="20%"
                                   DisplayFormat="dd/MM/yyyy HH:mm:ss"
                                   CaptionAlignment="GridTextAlignment.Left"
                                   TextAlignment="GridTextAlignment.Left" />
                 <DxGridDataColumn FieldName="@nameof(Auditoria.Usuario)"
-                                  Caption="@ObtenerTexto(AppResources.Pages.Auditorias.Usuario)"
+                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario)"
                                   Width="30%"
                                   CaptionAlignment="GridTextAlignment.Left"
                                   TextAlignment="GridTextAlignment.Left" />

@@ -41,7 +41,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <div>@ObtenerTexto(AppResources.Pages.Impersonation.Description)</div>
+                            <div>@ObtenerTexto(TextosApp.Pages.Impersonation.Description)</div>
                         </CaptionTemplate>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
@@ -53,14 +53,14 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
                         <DxTextBox @bind-Text="@_userNameImpersonation"
-                        NullText="@ObtenerTexto(AppResources.Pages.Impersonation.UserName)"
+                        NullText="@ObtenerTexto(TextosApp.Pages.Impersonation.UserName)"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
                         <DxTextBox @bind-Text="@_passwordImpersonation"
-                        NullText="@ObtenerTexto(AppResources.Pages.Impersonation.Password)"
+                        NullText="@ObtenerTexto(TextosApp.Pages.Impersonation.Password)"
                         Password="true"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
@@ -70,7 +70,7 @@ else
                         <div class="d-flex justify-content-center">
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Common.Aceptar)"
+                            Text="@ObtenerTexto(TextosApp.Common.Aceptar)"
                             Click="OnImpersonarConLogin" ClickEventArgs="true" /> @* para que acepte MouseEventArgs *@
                         </div>
                     </DxFormLayoutItem>
@@ -100,7 +100,7 @@ else
 
     protected override async Task InicializarPaginaAsync()
     {
-        _textoToolTipAyuda = ObtenerTexto(AppResources.Pages.Impersonation.ToolTip);
+        _textoToolTipAyuda = ObtenerTexto(TextosApp.Pages.Impersonation.ToolTip);
     }
 
 
@@ -136,17 +136,17 @@ else
                     }
                     else
                     {
-                        _message = ObtenerTexto(AppResources.Pages.Impersonation.UsuarioNoAutorizado);
+                        _message = ObtenerTexto(TextosApp.Pages.Impersonation.UsuarioNoAutorizado);
                     }
                 }
                 else
                 {
-                    _message = ObtenerTexto(AppResources.Pages.Impersonation.UsuarioImpersonadoIgual);
+                    _message = ObtenerTexto(TextosApp.Pages.Impersonation.UsuarioImpersonadoIgual);
                 }
             }
             else
             {
-                _message = ObtenerTexto(AppResources.Pages.Impersonation.RellenarDatosUsuario);
+                _message = ObtenerTexto(TextosApp.Pages.Impersonation.RellenarDatosUsuario);
             }
         });
     }

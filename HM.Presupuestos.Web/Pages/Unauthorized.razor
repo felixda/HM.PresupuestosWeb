@@ -50,9 +50,9 @@
             // _link = $"{await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:BackToHome:label")}";
             // var msg = await _JSRuntime.InvokeAsync<string>("GetResourceValue", "common:UnauthorizedUser:label");
 
-            _pageTitle = ObtenerTexto(AppResources.Common.AppName);
-            _link = ObtenerTexto(AppResources.Common.BackToHome);
-            var msg = ObtenerTexto(AppResources.Common.UnauthorizedUser);
+            _pageTitle = ObtenerTexto(TextosApp.Common.AppName);
+            _link = ObtenerTexto(TextosApp.Common.BackToHome);
+            var msg = ObtenerTexto(TextosApp.Common.UnauthorizedUser);
             _htmlMessage = new MarkupString(msg ?? string.Empty);
             if (!_componentInitialized)
             {

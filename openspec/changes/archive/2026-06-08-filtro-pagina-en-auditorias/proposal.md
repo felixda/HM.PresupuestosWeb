@@ -27,7 +27,7 @@ La página de Auditorías permite filtrar por tipo de acción, pero cuando se se
 - **Web (Adaptadores)**: `RegistroAplicacion` — nuevo formato de string para AccesoAPagina; `IMapaMenu` + `MapaMenu` — nuevo método `ObtenerPaginasNavegables()`
 - **Web (Página)**: `Auditorias.razor` + `Auditorias.razor.cs` — nuevo combo condicional + nueva propiedad + carga en `InicializarPaginaAsync`
 - **Tests unitarios**: nuevos casos para `ObtenerAuditorias` con `codigoPagina`
-- Requiere nuevas claves de traducción en AppResources (`Pages.Auditorias.Pagina`)
+- Requiere nuevas claves de traducción en TextosApp (`Pages.Auditorias.Pagina`)
 - No requiere nuevas acciones de auditoría (AccionesLog)
 - No requiere nuevos permisos (CodigosMenu)
 

@@ -1,6 +1,7 @@
 
 using HM.Presupuestos.Domain.Entidades;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using System.Globalization;
 
 namespace HM.Presupuestos.Web.Adaptadores.Idioma
 {
@@ -11,6 +12,10 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
         Task CambiarIdioma(string nuevoIdioma);
 
         string IdiomaActual { get; }
+
+        List<CodigoDescripcion> ObtenerMeses();
+
+        void TraducirMesesVigencias(List<Vigencia> vigencias);
     }
 
 
@@ -76,6 +81,39 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
                 {
                     await IdiomaCambiado.Invoke();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Devuelve una lista de los meses del año en el idioma actual
+        /// </summary>
+        /// <returns></returns>
+        public List<CodigoDescripcion> ObtenerMeses()
+        {
+            var culture = new CultureInfo(IdiomaActual);
+            string[] nombresMeses = culture.DateTimeFormat.MonthNames;
+            List<CodigoDescripcion> meses = [];
+            int numeroMes = 1;
+
+            foreach (var nombreMes in nombresMeses)
+            {
+                if (!string.IsNullOrEmpty(nombreMes))
+                {
+                    meses.Add(new CodigoDescripcion { Codigo = numeroMes, Descripcion = nombreMes });
+                    numeroMes++;
+                }
+            }
+            return meses;
+        }
+
+        public void TraducirMesesVigencias(List<Vigencia> vigencias)
+        {
+            var culture = new CultureInfo(IdiomaActual);
+            string[] nombresMeses = culture.DateTimeFormat.MonthNames;
+
+            foreach (Vigencia vigencia in vigencias)
+            {
+                vigencia.Descripcion = $" {nombresMeses[vigencia.MesDesde - 1]} - {nombresMeses[vigencia.MesHasta - 1]}";
             }
         }
 

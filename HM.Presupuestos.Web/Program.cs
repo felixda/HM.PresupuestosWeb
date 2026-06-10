@@ -138,7 +138,6 @@ builder.Services.AddScoped<IGestorIdioma, GestorIdioma>();
 builder.Services.AddScoped<IAlmacenSesionUsuario, AlmacenSesionUsuario>();
 builder.Services.AddScoped<IRegistroAplicacion, RegistroAplicacion>();
 builder.Services.AddScoped<MensajesHelper>();
-builder.Services.AddScoped<TraduccionesHelper>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<DialogoErrores>();
 builder.Services.AddScoped<ParametrosNavegacion>();

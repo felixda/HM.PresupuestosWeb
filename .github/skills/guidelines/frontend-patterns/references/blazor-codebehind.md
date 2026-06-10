@@ -82,7 +82,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
 
             if (_datos.Count == 0)
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                    ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+                    ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
         }
 
         protected override async Task OnUsuarioImpersonadoDesconectado()
@@ -116,7 +116,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
             {
                 _entidadEnEdicion = new MiEntidad();
                 _modoEdicion = ModoEdicion.Alta;
-                TituloPopup = ObtenerTexto(AppResources.Pages.MiPagina.NuevoRegistro);
+                TituloPopup = ObtenerTexto(TextosApp.Pages.MiPagina.NuevoRegistro);
                 EsPopupVisible = true;
             });
         }
@@ -127,7 +127,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
             {
                 _entidadEnEdicion = DatosHelper.ClonarObjeto(entidad);
                 _modoEdicion = ModoEdicion.Edicion;
-                TituloPopup = ObtenerTexto(AppResources.Pages.MiPagina.EditarRegistro);
+                TituloPopup = ObtenerTexto(TextosApp.Pages.MiPagina.EditarRegistro);
                 EsPopupVisible = true;
             });
         }
@@ -138,7 +138,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
 
             bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
                 TituloPagina,
-                ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+                ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar));
 
             if (!confirmado) return;
 
@@ -148,7 +148,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
                 _datos.Remove(entidad);
                 Grid.Reload();
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                    ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                    ObtenerTexto(TextosApp.Mensajes.RegistroEliminado));
             });
         }
 
@@ -167,7 +167,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
                 EsPopupVisible = false;
 
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-                    ObtenerTexto(AppResources.Mensajes.RegistroGrabado));
+                    ObtenerTexto(TextosApp.Mensajes.RegistroGrabado));
             });
         }
 
@@ -267,7 +267,7 @@ await EjecutarAsync(async () =>
 {
     await MiServicio.Eliminar(entidad.Codigo);
     _datos.Remove(entidad);
-}, ObtenerTexto(AppResources.Mensajes.ErrorGeneral));
+}, ObtenerTexto(TextosApp.Mensajes.ErrorGeneral));
 ```
 
 **No usar** `EjecutarAsync` dentro de `InicializarPaginaAsync()` — ya está envuelto por el framework.
@@ -321,11 +321,11 @@ El code-behind se organiza siempre con regiones. Orden canónico:
 ## 7. Localización de Textos
 
 ```csharp
-// ✅ CORRECTO — clave tipada desde AppResources
-ObtenerTexto(AppResources.Common.Descripcion)
-ObtenerTexto(AppResources.Botones.Grabar)
-ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar)
-ObtenerTexto(AppResources.Pages.MiPagina.ToolTip)
+// ✅ CORRECTO — clave tipada desde TextosApp
+ObtenerTexto(TextosApp.Common.Descripcion)
+ObtenerTexto(TextosApp.Botones.Grabar)
+ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar)
+ObtenerTexto(TextosApp.Pages.MiPagina.ToolTip)
 
 // ❌ INCORRECTO — string literal (funciona pero no es tipado ni seguro)
 ObtenerTexto("Common:Descripcion:label")
@@ -345,23 +345,23 @@ Nunca usar alertas JavaScript nativas. Siempre `MensajesHelper`:
 ```csharp
 // Información — resultado vacío, estado neutro
 await MensajesHelper.MostrarMensajeInfo(TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+    ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
 
 // Éxito — operación completada correctamente
 await MensajesHelper.MostrarMensajeExito(TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.RegistroGrabado));
+    ObtenerTexto(TextosApp.Mensajes.RegistroGrabado));
 
 // Advertencia — validación, estado inconsistente
 await MensajesHelper.MostrarMensajeAviso(TituloPagina, mensajeValidacion);
 
 // Error — técnico o inesperado
 await MensajesHelper.MostrarMensajeError(TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.ErrorGeneral));
+    ObtenerTexto(TextosApp.Mensajes.ErrorGeneral));
 
 // Confirmación — antes de acción destructiva (eliminar, sobrescribir)
 bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
     TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+    ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar));
 
 if (!confirmado) return;
 ```
@@ -409,7 +409,7 @@ private async Task NuevoAsync()
     {
         _entidadEnEdicion = new MiEntidad();
         _modoEdicion = ModoEdicion.Alta;
-        TituloPopup = ObtenerTexto(AppResources.Pages.MiPagina.NuevoRegistro);
+        TituloPopup = ObtenerTexto(TextosApp.Pages.MiPagina.NuevoRegistro);
         EsPopupVisible = true;
     });
 }
@@ -421,7 +421,7 @@ private async Task EditarAsync(MiEntidad entidad)
     {
         _entidadEnEdicion = DatosHelper.ClonarObjeto(entidad);
         _modoEdicion = ModoEdicion.Edicion;
-        TituloPopup = ObtenerTexto(AppResources.Pages.MiPagina.EditarRegistro);
+        TituloPopup = ObtenerTexto(TextosApp.Pages.MiPagina.EditarRegistro);
         EsPopupVisible = true;
     });
 }
@@ -480,7 +480,7 @@ private bool HayCambiosPendientes =>
 - [ ] `OnUsuarioImpersonadoDesconectado()` sobrescrito si hay estado que refrescar
 - [ ] Toda operación async de UI envuelta en `EjecutarAsync`
 - [ ] Confirmación antes de cualquier acción destructiva (`MostrarMensajeParaConfirmacion`)
-- [ ] Todos los textos via `ObtenerTexto(AppResources.*)`
-- [ ] Claves de traducción nuevas añadidas a los 3 JSON + `AppResources.cs`
+- [ ] Todos los textos via `ObtenerTexto(TextosApp.*)`
+- [ ] Claves de traducción nuevas añadidas a los 3 JSON + `TextosApp.cs`
 - [ ] Los handlers de eventos DevExpress usan `async void` (no `async Task`)
 - [ ] No redeclarar servicios ya heredados de `Context`

@@ -82,7 +82,7 @@ finally
 private string ObtenerMensajeValidacion(CampoErrorValidacion campo, string valor)
 {
     string nombreCampo = ObtenerTexto($"Common:{campo}:label");
-    return string.Format(ObtenerTexto(AppResources.Mensajes.ValorCampoRepetido), nombreCampo, valor);
+    return string.Format(ObtenerTexto(TextosApp.Mensajes.ValorCampoRepetido), nombreCampo, valor);
 }
 ```
 
@@ -290,18 +290,18 @@ Los mensajes se muestran siempre mediante `MensajesHelper`, nunca con alertas na
 
 ```csharp
 // Error técnico genérico
-await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(AppResources.Mensajes.ErrorGeneral));
+await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorGeneral));
 
 // Aviso de validación (dato duplicado)
 await MensajesHelper.MostrarMensajeAviso(TituloPagina, mensajeValidacion);
 
 // Información (sin resultados)
-await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
 
 // Confirmación antes de acción destructiva
 bool confirmado = await MensajesHelper.MostrarMensajeParaConfirmacion(
     TituloPagina,
-    ObtenerTexto(AppResources.Mensajes.AvisoAntesCancelar));
+    ObtenerTexto(TextosApp.Mensajes.AvisoAntesCancelar));
 if (!confirmado) return;
 ```
 

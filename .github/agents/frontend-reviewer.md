@@ -149,12 +149,12 @@ var items = await EjecutarAsync(
 ## Textos y traducciones
 
 - ❌ Nunca strings literales visibles en la UI (etiquetas, mensajes, tooltips, títulos...)
-- ✅ Siempre `ObtenerTexto(AppResources.Seccion.Clave)`
+- ✅ Siempre `ObtenerTexto(TextosApp.Seccion.Clave)`
 - Si la clave no existe, seguir el proceso de `.github/prompts/anadir-traduccion.prompt.md`
 
 ```csharp
 // ✅ CORRECTO
-var mensaje = ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar);
+var mensaje = ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar);
 
 // ❌ MAL
 var mensaje = "¿Desea eliminar el registro?";
@@ -214,6 +214,6 @@ dotnet build HM.Presupuestos.Web/HM.Presupuestos.Web.csproj --no-restore
 
 | # | Fichero | Problema | Corrección aplicada |
 |---|---------|----------|---------------------|
-| 1 | `Web/Pages/Condiciones/CondicionesPage.razor` | String literal en UI | Reemplazado por `ObtenerTexto(AppResources.X.Y)` |
+| 1 | `Web/Pages/Condiciones/CondicionesPage.razor` | String literal en UI | Reemplazado por `ObtenerTexto(TextosApp.X.Y)` |
 | 2 | `Web/Pages/Versiones/VersionesPage.razor.cs` | `@inject` en lugar de `[Inject]` | Movido a `.razor.cs` |
 | 3 | `Web/Componentes/FiltroFechas.razor.cs` | `OnInitializedAsync` para cargar datos | Movido a `InicializarPaginaAsync` |

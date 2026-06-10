@@ -59,7 +59,7 @@ Debes:
 6. Respetar las siguientes reglas de posición:
    - Si la sección es **`Common`**: insertar la entrada en **orden alfabético** por clave
    - Para **cualquier otra sección**: insertar la entrada al **final de la sección**, antes del cierre `}`
-7. Tras modificar los JSON, actualizar la clase `HM.Presupuestos.Server\Helper\AppResources.cs`:
+7. Tras modificar los JSON, actualizar la clase `HM.Presupuestos.Server\Helper\TextosApp.cs`:
    - Leer el fichero para localizar la clase estática correspondiente a la sección (ej: `Common`, `Pages`, `Mensajes`)
    - Añadir una nueva constante `public const string` siguiendo el patrón existente:
      ```csharp

@@ -29,7 +29,7 @@
 ## 7. Web — Recursos
 
 - [x] 7.1 Añadir clave `Pagina` en la sección `Pages.Auditorias` de `app.es.json`, `app.en.json` y `app.pt.json`
-- [x] 7.2 Actualizar `AppResources.cs` con la nueva clave `Pages.Auditorias.Pagina`
+- [x] 7.2 Actualizar `TextosApp.cs` con la nueva clave `Pages.Auditorias.Pagina`
 
 ## 8. Web — Página Auditorías
 

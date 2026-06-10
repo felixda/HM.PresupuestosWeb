@@ -81,7 +81,7 @@ Antes de refactorizar, leer la implementación canónica en el módulo de Condic
 
 #### Textos y traducciones
 
-- String literal visible en la UI → `ObtenerTexto(AppResources.Seccion.Clave)`
+- String literal visible en la UI → `ObtenerTexto(TextosApp.Seccion.Clave)`
   - Si la clave no existe, seguir `.github/prompts/anadir-traduccion.prompt.md`
 
 #### Arquitectura

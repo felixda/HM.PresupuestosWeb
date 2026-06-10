@@ -28,7 +28,7 @@ Los combos de la página Auditorías (tipo de acción y página) muestran sus op
 - **Recursos**: `app.es.json`, `app.en.json`, `app.pt.json` — nueva sección `AccionesLog` (29 entradas)
 - **Guidelines**: `frontend-patterns` — documentar `OnIdiomaActualizadoAsync`; nueva regla de sincronía `AccionesLog` ↔ JSON
 - No requiere cambios en Domain, Application ni Infrastructure
-- No requiere nuevas claves de `AppResources.cs` (lookup dinámico por nombre del enum)
+- No requiere nuevas claves de `TextosApp.cs` (lookup dinámico por nombre del enum)
 - No requiere nuevos permisos (CodigosMenu)
 - No requiere nuevas acciones de auditoría (AccionesLog)
 

@@ -38,8 +38,8 @@
 
 
     /// <summary>
-    /// Se ejecuta cuando los parámetros (StatusCode) son establecidos por el router.
-    /// Es el lugar ideal para cargar datos dependientes del parámetro.
+    /// Se ejecuta cuando los parï¿½metros (StatusCode) son establecidos por el router.
+    /// Es el lugar ideal para cargar datos dependientes del parï¿½metro.
     /// </summary>
     protected override void OnParametersSet()
     {
@@ -55,16 +55,16 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            _pageTitle = $"{_ResourceService.ObtenerTexto(AppResources.Common.AppName)} - {_httpStatusCode}";
-            _link = _ResourceService.ObtenerTexto(AppResources.Common.BackToHome);
+            _pageTitle = $"{_ResourceService.ObtenerTexto(TextosApp.Common.AppName)} - {_httpStatusCode}";
+            _link = _ResourceService.ObtenerTexto(TextosApp.Common.BackToHome);
 
             var msgDescription = _httpStatusCode switch
             {
-                400 => _ResourceService.ObtenerTexto(AppResources.Common.Http400),
-                403 => _ResourceService.ObtenerTexto(AppResources.Common.Http403),
-                404 => _ResourceService.ObtenerTexto(AppResources.Common.Http404),
-                500 => _ResourceService.ObtenerTexto(AppResources.Common.Http500),
-                _   => _ResourceService.ObtenerTexto(AppResources.Common.HttpError),
+                400 => _ResourceService.ObtenerTexto(TextosApp.Common.Http400),
+                403 => _ResourceService.ObtenerTexto(TextosApp.Common.Http403),
+                404 => _ResourceService.ObtenerTexto(TextosApp.Common.Http404),
+                500 => _ResourceService.ObtenerTexto(TextosApp.Common.Http500),
+                _   => _ResourceService.ObtenerTexto(TextosApp.Common.HttpError),
             };
             _htmlMessage = new MarkupString($"{_httpStatusCode.ToString()} - {msgDescription}");
 

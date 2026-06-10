@@ -53,14 +53,14 @@ else
         <DxFormLayout>
             <DxFormLayoutGroup Visible="true"
             ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
-            Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+            Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
             ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
             AnimationType="LayoutAnimationType.Slide">
                 <Items>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Network)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Network)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_networks" Enabled="true"
@@ -85,7 +85,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="5" ColSpanXl="5" ColSpanXxl="5"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.GrupoClientes)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.GrupoClientes)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_gruposClientes"
@@ -110,7 +110,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Anio)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_anios" Enabled="true"
@@ -132,7 +132,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Version)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Version)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_versiones"
@@ -160,7 +160,7 @@ else
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                                      Text="@ObtenerTexto(TextosApp.Common.Buscar)"
                                       IconCssClass="fa-solid fa-search"
                                       Click="@FiltroBuscar" />
                         </div>
@@ -172,7 +172,7 @@ else
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
                                       IconCssClass="fa-solid fa-trash"
-                            Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                            Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
                             Click="FiltroLimpiar" />
                         </div>
                     </DxFormLayoutItem>
@@ -195,7 +195,7 @@ else
                     <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Vigencias)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Vigencias)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_vigencias"
@@ -222,7 +222,7 @@ else
                             Enabled="@(ValidarCamposObligatoriosFiltro() && !HayCambiosPendientes)"
                             Id="btnAñadirVigencia"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Añadir)"
+                            Text="@ObtenerTexto(TextosApp.Botones.Añadir)"
                             IconCssClass="fa-solid fa-add"
                             Click="@AñadirVigencia" />
                         </div>
@@ -234,7 +234,7 @@ else
                             Id="btnModificarVigencia"
                             Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Modificar)"
+                            Text="@ObtenerTexto(TextosApp.Botones.Modificar)"
                             IconCssClass="fa-solid fa-edit"
                             Click="@EditarVigencia" />
                         </div>
@@ -246,7 +246,7 @@ else
                             Id="btnEliminarVigencia"
                             Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Eliminar)"
+                            Text="@ObtenerTexto(TextosApp.Botones.Eliminar)"
                                       IconCssClass="fa-solid fa-trash"
                             Click="@EliminarVigencia" />
                         </div>
@@ -272,7 +272,7 @@ else
                         <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                         CaptionPosition="CaptionPosition.Vertical">
                             <CaptionTemplate>
-                                <span>@ObtenerTexto(AppResources.Common.MesDesde)</span><span class="mandatory"></span>
+                                <span>@ObtenerTexto(TextosApp.Common.MesDesde)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
                                 <DxComboBox Data="@_meses"
@@ -294,7 +294,7 @@ else
                         <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                         CaptionPosition="CaptionPosition.Vertical">
                             <CaptionTemplate>
-                                <span>@ObtenerTexto(AppResources.Common.MesHasta)</span><span class="mandatory"></span>
+                                <span>@ObtenerTexto(TextosApp.Common.MesHasta)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
                                 <DxComboBox Data="@_meses"
@@ -318,13 +318,13 @@ else
                     <div class="popupFooter">
                         <DxButton CssClass="btnCustom"
                         RenderStyle=ButtonRenderStyle.None
-                        Text="@ObtenerTexto(AppResources.Common.Save)"
+                        Text="@ObtenerTexto(TextosApp.Common.Save)"
                         IconCssClass="fa-solid fa-save"
                         Click="@GrabarVigencia" />
 
                         <DxButton CssClass="btnCustom"
                         RenderStyle=ButtonRenderStyle.None
-                        Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                        Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
 
                         IconCssClass="fa-solid fa-cancel"
                         Click="@OcultarPopupVigencia" />
@@ -368,7 +368,7 @@ else
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                     RenderStyle=ButtonRenderStyle.None
-                                    Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                    Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                                     Click="CancelarCambiosCondiciones"
                                     IconCssClass="fa-solid fa-cancel"
                                     Enabled="@(_condicionesNoGuardados.Count > 0)" />
@@ -377,7 +377,7 @@ else
                             <Columns>
 
                                 <DxGridDataColumn FieldName="DescripcionMedio" 
-                                Caption="@ObtenerTexto(AppResources.Common.Medio)" 
+                                Caption="@ObtenerTexto(TextosApp.Common.Medio)" 
                                 ReadOnly="true"
                                 Width="35%"
                                 CaptionAlignment="GridTextAlignment.Center"
@@ -398,13 +398,13 @@ else
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
                                                   FieldName="@nameof(CondicionViewModel.PctSAG)" 
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" >
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -453,13 +453,13 @@ else
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
                                                   FieldName="@nameof(CondicionViewModel.PctManPower)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" >
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -506,7 +506,7 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(CondicionViewModel.IndicadorCalculoDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.BCDevolucion)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.BCDevolucion)"
                                                   Width="13%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -550,13 +550,13 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(CondicionViewModel.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -603,7 +603,7 @@ else
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn FieldName="@nameof(CondicionViewModel.NumeroExcepciones)"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.NumExcepciones)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.NumExcepciones)"
                                                   ReadOnly="true"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -616,7 +616,7 @@ else
                                 </DxGridDataColumn>
 
                                 <DxGridCommandColumn Width="11%" NewButtonVisible="false" 
-                                                    Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.FiltroExcepciones)"
+                                                    Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.FiltroExcepciones)"
                                                     CaptionAlignment="GridTextAlignment.Center">
                                     <FilterRowCellTemplate>
                                     </FilterRowCellTemplate>
@@ -625,7 +625,7 @@ else
                                             var item = (CondicionViewModel)context.DataItem;
                                             var isSelected = _codigoMedioleccionadoParaFiltro == item.CodigoMedio; 
                                             var clase = isSelected ? "valor-filtrado" : "";
-                                            string toolTip = isSelected ? ObtenerTexto(AppResources.Common.FiltroQuitar) : ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.FiltroPorMedio);
+                                            string toolTip = isSelected ? ObtenerTexto(TextosApp.Common.FiltroQuitar) : ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.FiltroPorMedio);
                                         }
                                         <div class="grid-cell-align-center">
                                             <DxButton IconCssClass="fas fa-filter"
@@ -681,7 +681,7 @@ else
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                             RenderStyle=ButtonRenderStyle.None
-                                            Text="@ObtenerTexto(AppResources.Common.Nuevo)"
+                                            Text="@ObtenerTexto(TextosApp.Common.Nuevo)"
                                             Click="AñadirExcepcion"
                                               Enabled=@ActivarBotonNuevaExcepcion 
                                             IconCssClass="fa-solid fa-plus" />
@@ -690,7 +690,7 @@ else
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                               RenderStyle=ButtonRenderStyle.None
-                                              Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                              Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                                               Click="CancelarCambiosExcepciones"
                                               IconCssClass="fa-solid fa-cancel"
                                               Enabled="@(ExcepcionesNoGuardadas.Count > 0)" />
@@ -700,7 +700,7 @@ else
                             <Columns>
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.Jerarquia)"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Jerarquia)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Jerarquia)"
                                                   ReadOnly="true"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -777,7 +777,7 @@ else
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.DescripcionMedio)"
-                                                  Caption="@ObtenerTexto(AppResources.Common.Medio)"
+                                                  Caption="@ObtenerTexto(TextosApp.Common.Medio)"
                                                   ReadOnly="true"
                                                   Width="13%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -789,12 +789,12 @@ else
 
                                 <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionCondicionViewModel.PctSAG)"
                                                   FilterRowEditorVisible="true"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right">
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -842,13 +842,13 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.PctManPower)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -897,13 +897,13 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
@@ -951,7 +951,7 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoAlcance)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Alcance)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Alcance)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -995,7 +995,7 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoTipoDisciplina)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoDisciplina)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.TipoDisciplina)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1042,7 +1042,7 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDisciplinaGrupo)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DisciplinaGrupo)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DisciplinaGrupo)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1089,7 +1089,7 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDisciplina)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Disciplina)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Disciplina)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1134,7 +1134,7 @@ else
 
                                  <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDiversified)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Diversified)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Diversified)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1176,7 +1176,7 @@ else
 
                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoObjetivo)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Objetivo)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Objetivo)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1220,7 +1220,7 @@ else
 
                                  <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoTipoCompra)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoCompra)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.TipoCompra)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
@@ -1271,7 +1271,7 @@ else
                                             <DxButton IconCssClass="fas fa-trash"
                                                       RenderStyle="ButtonRenderStyle.Link"
                                                       aria-label="Delete"
-                                                      title="@ObtenerTexto(AppResources.Common.EliminarRegistro)"
+                                                      title="@ObtenerTexto(TextosApp.Common.EliminarRegistro)"
                                                       Click="@(() => EliminarExcepcion(context.DataItem))" />
                                         </div>
                                     </CellDisplayTemplate>
@@ -1304,7 +1304,7 @@ else
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@ObtenerTexto(AppResources.Common.Save)"
+                                      Text="@ObtenerTexto(TextosApp.Common.Save)"
                                       Click="Grabar"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayCambiosPendientes" />
@@ -1318,7 +1318,7 @@ else
                     <div class="d-flex justify-content-end">
                         <DxButton CssClass="btnCustom"
                                   RenderStyle=ButtonRenderStyle.None
-                                  Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                  Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                                   Click="CancelarCambios"
                                   IconCssClass="fa-solid fa-cancel"
                                   Enabled="@HayCambiosPendientes" />
@@ -1343,7 +1343,7 @@ else
                     <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Medios)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Medios)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxComboBox Data="@_mediosMaster"
@@ -1366,14 +1366,14 @@ else
                 <div class="popupFooter">
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None
-                              Text="@ObtenerTexto(AppResources.Common.Aceptar)"
+                              Text="@ObtenerTexto(TextosApp.Common.Aceptar)"
                               IconCssClass="fa-solid fa-save"
                               Enabled="@(_medioSeleccionadoDesdePopup != null)"
                               Click="@AñadirExcepcionDesdePopup" />
 
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None
-                              Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                              Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                               IconCssClass="fa-solid fa-cancel"
                               Click="@OcultarPopupMedios" />
                 </div>

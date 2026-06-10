@@ -320,7 +320,7 @@ if (await ExisteDescripcion(indicador.Descripcion, indicador.Codigo))
 // Captura en la página Web para mostrar mensaje localizado
 catch (ValidacionException ex)
 {
-    MostrarError(ObtenerTexto(AppResources.Indicadores.ErrorDuplicado, ex.Valor));
+    MostrarError(ObtenerTexto(TextosApp.Indicadores.ErrorDuplicado, ex.Valor));
 }
 ```
 

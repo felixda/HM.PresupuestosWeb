@@ -269,7 +269,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             usuario.Login = nombreUsuario;
 
             // TODO: Eliminar esta línea cuando ya no sea necesario
-           // usuario.Menus.RemoveAll(m => m.Id == 1);
+           usuario.Menus.RemoveAll(m => m.Id == 1);
 
             // TODO-TEMPORAL: Añadir menú 26 (Auditorías) como hijo de Administración (20) hasta que se configure en HM.CORE.
             //                ELIMINAR este bloque cuando el menú esté dado de alta en el core.

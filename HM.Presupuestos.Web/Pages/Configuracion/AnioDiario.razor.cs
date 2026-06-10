@@ -57,7 +57,7 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
 
         protected override async Task InicializarPaginaAsync()
         {
-            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.AnioDiario.ToolTip);
+            TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.AnioDiario.ToolTip);
 
             int añoActual = DateTime.Now.Year;
             Anios.Add(CrearAnio(añoActual + 1));
@@ -100,7 +100,7 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
             {
                 await ConfiguracionService.ActualizarAnioDiario(AnioSeleccionado!.Codigo);
                 AnioOriginal = AnioSeleccionado;
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
             });
         }
 

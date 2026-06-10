@@ -10,7 +10,6 @@ namespace HM.Presupuestos.Web.Layout
         [Inject] private ControlInactividad ControlInactividad { get; set; } = default!;
         [Inject] private JsInteropHelper InteropInactividad { get; set; } = default!;
         [Inject] private IConfiguration Configuracion { get; set; } = default!;
-        [Inject] private TraduccionesHelper TraduccionesHelper { get; set; } = default!;
         [Inject] private IControlCambiosNavegacion ControlCambiosNavegacion { get; set; } = default!;
         [Inject] private ISesionUsuario SesionUsuario { get; set; } = default!;
         [Inject] private DialogoErrores DialogoErrores { get; set; } = default!;
@@ -88,8 +87,8 @@ namespace HM.Presupuestos.Web.Layout
                 {
                     await SesionUsuario.InicializarUsuarioAsync();
 
-                    TituloAvisoInactividad = AppResources.Pages.ModalInactividad.Titulo;
-                    TextoCuentaAtras = AppResources.Pages.ModalInactividad.CuentaAtras;
+                    TituloAvisoInactividad = TextosApp.Pages.ModalInactividad.Titulo;
+                    TextoCuentaAtras = TextosApp.Pages.ModalInactividad.CuentaAtras;
 
                     await ActualizarSubscripcionesInactividad();
                 }

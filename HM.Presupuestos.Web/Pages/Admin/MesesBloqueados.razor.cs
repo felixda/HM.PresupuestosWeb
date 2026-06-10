@@ -13,7 +13,6 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         [Inject] protected IAdminService AdminService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-        [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
 
         #endregion
@@ -47,8 +46,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         protected override async Task InicializarPaginaAsync()
         {
-            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.MesesBloqueados.ToolTip);
-            Meses = await Traducciones.ObtenerMeses();
+            TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.MesesBloqueados.ToolTip);
+            Meses = GestorIdioma.ObtenerMeses();
             Anios = await VersionesService.ObtenerAniosConVersiones(true);
 
             if (Anios.Count > 0)
@@ -92,7 +91,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
                     ];
 
                 await AdminService.InsertarMesesBloqueado(AnioSeleccionado!.Codigo, mesesSeleccionados);
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(AppResources.Common.DatosGrabados));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
             });
         }
 

@@ -1,4 +1,4 @@
-﻿@page "/configuracion/anio-diario"
+@page "/configuracion/anio-diario"
 
 @inherits ContextProtegido
 
@@ -18,11 +18,11 @@ else
 
     <div class="layoutContainer">
         <DxFormLayout>
-            <DxFormLayoutGroup Caption="@ObtenerTexto(AppResources.Common.Parametros)"
+            <DxFormLayoutGroup Caption="@ObtenerTexto(TextosApp.Common.Parametros)"
                                CaptionCssClass="formLayoutGroupCaption">
 
                 <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                  Caption="@ObtenerTexto(AppResources.Common.Anio)"
+                                  Caption="@ObtenerTexto(TextosApp.Common.Anio)"
                                   CaptionPosition="CaptionPosition.Vertical">
                     <DxComboBox Data="@Anios" Enabled="true"
                                 TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -44,7 +44,7 @@ else
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="toolbarButtonCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+                                      Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
                                       Click="Grabar_Click"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayCambiosPendientes" />

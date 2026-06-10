@@ -1,4 +1,4 @@
-﻿@page "/mantenimiento/indicadores"
+@page "/mantenimiento/indicadores"
 
 @attribute [Authorize]
 
@@ -38,10 +38,10 @@ else if (TienePermiso == false)
 }
 else
 {
-    <PageHeader CodigoMenu="@CodigosMenu.Indicadores" Titulo="@TituloPagina" TextoToolTipAyuda="@ObtenerTexto(AppResources.Pages.Indicadores.ToolTip)"  />
+    <PageHeader CodigoMenu="@CodigosMenu.Indicadores" Titulo="@TituloPagina" TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.Indicadores.ToolTip)"  />
     <div class="layoutContainer">
         <DxFormLayout>
-            <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Enabled="true" Caption="@ObtenerTexto(AppResources.Pages.Indicadores.ListaIndicadores)">
+            <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Enabled="true" Caption="@ObtenerTexto(TextosApp.Pages.Indicadores.ListaIndicadores)">
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
                     @* GRID INDICADORES *@
                     <DxGrid @ref="GridIndicadores"
@@ -64,14 +64,14 @@ else
                                 <div class="col-1">
                                     <DxButton CssClass="toolbarButtonCustom"
                                               RenderStyle="ButtonRenderStyle.None"
-                                              Text="@ObtenerTexto(AppResources.Common.Nuevo)"
+                                              Text="@ObtenerTexto(TextosApp.Common.Nuevo)"
                                               Click="NuevoIndicadorAsync"
                                               IconCssClass="fa-solid fa-plus" />
                                 </div>
                                 <div class="col-2 offset-9 d-flex justify-content-end">
                                     <DxButton CssClass="toolbarButtonCustom"
                                               RenderStyle="ButtonRenderStyle.None"
-                                              Text="@ObtenerTexto(AppResources.Pages.Indicadores.Actualizar)"
+                                              Text="@ObtenerTexto(TextosApp.Pages.Indicadores.Actualizar)"
                                               Click="ActualizarGridAsync"
                                               IconCssClass="fa-solid fa-rotate" />
                                 </div>
@@ -79,20 +79,20 @@ else
                         </ToolbarTemplate>
                         <Columns>
                             <DxGridDataColumn FieldName="@nameof(Indicador.Codigo)" 
-                                            Caption="@ObtenerTexto(AppResources.Common.Codigo)" 
+                                            Caption="@ObtenerTexto(TextosApp.Common.Codigo)" 
                                             Width="7%" 
                                             DataRowEditorVisible="false" 
                                             ReadOnly="true" 
                                             CaptionAlignment="GridTextAlignment.Right" />
                             
                             <DxGridDataColumn FieldName="@nameof(Indicador.Descripcion)" 
-                                            Caption="@ObtenerTexto(AppResources.Common.Descripcion)" 
+                                            Caption="@ObtenerTexto(TextosApp.Common.Descripcion)" 
                                             Width="auto" 
                                             CaptionAlignment="GridTextAlignment.Left" 
                                             TextAlignment="GridTextAlignment.Left" />
                             
                             <DxGridDataColumn FieldName="@nameof(Indicador.Orden)" 
-                                            Caption="@ObtenerTexto(AppResources.Common.Orden)" 
+                                            Caption="@ObtenerTexto(TextosApp.Common.Orden)" 
                                             Width="7%" 
                                             DataRowEditorVisible="false" 
                                             ReadOnly="true" 
@@ -100,14 +100,14 @@ else
                                             CaptionAlignment="GridTextAlignment.Right" />
                             
                             <DxGridDataColumn FieldName="@nameof(Indicador.BitAnd)" 
-                                            Caption="@ObtenerTexto(AppResources.Common.BitAnd)" 
+                                            Caption="@ObtenerTexto(TextosApp.Common.BitAnd)" 
                                             Width="7%" 
                                             ReadOnly="true" 
                                             TextAlignment="GridTextAlignment.Right" 
                                             CaptionAlignment="GridTextAlignment.Right" />
                             
                             <DxGridDataColumn FieldName="@nameof(Indicador.IndMostrar)" 
-                                            Caption="@ObtenerTexto(AppResources.Pages.Indicadores.Mostrar)" 
+                                            Caption="@ObtenerTexto(TextosApp.Pages.Indicadores.Mostrar)" 
                                             Width="10%" 
                                             DataRowEditorVisible="false" 
                                             ReadOnly="true" 
@@ -115,7 +115,7 @@ else
                                             TextAlignment="GridTextAlignment.Center" />
                             
                             <DxGridDataColumn FieldName="@nameof(Indicador.IndVersionUnica)" 
-                                            Caption="@ObtenerTexto(AppResources.Pages.Indicadores.VersionUnica)" 
+                                            Caption="@ObtenerTexto(TextosApp.Pages.Indicadores.VersionUnica)" 
                                             Width="20%" 
                                             DataRowEditorVisible="false" 
                                             ReadOnly="true" 
@@ -130,7 +130,7 @@ else
                                     <div>
                                         <DxButton IconCssClass="fa fa-edit"
                                         RenderStyle="ButtonRenderStyle.Link"
-                                        title="@ObtenerTexto(AppResources.Common.EditarRegistro)"
+                                        title="@ObtenerTexto(TextosApp.Common.EditarRegistro)"
                                         aria-label="Editar"
                                         Enabled="true"
                                         Click="() => EditarIndicadorAsync((Indicador)context.DataItem)" />
@@ -146,7 +146,7 @@ else
                                     <div>
                                         <DxButton IconCssClass="fa fa-trash"
                                         RenderStyle="ButtonRenderStyle.Link"
-                                        title="@ObtenerTexto(AppResources.Common.EliminarRegistro)"
+                                        title="@ObtenerTexto(TextosApp.Common.EliminarRegistro)"
                                         aria-label="Eliminar"
                                         Enabled="true"
                                         Click="() => EliminarIndicadorAsync((Indicador)context.DataItem)" />
@@ -162,7 +162,7 @@ else
         @* POPUP EDIT *@
         <DxPopup Visible="@EsPopupEdicionVisible"
                  ShowFooter="true"
-                 HeaderText="@ObtenerTexto(AppResources.Common.Detalle)"
+                 HeaderText="@ObtenerTexto(TextosApp.Common.Detalle)"
                  ShowCloseButton="false"
                  Width="60%"
                  Height="Auto"
@@ -175,7 +175,7 @@ else
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="10" ColSpanLg="10" ColSpanXl="10" ColSpanXxl="10" 
                     CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Descripcion)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Descripcion)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxTextBox @bind-Text="@IndicadorEnEdicion.Descripcion"
@@ -188,7 +188,7 @@ else
                     <DxFormLayoutItem ColSpanSm="3" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Orden)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Orden)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
                             <DxMaskedInput @bind-Value="@IndicadorEnEdicion.Orden"
@@ -202,7 +202,7 @@ else
                     <DxFormLayoutItem ColSpanSm="3" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                     CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.BitAnd)</span>
+                            <span>@ObtenerTexto(TextosApp.Common.BitAnd)</span>
                         </CaptionTemplate>
                         <Template>
                             <DxMaskedInput @bind-Value="@IndicadorEnEdicion.BitAnd"
@@ -215,13 +215,13 @@ else
                         </Template>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="3" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                    Caption="@ObtenerTexto(AppResources.Pages.Indicadores.Mostrar)"
+                    Caption="@ObtenerTexto(TextosApp.Pages.Indicadores.Mostrar)"
                     CaptionPosition="CaptionPosition.Vertical"
                     CssClass="horizontal-centered">
                         <DxCheckBox @bind-Checked="@IndicadorEnEdicion.IndMostrar" Alignment="CheckBoxContentAlignment.Center" />
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="3" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                    Caption="@ObtenerTexto(AppResources.Pages.Indicadores.VersionUnica)"
+                    Caption="@ObtenerTexto(TextosApp.Pages.Indicadores.VersionUnica)"
                     CaptionPosition="CaptionPosition.Vertical" 
                     CssClass="horizontal-centered">
                         <DxCheckBox @bind-Checked="@IndicadorEnEdicion.IndVersionUnica" Alignment="CheckBoxContentAlignment.Center" />
@@ -243,14 +243,14 @@ else
                                     <div class="d-flex justify-content-start">
                                         <DxButton CssClass="toolbarButtonCustom"
                                         RenderStyle="ButtonRenderStyle.None"
-                                        Text="@ObtenerTexto(AppResources.Common.Nuevo)"
+                                        Text="@ObtenerTexto(TextosApp.Common.Nuevo)"
                                         Click="AgregarIdiomaAsync"
                                         IconCssClass="fa-solid fa-plus" />
                                     </div>
                                 </ToolbarTemplate>
                                 <Columns>
                                     <DxGridDataColumn FieldName="@nameof(IdiomaIndicador.CodigoIdioma)" 
-                                                    Caption="@ObtenerTexto(AppResources.Common.Idioma)" 
+                                                    Caption="@ObtenerTexto(TextosApp.Common.Idioma)" 
                                                     Width="15%" 
                                                     CaptionAlignment="GridTextAlignment.Left" 
                                                     TextAlignment="GridTextAlignment.Left">
@@ -261,24 +261,24 @@ else
                                             EditFormat="{1} {2}">
                                                 <Columns>
                                                     <DxListEditorColumn FieldName="@nameof(Idioma.Descripcion)" 
-                                                                      Caption="@ObtenerTexto(AppResources.Common.Descripcion)" />
+                                                                      Caption="@ObtenerTexto(TextosApp.Common.Descripcion)" />
                                                 </Columns>
                                             </DxComboBoxSettings>
                                         </EditSettings>
                                     </DxGridDataColumn>
                                     <DxGridDataColumn FieldName="@nameof(IdiomaIndicador.Descripcion)" 
-                                                    Caption="@ObtenerTexto(AppResources.Common.Descripcion)" 
+                                                    Caption="@ObtenerTexto(TextosApp.Common.Descripcion)" 
                                                     CaptionAlignment="GridTextAlignment.Left" 
                                                     TextAlignment="GridTextAlignment.Left" />
                                     
                                     <DxGridDataColumn FieldName="@nameof(IdiomaIndicador.DescripcionAbreviada)" 
-                                                    Caption="@ObtenerTexto(AppResources.Common.DescripcionAbreviada)" 
+                                                    Caption="@ObtenerTexto(TextosApp.Common.DescripcionAbreviada)" 
                                                     Width="20%" 
                                                     CaptionAlignment="GridTextAlignment.Left" 
                                                     TextAlignment="GridTextAlignment.Left" />
                                     
                                     <DxGridDataColumn FieldName="@nameof(IdiomaIndicador.Leyenda)" 
-                                                    Caption="@ObtenerTexto(AppResources.Common.Leyenda)" 
+                                                    Caption="@ObtenerTexto(TextosApp.Common.Leyenda)" 
                                                     Width="20%" 
                                                     CaptionAlignment="GridTextAlignment.Left" 
                                                     TextAlignment="GridTextAlignment.Left" />
@@ -288,7 +288,7 @@ else
                                                 <DxButton IconCssClass="fa fa-trash"
                                                 RenderStyle="ButtonRenderStyle.Link" 
                                                 aria-label="Eliminar"
-                                                title="@ObtenerTexto(AppResources.Common.EliminarRegistro)"
+                                                title="@ObtenerTexto(TextosApp.Common.EliminarRegistro)"
                                                 Click="@(() => EliminarIdioma(context.DataItem))" />
                                             </div>
                                         </CellDisplayTemplate>
@@ -312,13 +312,13 @@ else
                 <div class="popupFooter">
                     <DxButton CssClass="btnCustom"
                     RenderStyle="ButtonRenderStyle.None"
-                    Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+                    Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
                     Click="OnGuardarIndicadorAsync"
                     IconCssClass="fa-solid fa-save" />
                     
                     <DxButton CssClass="btnCustom"
                     RenderStyle="ButtonRenderStyle.None"
-                    Text="@ObtenerTexto(AppResources.Common.Cancelar)"
+                    Text="@ObtenerTexto(TextosApp.Common.Cancelar)"
                     Click="CancelarEdicionIndicadorAsync"
                     IconCssClass="fa-solid fa-cancel" />
                 </div>

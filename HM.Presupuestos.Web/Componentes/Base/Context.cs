@@ -295,7 +295,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 string clave = $"MensajeErrorBD:{ex.Codigo}:label";
                 mensaje = ExisteRecurso(clave)
                     ? ObtenerTexto(clave)
-                    : (esWarning ? AppResources.Mensajes.DatabaseWarning : null);
+                    : (esWarning ? TextosApp.Mensajes.DatabaseWarning : null);
             }
 
             // Registrar en log si es necesario y capturar si falló
@@ -308,14 +308,14 @@ namespace HM.Presupuestos.Web.Componentes.Base
             // Agregar advertencia de logging fallido al mensaje si corresponde
             if (!excepcionRegistrada  && mensaje != null)
             {
-                mensaje += "\n\n" + AppResources.Mensajes.LoggingError;
+                mensaje += "\n\n" + TextosApp.Mensajes.LoggingError;
             }
 
             // Mostrar mensaje según tipo
             if (esWarning)
             {
                 await MensajesHelper.MostrarMensajeAviso(titulo, 
-                    mensaje ?? AppResources.Mensajes.DatabaseWarning);
+                    mensaje ?? TextosApp.Mensajes.DatabaseWarning);
             }
             else
             {
@@ -485,12 +485,12 @@ namespace HM.Presupuestos.Web.Componentes.Base
             bool excepcionRegistrada  = await SeRegistroExcepcion(excepcion, categoria);
 
             // Construir mensaje para el usuario
-            var mensaje = mensajePersonalizado ?? AppResources.Mensajes.ErrorGeneral;
+            var mensaje = mensajePersonalizado ?? TextosApp.Mensajes.ErrorGeneral;
 
             // Agregar advertencia de logging fallido si corresponde
             if (!excepcionRegistrada)
             {
-                mensaje += "\n\n" + AppResources.Mensajes.LoggingError; 
+                mensaje += "\n\n" + TextosApp.Mensajes.LoggingError; 
             }
 
             await MensajesHelper.MostrarMensajeError(TituloPagina, mensaje);

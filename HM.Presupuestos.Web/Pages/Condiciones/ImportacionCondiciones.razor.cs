@@ -11,7 +11,6 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
         [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-        [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
         [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
@@ -81,7 +80,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 try
                 {
                     PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.ImportacionCondiciones}:label");
-                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {PageTitle}");
+                    LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {PageTitle}");
                     await PageInitialize();
                 }
                 catch (Exception ex)
@@ -104,7 +103,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task PageInitialize()
         {
-            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.ImportacionCondiciones.ToolTip);
+            TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.ToolTip);
          //   Jwt.Usuario = Usuario;
 
             _networks = await PresupuestosService.ObtenerNetworks();
@@ -185,13 +184,13 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
                 return;
             }
             try
             {
                 
-                bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.AvisoImportarCondiciones));
+                bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(TextosApp.Mensajes.AvisoImportarCondiciones));
                 if (!confirmacion) return;
 
 
@@ -211,7 +210,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 await CondicionesService.ImportarCondicionesMMS(_filtro);
 
-                await MensajesHelper.MostrarMensajeExito(PageTitle, ObtenerTexto(AppResources.Mensajes.ImportacionCondicionesFinalizada));
+                await MensajesHelper.MostrarMensajeExito(PageTitle, ObtenerTexto(TextosApp.Mensajes.ImportacionCondicionesFinalizada));
 
                 ImportacionRealizada = true;
             }
