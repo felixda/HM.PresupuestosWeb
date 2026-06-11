@@ -19,7 +19,7 @@ else
             <DxToolbarItem BeginGroup="true">
                 <Template>
                     <div class="logo-image">
-                        <span class="logo-img" title="@($"Versión: {VersionApp}")"></span>
+                        <span class="logo-img" title="@($"VersiÃ³n: {VersionApp}")"></span>
                         @if (Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
                         {
                             <p class="entorno">@(Configuration.GetValue<string>("AppSettings:AppEnvironment"))</p>

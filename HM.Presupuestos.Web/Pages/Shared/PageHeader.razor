@@ -8,7 +8,7 @@
             <Template>
                 @if (UsuarioCargado)
                 {
-                    //Solo mostrar el bot�n de favorito si el usuario es SSO
+                    //Solo mostrar el botón de favorito si el usuario es SSO
                     @if (UsuarioImpersonado == null)
                     {
                         var claseIcono = EsFavorito ? "icon star-fill" : "icon star";
@@ -39,7 +39,7 @@
             </Template>
         </DxStackLayoutItem>
 
-        @* Bot�n temporal solo para usuario Felix.Davilla-ext *@
+        @* Botón temporal solo para usuario Felix.Davilla-ext *@
         @if (UsuarioCargado && Usuario!.CodigoUsuario == 2825)
         {
             <DxStackLayoutItem>

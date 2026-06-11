@@ -53,7 +53,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             ControlCambios.LimpiarCambiosPendientes();
         }
 
-        public bool UsuarioEsAdmin => Usuario?.Reglas?.Any(o => o.Id == Constantes.User.RULE_ADMIN) ?? false;
+        protected bool UsuarioEsAdmin => Usuario?.Reglas?.Any(o => o.Id == Constantes.User.RULE_ADMIN) ?? false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -137,13 +137,13 @@ namespace HM.Presupuestos.Web.Componentes.Base
         }
 
 
-        public async Task EstablecerMenuActivo(int code)
+        protected async Task EstablecerMenuActivo(int code)
         {
             await JSRuntime.InvokeVoidAsync("Menu.SetMenuActive", code);
         }
 
 
-        public LogAccion CrearLogAccion(int codigoUsuario, string nombreMetodoLlamador, AccionesLog accion, object? objetoConParametros = null)
+        protected LogAccion CrearLogAccion(int codigoUsuario, string nombreMetodoLlamador, AccionesLog accion, object? objetoConParametros = null)
         {
             string parametrosJson = objetoConParametros != null
                    ? JsonSerializer.Serialize(objetoConParametros, new JsonSerializerOptions { WriteIndented = true })
@@ -161,7 +161,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
 
 
-        public string ObtenerValoresSeleccionados<T, TValue>(IEnumerable<T>? listaObjetos,
+        protected string ObtenerValoresSeleccionados<T, TValue>(IEnumerable<T>? listaObjetos,
            Func<T, TValue> selector, string separador = ",")
         {
             if (listaObjetos == null)
@@ -174,7 +174,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 .Select(x => (selector(x) ?? default!)?.ToString() ?? string.Empty));
         }
 
-        public string ObtenerValoresSeleccionados<T, TValue>(object? listaObjetos,
+        protected string ObtenerValoresSeleccionados<T, TValue>(object? listaObjetos,
             Func<T, TValue> selector, string separador = ",")
         {
             if (listaObjetos is not IEnumerable<T> lista)
@@ -187,7 +187,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 .Select(x => (selector(x) ?? default!)?.ToString() ?? string.Empty));
         }
 
-        public List<int> ObtenerListaValoresSeleccionados<T, TValue>(object? listaObjetos,
+        protected List<int> ObtenerListaValoresSeleccionados<T, TValue>(object? listaObjetos,
             Func<T, TValue> selector, string separador = ",")
         {
             string cadena = ObtenerValoresSeleccionados(listaObjetos, selector, separador);
@@ -202,7 +202,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
                 .Select(int.Parse)];
         }
 
-        public string GetDropDownBoxTextoSeleccionados<T, TValue>(DropDownBoxQueryDisplayTextContext arg,
+        protected string GetDropDownBoxTextoSeleccionados<T, TValue>(DropDownBoxQueryDisplayTextContext arg,
             Func<T, TValue> selector, string textoTodos = "", string separador = ",")
         {
             if (arg.Value is not IEnumerable<T> listaObjetos || !listaObjetos.Any())
@@ -220,7 +220,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             return string.Join(separador, seleccionados);
         }
 
-        public string GetDropDownBoxTextoSeleccionados<T, TValue>(IEnumerable<T>? listaObjetos,
+        protected string GetDropDownBoxTextoSeleccionados<T, TValue>(IEnumerable<T>? listaObjetos,
             Func<T, TValue> selector, string todos, string separador = ",")
         {
             if (listaObjetos == null)
@@ -243,7 +243,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         /// <param name="anio">El año para el que se desean obtener los resúmenes de versiones.</param>
         /// <returns>Una lista de objetos VersionResumen que representan las versiones accesibles para el usuario en el año
         /// especificado.</returns>
-        public async Task<List<VersionResumen>> ObtenerVersionesPorPermisos(int anio)
+        protected async Task<List<VersionResumen>> ObtenerVersionesPorPermisos(int anio)
         {
             if (UsuarioEsAdmin)
             {
@@ -259,7 +259,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         /// <summary>
         /// Maneja una excepción generada por la base de datos mostrando error al usuario
         /// </summary>
-        public async Task TratarExcepcionGeneradaEnBD(ExcepcionBaseDatos ex, string titulo,
+        protected async Task TratarExcepcionGeneradaEnBD(ExcepcionBaseDatos ex, string titulo,
             [CallerMemberName] string nombreMetodoLlamador = "",
             [CallerFilePath] string rutaFicheroLlamador = "")
         {
@@ -272,7 +272,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         /// <summary>
         /// Maneja una excepción generada por la base de datos mostrando advertencia al usuario
         /// </summary>
-        public async Task TratarWarningGeneradoEnBD(ExcepcionBaseDatos ex, string titulo,
+        protected async Task TratarWarningGeneradoEnBD(ExcepcionBaseDatos ex, string titulo,
             [CallerMemberName] string nombreMetodoLlamador = "",
             [CallerFilePath] string rutaFicheroLlamador = "")
         {
@@ -324,7 +324,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
         }
 
 
-        public bool ExisteRecurso(string claveRecurso)
+        protected bool ExisteRecurso(string claveRecurso)
         {
             return LocalizadorRecursos.ExisteRecurso(claveRecurso);
         }

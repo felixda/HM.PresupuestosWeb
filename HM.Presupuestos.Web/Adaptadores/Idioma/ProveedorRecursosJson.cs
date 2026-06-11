@@ -42,9 +42,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
             return _recursosPorIdioma.TryGetValue(languageCode, out var doc) ? doc : null;
         }
 
-        /// <summary>
-        /// Limpia la cachÃ© interna de documentos JSON (Ãºtil al cambiar idioma).
-        /// </summary>
+        // Limpia la caché interna de documentos JSON (útil al cambiar idioma).
         //public void LimpiarCacheValores()
         //{
         //    // Los JsonDocuments son inmutables; no necesitan limpiarse.

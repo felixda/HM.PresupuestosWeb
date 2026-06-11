@@ -179,10 +179,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             await ManajarRequest();
         }
 
-        /// <summary>
-        /// Se ejecuta cuando el usuario tiene permisos válidos para acceder
-        /// Inicializa la página y carga los datos necesarios
-        /// </summary>
+        // Se ejecuta cuando el usuario tiene permisos válidos para acceder
+        // Inicializa la página y carga los datos necesarios
         //protected override async Task OnPermisoValidadoAsync()
         //{
         //    try
@@ -205,9 +203,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         //    }
         //}
 
-        /// <summary>
-        /// Inicializa la página cargando datos maestros
-        /// </summary>
+        // Inicializa la página cargando datos maestros
         //private async Task InicializarPaginaAsync()
         //{
         //    CaptionIzquierda = ObtenerTexto(TextosApp.Pages.Sobreprimas.Titulo);
