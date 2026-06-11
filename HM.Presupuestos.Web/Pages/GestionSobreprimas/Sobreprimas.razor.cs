@@ -13,7 +13,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         #region Inyección de Dependencias
 
         [Inject] protected ISobreprimasService SobreprimasService { get; set; } = default!;
-        [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
+        [Inject] protected IMaestrosCacheService PresupuestosService { get; set; } = default!;
         [Inject] protected IVersionesService VersionesService { get; set; } = default!;
         [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
         [Inject] protected DialogoErrores ErrorService { get; set; } = default!;

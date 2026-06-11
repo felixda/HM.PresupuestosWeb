@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #region Inyecci?n de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
-        [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
+        [Inject] protected IMaestrosCacheService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 

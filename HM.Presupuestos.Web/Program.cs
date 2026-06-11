@@ -157,6 +157,8 @@ builder.Services.AddScoped<IValidadorMenusUsuario, ValidadorMenusUsuario>();
 
 // ===== SERVICIOS DATOS =====
 builder.Services.AddScoped<IMaestrosService, MaestrosService>();
+builder.Services.Configure<MaestrosCacheOptions>(builder.Configuration.GetSection("MaestrosCache"));
+builder.Services.AddScoped<IMaestrosCacheService, MaestrosCacheService>();
 builder.Services.AddScoped<IVersionesService, VersionesService>();
 builder.Services.AddScoped<IIndicadoresService, IndicadoresService>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();
