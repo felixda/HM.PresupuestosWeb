@@ -37,6 +37,8 @@ namespace HM.Presupuestos.Domain.Puertos
         Task<List<EditorialConAgrupacionComercialAndMedio>> ObtenerEditorialesConAgrupacionComercialAndMedio();
         Task<List<CodigoDescripcion>> ObtenerAgrupacionesComerciales(string? codigosMedios = null);
 
+        Task<(List<CodigoDescripcion> Agrupaciones, List<CodigoDescripcion> Editoriales)> ObtenerAgrupacionesYEditoriales(string codigosMedios);
+
         Task<List<AgrupacionComercialConMedio>> ObtenerAgrupacionesComercialesConMedio();
 
         Task<List<CodigoDescripcion>> ObtenerTiposDisciplina();

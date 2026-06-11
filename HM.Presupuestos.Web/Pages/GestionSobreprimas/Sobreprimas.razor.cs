@@ -155,28 +155,46 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         protected override async Task InicializarPaginaAsync()
         {
-           // TituloPagina = ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
-            LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
-
-
             CaptionIzquierda = ObtenerTexto(TextosApp.Pages.Sobreprimas.Titulo);
 
-            AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
-            NetworksMaestros = await PresupuestosService.ObtenerNetworks();
+            // A: Fase 1 — años y networks en paralelo (repositorios distintos → seguro)
+            var añosTask    = VersionesService.ObtenerAniosConVersiones();
+            var networksTask = PresupuestosService.ObtenerNetworks();
+            await Task.WhenAll(añosTask, networksTask);
 
-            string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
-            MediosMaestros = await PresupuestosService.ObtenerMediosPorNetWork(codigosNetwork);
+            AñosMaestros    = añosTask.Result;
+            NetworksMaestros = networksTask.Result;
 
-            MediosFiltrados = DatosHelper.ClonarObjeto(MediosMaestros);
-            string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+            // C: El overlay se detiene al salir de InicializarPaginaAsync (lo hace ContextProtegido).
+            //    Fase 2 se dispara en background — la página ya es visible para el usuario.
+            _ = CargarMaestrosDependientesAsync();
+        }
 
-            AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
+        private async Task CargarMaestrosDependientesAsync()
+        {
+            try
+            {
+                string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
+                MediosMaestros = await PresupuestosService.ObtenerMediosPorNetWork(codigosNetwork);
+                MediosFiltrados = DatosHelper.ClonarObjeto(MediosMaestros);
 
-            FiltroEditoriales filtro = new();
-            filtro.CodigosMedios = codigosMedios;
-            EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
+                await InvokeAsync(StateHasChanged);
 
-            await ManajarRequest();
+                string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+
+                // B: AgrupacionesComerciales + Editoriales en una sola query Oracle
+                var (agrupaciones, editoriales) = await PresupuestosService.ObtenerAgrupacionesYEditoriales(codigosMedios);
+                AgrupacionesComercialesMaestras = agrupaciones;
+                EditorialesMaestras = editoriales;
+
+                await InvokeAsync(StateHasChanged);
+
+                await ManajarRequest();
+            }
+            catch (Exception ex)
+            {
+                await ManejarExcepcion(ex, null);
+            }
         }
 
         #endregion

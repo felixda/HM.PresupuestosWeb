@@ -157,6 +157,12 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
             return resultado;
         }
 
+        public async Task<(List<CodigoDescripcion> Agrupaciones, List<CodigoDescripcion> Editoriales)> ObtenerAgrupacionesYEditoriales(string codigosMedios)
+        {
+            _logger.Trace("Llamando método ObtenerAgrupacionesYEditoriales");
+            return await _presupuestosRepository.ObtenerAgrupacionesYEditoriales(codigosMedios);
+        }
+
         public async Task<List<AgrupacionComercialConMedio>> ObtenerAgrupacionesComercialesConMedio()
         {
             List<AgrupacionComercialConMedio> resultado;

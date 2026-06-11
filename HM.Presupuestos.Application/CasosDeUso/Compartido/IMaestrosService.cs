@@ -103,6 +103,8 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
         /// <returns>Lista de agrupaciones comerciales con código y descripción</returns>
         Task<List<CodigoDescripcion>> ObtenerAgrupacionesComerciales(string? codigosMedios = null);
 
+        Task<(List<CodigoDescripcion> Agrupaciones, List<CodigoDescripcion> Editoriales)> ObtenerAgrupacionesYEditoriales(string codigosMedios);
+
         /// <summary>
         /// Obtiene la lista de agrupaciones comerciales con su medio asociado
         /// </summary>

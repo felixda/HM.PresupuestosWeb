@@ -634,6 +634,65 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             return lista;
         }
 
+        public async Task<(List<CodigoDescripcion> Agrupaciones, List<CodigoDescripcion> Editoriales)> ObtenerAgrupacionesYEditoriales(string codigosMedios)
+        {
+            var agrupacionesSet = new Dictionary<int, CodigoDescripcion>();
+            var editorialesSet = new Dictionary<int, CodigoDescripcion>();
+
+            var query = new StringBuilder(@"
+                SELECT DISTINCT
+                    COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL,
+                    COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL
+                FROM V_SOPORTE
+                WHERE COD_AGRUPACION_COMERCIAL IS NOT NULL
+            ");
+
+            if (!string.IsNullOrEmpty(codigosMedios))
+            {
+                query.Append($" AND COD_MEDIO IN ({codigosMedios})");
+            }
+
+            query.Append(" ORDER BY DES_AGRUPACION_COMERCIAL, DES_EDITORIAL_COMERCIAL");
+
+            dah.GetSqlStringComando(query.ToString());
+
+            await AñadirParametroMulticompania(dah);
+
+            await Task.Run(() =>
+            {
+                dah.ProcesarDatos((dr) =>
+                {
+                    while (dr.Read())
+                    {
+                        int codAgrup = dr.GetInt32("COD_AGRUPACION_COMERCIAL");
+                        if (!agrupacionesSet.ContainsKey(codAgrup))
+                        {
+                            agrupacionesSet[codAgrup] = new CodigoDescripcion
+                            {
+                                Codigo = codAgrup,
+                                Descripcion = dr.GetString("DES_AGRUPACION_COMERCIAL")
+                            };
+                        }
+
+                        int codEdit = dr.GetInt32("COD_EDITORIAL_COMERCIAL");
+                        if (!editorialesSet.ContainsKey(codEdit))
+                        {
+                            editorialesSet[codEdit] = new CodigoDescripcion
+                            {
+                                Codigo = codEdit,
+                                Descripcion = dr.GetString("DES_EDITORIAL_COMERCIAL")
+                            };
+                        }
+                    }
+                });
+            });
+
+            return (
+                [.. agrupacionesSet.Values.OrderBy(x => x.Descripcion)],
+                [.. editorialesSet.Values.OrderBy(x => x.Descripcion)]
+            );
+        }
+
         public async Task<List<CodigoDescripcion>> ObtenerEditorialesPorAgrupacionComercial(int codigoAgrupacionComercial)
         {
             List<CodigoDescripcion> resultado = [];
