@@ -1,4 +1,4 @@
-@page "/gestion/importacion-condiciones"
+﻿@page "/gestion/importacion-condiciones"
 
 @using static HM.Presupuestos.Application.CasosDeUso.VersionesService
 @using Version = HM.Presupuestos.Domain.Entidades.Version
@@ -42,7 +42,7 @@
                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                            NullText="@ObtenerTexto(TextosApp.Common.Todos)">
                                 <DropDownBodyTemplate>
-                                    <DxListBox Data="@_networks"
+                                    <DxListBox Data="@Networks"
                                                TData="CodigoDescripcion"
                                                TValue="CodigoDescripcion"
                                                Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
@@ -64,7 +64,7 @@
                             <span>@ObtenerTexto(TextosApp.Common.GrupoClientes)</span>
                         </CaptionTemplate>
                         <Template>
-                            <DxDropDownBox @bind-Value="_gruposClientesSeleccionados"
+                            <DxDropDownBox @bind-Value="GruposClientesSeleccionados"
                                            QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
                                             arg,
                                             x => x.Descripcion,
@@ -77,11 +77,11 @@
                                 <DropDownBodyTemplate>
                                     <DxTextBox                                    NullText="@ObtenerTexto(TextosApp.Common.EscribaTextoBusqueda)"
                                                InputDelay="500"
-                                               @bind-Text="@_querySearchGrupoClientesList"
+                                               @bind-Text="@QuerySearchGrupoClientesList"
                                                BindValueMode="BindValueMode.OnInput"
                                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                                     </DxTextBox>
-                                    <DxListBox Data="@_gruposClientes"
+                                    <DxListBox Data="@GruposClientes"
                                                TData="CodigoDescripcion"
                                                TValue="CodigoDescripcion"
                                                Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
@@ -91,7 +91,7 @@
                                                SelectionMode="ListBoxSelectionMode.Multiple"
                                                ShowCheckboxes="true"
                                                ListRenderMode="ListRenderMode.Virtual"
-                                               SearchText="@_querySearchGrupoClientesList">
+                                               SearchText="@QuerySearchGrupoClientesList">
                                     </DxListBox>
                                 </DropDownBodyTemplate>
                             </DxDropDownBox>
@@ -105,10 +105,10 @@
                             <span>@ObtenerTexto(TextosApp.Common.Anio)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_anios" Enabled="true"
+                            <DxComboBox Data="@Anios" Enabled="true"
                                         TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                         ValueFieldName=@nameof(CodigoDescripcion.Codigo)
-                                        @bind-Value="@_anioSeleccionado"
+                                        @bind-Value="@AnioSeleccionado"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -127,10 +127,10 @@
                             <span>@ObtenerTexto(TextosApp.Common.Version)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_versiones"
+                            <DxComboBox Data="@Versiones"
                                         TextFieldName=@nameof(VersionResumen.Descripcion)
                                         ValueFieldName=@nameof(VersionResumen.Codigo)
-                                        @bind-Value="_versionSeleccionada"
+                                        @bind-Value="VersionSeleccionada"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" >

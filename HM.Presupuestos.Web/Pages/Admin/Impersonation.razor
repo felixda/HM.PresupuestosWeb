@@ -1,4 +1,4 @@
-@page "/administracion/impersonacion"
+﻿@page "/administracion/impersonacion"
 
 @inject IConfiguration _Configuration
 @inject IControlador _SecurityController
@@ -27,7 +27,7 @@ else if (TienePermiso == false)
 else
 {
     <PageTitle>@TituloPagina</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.Impersonacion" Titulo="@TituloPagina" TextoToolTipAyuda="@_textoToolTipAyuda" />
+    <PageHeader CodigoMenu="@CodigosMenu.Impersonacion" Titulo="@TituloPagina" TextoToolTipAyuda="@TextoToolTipAyuda" />
     <div class="layoutContainer">
         <DxFormLayout>
             <DxFormLayoutGroup ColSpanSm="6" ColSpanMd="6" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4">
@@ -46,14 +46,14 @@ else
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" 
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
-                        <DxTextBox @bind-Text="@_userNameImpersonation"
+                        <DxTextBox @bind-Text="@UserNameImpersonation"
                         NullText="@ObtenerTexto(TextosApp.Pages.Impersonation.UserName)"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                         </DxTextBox>
                     </DxFormLayoutItem>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout" BeginRow=" true">
-                        <DxTextBox @bind-Text="@_passwordImpersonation"
+                        <DxTextBox @bind-Text="@PasswordImpersonation"
                         NullText="@ObtenerTexto(TextosApp.Pages.Impersonation.Password)"
                         Password="true"
                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
@@ -77,9 +77,9 @@ else
 
 @code {
 
-    private string _textoToolTipAyuda { get; set; } = string.Empty;
-    private string _userNameImpersonation { get; set; } = "";
-    private string _passwordImpersonation { get; set; } = "";
+    private string TextoToolTipAyuda { get; set; } = string.Empty;
+    private string UserNameImpersonation { get; set; } = "";
+    private string PasswordImpersonation { get; set; } = "";
     private string _message { get; set; } = "";
     private UsuarioEntidad _userAuthenticated = new UsuarioEntidad();
 
@@ -94,7 +94,7 @@ else
 
     protected override async Task InicializarPaginaAsync()
     {
-        _textoToolTipAyuda = ObtenerTexto(TextosApp.Pages.Impersonation.ToolTip);
+        TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.Impersonation.ToolTip);
     }
 
 
@@ -107,23 +107,23 @@ else
         await EjecutarAsync(async () =>
         {
             _message = "";
-            _userNameImpersonation = (_userNameImpersonation != null) ? _userNameImpersonation.Replace(" ", "") : "";
+            UserNameImpersonation = (UserNameImpersonation != null) ? UserNameImpersonation.Replace(" ", "") : "";
 
             //Para las pruebas de seguridad en entornos distintos a PRO
             if (_Configuration.GetValue<string>("AppSettings:AppEnvironment") != Constantes.Environment.PRO)
             {
                 if (e.CtrlKey && e.AltKey && (Usuario!.CodigoUsuario == 2825 || Usuario!.CodigoUsuario == 1182))
                 {
-                    _userNameImpersonation = "probar.acceso";
-                    _passwordImpersonation = "ccc";
+                    UserNameImpersonation = "probar.acceso";
+                    PasswordImpersonation = "ccc";
                 }
             }
 
-            if (!String.IsNullOrEmpty(_userNameImpersonation) && !String.IsNullOrEmpty(_passwordImpersonation))
+            if (!String.IsNullOrEmpty(UserNameImpersonation) && !String.IsNullOrEmpty(PasswordImpersonation))
             {
-                if (_userAuthenticated.Login != _userNameImpersonation)
+                if (_userAuthenticated.Login != UserNameImpersonation)
                 {
-                    var respuesta = await _SesionUsuario.AutenticarUsuarioPorLoginAsync(_userNameImpersonation, _passwordImpersonation);
+                    var respuesta = await _SesionUsuario.AutenticarUsuarioPorLoginAsync(UserNameImpersonation, PasswordImpersonation);
                     if (respuesta)
                     {
                         _NavigationManager.NavigateTo("/home", forceLoad: false);

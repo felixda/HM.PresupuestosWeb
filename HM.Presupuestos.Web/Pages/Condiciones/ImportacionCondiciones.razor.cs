@@ -1,4 +1,4 @@
-using HM.Presupuestos.Application.CasosDeUso.Compartido;
+﻿using HM.Presupuestos.Application.CasosDeUso.Compartido;
 
 namespace HM.Presupuestos.Web.Pages.Condiciones
 {
@@ -31,25 +31,25 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         bool ImportacionRealizada { get; set; } = false;
 
-        private string _querySearchGrupoClientesList { get; set; } = String.Empty;
+        private string QuerySearchGrupoClientesList { get; set; } = String.Empty;
 
         private CondicionImportarFiltro _filtro;
 
-        private List<CodigoDescripcion> _networks = [];
-        private object? _networskSeleccionados { get; set; } = null;
+        private List<CodigoDescripcion> Networks { get; set; } = [];
+        private object? NetworksSeleccionadosBackingField { get; set; } = null;
 
         private object? NetworkSeleccionados
         {
-            get => _networskSeleccionados;
+            get => NetworksSeleccionadosBackingField;
             set
             {
-                if (_networskSeleccionados != value)
+                if (NetworksSeleccionadosBackingField != value)
                 {
-                    _networskSeleccionados = value;
+                    NetworksSeleccionadosBackingField = value;
                     if (value == null)
                     {
-                        _gruposClientesSeleccionados = null;
-                        _gruposClientes = [];
+                        GruposClientesSeleccionados = null;
+                        GruposClientes = [];
                     }
                 }
             }
@@ -57,15 +57,15 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
 
 
-        private List<CodigoDescripcion> _gruposClientes = [];
+        private List<CodigoDescripcion> GruposClientes { get; set; } = [];
 
-        private object? _gruposClientesSeleccionados { get; set; }
+        private object? GruposClientesSeleccionados { get; set; }
 
-        private List<CodigoDescripcion> _anios = [];
-        private CodigoDescripcion? _anioSeleccionado { get; set; } = null;
+        private List<CodigoDescripcion> Anios { get; set; } = [];
+        private CodigoDescripcion? AnioSeleccionado { get; set; } = null;
 
-        private List<VersionResumen> _versiones = [];
-        private VersionResumen? _versionSeleccionada { get; set; } = null;
+        private List<VersionResumen> Versiones { get; set; } = [];
+        private VersionResumen? VersionSeleccionada { get; set; } = null;
 
 
         #endregion
@@ -104,21 +104,21 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.ToolTip);
          //   Jwt.Usuario = Usuario;
 
-            _networks = await PresupuestosService.ObtenerNetworks();
-            _anios = await VersionesService.ObtenerAniosConVersiones();
+            Networks = await PresupuestosService.ObtenerNetworks();
+            Anios = await VersionesService.ObtenerAniosConVersiones();
 
             FilterInit();
         }
 
         private void FilterInit()
         {
-            if (_networks.Count == 1)
+            if (Networks.Count == 1)
             {
-                _networskSeleccionados = new List<CodigoDescripcion> { _networks[0] };
+                NetworksSeleccionadosBackingField = new List<CodigoDescripcion> { Networks[0] };
             }
-            else if (_networks.Count > 1)
+            else if (Networks.Count > 1)
             {
-                _networskSeleccionados = null;
+                NetworksSeleccionadosBackingField = null;
             }
         }
 
@@ -127,8 +127,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
 
-            _gruposClientesSeleccionados = null;
-            _gruposClientes = [];
+            GruposClientesSeleccionados = null;
+            GruposClientes = [];
 
             try
             {
@@ -136,7 +136,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 if (values.Any())
                 {
                     string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
-                    _gruposClientes = await PresupuestosService.ObtenerGruposClientePorNetworks(codigosNetwork);
+                    GruposClientes = await PresupuestosService.ObtenerGruposClientePorNetworks(codigosNetwork);
                 }
             }
             catch (Exception ex)
@@ -156,15 +156,15 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
        
         private async Task ComboAnios_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
-            _versionSeleccionada = null;
-            _versiones = [];
+            VersionSeleccionada = null;
+            Versiones = [];
             if (e.DataItem != null)
             {
                 int anioSeleccionado = e.DataItem.Codigo;
                 try
                 {
                     LayerOverlayService.Start();
-                    _versiones = await ObtenerVersionesPorPermisos(anioSeleccionado);
+                    Versiones = await ObtenerVersionesPorPermisos(anioSeleccionado);
                 }
                 catch (Exception ex)
                 {
@@ -196,14 +196,14 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 _filtro = new CondicionImportarFiltro()
                 {
-                    CodigosNetwork = _networskSeleccionados == null
-                        ? [.. (_networks).Select(x => x.Codigo)]
-                        : [.. ((List<CodigoDescripcion>)_networskSeleccionados).Select(x => x.Codigo)],
-                    CodigosGrupoCliente = _gruposClientesSeleccionados == null
+                    CodigosNetwork = NetworksSeleccionadosBackingField == null
+                        ? [.. (Networks).Select(x => x.Codigo)]
+                        : [.. ((List<CodigoDescripcion>)NetworksSeleccionadosBackingField).Select(x => x.Codigo)],
+                    CodigosGrupoCliente = GruposClientesSeleccionados == null
                         ? [-1]
-                        : [.. ((List<CodigoDescripcion>)_gruposClientesSeleccionados).Select(x => x.Codigo)],
-                    Anio = Convert.ToInt32(_anioSeleccionado!.Descripcion),
-                    CodigoVersion = _versionSeleccionada!.Codigo
+                        : [.. ((List<CodigoDescripcion>)GruposClientesSeleccionados).Select(x => x.Codigo)],
+                    Anio = Convert.ToInt32(AnioSeleccionado!.Descripcion),
+                    CodigoVersion = VersionSeleccionada!.Codigo
                 };
 
                 await CondicionesService.ImportarCondicionesMMS(_filtro);
@@ -233,7 +233,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             bool validacion = true;
 
-            if ( _anioSeleccionado == null || _versionSeleccionada == null)
+            if ( AnioSeleccionado == null || VersionSeleccionada == null)
             {
                 validacion = false;
             }
@@ -245,9 +245,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             try
             {
-                _anioSeleccionado = null;
-                _versionSeleccionada = null;
-                _gruposClientesSeleccionados = null;
+                AnioSeleccionado = null;
+                VersionSeleccionada = null;
+                GruposClientesSeleccionados = null;
                 FilterInit();
             }
             catch (Exception ex)

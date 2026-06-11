@@ -1,4 +1,4 @@
-@page "/gestion/sobreprimas"
+﻿@page "/gestion/sobreprimas"
 
 @using System.Linq.Expressions
 @using Version = HM.Presupuestos.Domain.Entidades.Version
@@ -392,10 +392,10 @@ else
             </DxFormLayoutGroup>
 
             @* POPUP EDIT SOBREPRIMAS *@
-            <DxPopup @ref="_popupSobreprimas"
-                     Visible="@_popupEdicionVisible"
+            <DxPopup @ref="PopupSobreprimas"
+                     Visible="@PopupEdicionVisible"
                      ShowFooter="true"
-                     HeaderText="@_tituloPopupEdicion"
+                     HeaderText="@TituloPopupEdicion"
                      ShowCloseButton="false"
                      Width="65%"
                      Height="Auto"
@@ -412,7 +412,7 @@ else
                             </CaptionTemplate>
                             <Template>
                                 <DxComboBox Data="@NetworksMaestros"
-                                            @bind-Value="@_sobreprimaEnEdicion.CodigoNetwork"
+                                            @bind-Value="@SobreprimaEnEdicion.CodigoNetwork"
                                             ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                             TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                             ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -433,8 +433,8 @@ else
                                 <span>@ObtenerTexto(TextosApp.Common.Medio)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
-                                <DxComboBox Data="@_mediosPopup"
-                                            @bind-Value="@_sobreprimaEnEdicion.CodigoMedio"
+                                <DxComboBox Data="@MediosPopup"
+                                            @bind-Value="@SobreprimaEnEdicion.CodigoMedio"
                                             ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                             TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                             SearchMode="@ListSearchMode.AutoSearch"
@@ -455,8 +455,8 @@ else
                             <span>@ObtenerTexto(TextosApp.Common.AgrupacionComercial)</span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_agrupacionesComercialesPopup"
-                                        @bind-Value="@_sobreprimaEnEdicion.CodigoAgrupacionComercial"
+                            <DxComboBox Data="@AgrupacionesComercialesPopup"
+                                        @bind-Value="@SobreprimaEnEdicion.CodigoAgrupacionComercial"
                                         ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                         TextFieldName="@nameof(CodigoDescripcion.DescripcionConCodigo)"
                                         SearchMode="@ListSearchMode.AutoSearch"
@@ -478,8 +478,8 @@ else
                                 <span>@ObtenerTexto(TextosApp.Common.Editorial)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
-                                <DxComboBox Data="@_editorialesPopup"
-                                            @bind-Value="@_sobreprimaEnEdicion.CodigoEditorial"
+                                <DxComboBox Data="@EditorialesPopup"
+                                            @bind-Value="@SobreprimaEnEdicion.CodigoEditorial"
                                             ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                             TextFieldName="@nameof(CodigoDescripcion.DescripcionConCodigo)"
                                             ListRenderMode="ListRenderMode.Virtual"
@@ -502,7 +502,7 @@ else
                                 <span>@ObtenerTexto(TextosApp.Pages.Sobreprimas.TypeConcept.Default) %</span>
                             </CaptionTemplate>
                             <Template>
-                                <DxSpinEdit @bind-Value="@_sobreprimaEnEdicion.ConceptoDefaul.Porcentaje"
+                                <DxSpinEdit @bind-Value="@SobreprimaEnEdicion.ConceptoDefaul.Porcentaje"
                                             ShowSpinButtons="false"
                                             InputCssClass="text-end"
                                             DisplayFormat="{0:N2} %"
@@ -520,7 +520,7 @@ else
                                 <span>@ObtenerTexto(TextosApp.Pages.Sobreprimas.TypeConcept.SLA) %</span>
                             </CaptionTemplate>
                             <Template>
-                                <DxSpinEdit @bind-Value="@_sobreprimaEnEdicion.ConceptoSLA.Porcentaje"
+                                <DxSpinEdit @bind-Value="@SobreprimaEnEdicion.ConceptoSLA.Porcentaje"
                                             ShowSpinButtons="false"
                                             InputCssClass="text-end"
                                             DisplayFormat="{0:N2} %"
@@ -538,7 +538,7 @@ else
                                 <span>@ObtenerTexto(TextosApp.Pages.Sobreprimas.TypeConcept.HVP) %</span>
                             </CaptionTemplate>
                             <Template>
-                                <DxSpinEdit @bind-Value="@_sobreprimaEnEdicion.ConceptoHVP.Porcentaje"
+                                <DxSpinEdit @bind-Value="@SobreprimaEnEdicion.ConceptoHVP.Porcentaje"
                                             ShowSpinButtons="false"
                                             InputCssClass="text-end"
                                             MaxValue="100"
