@@ -179,53 +179,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             await ManajarRequest();
         }
 
-        // Se ejecuta cuando el usuario tiene permisos válidos para acceder
-        // Inicializa la página y carga los datos necesarios
-        //protected override async Task OnPermisoValidadoAsync()
-        //{
-        //    try
-        //    {
-        //        TituloPagina = ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.CargarSobreprimas));
-        //        LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
-
-        //        await InicializarPaginaAsync();
-
-        //        await InvokeAsync(StateHasChanged);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await LogService.InsertException(ex);
-        //        await ErrorService.MostrarErrorInicializandoPagina(TituloPagina, ex);
-        //    }
-        //    finally
-        //    {
-        //        LayerOverlayService.Stop();
-        //    }
-        //}
-
-        // Inicializa la página cargando datos maestros
-        //private async Task InicializarPaginaAsync()
-        //{
-        //    CaptionIzquierda = ObtenerTexto(TextosApp.Pages.Sobreprimas.Titulo);
-
-        //    AñosMaestros = await VersionesService.ObtenerAniosConVersiones();
-        //    NetworksMaestros = await PresupuestosService.ObtenerNetworks();
-
-        //    string codigosNetwork = GetValoresSeleccionados<CodigoDescripcion, int>(NetworksMaestros, x => x.Codigo, ",");
-        //    MediosMaestros = await PresupuestosService.ObtenerMediosPorNetWork(codigosNetwork);
-
-        //    MediosFiltrados = DatosHelper.ClonarObjeto(MediosMaestros);
-        //    string codigosMedios = GetValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
-
-        //    AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
-
-        //    FiltroEditoriales filtro = new();
-        //    filtro.CodigosMedios = codigosMedios;
-        //    EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
-
-        //    await ManajarRequest();
-        //}
-
         #endregion
 
         #region Filtro

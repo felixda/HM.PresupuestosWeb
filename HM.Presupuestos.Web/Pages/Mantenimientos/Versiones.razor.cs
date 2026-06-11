@@ -164,7 +164,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
             var itemIndicador = itemVersion.IndicadorList.Find(x => x.Codigo == indicadorCodigo);
             if (itemIndicador == null) return;
 
-            try
+            await EjecutarAsync(async () =>
             {
                 //Activamos el indicador chequeado
                 itemIndicador.Estado = (bool)newValue;
@@ -228,12 +228,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                 }
 
                 await ActualizarEstadoCambios(HayCambios);
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
+            }, showOverlay: false);
         }
 
 
@@ -246,7 +241,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
 
             if (ItemYearSelected != null && ListVersion.Find(x => x.Codigo == 0) == null)
             {
-                try
+                await EjecutarAsync(async () =>
                 {
                     var nuevaVersion = new Version();
                     nuevaVersion.CodigoTipo = 1;  //Por defecto el tipo Usuario
@@ -269,13 +264,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                     ListVersion.Insert(0, nuevaVersion);
                     GridVersiones!.Reload(); //Porque si no desplaza la ultima fila y no se ve
                     await ActualizarEstadoCambios(true);
-
-                }
-                catch (Exception ex)
-                {
-                    await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(TituloPagina);
-                }
+                });
             }
         }
 
@@ -304,7 +293,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         {
             if (ea.ElementType == GridElementType.DataCell)
             {
-                try
+                await EjecutarAsync(async () =>
                 {
                     var column = (IGridDataColumn)ea.Column;
                     var version = (Version)GridVersiones!.GetDataItem(ea.VisibleIndex);
@@ -338,11 +327,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(TituloPagina);
-                }
+                }, showOverlay: false);
             }
         }
 
@@ -500,11 +485,10 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///</summary>
         private async Task GuardarDatosVersion()
         {
-            try
-            {
-                if (!await UsuarioTienePermisos()) return;
+            if (!await UsuarioTienePermisos()) return;
 
-                LayerOverlayService.Start();
+            await EjecutarAsync(async () =>
+            {
                 if (await ValidarDatos())
                 {
 
@@ -556,16 +540,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                         await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SinModificaciones));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorAlGrabar));
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
         }
 
         #endregion

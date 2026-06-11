@@ -9,8 +9,6 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
-        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-        [Inject] protected NavigationManager Navigation { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
@@ -18,8 +16,6 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Page
 
-        private bool _componentInitialized = false;
-        private string PageTitle { get; set; } = string.Empty;
         private string TextoToolTipAyuda { get; set; } = string.Empty;
 
 
@@ -70,45 +66,17 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #endregion
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                await base.OnAfterRenderAsync(firstRender);
-                try
-                {
-                    PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.ImportacionCondiciones}:label");
-                    LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {PageTitle}");
-                    await PageInitialize();
-                }
-                catch (Exception ex)
-                {
-                    await ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
-                    return;
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
-
-                if (!_componentInitialized)
-                {
-                    _componentInitialized = true;
-                    await InvokeAsync(StateHasChanged);
-                }
-            }
-        }
-
-        private async Task PageInitialize()
+        protected override async Task InicializarPaginaAsync()
         {
             TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.ToolTip);
-         //   Jwt.Usuario = Usuario;
 
             Networks = await PresupuestosService.ObtenerNetworks();
             Anios = await VersionesService.ObtenerAniosConVersiones();
 
             FilterInit();
         }
+
+        protected override Task OnPermisoDenegadoAsync() => Task.CompletedTask;
 
         private void FilterInit()
         {
@@ -130,24 +98,14 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             GruposClientesSeleccionados = null;
             GruposClientes = [];
 
-            try
+            await EjecutarAsync(async () =>
             {
-                LayerOverlayService.Start();
                 if (values.Any())
                 {
                     string codigosNetwork = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
                     GruposClientes = await PresupuestosService.ObtenerGruposClientePorNetworks(codigosNetwork);
                 }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
             dropDownBox.EndUpdate();
             if (esSingle)
                 dropDownBox.HideDropDown();
@@ -161,20 +119,10 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             if (e.DataItem != null)
             {
                 int anioSeleccionado = e.DataItem.Codigo;
-                try
+                await EjecutarAsync(async () =>
                 {
-                    LayerOverlayService.Start();
                     Versiones = await ObtenerVersionesPorPermisos(anioSeleccionado);
-                }
-                catch (Exception ex)
-                {
-                    await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
+                });
             }
         }
 
@@ -182,18 +130,15 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
                 return;
             }
-            try
+
+            bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.AvisoImportarCondiciones));
+            if (!confirmacion) return;
+
+            await EjecutarAsync(async () =>
             {
-                
-                bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(TextosApp.Mensajes.AvisoImportarCondiciones));
-                if (!confirmacion) return;
-
-
-                LayerOverlayService.Start();
-
                 _filtro = new CondicionImportarFiltro()
                 {
                     CodigosNetwork = NetworksSeleccionadosBackingField == null
@@ -206,27 +151,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     CodigoVersion = VersionSeleccionada!.Codigo
                 };
 
-                await CondicionesService.ImportarCondicionesMMS(_filtro);
+                try
+                {
+                    await CondicionesService.ImportarCondicionesMMS(_filtro);
+                }
+                catch (ExcepcionBaseDatos exBd)
+                {
+                    await TratarExcepcionGeneradaEnBD(exBd, TituloPagina);
+                    ImportacionRealizada = false;
+                    return;
+                }
 
-                await MensajesHelper.MostrarMensajeExito(PageTitle, ObtenerTexto(TextosApp.Mensajes.ImportacionCondicionesFinalizada));
-
+                await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ImportacionCondicionesFinalizada));
                 ImportacionRealizada = true;
-            }
-            catch (ExcepcionBaseDatos exBd)
-            {
-                await TratarExcepcionGeneradaEnBD(exBd, PageTitle);
-                ImportacionRealizada = false;
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
-                ImportacionRealizada = false;
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
         }
 
         private bool ValidarCamposObligatoriosFiltro()
@@ -243,18 +181,13 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task FiltroLimpiar()
         {
-            try
+            await EjecutarAsync(() =>
             {
                 AnioSeleccionado = null;
                 VersionSeleccionada = null;
                 GruposClientesSeleccionados = null;
                 FilterInit();
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
-            }
+            }, showOverlay: false);
         }
 
 
@@ -268,7 +201,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         private void IrACondiciones()
         {
             NavegacionService.Guardar(_filtro);
-            Navigation.NavigateTo("/gestion/planificacion-condiciones");
+            NavigationManager.NavigateTo("/gestion/planificacion-condiciones");
         }
 
     }

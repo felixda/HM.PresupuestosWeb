@@ -3,15 +3,23 @@
 @using static HM.Presupuestos.Application.CasosDeUso.VersionesService
 @using Version = HM.Presupuestos.Domain.Entidades.Version
 
-@inherits Context
+@inherits ContextProtegido
 
 @attribute [Authorize]
 
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
 {
-     <PageTitle>@PageTitle</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.ImportacionCondiciones" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+    @* Silencio mientras carga *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
+{
+     <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.ImportacionCondiciones" Titulo="@TituloPagina" TextoToolTipAyuda="@TextoToolTipAyuda" />
 
     <div class="layoutContainer">
         @* FILTER *@

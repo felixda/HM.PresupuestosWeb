@@ -411,10 +411,7 @@ namespace HM.Presupuestos.Web.Componentes.Base
             }
             catch (Exception ex)
             {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, customErrorMessage);
+                await ManejarExcepcion(ex, customErrorMessage);
 
                 return defaultValue;
             }
