@@ -326,7 +326,6 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
                             }
                         }
                     }
-                }
                 }, showOverlay: false);
             }
         }
