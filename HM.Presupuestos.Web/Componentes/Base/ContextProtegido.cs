@@ -84,6 +84,15 @@ public abstract class ContextProtegido : Context
             string url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var urlNormalizada = RutasNavegecion.NormalizarRuta(url);
 
+            if (EsPaginaHome(urlNormalizada))
+            {
+                TienePermiso = true;
+                ValidandoPermisos = false;
+                await OnPermisoValidadoAsync();
+                await InvokeAsync(StateHasChanged);
+                return;
+            }
+
             TienePermiso = ControlAccesNavegacion.PuedeAccederA(urlNormalizada);
 
             if ((bool)TienePermiso)
@@ -106,6 +115,16 @@ public abstract class ContextProtegido : Context
             ValidandoPermisos = false;
             await InvokeAsync(StateHasChanged);
         }
+    }
+
+    #endregion
+
+    #region Métodos Privados
+
+    private static bool EsPaginaHome(string urlNormalizada)
+    {
+        var urlLower = urlNormalizada.ToLowerInvariant().Trim('/');
+        return urlLower == string.Empty || urlLower == "home" || urlLower == "index";
     }
 
     #endregion
