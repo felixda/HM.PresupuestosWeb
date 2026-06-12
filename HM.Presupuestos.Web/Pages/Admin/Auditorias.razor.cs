@@ -59,7 +59,15 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         private async Task BuscarAuditoriasAsync()
         {
-            if (TipoAuditoriaSeleccionado is null || !FechaInicio.HasValue || !FechaFin.HasValue)
+            if (TipoAuditoriaSeleccionado is null)
+            {
+                await MensajesHelper.MostrarMensajeAviso(
+                    TituloPagina,
+                    ObtenerTexto(TextosApp.Pages.Auditorias.CamposObligatorios));
+                return;
+            }
+
+            if (!FechaInicio.HasValue || !FechaFin.HasValue)
             {
                 await MensajesHelper.MostrarMensajeAviso(
                     TituloPagina,

@@ -118,6 +118,47 @@ else
             </DxFormLayoutGroup>
         </DxFormLayout>
 
+        @* RESULTADOS *@
+        <DxGrid Data="@ResultadoAuditorias"
+                PageSize="20"
+                ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                TextWrapEnabled="false"
+                HighlightRowOnHover="true">
+            <Columns>
+                <DxGridDataColumn FieldName="@nameof(Auditoria.Descripcion)"
+                                  Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
+                                  Width="50%"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(Auditoria.FechaInicio)"
+                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaInicio)"
+                                  Width="20%"
+                                  DisplayFormat="dd/MM/yyyy HH:mm:ss"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(Auditoria.Usuario)"
+                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario)"
+                                  Width="25%"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(Auditoria.Parametros)"
+                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Parametros)"
+                                  Width="5%"
+                                  CaptionAlignment="GridTextAlignment.Center"
+                                  TextAlignment="GridTextAlignment.Center">
+                    <CellDisplayTemplate>
+                        @{
+                            var auditoria = (Auditoria)context.DataItem;
+                        }
+                        <button class="btn-parametros" title="@ObtenerTexto(TextosApp.Pages.Auditorias.TituloPopupParametros)"
+                                @onclick="() => AbrirPopupParametros(auditoria)">
+                            <i class="fa-solid fa-file-code"></i>
+                        </button>
+                    </CellDisplayTemplate>
+                </DxGridDataColumn>
+            </Columns>
+        </DxGrid>
+
         @* ESTADÍSTICAS *@
         @if (_estadisticas != null)
         {
@@ -217,47 +258,6 @@ else
                 </DxFormLayoutGroup>
             </DxFormLayout>
         }
-
-        @* RESULTADOS *@
-        <DxGrid Data="@ResultadoAuditorias"
-                PageSize="20"
-                ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                TextWrapEnabled="false"
-                HighlightRowOnHover="true">
-            <Columns>
-                <DxGridDataColumn FieldName="@nameof(Auditoria.Descripcion)"
-                                  Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
-                                  Width="50%"
-                                  CaptionAlignment="GridTextAlignment.Left"
-                                  TextAlignment="GridTextAlignment.Left" />
-                <DxGridDataColumn FieldName="@nameof(Auditoria.FechaInicio)"
-                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaInicio)"
-                                  Width="20%"
-                                  DisplayFormat="dd/MM/yyyy HH:mm:ss"
-                                  CaptionAlignment="GridTextAlignment.Left"
-                                  TextAlignment="GridTextAlignment.Left" />
-                <DxGridDataColumn FieldName="@nameof(Auditoria.Usuario)"
-                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario)"
-                                  Width="25%"
-                                  CaptionAlignment="GridTextAlignment.Left"
-                                  TextAlignment="GridTextAlignment.Left" />
-                <DxGridDataColumn FieldName="@nameof(Auditoria.Parametros)"
-                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Parametros)"
-                                  Width="5%"
-                                  CaptionAlignment="GridTextAlignment.Center"
-                                  TextAlignment="GridTextAlignment.Center">
-                    <CellDisplayTemplate>
-                        @{
-                            var auditoria = (Auditoria)context.DataItem;
-                        }
-                        <button class="btn-parametros" title="@ObtenerTexto(TextosApp.Pages.Auditorias.TituloPopupParametros)"
-                                @onclick="() => AbrirPopupParametros(auditoria)">
-                            <i class="fa-solid fa-file-code"></i>
-                        </button>
-                    </CellDisplayTemplate>
-                </DxGridDataColumn>
-            </Columns>
-        </DxGrid>
 
         <DxPopup Visible="@_popupParametrosVisible"
                  VisibleChanged="@((bool v) => _popupParametrosVisible = v)"
