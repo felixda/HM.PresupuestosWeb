@@ -22,6 +22,11 @@ namespace HM.Presupuestos.Web.Pages.Admin
         private int? PaginaSeleccionada { get; set; }
         private Auditoria? _auditoriaSeleccionada;
         private bool _popupParametrosVisible;
+        private EstadisticasAuditoria? _estadisticas;
+
+        private bool RangoSuperaLimite =>
+            FechaInicio.HasValue && FechaFin.HasValue &&
+            (FechaFin.Value - FechaInicio.Value).TotalDays > 90;
 
         #endregion
 
@@ -31,6 +36,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
         {
             TiposAuditoria = RecursosApp.ObtenerAccionesLog();
             PaginasNavegables = RecursosApp.ObtenerPaginasNavegables();
+            FechaInicio = DateTime.Today;
+            FechaFin = DateTime.Today;
             return Task.CompletedTask;
         }
 
@@ -52,28 +59,34 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         private async Task BuscarAuditoriasAsync()
         {
-            if (TipoAuditoriaSeleccionado is null)
+            if (TipoAuditoriaSeleccionado is null || !FechaInicio.HasValue || !FechaFin.HasValue)
             {
                 await MensajesHelper.MostrarMensajeAviso(
                     TituloPagina,
-                    ObtenerTexto(TextosApp.Pages.Auditorias.CamposObligatorios));
+                    ObtenerTexto(TextosApp.Pages.Auditorias.FechasObligatorias));
                 return;
             }
 
             await EjecutarAsync(async () =>
             {
                 AccionesLog tipo = (AccionesLog)TipoAuditoriaSeleccionado.Value;
-                ResultadoAuditorias = await LogAccionesService.ObtenerAuditorias(tipo, FechaInicio, FechaFin, PaginaSeleccionada);
+                var fechaFinInclusiva = FechaFin.Value.Date.AddDays(1);
+                var taskAuditorias = LogAccionesService.ObtenerAuditorias(tipo, FechaInicio, fechaFinInclusiva, PaginaSeleccionada);
+                var taskEstadisticas = LogAccionesService.ObtenerEstadisticas(tipo, FechaInicio.Value, FechaFin.Value, PaginaSeleccionada);
+                await Task.WhenAll(taskAuditorias, taskEstadisticas);
+                ResultadoAuditorias = taskAuditorias.Result;
+                _estadisticas = taskEstadisticas.Result;
             });
         }
 
         private async Task LimpiarFiltroAsync()
         {
             TipoAuditoriaSeleccionado = null;
-            FechaInicio = null;
-            FechaFin = null;
+            FechaInicio = DateTime.Today;
+            FechaFin = DateTime.Today;
             PaginaSeleccionada = null;
             ResultadoAuditorias = [];
+            _estadisticas = null;
             await InvokeAsync(StateHasChanged);
         }
 

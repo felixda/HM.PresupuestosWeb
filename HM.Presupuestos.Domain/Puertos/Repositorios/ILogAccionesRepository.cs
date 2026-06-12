@@ -9,6 +9,7 @@ namespace HM.Presupuestos.Domain.Puertos
     {
         Task Insertar(LogAccion logAccion);
         Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin, int? codigoPagina = null);
+        Task<EstadisticasAuditoria> ObtenerEstadisticas(AccionesLog tipo, DateTime fechaInicio, DateTime fechaFin, int? codigoPagina = null);
     }
 }
 

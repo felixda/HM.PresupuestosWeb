@@ -574,6 +574,33 @@
       },
       "TituloPopupParametros": {
         "label": "Parámetros de la acción"
+      },
+      "ResumenPeriodo": {
+        "label": "Resumen del período"
+      },
+      "TotalAcciones": {
+        "label": "Acciones"
+      },
+      "UsuariosUnicos": {
+        "label": "Usuarios"
+      },
+      "UsuarioMasActivo": {
+        "label": "Usuario más activo"
+      },
+      "PaginaMasVisitada": {
+        "label": "Página más visitada"
+      },
+      "TopUsuarios": {
+        "label": "Top usuarios"
+      },
+      "ActividadDiaria": {
+        "label": "Actividad diaria"
+      },
+      "RangoDemasiadoAmplio": {
+        "label": "El rango supera 90 días. La gráfica diaria no está disponible."
+      },
+      "FechasObligatorias": {
+        "label": "Las fechas de inicio y fin son obligatorias"
       }
     },
     "AnioDiario": {

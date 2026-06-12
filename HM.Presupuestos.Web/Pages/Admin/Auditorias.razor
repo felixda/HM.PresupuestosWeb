@@ -44,7 +44,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ListRenderMode="ListRenderMode.Entire"
                                         Value="@TipoAuditoriaSeleccionado"
-                                        ValueChanged="@((int? v) => { TipoAuditoriaSeleccionado = v; ResultadoAuditorias = []; if (v != (int)AccionesLog.AccesoAPagina) PaginaSeleccionada = null; })">
+                                        ValueChanged="@((int? v) => { TipoAuditoriaSeleccionado = v; ResultadoAuditorias = []; _estadisticas = null; if (v != (int)AccionesLog.AccesoAPagina) PaginaSeleccionada = null; })">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -76,19 +76,27 @@ else
                     }
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                      Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaInicio)"
                                       CaptionPosition="CaptionPosition.Vertical">
-                        <DxDateEdit @bind-Date="@FechaInicio"
-                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                    NullText="@ObtenerTexto(TextosApp.Common.Todos)" />
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(TextosApp.Pages.Auditorias.FechaInicio)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxDateEdit @bind-Date="@FechaInicio"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        NullText="@ObtenerTexto(TextosApp.Common.Todos)" />
+                        </Template>
                     </DxFormLayoutItem>
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="4" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                      Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaFin)"
                                       CaptionPosition="CaptionPosition.Vertical">
-                        <DxDateEdit @bind-Date="@FechaFin"
-                                    ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                    NullText="@ObtenerTexto(TextosApp.Common.Todos)" />
+                        <CaptionTemplate>
+                            <span>@ObtenerTexto(TextosApp.Pages.Auditorias.FechaFin)</span><span class="mandatory"></span>
+                        </CaptionTemplate>
+                        <Template>
+                            <DxDateEdit @bind-Date="@FechaFin"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        NullText="@ObtenerTexto(TextosApp.Common.Todos)" />
+                        </Template>
                     </DxFormLayoutItem>
 
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
@@ -109,6 +117,97 @@ else
                 </Items>
             </DxFormLayoutGroup>
         </DxFormLayout>
+
+        @* ESTADÍSTICAS *@
+        @if (_estadisticas != null)
+        {
+            <DxFormLayout>
+                <DxFormLayoutGroup Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.ResumenPeriodo)"
+                                   CssClass="filterContainer stats-panel"
+                                   ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                                   AnimationType="LayoutAnimationType.Slide">
+                    <Items>
+                        <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <span class="stat-value">@_estadisticas.TotalAcciones</span>
+                                    <span class="stat-label">@ObtenerTexto(TextosApp.Pages.Auditorias.TotalAcciones)</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span class="stat-value">@_estadisticas.UsuariosUnicos</span>
+                                    <span class="stat-label">@ObtenerTexto(TextosApp.Pages.Auditorias.UsuariosUnicos)</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span class="stat-value">@_estadisticas.UsuarioMasActivo</span>
+                                    <span class="stat-sublabel">(@_estadisticas.UsuarioMasActivoTotal)</span>
+                                    <span class="stat-label">@ObtenerTexto(TextosApp.Pages.Auditorias.UsuarioMasActivo)</span>
+                                </div>
+                                @if (TipoAuditoriaSeleccionado == (int)AccionesLog.AccesoAPagina && !string.IsNullOrEmpty(_estadisticas.PaginaMasVisitada))
+                                {
+                                    <div class="stat-card">
+                                        <span class="stat-value stat-value--small">@_estadisticas.PaginaMasVisitada</span>
+                                        <span class="stat-sublabel">(@_estadisticas.PaginaMasVisitadaTotal)</span>
+                                        <span class="stat-label">@ObtenerTexto(TextosApp.Pages.Auditorias.PaginaMasVisitada)</span>
+                                    </div>
+                                }
+                            </div>
+                        </DxFormLayoutItem>
+
+                        @if (_estadisticas.TopUsuarios.Count > 0)
+                        {
+                            <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4">
+                                <div class="stats-section">
+                                    <span class="stats-section-title">@ObtenerTexto(TextosApp.Pages.Auditorias.TopUsuarios)</span>
+                                    @foreach (var usuario in _estadisticas.TopUsuarios)
+                                    {
+                                        <div class="top-usuario-row">
+                                            <span class="top-usuario-login">@usuario.Login</span>
+                                            <DxProgressBar Value="@usuario.Total"
+                                                           MaxValue="@_estadisticas.TopUsuarios[0].Total"
+                                                           ShowLabel="false"
+                                                           CssClass="top-usuario-bar" />
+                                            <span class="top-usuario-total">@usuario.Total</span>
+                                        </div>
+                                    }
+                                </div>
+                            </DxFormLayoutItem>
+                        }
+
+                        <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="8" ColSpanXl="8" ColSpanXxl="8">
+                            <div class="stats-section">
+                                <span class="stats-section-title">@ObtenerTexto(TextosApp.Pages.Auditorias.ActividadDiaria)</span>
+                                @if (RangoSuperaLimite)
+                                {
+                                    <span class="stats-rango-aviso">@ObtenerTexto(TextosApp.Pages.Auditorias.RangoDemasiadoAmplio)</span>
+                                }
+                                else if (_estadisticas.ActividadPorDia.Count > 0)
+                                {
+                                    <DxChart Data="@_estadisticas.ActividadPorDia"
+                                             CssClass="stats-chart">
+                                        <DxChartBarSeries ValueField="@((PuntoTemporal p) => p.Total)"
+                                                          ArgumentField="@((PuntoTemporal p) => p.Fecha)"
+                                                          Name="@ObtenerTexto(TextosApp.Pages.Auditorias.TotalAcciones)" />
+                                        <DxChartArgumentAxis>
+                                            <DxChartAxisLabel Format="@ChartElementFormat.FixedPoint(0)" FormatString="dd/MM" />
+                                        </DxChartArgumentAxis>
+                                        <DxChartValueAxis>
+                                            <DxChartAxisLabel Format="@ChartElementFormat.FixedPoint(0)" />
+                                        </DxChartValueAxis>
+                                        <DxChartLegend Visible="false" />
+                                        <DxChartTooltip Enabled="true" Context="tooltipCtx">
+                                            @{ var punto = (PuntoTemporal)tooltipCtx.Point.DataItems.First(); }
+                                            <div style="padding:4px 8px">
+                                                <b>@punto.Fecha.ToString("dd/MM/yyyy")</b>: @punto.Total
+                                            </div>
+                                        </DxChartTooltip>
+                                    </DxChart>
+                                }
+                            </div>
+                        </DxFormLayoutItem>
+                    </Items>
+                </DxFormLayoutGroup>
+            </DxFormLayout>
+        }
 
         @* RESULTADOS *@
         <DxGrid Data="@ResultadoAuditorias"

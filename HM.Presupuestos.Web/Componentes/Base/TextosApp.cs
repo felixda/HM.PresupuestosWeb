@@ -860,6 +860,33 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
                 /// <summary>Título del popup de parámetros</summary>
                 public const string TituloPopupParametros = "Pages:Auditorias:TituloPopupParametros:label";
+
+                /// <summary>Resumen del período</summary>
+                public const string ResumenPeriodo = "Pages:Auditorias:ResumenPeriodo:label";
+
+                /// <summary>Total acciones</summary>
+                public const string TotalAcciones = "Pages:Auditorias:TotalAcciones:label";
+
+                /// <summary>Usuarios únicos</summary>
+                public const string UsuariosUnicos = "Pages:Auditorias:UsuariosUnicos:label";
+
+                /// <summary>Usuario más activo</summary>
+                public const string UsuarioMasActivo = "Pages:Auditorias:UsuarioMasActivo:label";
+
+                /// <summary>Página más visitada</summary>
+                public const string PaginaMasVisitada = "Pages:Auditorias:PaginaMasVisitada:label";
+
+                /// <summary>Top usuarios</summary>
+                public const string TopUsuarios = "Pages:Auditorias:TopUsuarios:label";
+
+                /// <summary>Actividad diaria</summary>
+                public const string ActividadDiaria = "Pages:Auditorias:ActividadDiaria:label";
+
+                /// <summary>Rango demasiado amplio para mostrar gráfica diaria</summary>
+                public const string RangoDemasiadoAmplio = "Pages:Auditorias:RangoDemasiadoAmplio:label";
+
+                /// <summary>Las fechas son obligatorias</summary>
+                public const string FechasObligatorias = "Pages:Auditorias:FechasObligatorias:label";
             }
 
             #endregion

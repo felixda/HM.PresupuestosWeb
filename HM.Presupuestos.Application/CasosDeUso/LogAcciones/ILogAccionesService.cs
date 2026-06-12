@@ -11,5 +11,6 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
         Task Insertar(AccionesLog accion, object? parametros = null, [CallerMemberName] string nombreMetodoLlamador = "");
         Task Insertar(LogAccion logAccion);
         Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin, int? codigoPagina = null);
+        Task<EstadisticasAuditoria> ObtenerEstadisticas(AccionesLog tipo, DateTime fechaInicio, DateTime fechaFin, int? codigoPagina = null);
     }
 }

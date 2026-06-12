@@ -110,6 +110,11 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
             return await _logAccionesRepository.ObtenerAuditorias(tipo, fechaInicio, fechaFin, codigoPagina);
         }
 
+        public async Task<EstadisticasAuditoria> ObtenerEstadisticas(AccionesLog tipo, DateTime fechaInicio, DateTime fechaFin, int? codigoPagina = null)
+        {
+            return await _logAccionesRepository.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, codigoPagina);
+        }
+
         private async Task InsertErrorLog(Exception exception, int codigoUsuario, [CallerMemberName] string nombreMetodoLlamador = "")
         {
             var data = new DetalleError

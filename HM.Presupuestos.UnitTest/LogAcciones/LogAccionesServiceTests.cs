@@ -155,4 +155,68 @@ public class LogAccionesServiceTests
     }
 
     #endregion
+
+    #region ObtenerEstadisticas
+
+    [Test]
+    public async Task ObtenerEstadisticas_DelegaEnRepositorioConLosParametrosCorrectos()
+    {
+        // Arrange
+        var tipo = AccionesLog.AccesoAPagina;
+        var fechaInicio = new DateTime(2026, 6, 1);
+        var fechaFin = new DateTime(2026, 6, 12);
+        var estadisticas = new EstadisticasAuditoria { TotalAcciones = 42, UsuariosUnicos = 5 };
+
+        _repositoryMock
+            .Setup(r => r.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, null))
+            .ReturnsAsync(estadisticas);
+
+        // Act
+        var resultado = await _sut.ObtenerEstadisticas(tipo, fechaInicio, fechaFin);
+
+        // Assert
+        Assert.That(resultado.TotalAcciones, Is.EqualTo(42));
+        _repositoryMock.Verify(r => r.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, null), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerEstadisticas_RepositorioDevuelveEstadisticasVacias_DevuelveEstadisticasVacias()
+    {
+        // Arrange
+        var estadisticasVacias = new EstadisticasAuditoria();
+
+        _repositoryMock
+            .Setup(r => r.ObtenerEstadisticas(It.IsAny<AccionesLog>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int?>()))
+            .ReturnsAsync(estadisticasVacias);
+
+        // Act
+        var resultado = await _sut.ObtenerEstadisticas(AccionesLog.AccesoAPagina, DateTime.Today, DateTime.Today);
+
+        // Assert
+        Assert.That(resultado.TotalAcciones, Is.EqualTo(0));
+        Assert.That(resultado.TopUsuarios, Is.Empty);
+        Assert.That(resultado.ActividadPorDia, Is.Empty);
+    }
+
+    [Test]
+    public async Task ObtenerEstadisticas_ConCodigoPagina_DelegaEnRepositorioConCodigoPagina()
+    {
+        // Arrange
+        var tipo = AccionesLog.AccesoAPagina;
+        var fechaInicio = DateTime.Today;
+        var fechaFin = DateTime.Today;
+        var codigoPagina = 26;
+
+        _repositoryMock
+            .Setup(r => r.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, codigoPagina))
+            .ReturnsAsync(new EstadisticasAuditoria());
+
+        // Act
+        await _sut.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, codigoPagina);
+
+        // Assert
+        _repositoryMock.Verify(r => r.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, codigoPagina), Times.Once);
+    }
+
+    #endregion
 }
