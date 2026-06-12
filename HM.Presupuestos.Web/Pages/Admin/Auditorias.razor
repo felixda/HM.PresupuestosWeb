@@ -184,20 +184,25 @@ else
                                 {
                                     <DxChart Data="@_estadisticas.ActividadPorDia"
                                              CssClass="stats-chart">
-                                        <DxChartBarSeries ValueField="@((PuntoTemporal p) => p.Total)"
-                                                          ArgumentField="@((PuntoTemporal p) => p.Fecha)"
+                                        <DxChartBarSeries T="PuntoTemporal"
+                                                          TValue="int"
+                                                          TArgument="DateTime"
+                                                          ValueField="@(p => p.Total)"
+                                                          ArgumentField="@(p => p.Fecha)"
                                                           Name="@ObtenerTexto(TextosApp.Pages.Auditorias.TotalAcciones)" />
                                         <DxChartArgumentAxis>
-                                            <DxChartAxisLabel Format="@ChartElementFormat.FixedPoint(0)" FormatString="dd/MM" />
+                                            <DxChartAxisLabel Format="@ChartElementFormat.MonthAndDay" />
                                         </DxChartArgumentAxis>
                                         <DxChartValueAxis>
-                                            <DxChartAxisLabel Format="@ChartElementFormat.FixedPoint(0)" />
+                                            <DxChartAxisLabel Format="@ChartElementFormat.Decimal()" />
                                         </DxChartValueAxis>
                                         <DxChartLegend Visible="false" />
                                         <DxChartTooltip Enabled="true" Context="tooltipCtx">
-                                            @{ var punto = (PuntoTemporal)tooltipCtx.Point.DataItems.First(); }
+                                            @{
+                                                var point = tooltipCtx.GetCommonPoint<PuntoTemporal, int>(p => p.Total);
+                                            }
                                             <div style="padding:4px 8px">
-                                                <b>@punto.Fecha.ToString("dd/MM/yyyy")</b>: @punto.Total
+                                                <b>@((DateTime)point.Argument).ToString("dd/MM/yyyy")</b>: @point.Value
                                             </div>
                                         </DxChartTooltip>
                                     </DxChart>
