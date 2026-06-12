@@ -191,7 +191,7 @@ else
                                                           ValueField="@(p => p.Total)"
                                                           ArgumentField="@(p => p.Fecha)"
                                                           Name="@ObtenerTexto(TextosApp.Pages.Auditorias.TotalAcciones)" />
-                                        <DxChartArgumentAxis>
+                                        <DxChartArgumentAxis TickInterval="ChartAxisInterval.Days(1)">
                                             <DxChartAxisLabel Format="@ChartElementFormat.MonthAndDay" />
                                         </DxChartArgumentAxis>
                                         <DxChartValueAxis>
