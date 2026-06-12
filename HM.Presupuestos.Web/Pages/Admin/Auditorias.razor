@@ -183,6 +183,7 @@ else
                                 else if (_estadisticas.ActividadPorDia.Count > 0)
                                 {
                                     <DxChart Data="@_estadisticas.ActividadPorDia"
+                                             Height="220px"
                                              CssClass="stats-chart">
                                         <DxChartBarSeries T="PuntoTemporal"
                                                           TValue="int"
@@ -201,9 +202,12 @@ else
                                             @{
                                                 var point = tooltipCtx.GetCommonPoint<PuntoTemporal, int>(p => p.Total);
                                             }
-                                            <div style="padding:4px 8px">
-                                                <b>@((DateTime)point.Argument).ToString("dd/MM/yyyy")</b>: @point.Value
-                                            </div>
+                                            @if (point != null)
+                                            {
+                                                <div style="padding:4px 8px">
+                                                    <b>@((DateTime)point.Argument).ToString("dd/MM/yyyy")</b>: @point.Value
+                                                </div>
+                                            }
                                         </DxChartTooltip>
                                     </DxChart>
                                 }
