@@ -14,6 +14,7 @@ Guías de referencia del proyecto organizadas por área. Cada guía indica qué 
 | Estrategia Git | [git-strategy/SKILL.md](git-strategy/SKILL.md) | — |
 | Repositorios de Infrastructure (Oracle) | [infrastructure/repositories.md](infrastructure/repositories.md) | `repositories-reviewer` |
 | Esquema de base de datos | [database/README.md](database/README.md) | — |
+| Gestión de tareas (Azure DevOps) | [azure-devops/SKILL.md](azure-devops/SKILL.md) | — |
 
 ## Referencias detalladas por área
 

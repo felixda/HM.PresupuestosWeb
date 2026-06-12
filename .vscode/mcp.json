@@ -1,0 +1,14 @@
+{
+  "servers": {
+    "azure-devops": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@tiberriver256/mcp-server-azure-devops"],
+      "env": {
+        "AZURE_DEVOPS_ORG_URL": "https://dev.azure.com/havasit-iberia",
+        "AZURE_DEVOPS_DEFAULT_PROJECT": "ESFNN - España Resto Finanzas",
+        "AZURE_DEVOPS_AUTH_METHOD": "pat"
+      }
+    }
+  }
+}
