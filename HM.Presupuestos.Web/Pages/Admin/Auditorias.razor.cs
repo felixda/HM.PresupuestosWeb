@@ -20,6 +20,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
         private List<Auditoria> ResultadoAuditorias { get; set; } = [];
         private List<CodigoDescripcion> PaginasNavegables { get; set; } = [];
         private int? PaginaSeleccionada { get; set; }
+        private Auditoria? _auditoriaSeleccionada;
+        private bool _popupParametrosVisible;
 
         #endregion
 
@@ -73,6 +75,12 @@ namespace HM.Presupuestos.Web.Pages.Admin
             PaginaSeleccionada = null;
             ResultadoAuditorias = [];
             await InvokeAsync(StateHasChanged);
+        }
+
+        private void AbrirPopupParametros(Auditoria auditoria)
+        {
+            _auditoriaSeleccionada = auditoria;
+            _popupParametrosVisible = true;
         }
 
         #endregion

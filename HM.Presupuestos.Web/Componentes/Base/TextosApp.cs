@@ -854,6 +854,12 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
                 /// <summary>Página</summary>
                 public const string Pagina = "Pages:Auditorias:Pagina:label";
+
+                /// <summary>Parámetros</summary>
+                public const string Parametros = "Pages:Auditorias:Parametros:label";
+
+                /// <summary>Título del popup de parámetros</summary>
+                public const string TituloPopupParametros = "Pages:Auditorias:TituloPopupParametros:label";
             }
 
             #endregion

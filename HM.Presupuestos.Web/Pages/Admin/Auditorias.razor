@@ -44,7 +44,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ListRenderMode="ListRenderMode.Entire"
                                         Value="@TipoAuditoriaSeleccionado"
-                                        ValueChanged="@((int? v) => { TipoAuditoriaSeleccionado = v; if (v != (int)AccionesLog.AccesoAPagina) PaginaSeleccionada = null; })">
+                                        ValueChanged="@((int? v) => { TipoAuditoriaSeleccionado = v; ResultadoAuditorias = []; if (v != (int)AccionesLog.AccesoAPagina) PaginaSeleccionada = null; })">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -130,11 +130,36 @@ else
                                   TextAlignment="GridTextAlignment.Left" />
                 <DxGridDataColumn FieldName="@nameof(Auditoria.Usuario)"
                                   Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario)"
-                                  Width="30%"
+                                  Width="25%"
                                   CaptionAlignment="GridTextAlignment.Left"
                                   TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(Auditoria.Parametros)"
+                                  Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Parametros)"
+                                  Width="5%"
+                                  CaptionAlignment="GridTextAlignment.Center"
+                                  TextAlignment="GridTextAlignment.Center">
+                    <CellDisplayTemplate>
+                        @{
+                            var auditoria = (Auditoria)context.DataItem;
+                        }
+                        <button class="btn-parametros" title="@ObtenerTexto(TextosApp.Pages.Auditorias.TituloPopupParametros)"
+                                @onclick="() => AbrirPopupParametros(auditoria)">
+                            <i class="fa-solid fa-file-code"></i>
+                        </button>
+                    </CellDisplayTemplate>
+                </DxGridDataColumn>
             </Columns>
         </DxGrid>
+
+        <DxPopup Visible="@_popupParametrosVisible"
+                 VisibleChanged="@((bool v) => _popupParametrosVisible = v)"
+                 HeaderText="@ObtenerTexto(TextosApp.Pages.Auditorias.TituloPopupParametros)"
+                 Width="700px"
+                 CloseOnOutsideClick="true">
+            <BodyContentTemplate>
+                <pre class="parametros-pre">@_auditoriaSeleccionada?.Parametros</pre>
+            </BodyContentTemplate>
+        </DxPopup>
 
     </div>
 }

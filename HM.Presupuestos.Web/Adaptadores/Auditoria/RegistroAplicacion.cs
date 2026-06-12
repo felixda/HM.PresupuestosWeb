@@ -70,9 +70,14 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             var urlActual = _rutasNavegacion.ObtenerRutaActual();
             int codigoMenu = _recursosApp.ObtenerCodigoMenuPorUrl(urlActual);
             var accion = AccionesLog.AccesoAPagina.ObtenerDescripcion();
+            var usuario = _sesionUsuario.UsuarioApp?.UsuarioActivo;
 
             string accionConDetalle = $"[{(int)AccionesLog.AccesoAPagina}](RegistrarAccesoAPagina) -> {string.Format(accion.ToString(), tituloPagina)} [{urlActual}] [{codigoMenu}]";
-            await _logAccionesService.Insertar(new LogAccion { Accion = accionConDetalle });
+            string parametros = usuario != null
+                ? $"{{\"Login\":\"{usuario.Login}\",\"Nombre\":\"{usuario.Nombre} {usuario.Apellido1}\"}}"
+                : string.Empty;
+
+            await _logAccionesService.Insertar(new LogAccion { Accion = accionConDetalle, Parametros = parametros });
         }
 
 

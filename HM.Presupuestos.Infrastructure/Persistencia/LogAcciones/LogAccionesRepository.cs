@@ -71,7 +71,8 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                         {
                             Descripcion = QuitarPrefijoAccion(dr.GetString("DES_PROCESO")),
                             FechaInicio = dr.GetDateTime("FECHA_INICIO"),
-                            Usuario = ExtraerUsuario(dr.GetNullableString("PARAMETROS") ?? string.Empty)
+                            Usuario = ExtraerUsuario(dr.GetNullableString("PARAMETROS") ?? string.Empty),
+                            Parametros = dr.GetNullableString("PARAMETROS") ?? string.Empty
                         });
                     }
                 });

@@ -568,6 +568,12 @@
       },
       "Pagina": {
         "label": "Página"
+      },
+      "Parametros": {
+        "label": "Parámetros"
+      },
+      "TituloPopupParametros": {
+        "label": "Parámetros de la acción"
       }
     },
     "AnioDiario": {
