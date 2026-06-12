@@ -6,7 +6,7 @@ La página de Auditorías permite consultar el log de acciones una a una, pero n
 
 - Las fechas de filtro pasan a ser **obligatorias** con valor por defecto = hoy, evitando consultas sin límite temporal.
 - Al pulsar Buscar se cargan simultáneamente el grid de detalle (comportamiento actual) y un nuevo panel de resumen estadístico con métricas agregadas del mismo período y tipo.
-- El panel de resumen es colapsable y se sitúa debajo del grid.
+- El panel de resumen es colapsable y se sitúa entre los filtros y el grid.
 - Si el rango de fechas supera 90 días, las estadísticas se muestran sin gráfica de tendencia diaria y con un aviso informativo.
 - Se utilizan `DxSparkline` (tipo Bar) para la tendencia temporal y `DxProgressBar` para los rankings top-N, ambos ya incluidos en `DevExpress.Blazor` v24.2.5.
 

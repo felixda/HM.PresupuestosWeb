@@ -1,5 +1,5 @@
 ### Requirement: Ver parámetros de una entrada de auditoría
-El sistema SHALL mostrar el contenido del campo `Parametros` de una entrada de auditoría al pulsar un icono en el grid de la página de Auditorías, mediante un popup modal con el JSON formateado y con scroll.
+El sistema SHALL mostrar el contenido del campo `Parametros` de una entrada de auditoría al pulsar un icono en el grid de la página de Auditorías, mediante un popup modal con el JSON formateado y con scroll. La búsqueda que carga el grid SHALL requerir las fechas FechaInicio y FechaFin como campos obligatorios.
 
 #### Scenario: Columna de parámetros visible en el grid
 - **WHEN** el administrador accede a la página de Auditorías y realiza una búsqueda
@@ -20,3 +20,7 @@ El sistema SHALL mostrar el contenido del campo `Parametros` de una entrada de a
 #### Scenario: Acceso restringido
 - **WHEN** un usuario sin permiso de administrador intenta acceder a la página
 - **THEN** el sistema muestra la pantalla de acceso denegado (comportamiento heredado, sin cambio)
+
+#### Scenario: Búsqueda sin fecha no es posible
+- **WHEN** el administrador elimina FechaInicio o FechaFin e intenta pulsar Buscar
+- **THEN** el sistema muestra un aviso indicando que las fechas son obligatorias y no ejecuta la consulta
