@@ -71,11 +71,8 @@ namespace HM.Presupuestos.Web.Pages.Admin
             {
                 AccionesLog tipo = (AccionesLog)TipoAuditoriaSeleccionado.Value;
                 var fechaFinInclusiva = FechaFin.Value.Date.AddDays(1);
-                var taskAuditorias = LogAccionesService.ObtenerAuditorias(tipo, FechaInicio, fechaFinInclusiva, PaginaSeleccionada);
-                var taskEstadisticas = LogAccionesService.ObtenerEstadisticas(tipo, FechaInicio.Value, FechaFin.Value, PaginaSeleccionada);
-                await Task.WhenAll(taskAuditorias, taskEstadisticas);
-                ResultadoAuditorias = taskAuditorias.Result;
-                _estadisticas = taskEstadisticas.Result;
+                ResultadoAuditorias = await LogAccionesService.ObtenerAuditorias(tipo, FechaInicio, fechaFinInclusiva, PaginaSeleccionada);
+                _estadisticas = await LogAccionesService.ObtenerEstadisticas(tipo, FechaInicio.Value, FechaFin.Value, PaginaSeleccionada);
             });
         }
 
