@@ -64,6 +64,29 @@ La estimación por tarea es libre, pero la suma de todas las tasks debe ser cohe
 
 ---
 
+## Vinculación a DevOps al iniciar un cambio OpenSpec
+
+Cuando se invoca `/opsx:explore` o `/opsx:propose` **sin proporcionar el ID de un US o Task de Azure DevOps**, preguntar explícitamente al usuario:
+
+> ¿Este cambio se va a asociar a un User Story de Azure DevOps?
+
+### Si la respuesta es **NO**
+
+El ciclo se ejecuta en **modo sin vinculación DevOps**:
+
+- **No** se crean Tasks en Azure DevOps.
+- **No** se incluye `#AB<ID>` en los mensajes de commit.
+- **No** se añaden comentarios con links a commits en Tasks.
+- **No** se cierra ningún US ni Task al finalizar.
+- La rama git sigue el convenio estándar `feat/<descripcion>` desde `develop` (no `feat/us-<ID>-...` desde `master`).
+- El ciclo OpenSpec (propose → apply → archive) se ejecuta igualmente.
+
+### Si la respuesta es **SÍ**
+
+Solicitar el ID del US y continuar con el flujo completo descrito a continuación.
+
+---
+
 ## Flujo de trabajo: US de DevOps → OpenSpec → Rama git
 
 Cuando el punto de partida es un **User Story en Azure DevOps**, seguir este proceso de forma ordenada:
@@ -181,7 +204,7 @@ git checkout -b feat/us-<ID>-<desc> (desde master)
 /opsx:apply    →  design.md + specs/ + tasks.md
        │
        ▼
-Crear Tasks en DevOps como hijas del US
+Crear Tasks en Master como hijas del US
 (parentId + OriginalEstimate por tarea)
        │
        ▼
