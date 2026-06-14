@@ -17,6 +17,7 @@ namespace HM.Presupuestos.Web.Layout
         [Inject] private IGestorIdioma GestorIdioma { get; set; } = default!;
         [Inject] private IRutasNavegacion RutasNavegacion { get; set; } = default!;
         [Inject] private IRecursosApp RecursosApp { get; set; } = default!;
+        [Inject] private IRegistroSesionesActivas RegistroSesionesActivas { get; set; } = default!;
 
         #endregion
 
