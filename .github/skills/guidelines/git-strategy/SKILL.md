@@ -14,11 +14,17 @@ Feature branching workflow with conventional commits and TDD-driven commit disci
 
 All work happens on feature branches created from `develop`.
 
+**Excepción — User Stories de Azure DevOps:** cuando el punto de partida es un US en Azure DevOps, la rama se crea desde `master` con el convenio `feat/us-<ID>-<descripcion>`. Ver el flujo completo en [guidelines/azure-devops/SKILL.md](../azure-devops/SKILL.md).
+
 ```
 develop
  └── feat/add-user-registration
  └── fix/login-validation-error
  └── refactor/extract-payment-module
+
+master
+ └── feat/us-1234-auditoria-estadisticas   ← US de DevOps
+ └── feat/us-5678-filtro-condiciones       ← US de DevOps
 ```
 
 ### Branch Naming
