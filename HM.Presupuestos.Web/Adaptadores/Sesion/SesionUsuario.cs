@@ -25,7 +25,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
         private readonly ILogAccionesService _registroAcciones;
         private readonly IJwt _jwt;
         private readonly IValidadorMenusUsuario _validadorMenusUsuario;
- 
+        private readonly IRegistroSesionesActivas _registroSesionesActivas;
+
 
         public event Func<Task>? UsuarioCargado;
 
@@ -40,7 +41,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             AuthenticationStateProvider authStateProvider,
             ILogAccionesService registroAcciones,
             ILogger<SesionUsuario> logger,
-            IValidadorMenusUsuario validadorMenusUsuario)
+            IValidadorMenusUsuario validadorMenusUsuario,
+            IRegistroSesionesActivas registroSesionesActivas)
         {
             _sesionUsuario = sesionUsuario;
             _registroAcciones = registroAcciones;
@@ -50,6 +52,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             _jwt = jwt;
             _configuracion = configuracion;
             _validadorMenusUsuario = validadorMenusUsuario;
+            _registroSesionesActivas = registroSesionesActivas;
         }
 
         public async Task InicializarUsuarioAsync()
@@ -180,6 +183,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                 UsuarioApp ??= new ContextoUsuario();
                 UsuarioApp!.AsignarUsuarioAutenticado(usuario);
 
+                _registroSesionesActivas.Registrar(usuario.Login, DateTime.UtcNow);
+
                 return usuario;
             }
             catch (Exception ex)
@@ -282,6 +287,17 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                 IdPadre = (int)CodigosMenu.Administracion,
                 NombreMenu = "Auditorías",
                 IndOrdenacion = 99
+            });
+            // FIN TODO-TEMPORAL
+
+            // TODO-TEMPORAL: Añadir menú 27 (Usuarios conectados) como hijo de Administración (20) hasta que se configure en HM.CORE.
+            //                ELIMINAR este bloque cuando el menú esté dado de alta en el core.
+            usuario.Menus.Add(new Menu
+            {
+                Id = (int)CodigosMenu.UsuariosConectados,
+                IdPadre = (int)CodigosMenu.Administracion,
+                NombreMenu = "Usuarios conectados",
+                IndOrdenacion = 100
             });
             // FIN TODO-TEMPORAL
 
