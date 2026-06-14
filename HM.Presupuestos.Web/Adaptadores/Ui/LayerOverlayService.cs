@@ -2,57 +2,57 @@
 namespace HM.Presupuestos.Web.Adaptadores.Ui
 {
     /// <summary>
-    /// Service to control a UI layer overlay (e.g., loading or busy indicator) with reference counting and optional auto-stop.
-    /// Consumers call <see cref="Start"/> to show and <see cref="Stop"/> to hide; multiple overlapping operations are handled safely.
+    /// Servicio para controlar una capa de overlay en la UI (p.ej. indicador de carga o de operación en curso) con conteo de referencias y parada automática opcional.
+    /// Los consumidores llaman a <see cref="Start"/> para mostrar el overlay y a <see cref="Stop"/> para ocultarlo; múltiples operaciones solapadas se gestionan de forma segura.
     /// </summary>
     public interface ILayerOverlayService
     {
         /// <summary>
-        /// Default auto-stop timeout (in seconds) applied when not explicitly provided.
+        /// Tiempo máximo por defecto (en segundos) tras el que se detiene el overlay automáticamente cuando no se especifica explícitamente.
         /// </summary>
         public const int _DEFAULT_AUTOSTOP_SECONDS = 20;
 
         /// <summary>
-        /// Delay (in seconds) before firing the final <see cref="OnChange"/> event with a false state to allow UI fade-out/transition.
+        /// Retardo (en segundos) antes de disparar el evento <see cref="OnChange"/> final con estado false, para permitir animaciones de cierre en la UI.
         /// </summary>
         public const decimal _DELAY_STOP_SECONDS = 0.5M;
 
         /// <summary>
-        /// Activates (or keeps active) the overlay. Increments an internal counter.
-        /// The overlay becomes visible immediately and remains so until:
-        ///  - The counter is decremented back to zero via matching <see cref="Stop"/> calls, or
-        ///  - The optional auto-stop timeout elapses (only if this invocation transitions the counter 0 -> 1 and timeout &gt; 0).
+        /// Activa (o mantiene activo) el overlay. Incrementa un contador interno.
+        /// El overlay se hace visible inmediatamente y permanece así hasta:
+        ///  - Que el contador vuelva a cero mediante las llamadas correspondientes a <see cref="Stop"/>, o
+        ///  - Que expire el timeout de parada automática (solo si esta invocación transiciona el contador de 0 a 1 y el timeout es &gt; 0).
         /// </summary>
         /// <param name="message">
-        /// Optional message to display. If null, the existing message (if any) is preserved; if non-null, it replaces the current message.
+        /// Mensaje opcional a mostrar. Si es null, se conserva el mensaje previo (si lo hay); si no es null, reemplaza el mensaje actual.
         /// </param>
         /// <param name="secondsAutoStopAfter">
-        /// Auto-stop timeout in seconds. Use 0 or negative to disable auto-stop for this activation.
+        /// Timeout en segundos tras el que se detiene el overlay automáticamente. Usar 0 o negativo para desactivar la parada automática en esta activación.
         /// </param>
         void Start(string? message = null, int secondsAutoStopAfter = _DEFAULT_AUTOSTOP_SECONDS);
 
         /// <summary>
-        /// Decrements the internal counter. When it reaches zero:
-        ///  - Cancels any pending auto-stop timer.
-        ///  - Clears the message.
-        ///  - After a short delay (<see cref="_DELAY_STOP_SECONDS"/>) raises <see cref="OnChange"/> with (false, null).
-        /// If the counter remains above zero, the overlay stays active and an updated <see cref="OnChange"/> (true, message) is fired.
+        /// Decrementa el contador interno. Cuando llega a cero:
+        ///  - Cancela cualquier timer de parada automática pendiente.
+        ///  - Limpia el mensaje.
+        ///  - Tras un breve retardo (<see cref="_DELAY_STOP_SECONDS"/>) dispara <see cref="OnChange"/> con (false, null).
+        /// Si el contador sigue por encima de cero, el overlay permanece activo y se dispara <see cref="OnChange"/> actualizado (true, mensaje).
         /// </summary>
         void Stop();
 
         /// <summary>
-        /// Creates a scope that calls <see cref="Start"/> on construction and <see cref="Stop"/> on dispose.
-        /// Intended for use with <c>using</c> to guarantee release in success/error paths.
+        /// Crea un ámbito que llama a <see cref="Start"/> al construirse y a <see cref="Stop"/> al liberarse.
+        /// Pensado para usarse con <c>using</c> y garantizar la liberación tanto en el camino éxito como en error.
         /// </summary>
-        /// <param name="message">Optional message; see <see cref="Start(string?, int)"/>.</param>
-        /// <param name="secondsAutoStopAfter">Auto-stop timeout; see <see cref="Start(string?, int)"/>.</param>
-        /// <returns>An <see cref="IDisposable"/> that will stop the overlay when disposed.</returns>
+        /// <param name="message">Mensaje opcional; ver <see cref="Start(string?, int)"/>.</param>
+        /// <param name="secondsAutoStopAfter">Timeout de parada automática; ver <see cref="Start(string?, int)"/>.</param>
+        /// <returns>Un <see cref="IDisposable"/> que detendrá el overlay al liberarse.</returns>
         IDisposable Scope(string? message = null, int secondsAutoStopAfter = _DEFAULT_AUTOSTOP_SECONDS);
 
         /// <summary>
-        /// Raised whenever the overlay visibility or message changes.
-        /// First parameter: true = visible, false = hidden.
-        /// Second parameter: active message (null when hidden).
+        /// Se dispara cada vez que cambia la visibilidad o el mensaje del overlay.
+        /// Primer parámetro: true = visible, false = oculto.
+        /// Segundo parámetro: mensaje activo (null cuando está oculto).
         /// </summary>
         event Action<bool, string?>? OnChange;
     }
@@ -60,42 +60,42 @@ namespace HM.Presupuestos.Web.Adaptadores.Ui
     public class LayerOverlayService : ILayerOverlayService
     {
         private int _counter;
-        private string? _message;
+        private string? _mensaje;
         private CancellationTokenSource? _cts;
         private Task? _autoStopTask;
 
         public event Action<bool, string?>? OnChange;
 
         /// <summary>
-        /// Activates the overlay and optionally sets a message.
-        /// Each call increments an internal counter; the overlay stays active until all corresponding
-        /// <see cref="Stop"/> calls are made or the optional auto-stop timeout elapses.
+        /// Activa el overlay y opcionalmente establece un mensaje.
+        /// Cada llamada incrementa un contador interno; el overlay permanece activo hasta que se realicen todas las llamadas
+        /// correspondientes a <see cref="Stop"/> o expire el timeout de parada automática.
         /// </summary>
         /// <param name="message">
-        /// Optional message to display. If null, any previously set message is retained.
-        /// Passing a non-null value replaces the current message.
+        /// Mensaje opcional a mostrar. Si es null, se conserva cualquier mensaje previo.
+        /// Pasar un valor no nulo reemplaza el mensaje actual.
         /// </param>
         /// <param name="secondsAutoStopAfter">
-        /// Timeout (in seconds) after which the overlay auto-stops, applied only when this call
-        /// transitions the internal counter from 0 to 1. Use a value = 0 to disable auto-stop.
+        /// Timeout en segundos tras el que el overlay se detiene automáticamente, aplicado solo cuando esta llamada
+        /// transiciona el contador interno de 0 a 1. Usar valor 0 para desactivar la parada automática.
         /// </param>
         /// <remarks>
-        /// Thread-safe: uses <see cref="Interlocked.Increment(ref int)"/> for the active counter.
-        /// Only the first activation (counter == 1) schedules an auto-stop task; subsequent calls
-        /// extend visibility but do not reschedule the timer.
-        /// If a new first activation occurs before a prior auto-stop fires, the previous timer is canceled.
-        /// The <see cref="OnChange"/> event is raised immediately after activation with (true, currentMessage).
-        /// On successful auto-stop or final <see cref="Stop"/> it raises (false, null) after a short delay
-        /// defined by <see cref="ILayerOverlayService._DELAY_STOP_SECONDS"/>.
+        /// Thread-safe: usa <see cref="Interlocked.Increment(ref int)"/> para el contador activo.
+        /// Solo la primera activación (contador == 1) programa una tarea de parada automática; las llamadas posteriores
+        /// prolongan la visibilidad pero no reprograman el timer.
+        /// Si se produce una nueva primera activación antes de que se dispare una parada automática previa, el timer anterior se cancela.
+        /// El evento <see cref="OnChange"/> se dispara inmediatamente tras la activación con (true, mensajeActual).
+        /// En la parada automática exitosa o en el <see cref="Stop"/> final, dispara (false, null) tras un breve retardo
+        /// definido por <see cref="ILayerOverlayService._DELAY_STOP_SECONDS"/>.
         /// </remarks>
         public void Start(string? message = null, int secondsAutoStopAfter = ILayerOverlayService._DEFAULT_AUTOSTOP_SECONDS)
         {
             var newValue = Interlocked.Increment(ref _counter);
 
             if (message is not null)
-                _message = message;
+                _mensaje = message;
 
-            OnChange?.Invoke(true, _message);
+            OnChange?.Invoke(true, _mensaje);
 
             if (newValue == 1 && secondsAutoStopAfter > 0)
             {
@@ -124,15 +124,15 @@ namespace HM.Presupuestos.Web.Adaptadores.Ui
         }
 
         /// <summary>
-        /// Decrements the active operations counter and potentially hides the overlay.
-        /// Behavior:
-        ///  - If the counter after decrement is &gt; 0, overlay remains active and notifies with current message.
-        ///  - If the counter reaches 0 or below:
-        ///      * Counter is reset to 0 (defensive).
-        ///      * Pending auto-stop timer (if any) is canceled and disposed.
-        ///      * Message cleared.
-        ///      * A short delay (<see cref="ILayerOverlayService._DELAY_STOP_SECONDS"/>) is awaited (if configured) before raising (false, null).
-        /// Thread-safe via <see cref="Interlocked.Decrement(ref int)"/>.
+        /// Decrementa el contador de operaciones activas y potencialmente oculta el overlay.
+        /// Comportamiento:
+        ///  - Si el contador tras el decremento es &gt; 0, el overlay permanece activo y notifica con el mensaje actual.
+        ///  - Si el contador llega a 0 o menos:
+        ///      * El contador se resetea a 0 (defensa).
+        ///      * El timer de parada automática pendiente (si lo hay) se cancela y libera.
+        ///      * El mensaje se limpia.
+        ///      * Se espera un breve retardo (<see cref="ILayerOverlayService._DELAY_STOP_SECONDS"/>) antes de disparar (false, null).
+        /// Thread-safe mediante <see cref="Interlocked.Decrement(ref int)"/>.
         /// </summary>
         public void Stop()
         {
@@ -150,7 +150,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Ui
                 }
                 _autoStopTask = null;
 
-                _message = null;
+                _mensaje = null;
                 _autoStopTask = Task.Run(async () =>
                 {
                     try
@@ -169,24 +169,24 @@ namespace HM.Presupuestos.Web.Adaptadores.Ui
             }
             else
             {
-                OnChange?.Invoke(true, _message);
+                OnChange?.Invoke(true, _mensaje);
             }
         }
 
         /// <summary>
-        /// Returns an <see cref="IDisposable"/> scope that calls <see cref="Start"/> immediately and <see cref="Stop"/> upon disposal.
-        /// Typical usage:
+        /// Devuelve un ámbito <see cref="IDisposable"/> que llama a <see cref="Start"/> inmediatamente y a <see cref="Stop"/> al liberarse.
+        /// Uso típico:
         /// <code>
-        /// using (overlay.Scope("Loading data"))
+        /// using (overlay.Scope("Cargando datos"))
         /// {
-        ///     await LoadAsync();
+        ///     await CargarAsync();
         /// }
         /// </code>
-        /// Guarantees overlay release even if an exception occurs.
+        /// Garantiza la liberación del overlay incluso si se produce una excepción.
         /// </summary>
-        /// <param name="message">Optional message to display for the duration of the scope.</param>
-        /// <param name="secondsAutoStopAfter">Auto-stop timeout; see <see cref="Start(string?, int)"/>.</param>
-        /// <returns>Disposable scope managing overlay lifetime.</returns>
+        /// <param name="message">Mensaje opcional a mostrar durante el ámbito.</param>
+        /// <param name="secondsAutoStopAfter">Timeout de parada automática; ver <see cref="Start(string?, int)"/>.</param>
+        /// <returns>Ámbito desechable que gestiona el ciclo de vida del overlay.</returns>
         public IDisposable Scope(string? message = null, int secondsAutoStopAfter = ILayerOverlayService._DEFAULT_AUTOSTOP_SECONDS)
             => new LoadingScope(this, message, secondsAutoStopAfter);
 

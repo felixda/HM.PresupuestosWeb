@@ -5,7 +5,6 @@ using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Puertos;
 using System.Data;
-using System.Text;
 
 namespace HM.Presupuestos.Infrastructure.Persistencia
 {
@@ -21,27 +20,22 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
-                query.AppendLine("SELECT E.COD_ESTADO_VERSION, E.BITAND, E.DES_ESTADO_VERSION, E.IND_MOSTRAR, E.IND_VERSION_UNICA, E.ORDEN, ");
-                query.AppendLine("EI.COD_ESTADO_VERSION_IDIOMA,  EI.COD_IDIOMA, EI.DES_ESTADO_VERSION_IDIOMA, EI.DES_ESTADO_VERSION_ABRV_IDIOMA, EI.LEYENDA");
-                query.AppendLine("FROM PPT_ESTADOS_VERSIONES E, PPT_ESTADOS_VERSIONES_IDIOMAS EI");
-                query.AppendLine("WHERE E.COD_ESTADO_VERSION =  EI.COD_ESTADO_VERSION (+) ");
+                string query = $@"
+                    SELECT E.COD_ESTADO_VERSION, E.BITAND, E.DES_ESTADO_VERSION, E.IND_MOSTRAR, E.IND_VERSION_UNICA, E.ORDEN,
+                           EI.COD_ESTADO_VERSION_IDIOMA, EI.COD_IDIOMA, EI.DES_ESTADO_VERSION_IDIOMA, EI.DES_ESTADO_VERSION_ABRV_IDIOMA, EI.LEYENDA
+                    FROM PPT_ESTADOS_VERSIONES E, PPT_ESTADOS_VERSIONES_IDIOMAS EI
+                    WHERE E.COD_ESTADO_VERSION = EI.COD_ESTADO_VERSION (+)
+                    {(!string.IsNullOrEmpty(descripcion) ? "AND UPPER(E.DES_ESTADO_VERSION) LIKE UPPER('%' || :Descripcion || '%')" : "")}
+                    ORDER BY E.ORDEN, E.COD_ESTADO_VERSION";
 
-                if (!string.IsNullOrEmpty(descripcion))
-                {
-                    query.Append("  AND UPPER (E.DES_ESTADO_VERSION) LIKE UPPER ('%' || :Descripcion || '%') ");
-                }
-
-                query.AppendLine(" ORDER BY E.ORDEN, E.COD_ESTADO_VERSION");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 if (!string.IsNullOrEmpty(descripcion))
                 {
                     dah.AddParameter("Descripcion", descripcion);
                 }
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -99,11 +93,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("DELETE FROM PPT_ESTADOS_VERSIONES ");
-                query.Append("WHERE COD_ESTADO_VERSION = :CodigoEstadoVersion");
+                const string query = @"
+                    DELETE FROM PPT_ESTADOS_VERSIONES
+                    WHERE COD_ESTADO_VERSION = :CodigoEstadoVersion";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("codigoEstadoVersion", codigoIndicador);
 
@@ -119,11 +113,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try 
             { 
-                StringBuilder query = new();
-                query.Append("DELETE FROM PPT_ESTADOS_VERSIONES_IDIOMAS ");
-                query.Append("WHERE COD_ESTADO_VERSION = :CodigoEstadoVersion");
+                const string query = @"
+                    DELETE FROM PPT_ESTADOS_VERSIONES_IDIOMAS
+                    WHERE COD_ESTADO_VERSION = :CodigoEstadoVersion";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("codigoEstadoVersion", codigoIndicador);
 
@@ -141,18 +135,18 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             bool result = false;
             try
             {
-                StringBuilder query = new();
-                query.Append("SELECT COUNT (*) ");
-                query.Append(" FROM PPT_ESTADOS_VERSIONES ");
-                query.Append(" WHERE UPPER(DES_ESTADO_VERSION) = :Descripcion");
-                query.Append(" AND COD_ESTADO_VERSION != :Codigo ");
+                const string query = @"
+                    SELECT COUNT(*)
+                    FROM PPT_ESTADOS_VERSIONES
+                    WHERE UPPER(DES_ESTADO_VERSION) = :Descripcion
+                      AND COD_ESTADO_VERSION != :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("Descripcion", indicador.Descripcion.ToUpper());
                 dah.AddParameter("Codigo", indicador.Codigo ?? -1);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -170,18 +164,18 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             bool result = false;
             try
             {
-                StringBuilder query = new();
-                query.Append("SELECT COUNT (*) ");
-                query.Append(" FROM PPT_ESTADOS_VERSIONES ");
-                query.Append(" WHERE ORDEN = :Orden");
-                query.Append(" AND COD_ESTADO_VERSION != :Codigo ");
+                const string query = @"
+                    SELECT COUNT(*)
+                    FROM PPT_ESTADOS_VERSIONES
+                    WHERE ORDEN = :Orden
+                      AND COD_ESTADO_VERSION != :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("Orden", indicador.Orden);
                 dah.AddParameter("Codigo", indicador.Codigo ?? -1);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -198,18 +192,18 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             bool result = false;
             try
             {
-                StringBuilder query = new();
-                query.Append("SELECT COUNT (*) ");
-                query.Append(" FROM PPT_ESTADOS_VERSIONES ");
-                query.Append(" WHERE BITAND = :BitAnd");
-                query.Append(" AND COD_ESTADO_VERSION != :Codigo ");
+                const string query = @"
+                    SELECT COUNT(*)
+                    FROM PPT_ESTADOS_VERSIONES
+                    WHERE BITAND = :BitAnd
+                      AND COD_ESTADO_VERSION != :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("BitAnd", indicador.BitAnd);
                 dah.AddParameter("Codigo", indicador.Codigo ?? -1);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);
@@ -227,21 +221,12 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
-                query.Append("INSERT INTO PPT_ESTADOS_VERSIONES (DES_ESTADO_VERSION, ");
-                query.Append("                   BITAND, ");
-                query.Append("                   ORDEN, ");
-                query.Append("                   IND_MOSTRAR, ");
-                query.Append("                   IND_VERSION_UNICA) ");
-                query.Append("     VALUES (:Descripcion, ");
-                query.Append("             :Bitand, ");
-                query.Append("             :Orden, ");
-                query.Append("             :IndMostrar,");
-                query.Append("             :IndVersionUnica) ");
-                query.Append("    RETURNING COD_ESTADO_VERSION ");
-                query.Append("       INTO :Codigo ");
+                const string query = @"
+                    INSERT INTO PPT_ESTADOS_VERSIONES (DES_ESTADO_VERSION, BITAND, ORDEN, IND_MOSTRAR, IND_VERSION_UNICA)
+                    VALUES (:Descripcion, :Bitand, :Orden, :IndMostrar, :IndVersionUnica)
+                    RETURNING COD_ESTADO_VERSION INTO :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("Descripcion", indicador.Descripcion);
                 dah.AddParameter("Bitand", indicador.BitAnd);
@@ -253,7 +238,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
+                // Obtener el valor del parÃ¡metro de salida
                 indicador.Codigo = Convert.ToInt32(dah.Comando.Parameters["Codigo"].Value);
                 result = indicador.Codigo.Value;
             }
@@ -268,16 +253,16 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("UPDATE PPT_ESTADOS_VERSIONES ");
-                query.Append("   SET DES_ESTADO_VERSION = :Descripcion, ");
-                query.Append("       BITAND = :Bitand, ");
-                query.Append("       ORDEN = :Orden, ");
-                query.Append("       IND_MOSTRAR = :IndMostrar, ");
-                query.Append("       IND_VERSION_UNICA = :IndVersionUnica ");
-                query.Append(" WHERE COD_ESTADO_VERSION = :Codigo ");
+                const string query = @"
+                    UPDATE PPT_ESTADOS_VERSIONES
+                    SET DES_ESTADO_VERSION = :Descripcion,
+                        BITAND = :Bitand,
+                        ORDEN = :Orden,
+                        IND_MOSTRAR = :IndMostrar,
+                        IND_VERSION_UNICA = :IndVersionUnica
+                    WHERE COD_ESTADO_VERSION = :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("Descripcion", indicador.Descripcion);
                 dah.AddParameter("Bitand", indicador.BitAnd);
@@ -298,19 +283,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("INSERT INTO PPT_ESTADOS_VERSIONES_IDIOMAS (COD_ESTADO_VERSION, ");
-                query.Append("                   COD_IDIOMA, ");
-                query.Append("                   DES_ESTADO_VERSION_IDIOMA, ");
-                query.Append("                   DES_ESTADO_VERSION_ABRV_IDIOMA, LEYENDA) ");
-                query.Append("     VALUES (:CodigoEstadoVersion, ");
-                query.Append("             :CodigoIdioma, ");
-                query.Append("             :Descripcion, ");
-                query.Append("             :DescripcionAbreviada, :Leyenda)");
-                query.Append("    RETURNING COD_ESTADO_VERSION_IDIOMA ");
-                query.Append("       INTO :Codigo ");
+                const string query = @"
+                    INSERT INTO PPT_ESTADOS_VERSIONES_IDIOMAS (
+                        COD_ESTADO_VERSION, COD_IDIOMA, DES_ESTADO_VERSION_IDIOMA, DES_ESTADO_VERSION_ABRV_IDIOMA, LEYENDA)
+                    VALUES (:CodigoEstadoVersion, :CodigoIdioma, :Descripcion, :DescripcionAbreviada, :Leyenda)
+                    RETURNING COD_ESTADO_VERSION_IDIOMA INTO :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
 
                 dah.AddParameter("CodigoEstadoVersion", idiomaIndicador.CodigoIndicador);
@@ -323,7 +302,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
+                // Obtener el valor del parÃ¡metro de salida
                 idiomaIndicador.Codigo = Convert.ToInt32(dah.Comando.Parameters["Codigo"].Value);
             }
             catch (Exception ex)
@@ -337,16 +316,15 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("UPDATE PPT_ESTADOS_VERSIONES_IDIOMAS ");
-                query.Append("   SET COD_IDIOMA = :CodigoIdioma, ");
-                query.Append("       DES_ESTADO_VERSION_IDIOMA = :Descripcion, ");
-                query.Append("       DES_ESTADO_VERSION_ABRV_IDIOMA = :DescripcionAbreviada ,");
-                query.Append("       LEYENDA = :Leyenda ");
-                query.Append(" WHERE COD_ESTADO_VERSION_IDIOMA = :Codigo ");
+                const string query = @"
+                    UPDATE PPT_ESTADOS_VERSIONES_IDIOMAS
+                    SET COD_IDIOMA = :CodigoIdioma,
+                        DES_ESTADO_VERSION_IDIOMA = :Descripcion,
+                        DES_ESTADO_VERSION_ABRV_IDIOMA = :DescripcionAbreviada,
+                        LEYENDA = :Leyenda
+                    WHERE COD_ESTADO_VERSION_IDIOMA = :Codigo";
 
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("CodigoIdioma", idiomaIndicador.CodigoIdioma);
                 dah.AddParameter("Descripcion", idiomaIndicador.Descripcion);
@@ -367,11 +345,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("DELETE FROM PPT_ESTADOS_VERSIONES_IDIOMAS ");
-                query.Append("WHERE COD_ESTADO_VERSION_IDIOMA = :Codigo ");
+                const string query = @"
+                    DELETE FROM PPT_ESTADOS_VERSIONES_IDIOMAS
+                    WHERE COD_ESTADO_VERSION_IDIOMA = :Codigo";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("Codigo", codigo);
 
@@ -389,13 +367,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             int resultado = -1;
             try
             {
-                StringBuilder query = new();
-                query.Append("SELECT MAX(BITAND) BITAND ");
-                query.Append(" FROM PPT_ESTADOS_VERSIONES ");
+                const string query = @"
+                    SELECT MAX(BITAND) BITAND
+                    FROM PPT_ESTADOS_VERSIONES";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -420,13 +398,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             int resultado = -1;
             try
             {
-                StringBuilder query = new();
-                query.Append("SELECT MAX(ORDEN) ORDEN ");
-                query.Append(" FROM PPT_ESTADOS_VERSIONES ");
+                const string query = @"
+                    SELECT MAX(ORDEN) ORDEN
+                    FROM PPT_ESTADOS_VERSIONES";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -452,15 +430,15 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new StringBuilder();
-                query.AppendLine("SELECT BITAND ");
-                query.AppendLine("FROM PPT_ESTADOS_VERSIONES ");
-                query.AppendLine(" WHERE COD_ESTADO_VERSION = :CodigoIndicador ");
+                const string query = @"
+                    SELECT BITAND
+                    FROM PPT_ESTADOS_VERSIONES
+                    WHERE COD_ESTADO_VERSION = :CodigoIndicador";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("CodigoIndicador", codigoIndicador);
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -491,12 +469,12 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("UPDATE PPT_VERSIONES ");
-                query.Append("   SET IND_ESTADO_VERSION = :Estado ");
-                query.Append(" WHERE COD_VERSION = :CodigoVersion ");
+                const string query = @"
+                    UPDATE PPT_VERSIONES
+                    SET IND_ESTADO_VERSION = :Estado
+                    WHERE COD_VERSION = :CodigoVersion";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
 
                 dah.AddParameter("Estado", bitAnd);
@@ -511,7 +489,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             }
         }
 
-        public ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
+        public new ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
 
     }
 }

@@ -1,4 +1,4 @@
-﻿
+
 
 namespace HM.Presupuestos.Domain.Entidades
 {
@@ -8,6 +8,6 @@ namespace HM.Presupuestos.Domain.Entidades
 
         public string Descripcion { get; set; } = string.Empty;
 
-        public string Iso { get; set; } = string.Empty; //es -> Español, en -> Ingles, pt ->Portugal
+        public string Iso { get; set; } = string.Empty; //es -> EspaÃ±ol, en -> Ingles, pt ->Portugal
     }
 }

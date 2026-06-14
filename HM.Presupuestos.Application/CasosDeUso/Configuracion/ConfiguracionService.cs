@@ -12,14 +12,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public async Task<CodigoDescripcion> ObtenerAnioDiario()
         {
-            logger.Trace($"Llamando método ObtenerAnioDiario");
+            logger.Trace($"Llamando mÃ©todo ObtenerAnioDiario");
 
             return await configuracionRepository.ObtenerAnioDiario();
         }
 
         public async Task ActualizarAnioDiario(int anio)
         {
-            logger.Trace($"Llamando método ActualizarAnioDiario");
+            logger.Trace($"Llamando mÃ©todo ActualizarAnioDiario");
             await configuracionRepository.ActualizarAnioDiario(anio);
         }
 

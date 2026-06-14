@@ -1,25 +1,25 @@
-@page "/gestion/importacion-condiciones"
+﻿@page "/gestion/importacion-condiciones"
 
-@using HM.Presupuestos.Application.CasosDeUso
-@using HM.Presupuestos.Domain.Entidades
-@using HM.Core.Comun.v6.Seguridad.Interfaces
-@using HM.Presupuestos.Domain.Compartido
-@using HM.Presupuestos.Web.Adaptadores
 @using static HM.Presupuestos.Application.CasosDeUso.VersionesService
-@using HM.Presupuestos.Web.Componentes.Base
 @using Version = HM.Presupuestos.Domain.Entidades.Version
-@using DevExpress.Blazor
 
-@inherits Context
+@inherits ContextProtegido
 
-@attribute [StreamRendering(true)]
 @attribute [Authorize]
 
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
 {
-     <PageTitle>@PageTitle</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.ImportacionCondiciones" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+    @* Silencio mientras carga *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
+{
+     <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.ImportacionCondiciones" Titulo="@TituloPagina" TextoToolTipAyuda="@TextoToolTipAyuda" />
 
     <div class="layoutContainer">
         @* FILTER *@
@@ -28,7 +28,7 @@
         <DxFormLayout>
             <DxFormLayoutGroup Visible="true"
             ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
-                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
             ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
             AnimationType="LayoutAnimationType.Slide">
                 <Items>
@@ -36,21 +36,21 @@
                                       CaptionPosition="CaptionPosition.Vertical"
                                       Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Network)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Network)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                          <Template>
                             <DxDropDownBox @bind-Value="@NetworkSeleccionados"
                                            QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
                                                 arg,
                                                 x => x.Descripcion,
-                                                ObtenerTexto(AppResources.Common.Todos)
+                                                ObtenerTexto(TextosApp.Common.Todos)
                                             ))"
                                            DropDownWidthMode="DropDownWidthMode.EditorWidth"
                                            InputId="dropDownBoxNetwork"
                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                           NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                                           NullText="@ObtenerTexto(TextosApp.Common.Todos)">
                                 <DropDownBodyTemplate>
-                                    <DxListBox Data="@_networks"
+                                    <DxListBox Data="@Networks"
                                                TData="CodigoDescripcion"
                                                TValue="CodigoDescripcion"
                                                Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
@@ -69,27 +69,27 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="5" ColSpanXl="5" ColSpanXxl="5"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.GrupoClientes)</span>
+                            <span>@ObtenerTexto(TextosApp.Common.GrupoClientes)</span>
                         </CaptionTemplate>
                         <Template>
-                            <DxDropDownBox @bind-Value="_gruposClientesSeleccionados"
+                            <DxDropDownBox @bind-Value="GruposClientesSeleccionados"
                                            QueryDisplayText="@(arg => GetDropDownBoxTextoSeleccionados<CodigoDescripcion, string>(
                                             arg,
                                             x => x.Descripcion,
-                                            ObtenerTexto(AppResources.Common.Todos)
+                                            ObtenerTexto(TextosApp.Common.Todos)
                                         ))"
                                            DropDownWidthMode="DropDownWidthMode.EditorWidth"
                                            InputId="ddbGrupos"
                                            ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-                                           NullText="@ObtenerTexto(AppResources.Common.Todos)">
+                                           NullText="@ObtenerTexto(TextosApp.Common.Todos)">
                                 <DropDownBodyTemplate>
-                                    <DxTextBox                                    NullText="@ObtenerTexto(AppResources.Common.EscribaTextoBusqueda)"
+                                    <DxTextBox                                    NullText="@ObtenerTexto(TextosApp.Common.EscribaTextoBusqueda)"
                                                InputDelay="500"
-                                               @bind-Text="@_querySearchGrupoClientesList"
+                                               @bind-Text="@QuerySearchGrupoClientesList"
                                                BindValueMode="BindValueMode.OnInput"
                                                ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto">
                                     </DxTextBox>
-                                    <DxListBox Data="@_gruposClientes"
+                                    <DxListBox Data="@GruposClientes"
                                                TData="CodigoDescripcion"
                                                TValue="CodigoDescripcion"
                                                Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
@@ -99,7 +99,7 @@
                                                SelectionMode="ListBoxSelectionMode.Multiple"
                                                ShowCheckboxes="true"
                                                ListRenderMode="ListRenderMode.Virtual"
-                                               SearchText="@_querySearchGrupoClientesList">
+                                               SearchText="@QuerySearchGrupoClientesList">
                                     </DxListBox>
                                 </DropDownBodyTemplate>
                             </DxDropDownBox>
@@ -110,13 +110,13 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Anio)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_anios" Enabled="true"
+                            <DxComboBox Data="@Anios" Enabled="true"
                                         TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                         ValueFieldName=@nameof(CodigoDescripcion.Codigo)
-                                        @bind-Value="@_anioSeleccionado"
+                                        @bind-Value="@AnioSeleccionado"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -132,13 +132,13 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Version)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Version)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_versiones"
+                            <DxComboBox Data="@Versiones"
                                         TextFieldName=@nameof(VersionResumen.Descripcion)
                                         ValueFieldName=@nameof(VersionResumen.Codigo)
-                                        @bind-Value="_versionSeleccionada"
+                                        @bind-Value="VersionSeleccionada"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" >
@@ -160,7 +160,7 @@
                         <div class="d-flex justify-content-start">
                              <DxButton CssClass="btnCustom"
                                       RenderStyle="ButtonRenderStyle.None"
-                                      Text="@ObtenerTexto(AppResources.Pages.ImportacionCondiciones.ImportarCondicionesMMS)"
+                                      Text="@ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.ImportarCondicionesMMS)"
                                       IconCssClass="fa-solid fa-file-import"
                                       Click="@ImportarCondicionesMMS" />
                         </div>
@@ -172,8 +172,8 @@
                             {
                                 <a href="#"
                                    class="d-flex align-items-center"
-                                   title="@ObtenerTexto(AppResources.Pages.ImportacionCondiciones.LinkCondicionesHelp)"
-                                   @onclick="IrACondiciones">@ObtenerTexto(AppResources.Pages.ImportacionCondiciones.LinkCondiciones)</a>
+                                   title="@ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.LinkCondicionesHelp)"
+                                   @onclick="IrACondiciones">@ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.LinkCondiciones)</a>
                             }
                         </div>
                     </DxFormLayoutItem>
@@ -183,7 +183,7 @@
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
                                       IconCssClass="fa-solid fa-trash"
-                            Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                            Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
                             Click="FiltroLimpiar" />
                         </div>
                     </DxFormLayoutItem>

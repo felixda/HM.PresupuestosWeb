@@ -1,10 +1,18 @@
-﻿@page "/administracion/meses-bloqueados"
+@page "/administracion/meses-bloqueados"
 
-@inherits Context
+@inherits ContextProtegido
 
 @attribute [Authorize]
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
 {
     <PageHeader CodigoMenu="@CodigosMenu.MesesBloqueados" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
 
@@ -13,11 +21,11 @@
         @* FILTER *@
         <DxFormLayout>
             <DxFormLayoutGroup CssClass="filterContainer"
-                               Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+                               Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
                                ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                                AnimationType="LayoutAnimationType.Slide">
                 <DxFormLayoutItem ColSpanSm="4" ColSpanMd="2" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
-                                  Caption="@($"{ObtenerTexto(AppResources.Common.Anio)}")"
+                                  Caption="@($"{ObtenerTexto(TextosApp.Common.Anio)}")"
                                   CaptionPosition="CaptionPosition.Vertical">
                     <DxComboBox Data="@Anios" Enabled="true"
                                 TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -38,7 +46,7 @@
 
         <DxFormLayout>
            
-            <DxFormLayoutGroup Caption="@ObtenerTexto(AppResources.Pages.MesesBloqueados.Titulo)"
+            <DxFormLayoutGroup Caption="@ObtenerTexto(TextosApp.Pages.MesesBloqueados.Titulo)"
                                 CaptionCssClass="formLayoutGroupCaption">
                 @* GRID MESES *@
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" Context="formLayout">
@@ -57,7 +65,7 @@
                            
                         <Columns>
                             <DxGridSelectionColumn Width="5%" CaptionAlignment="GridTextAlignment.Center" TextAlignment="GridTextAlignment.Center" />
-                            <DxGridDataColumn FieldName="@nameof(CodigoDescripcion.Descripcion)" Caption="@ObtenerTexto(AppResources.Common.Mes)"
+                            <DxGridDataColumn FieldName="@nameof(CodigoDescripcion.Descripcion)" Caption="@ObtenerTexto(TextosApp.Common.Mes)"
                                                 Width="95%" DataRowEditorVisible="false" ReadOnly="true" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left">
 
                                 <CellDisplayTemplate>
@@ -77,7 +85,7 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="toolbarButtonCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@ObtenerTexto(AppResources.Botones.Grabar)"
+                                      Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
                                       Click="Grabar_Click"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayAnioSeleccionado" />

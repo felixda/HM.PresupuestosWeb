@@ -13,10 +13,10 @@
         <DxTreeView AfterExpand="OnMenuExpandido">
             <Nodes>
                 <DxTreeViewNode id="menu_0"
-                                @onclick="@(() => OnNavegarA(MapaMenu.ObtenerUrlMenu(CodigosMenu.Home)!))"
-                                Text="@MapaMenu.ObtenerEtiquetaMenu(CodigosMenu.Home)" 
+                                @onclick="@(() => OnNavegarA(RecursosApp.ObtenerUrlMenu(CodigosMenu.Home)!))"
+                                Text="@RecursosApp.ObtenerEtiquetaMenu(CodigosMenu.Home)" 
                                 CssClass="menu-item"
-                                IconCssClass="@MapaMenu.ObtenerIconoMenu(CodigosMenu.Home)" />
+                                IconCssClass="@RecursosApp.ObtenerIconoMenu(CodigosMenu.Home)" />
                 
                 @if (Menu != null && Menu.Count > 0)
                 {
@@ -24,26 +24,26 @@
                     {
                         @if (item.CodigoMenuPadre == null || item.CodigoMenuPadre <= 0)
                         {
-                            var labelMenuItem = MapaMenu.ObtenerEtiquetaMenu((CodigosMenu)item.CodigoMenu);
-                            var visibleMenuItemStr = MapaMenu.ObtenerVisibilidadMenu((CodigosMenu)item.CodigoMenu);
+                            var labelMenuItem = RecursosApp.ObtenerEtiquetaMenu((CodigosMenu)item.CodigoMenu);
+                            var visibleMenuItemStr = RecursosApp.ObtenerVisibilidadMenu((CodigosMenu)item.CodigoMenu);
                             bool visibleMenuItem = !string.IsNullOrEmpty(visibleMenuItemStr) && 
                                                    (visibleMenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleMenuItemStr == "1");
                             
                             @if (visibleMenuItem && !string.IsNullOrEmpty(labelMenuItem))
                             {
                                 <DxTreeViewNode id=@($"menu_{item.CodigoMenu}")
-                                                @onclick="@(() => OnNavegarA(MapaMenu.ObtenerUrlMenu((CodigosMenu)item.CodigoMenu)!))"
+                                                @onclick="@(() => OnNavegarA(RecursosApp.ObtenerUrlMenu((CodigosMenu)item.CodigoMenu)!))"
 
                                                 Text="@labelMenuItem"
-                                                IconCssClass="@MapaMenu.ObtenerIconoMenu((CodigosMenu)item.CodigoMenu)" 
+                                                IconCssClass="@RecursosApp.ObtenerIconoMenu((CodigosMenu)item.CodigoMenu)" 
                                                 CssClass="menu-item">
                                     <Nodes>
                                         @if (item.Submenus != null && item.Submenus.Any())
                                         {
                                             @foreach (var submenuItem in item.Submenus.OrderBy(o => o.IndiceOrdenacion))
                                             {
-                                                var labelSubmenuItem = MapaMenu.ObtenerEtiquetaMenu((CodigosMenu)submenuItem.CodigoMenu);
-                                                var visibleSubmenuItemStr = MapaMenu.ObtenerVisibilidadMenu((CodigosMenu)submenuItem.CodigoMenu);
+                                                var labelSubmenuItem = RecursosApp.ObtenerEtiquetaMenu((CodigosMenu)submenuItem.CodigoMenu);
+                                                var visibleSubmenuItemStr = RecursosApp.ObtenerVisibilidadMenu((CodigosMenu)submenuItem.CodigoMenu);
                                                 bool visibleSubmenuItem = !string.IsNullOrEmpty(visibleSubmenuItemStr) && 
                                                                          (visibleSubmenuItemStr.Equals("true", StringComparison.OrdinalIgnoreCase) || visibleSubmenuItemStr == "1");
                                                 
@@ -53,7 +53,7 @@
                                                                     @onclick="@(() => OnNavegarA(submenuItem.Url))"
 
                                                                     Text="@labelSubmenuItem"
-                                                                    IconCssClass="@MapaMenu.ObtenerIconoMenu((CodigosMenu)submenuItem.CodigoMenu)"
+                                                                    IconCssClass="@RecursosApp.ObtenerIconoMenu((CodigosMenu)submenuItem.CodigoMenu)"
                                                                     CssClass="menu-item" />
                                                 } 
                                             }

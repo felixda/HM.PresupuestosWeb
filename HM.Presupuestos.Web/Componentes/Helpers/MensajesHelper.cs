@@ -1,5 +1,3 @@
-using DevExpress.Blazor;
-using HM.Presupuestos.Web.Adaptadores;
 
 namespace HM.Presupuestos.Web.Componentes.Helpers;
 
@@ -12,7 +10,7 @@ public class MensajesHelper(IDialogService dialogService, ILocalizadorRecursos r
 
 
     /// <summary>
-    /// Muestra un mensaje con formato general con un unico botón para cerrarlo (OK)
+    /// Muestra un mensaje con formato general con un unico botÃ³n para cerrarlo (OK)
     /// </summary>
     /// <param name="titulo">Texto a mostrar en el titulo del mensaje</param>
     /// <param name="mensaje">Texto a mostrara en el cuerpo del mensaje</param>

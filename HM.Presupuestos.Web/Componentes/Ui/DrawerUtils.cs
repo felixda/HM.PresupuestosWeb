@@ -15,8 +15,8 @@
         }
 
     // A11yAriaAttributeUtils es una utilidad o conjunto de funciones para manejar atributos ARIA (Accessible Rich Internet Applications), 
-    // que son usados en el desarrollo web para mejorar la accesibilidad de las interfaces de usuario. Uno de los atributos ARIA m·s comunes es aria-label,
-    // que proporciona una descripciÛn accesible para un elemento que es leÌdo por los lectores de pantalla, pero no es visible para los usuarios.
+    // que son usados en el desarrollo web para mejorar la accesibilidad de las interfaces de usuario. Uno de los atributos ARIA m√°s comunes es aria-label,
+    // que proporciona una descripci√≥n accesible para un elemento que es le√≠do por los lectores de pantalla, pero no es visible para los usuarios.
 
 
 }

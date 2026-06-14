@@ -7,143 +7,118 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
     public interface IAlmacenSesionUsuario
     {
         /// <summary>
-        /// Obtiene la informaciÛn del usuario autenticado mediante SSO de Azure AD de la sesiÛn protegida del navegador.
+        /// Obtiene la informaci√≥n del usuario autenticado mediante SSO de Azure AD de la sesi√≥n protegida del navegador.
         /// </summary>
-        /// <remarks>Utilice este mÈtodo para acceder a los detalles del usuario actual tras una
-        /// autenticaciÛn SSO exitosa. El resultado puede incluir informaciÛn como identificadores, roles y permisos
+        /// <remarks>Utilice este m√©todo para acceder a los detalles del usuario actual tras una
+        /// autenticaci√≥n SSO exitosa. El resultado puede incluir informaci√≥n como identificadores, roles y permisos
         /// asociados al usuario.</remarks>
-        /// <returns>Un objeto <see cref="UsuarioEntidad"/> que contiene los datos del usuario autenticado.</returns>
-        Task<UsuarioEntidad> ObtenerUsuarioSSO();
+        /// <returns>Un objeto <see cref="UsuarioEntidad"/> que contiene los datos del usuario autenticado, o null si no hay sesi√≥n.</returns>
+        Task<UsuarioEntidad?> ObtenerUsuarioSSO();
 
         /// <summary>
-        /// Guarda la informaciÛn de un usuario autenticado mediante SSO en la sesion protegida del navegador. 
-        /// Este mÈtodo se utiliza para almacenar los datos del usuario despuÈs de una autenticaciÛn SSO exitosa, permitiendo que la aplicaciÛn acceda a esta informaciÛn durante la sesiÛn del usuario.
+        /// Guarda la informaci√≥n de un usuario autenticado mediante SSO en la sesion protegida del navegador. 
+        /// Este m√©todo se utiliza para almacenar los datos del usuario despu√©s de una autenticaci√≥n SSO exitosa, permitiendo que la aplicaci√≥n acceda a esta informaci√≥n durante la sesi√≥n del usuario.
         /// </summary>
         /// <param name="usuario">La entidad de usuario que contiene los datos a almacenar. No puede ser null.</param>
-        /// <returns>Una tarea que representa la operaciÛn asincrÛnica de guardado.</returns>
+        /// <returns>Una tarea que representa la operaci√≥n asincr√≥nica de guardado.</returns>
         Task GuardarUsuarioSSO(UsuarioEntidad usuario);
         
         /// <summary>
-        /// Guarda la informaciÛn del usuario que se est· suplantando para su uso en la sesiÛn actual.
+        /// Guarda la informaci√≥n del usuario que se est√° suplantando para su uso en la sesi√≥n actual.
         /// </summary>
         /// <param name="usuario">La entidad de usuario que se va a guardar como usuario suplantado. No puede ser null.</param>
-        /// <returns>Una tarea que representa la operaciÛn asincrÛnica de guardado.</returns>
+        /// <returns>Una tarea que representa la operaci√≥n asincr√≥nica de guardado.</returns>
         Task GuardarUsuarioImpersonado(UsuarioEntidad usuario);
 
         /// <summary>
-        /// Obtiene la informaciÛn del usuario actualmente impersonado de la sesiÛn protegida del navegador. 
-        /// Este mÈtodo se utiliza para acceder a los detalles del usuario que ha sido impersonado, 
-        /// lo que puede ser ˙til en escenarios donde un administrador o un sistema necesita actuar en nombre de otro usuario.
+        /// Obtiene la informaci√≥n del usuario actualmente impersonado de la sesi√≥n protegida del navegador. 
+        /// Este m√©todo se utiliza para acceder a los detalles del usuario que ha sido impersonado, 
+        /// lo que puede ser √∫til en escenarios donde un administrador o un sistema necesita actuar en nombre de otro usuario.
         /// </summary>
         /// <returns>Un objeto <see cref="UsuarioEntidad"/> que contiene los datos del usuario impersonado, o null si no hay usuario impersonado.</returns>
         Task<UsuarioEntidad?> ObtenerUsuarioImpersonado();
 
         /// <summary>
-        /// Elimina la informaciÛn del usuario impersonado de la sesiÛn protegida del navegador.
+        /// Elimina la informaci√≥n del usuario impersonado de la sesi√≥n protegida del navegador.
         /// </summary>
-        /// <returns>Una tarea que representa la operaciÛn asincrÛnica de eliminaciÛn.</returns>
+        /// <returns>Una tarea que representa la operaci√≥n asincr√≥nica de eliminaci√≥n.</returns>
         Task EliminarUsuarioImpersonado();
     }
 
     /// <summary>
-    /// Servicio para gestionar la sesiÛn del usuario usando ProtectedSessionStorage.
+    /// Servicio para gestionar la sesi√≥n del usuario usando ProtectedSessionStorage.
     /// 
     /// VENTAJAS vs IMemoryCache:
     /// ? Persiste con F5 (NO se pierde al recargar)
-    /// ? M·s simple (menos cÛdigo)
-    /// ? Cifrado autom·tico
+    /// ? M√°s simple (menos c√≥digo)
+    /// ? Cifrado autom√°tico
     /// ? Bajo consumo de memoria
     /// ? Escala mejor
     /// </summary>
     public class AlmacenSesionUsuario : IAlmacenSesionUsuario
     {
         private readonly ProtectedSessionStorage _sessionStorage;
-        private readonly ILogger<AlmacenSesionUsuario> _logger;
 
-        public AlmacenSesionUsuario(
-            ProtectedSessionStorage sessionStorage,
-            ILogger<AlmacenSesionUsuario> logger)
+        public AlmacenSesionUsuario(ProtectedSessionStorage sessionStorage)
         {
             _sessionStorage = sessionStorage;
-            _logger = logger;
         }
 
         public async Task GuardarUsuarioImpersonado(UsuarioEntidad usuario)
         {
-            await SetItemAsync(Constantes.Session.USER_LOGIN, JsonSerializer.Serialize(usuario));
+            await _sessionStorage.SetAsync(Constantes.Session.USER_LOGIN, JsonSerializer.Serialize(usuario));
         }
 
         public async Task GuardarUsuarioSSO(UsuarioEntidad usuario)
         {
-            await SetItemAsync(Constantes.Session.USER_SSO, JsonSerializer.Serialize(usuario));
+            await _sessionStorage.SetAsync(Constantes.Session.USER_SSO, JsonSerializer.Serialize(usuario));
         }
 
-        public async Task<UsuarioEntidad> ObtenerUsuarioSSO()
+        public async Task<UsuarioEntidad?> ObtenerUsuarioSSO()
         {
-            var result = new UsuarioEntidad();
-            try
-            {
-                var userJson = await GetItemAsync(Constantes.Session.USER_SSO);
-                if (!String.IsNullOrEmpty(userJson))
-                    result = JsonSerializer.Deserialize<UsuarioEntidad>(userJson);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener usuario SSO de sesiÛn");
-            }
-            return result;
+            var userJson = await ObtenerItemAsync(Constantes.Session.USER_SSO);
+            return String.IsNullOrEmpty(userJson)
+                ? null
+                : JsonSerializer.Deserialize<UsuarioEntidad>(userJson);
         }
 
 
         public async Task<UsuarioEntidad?> ObtenerUsuarioImpersonado()
         {
-            UsuarioEntidad? result = null;
-            try
-            {
-                var userJson = await GetItemAsync(Constantes.Session.USER_LOGIN);
-                if (!String.IsNullOrEmpty(userJson))
-                {
-                    result = JsonSerializer.Deserialize<UsuarioEntidad>(userJson);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener usuario Impersonado de sesiÛn");
-
-            }
-            return result;
+            var userJson = await ObtenerItemAsync(Constantes.Session.USER_LOGIN);
+            return String.IsNullOrEmpty(userJson)
+                ? null
+                : JsonSerializer.Deserialize<UsuarioEntidad>(userJson);
         }
 
 
         public async Task EliminarUsuarioImpersonado()
         {
-            await _sessionStorage.DeleteAsync(Constantes.Session.USER_LOGIN);
+            await EliminarItemAsync(Constantes.Session.USER_LOGIN);
         }
 
 
         #region Private Methods
 
         /// <summary>
-        /// Set item Session Storage value
+        /// Obtiene el valor de una clave del Session Storage.
         /// </summary>
-        /// <param name="key">Session key</param>
-        /// <param name="value">Session value</param>
-        private async Task SetItemAsync(string key, string value)
-        {
-            await _sessionStorage.SetAsync(key, value);
-        }
-
-        /// <summary>
-        /// Get item Session Storage value
-        /// </summary>
-        /// <param name="key">Session key</param>
-        /// <returns>Session value</returns>
-        private async Task<string?> GetItemAsync(string key)
+        /// <param name="key">Clave de sesi√≥n</param>
+        /// <returns>Valor almacenado, o null si no existe</returns>
+        private async Task<string?> ObtenerItemAsync(string key)
         {
             var result = await _sessionStorage.GetAsync<string>(key);
             return result.Success ? result.Value : null;
         }
 
+        /// <summary>
+        /// Elimina una clave del Session Storage.
+        /// </summary>
+        /// <param name="key">Clave de sesi√≥n</param>
+        private async Task EliminarItemAsync(string key)
+        {
+            await _sessionStorage.DeleteAsync(key);
+        }
 
         #endregion
     }

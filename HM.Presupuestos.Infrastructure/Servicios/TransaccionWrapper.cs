@@ -3,7 +3,7 @@ using HM.Presupuestos.Domain.Puertos;
 namespace HM.Presupuestos.Infrastructure.Servicios
 {
     /// <summary>
-    /// Envuelve el objeto de transacción de HM.Core en la abstracción ITransaccion del dominio.
+    /// Envuelve el objeto de transacciÃ³n de HM.Core en la abstracciÃ³n ITransaccion del dominio.
     /// Permite que Application use transacciones sin depender de HM.Core directamente.
     /// </summary>
     public class TransaccionWrapper : ITransaccion

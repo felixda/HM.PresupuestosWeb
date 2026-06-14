@@ -8,21 +8,21 @@ namespace HM.Presupuestos.E2ETest.Tests;
 public class InicioTests : E2ETestBase
 {
     [Test]
-    [Description("La aplicación responde y devuelve una página HTML válida")]
+    [Description("La aplicaciÃ³n responde y devuelve una pÃ¡gina HTML vÃ¡lida")]
     public async Task Aplicacion_Responde_ConHtmlValido()
     {
         var response = await Page.GotoAsync(BaseUrl);
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         Assert.That(response, Is.Not.Null);
-        Assert.That(response!.Status, Is.LessThan(500), "La aplicación devolvió un error de servidor");
+        Assert.That(response!.Status, Is.LessThan(500), "La aplicaciÃ³n devolviÃ³ un error de servidor");
 
         var content = await Page.ContentAsync();
-        Assert.That(content, Is.Not.Empty, "El contenido de la página está vacío");
+        Assert.That(content, Is.Not.Empty, "El contenido de la pÃ¡gina estÃ¡ vacÃ­o");
     }
 
     [Test]
-    [Description("La página tiene un título definido")]
+    [Description("La pÃ¡gina tiene un tÃ­tulo definido")]
     public async Task PaginaInicio_TieneTitle()
     {
         await Page.GotoAsync(BaseUrl);
@@ -31,11 +31,11 @@ public class InicioTests : E2ETestBase
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         var titulo = await Page.TitleAsync();
-        Assert.That(titulo, Is.Not.Empty, "La página no tiene título");
+        Assert.That(titulo, Is.Not.Empty, "La pÃ¡gina no tiene tÃ­tulo");
     }
 
     [Test]
-    [Description("La URL raíz redirige o carga contenido sin error 5xx")]
+    [Description("La URL raÃ­z redirige o carga contenido sin error 5xx")]
     public async Task UrlRaiz_NoDaError500()
     {
         var fallos = new List<string>();
@@ -52,7 +52,7 @@ public class InicioTests : E2ETestBase
         await Page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
         Assert.That(response?.Status ?? 0, Is.LessThan(500),
-            $"La página devolvió HTTP {response?.Status}");
+            $"La pÃ¡gina devolviÃ³ HTTP {response?.Status}");
         Assert.That(fallos, Is.Empty,
             $"Se produjeron errores en las peticiones:\n{string.Join("\n", fallos)}");
     }

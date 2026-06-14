@@ -5,7 +5,6 @@ using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Puertos;
 using System.Data;
-using System.Text;
 using System.Text.Json;
 
 namespace HM.Presupuestos.Infrastructure.Persistencia
@@ -14,7 +13,9 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         IDataAccessHelperSecure dah,
         IJwt jwt) : BasePresupuestosRepository(dah, jwt), ICondicionesRepository
     {
-        public async Task<List<ConceptoCondicion>> ObtenerConceptos()
+        public new ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
+
+        public async Task<List<ConceptoCondicion>> ObtenerConceptosDeCondicion()
         {
             var resultado = new List<ConceptoCondicion>();
 
@@ -27,7 +28,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.GetSqlStringComando(query);
             dah.Comando.Parameters.Clear();
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -55,7 +56,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             var resultado = new List<Vigencia>();
 
-            var query = @"
+            const string query = @"
                 SELECT COD_CONDICION_VIGENCIA, MES_DESDE, MES_HASTA
                   FROM PPT_CONDICION_VIGENCIA
                  WHERE COD_VERSION = :CodigoVersion
@@ -72,7 +73,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoGrupo", filtro.CodigoGrupoCliente);
             dah.AddParameter("IndAcuerdo", filtro.IndicadorAcuerdo);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -103,7 +104,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task InsertarVigencia(Vigencia item)
         {
-            var query = @"
+            const string query = @"
                 INSERT INTO PPT_CONDICION_VIGENCIA(
                     COD_VERSION,
                     COD_NETWORK,
@@ -141,7 +142,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoUsuarioAlta", CodigoUsuario);
             dah.AddParameter("CodigoUsuarioModificacion", CodigoUsuario);
 
-            // Parámetro de salida
+            // ParÃ¡metro de salida
             dah.AddParameter("CodigoVigencia", item.Codigo, DbType.Int32, ParameterDirection.Output, 10);
 
             await Task.Run(() => dah.ExecuteNonQuery());
@@ -154,14 +155,14 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("UPDATE PPT_CONDICION_VIGENCIA ");
-                query.Append("   SET MES_DESDE = :MesDesde, ");
-                query.Append("       MES_HASTA = :MesHasta, ");
-                query.Append("       COD_USUARIO_MODIFICACION = :CodigoUsuario ");
-                query.Append(" WHERE COD_CONDICION_VIGENCIA = :CodigoVigencia ");
+                const string query = @"
+                    UPDATE PPT_CONDICION_VIGENCIA
+                       SET MES_DESDE = :MesDesde,
+                           MES_HASTA = :MesHasta,
+                           COD_USUARIO_MODIFICACION = :CodigoUsuario
+                     WHERE COD_CONDICION_VIGENCIA = :CodigoVigencia";
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
                 dah.Comando.Parameters.Clear();
 
                 dah.AddParameter("CodigoVigencia", item.Codigo);
@@ -214,9 +215,9 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        public async Task<bool> ExistenCondicionesVigencias(int codigoVigencia)
+        public async Task<bool> LaVigenciaTieneCondiciones(int codigoVigencia)
         {
-            var query = @"
+            const string query = @"
                 SELECT COUNT(*)
                 FROM PPT_CONDICION_MEDIO
                 WHERE COD_CONDICION_VIGENCIA = :CodigoVigencia";
@@ -232,11 +233,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        public async Task<List<CondicionDto>> ObtenerCondicionesPorVigencia(int codigoVigencia)
+        public async Task<List<CondicionDto>> ObtenerCondicionesDeLaVigencia(int codigoVigencia)
         {
             List<CondicionDto> resultado = new();
 
-            var query = @"
+            const string query = @"
                 SELECT 
                     COD_CONDICION_VIGENCIA,
                     COD_PAIS,
@@ -255,7 +256,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
             dah.AddParameter("CodigoVigencia", codigoVigencia);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -285,7 +286,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task ActualizarCondicion( Condicion medioCondicion)
         {
-            var query = @"
+            const string query = @"
                 UPDATE PPT_CONDICION_MEDIO
                    SET PCT_CONDICION_MEDIO = :Porcentaje,
                        IND_CALCULO        = :IndCalculo,
@@ -308,7 +309,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task InsertarCondicion(Condicion condicion)
         {
-            var query = @"
+            const string query = @"
                 INSERT INTO PPT_CONDICION_MEDIO(
                     COD_PAIS,
                     COD_MEDIO,
@@ -345,7 +346,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("Porcentaje", condicion.Porcentaje);
             dah.AddParameter("CodigoUsuario", CodigoUsuario);
 
-            // Parámetro de salida
+            // ParÃ¡metro de salida
             dah.AddParameter("CodigoCondicionMedio", condicion.CodigoCondicion, DbType.Int32, ParameterDirection.Output, 10);
 
             await Task.Run(() => dah.ExecuteNonQuery());
@@ -356,7 +357,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task GrabarCondicion(Condicion condicion)
         {
-            var query = @"
+            const string query = @"
                 MERGE INTO PPT_CONDICION_MEDIO T
                 USING DUAL
                    ON (T.COD_PAIS = :CodigoPais
@@ -411,7 +412,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task EliminarCondicion(Condicion condicion)
         {
-            var query = @"
+            const string query = @"
                 DELETE FROM PPT_CONDICION_MEDIO
                 WHERE COD_PAIS = :CodigoPais
                   AND COD_MEDIO = :CodigoMedio
@@ -432,11 +433,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        public async Task<List<ExcepcionDto>> ObtenerExcepcionesCondiciones(int codigoVigencia)
+        public async Task<List<ExcepcionDto>> ObtenerExcepcionesDeLaVigencia(int codigoVigencia)
         {
             var resultado = new List<ExcepcionDto>();
 
-            var query = @"
+            const string query = @"
                 SELECT 
                     COD_CONDICION_VIGENCIA, COD_PAIS, COD_MEDIO, DES_MEDIO, NUM_JERARQUIA,
                     PORC_SAG, PORC_MNP, PORC_DEV, IND_CALCULO_DEV, COD_ALCANCE,
@@ -450,7 +451,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
             dah.AddParameter("CodigoVigencia", codigoVigencia);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -488,7 +489,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task EliminarExcepcionCondicion(int codigoCondicionMedio)
         {
-            var query = @"
+            const string query = @"
                 DELETE FROM PPT_CONDICION_MEDIO
                 WHERE COD_CONDICION_MEDIO = :CodigoCondicionMedio";
 
@@ -539,11 +540,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             return result;
         }
 
-        public async Task EliminarConceptoNMDExcepcionCondicion(int codigoCondicionMedio, ConceptosCondicionesNMD concepto)
+        public async Task EliminarConceptoDeExcepcion(int codigoCondicionMedio, ConceptosCondicionesNMD concepto)
         {
             string tabla = ObtenerTablaConceptosNMD(concepto);
 
-            var query = $@"
+            string query = $@"
                 DELETE FROM {tabla}
                 WHERE COD_CONDICION_MEDIO = :CodigoCondicionMedio";
 
@@ -557,7 +558,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task ActualizarJerarquiaExcepcion(int codigoCondicionMedio, int jerarquia)
         {
-            var query = @"
+            const string query = @"
                 UPDATE PPT_CONDICION_MEDIO
                 SET NUM_JERARQUIA = :Jerarquia,
                     COD_USUARIO_MODIFICACION = :CodigoUsuario
@@ -579,7 +580,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             string tabla = ObtenerTablaConceptosNMD(codigoConceptoNMD);
             string campo = ObtenerCampoConceptosNMD(codigoConceptoNMD);
 
-            var query = $@"
+            string query = $@"
                 MERGE INTO {tabla} T
                 USING DUAL
                 ON (T.COD_CONDICION_MEDIO = :CodigoCondicionMedio)
@@ -606,11 +607,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
 
 
-        public async Task<List<int>> ObtenerCodigosExcepcionesCondiciones(Condicion condicion)
+        public async Task<List<int>> ObtenerCodigosDeExcepcionesDeCondicion(Condicion condicion)
         {
             List<int> resultado = new();
 
-            var query = @"
+            const string query = @"
                 SELECT COD_CONDICION_MEDIO 
                 FROM PPT_CONDICION_MEDIO
                 WHERE COD_PAIS = :CodigoPais
@@ -627,7 +628,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoVigencia", condicion.CodigoVigencia);
             dah.AddParameter("CodigoConcepto", (int)condicion.CodigoConcepto);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -644,11 +645,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        public async Task<Condicion?> ObtenerExcepcionOrCondicion(Condicion item)
+        public async Task<Condicion?> ObtenerCondicionPorClave(Condicion condicion)
         {
             Condicion? resultado = null;
 
-            var query = @"
+            const string query = @"
                 SELECT COD_CONDICION_MEDIO, PCT_CONDICION_MEDIO, IND_CALCULO
                 FROM PPT_CONDICION_MEDIO
                 WHERE COD_PAIS = :CodigoPais
@@ -661,12 +662,12 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
 
             dah.AddParameter("CodigoPais", CodigoPais);
-            dah.AddParameter("CodigoMedio", item.CodigoMedio);
-            dah.AddParameter("CodigoVigencia", item.CodigoVigencia);
-            dah.AddParameter("CodigoConcepto", (int)item.CodigoConcepto);
-            dah.AddParameter("Jerarquia", item.Jerarquia);
+            dah.AddParameter("CodigoMedio", condicion.CodigoMedio);
+            dah.AddParameter("CodigoVigencia", condicion.CodigoVigencia);
+            dah.AddParameter("CodigoConcepto", (int)condicion.CodigoConcepto);
+            dah.AddParameter("Jerarquia", condicion.Jerarquia);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -688,11 +689,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        public async Task<Condicion?> ObtenerExcepcionOrCondicion(int codigoCondicion)
+        public async Task<Condicion?> ObtenerCondicionPorCodigo(int codigoCondicion)
         {
             Condicion? resultado = null;
 
-            var query = @"
+            const string query = @"
                 SELECT COD_CONDICION_MEDIO, PCT_CONDICION_MEDIO, NUM_JERARQUIA
                 FROM PPT_CONDICION_MEDIO
                 WHERE COD_CONDICION_MEDIO = :CodigoCondicionMedio";
@@ -701,7 +702,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.Comando.Parameters.Clear();
             dah.AddParameter("CodigoCondicionMedio", codigoCondicion);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -757,7 +758,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         }
 
-        public ITransaccion ObtenerTransaccion() => new TransaccionWrapper(base.ObtenerTransaccion());
 
     }
 }

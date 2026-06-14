@@ -2,7 +2,7 @@
 namespace HM.Presupuestos.Web.Adaptadores.Inactividad
 {
     /// <summary>
-    /// Interfaz para controlar al navegar a otra p·gina si hay cambios en los datos de las paginas, 
+    /// Interfaz para controlar al navegar a otra p√°gina si hay cambios en los datos de las paginas, 
     /// que muestra pantalla modal para avisar si los hubiera, pudiendo cancelar la navegacion
     /// </summary>
     public interface IControlCambiosNavegacion
@@ -31,7 +31,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Inactividad
 
 
         /// <summary>
-        /// Metodo para activar la generaciÛn de un evento a la hora de cambiar de p·gina mediante navegacion
+        /// Metodo para activar la generaci√≥n de un evento a la hora de cambiar de p√°gina mediante navegacion
         /// </summary>
         /// <param name="cambios"></param>
         public async Task ActualizarEstadoCambios(bool cambios)

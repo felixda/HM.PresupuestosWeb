@@ -1,25 +1,22 @@
-@page "/gestion/planificacion-condiciones"
+ï»¿@page "/gestion/planificacion-condiciones"
 
-@using HM.Presupuestos.Application.CasosDeUso
-@using HM.Presupuestos.Domain.Entidades
-@using HM.Core.Comun.v6.Seguridad.Interfaces
-@using HM.Presupuestos.Domain.Compartido
-@using HM.Presupuestos.Web.Adaptadores
-@using static HM.Presupuestos.Application.CasosDeUso.VersionesService
-@using HM.Presupuestos.Web.Componentes.Base
-@using Version = HM.Presupuestos.Domain.Entidades.Version
-@using DevExpress.Blazor
+@inherits ContextProtegido
 
-@inherits Context
-
-@attribute [StreamRendering(true)]
 @attribute [Authorize]
 
 
-@if (_componentInitialized)
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
 {
-    <PageTitle>@PageTitle</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.PlanificacionCondiciones" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+    @* Silencio mientras carga *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
+{
+    <PageTitle>@TituloActual</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.PlanificacionCondiciones" Titulo="@TituloActual" TextoToolTipAyuda="@TextoToolTipAyuda" />
 
     <div class="layoutContainer">
         @* FILTER *@
@@ -35,8 +32,8 @@
                             <DxRadioGroup Id="radioGroupAcuerdo"
                                           ItemLabelPosition="LabelPosition.Right"
                                           ItemAlignment="CheckBoxContentAlignment.Center"
-                                          Items="@_radioGroupAcuerdoButtonList"
-                                          Value="@_radioGroupAcuerdoChecked"
+                                          Items="@RadioGroupAcuerdoButtonList"
+                                          Value="@RadioGroupAcuerdoChecked"
                                           ValueChanged="@((string val) => RadioGroupAcuerdo_ValueChanged(val))"
                                           CssClass="dxradiogroup-horizontal" />
                         </div>
@@ -50,17 +47,17 @@
         <DxFormLayout>
             <DxFormLayoutGroup Visible="true"
             ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
-            Caption="@ObtenerTexto(AppResources.Common.Filtros)"
+            Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
             ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
             AnimationType="LayoutAnimationType.Slide">
                 <Items>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Network)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Network)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_networks" Enabled="true"
+                            <DxComboBox Data="@Networks" Enabled="true"
                                         Id="comboBoxNetWorks"
                                         TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                         ValueFieldName=@nameof(CodigoDescripcion.Codigo)
@@ -69,7 +66,7 @@
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => ComboBoxNetwork_SelectedDataItemChanged(args)"
-                                        @bind-Value="@_networkSeleccionado">
+                                        @bind-Value="@NetworkSeleccionado">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -82,11 +79,11 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="5" ColSpanXl="5" ColSpanXxl="5"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.GrupoClientes)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.GrupoClientes)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_gruposClientes"
-                                        @bind-Value="@_codigoGrupoSeleccionado"
+                            <DxComboBox Data="@GruposClientes"
+                                        @bind-Value="@CodigoGrupoSeleccionado"
                                         ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                         TextFieldName="@nameof(CodigoDescripcion.DescripcionConCodigo)"
                                         SearchMode="@ListSearchMode.AutoSearch"
@@ -107,13 +104,13 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Anio)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Anio)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_anios" Enabled="true"
+                            <DxComboBox Data="@Anios" Enabled="true"
                                         TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                         ValueFieldName=@nameof(CodigoDescripcion.Codigo)
-                                        @bind-Value="@_anioSeleccionado"
+                                        @bind-Value="@AnioSeleccionado"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -129,13 +126,13 @@
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Version)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Version)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_versiones"
+                            <DxComboBox Data="@Versiones"
                                         TextFieldName=@nameof(VersionResumen.Descripcion)
                                         ValueFieldName=@nameof(VersionResumen.Codigo)
-                                        @bind-Value="_versionSeleccionada"
+                                        @bind-Value="VersionSeleccionada"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" >
@@ -157,7 +154,7 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@ObtenerTexto(AppResources.Common.Buscar)"
+                                      Text="@ObtenerTexto(TextosApp.Common.Buscar)"
                                       IconCssClass="fa-solid fa-search"
                                       Click="@FiltroBuscar" />
                         </div>
@@ -169,7 +166,7 @@
                             <DxButton CssClass="btnCustom"
                             RenderStyle=ButtonRenderStyle.None
                                       IconCssClass="fa-solid fa-trash"
-                            Text="@ObtenerTexto(AppResources.Common.Limpiar)"
+                            Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
                             Click="FiltroLimpiar" />
                         </div>
                     </DxFormLayoutItem>
@@ -192,10 +189,10 @@
                     <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3" BeginRow="true"
                     CaptionPosition="CaptionPosition.Vertical" Context="formLayout">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Vigencias)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Vigencias)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_vigencias"
+                            <DxComboBox Data="@Vigencias"
                                         Enabled="!HayCambiosPendientes"
                                         Id="comboBoxVigencias"
                                         DropDownWidthMode="DropDownWidthMode.EditorWidth"
@@ -203,7 +200,7 @@
                                         ValueFieldName=@nameof(Vigencia.Codigo)
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         ListRenderMode="ListRenderMode.Entire"
-                                        @bind-Value="@_vigenciaSeleccionada"
+                                        @bind-Value="@VigenciaSeleccionada"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<Vigencia> args) =>
                                                                              ComboBoxVigencias_SelectedDataItemChanged(args)">
                                 <EditBoxDisplayTemplate Context="contexto">
@@ -217,11 +214,11 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                             Enabled="@(ValidarCamposObligatoriosFiltro() && !HayCambiosPendientes)"
-                            Id="btnAñadirVigencia"
+                            Id="btnAÃ±adirVigencia"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Anadir)"
+                            Text="@ObtenerTexto(TextosApp.Botones.AÃ±adir)"
                             IconCssClass="fa-solid fa-add"
-                            Click="@AñadirVigencia" />
+                            Click="@AÃ±adirVigencia" />
                         </div>
                     </DxFormLayoutItem>
 
@@ -229,9 +226,9 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                             Id="btnModificarVigencia"
-                            Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
+                            Enabled="@(VigenciaSeleccionada != null && !HayCambiosPendientes)"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Modificar)"
+                            Text="@ObtenerTexto(TextosApp.Botones.Modificar)"
                             IconCssClass="fa-solid fa-edit"
                             Click="@EditarVigencia" />
                         </div>
@@ -241,9 +238,9 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                             Id="btnEliminarVigencia"
-                            Enabled="@(_vigenciaSeleccionada != null && !HayCambiosPendientes)"
+                            Enabled="@(VigenciaSeleccionada != null && !HayCambiosPendientes)"
                             RenderStyle=ButtonRenderStyle.None
-                            Text="@ObtenerTexto(AppResources.Botones.Eliminar)"
+                            Text="@ObtenerTexto(TextosApp.Botones.Eliminar)"
                                       IconCssClass="fa-solid fa-trash"
                             Click="@EliminarVigencia" />
                         </div>
@@ -254,9 +251,9 @@
 
 
             @* POPUP EDIT VIGENCIAS *@
-            <DxPopup Visible="@_popupVigenciaVisible"
+            <DxPopup Visible="@PopupVigenciaVisible"
             ShowFooter="true"
-            HeaderText="@_tituloPopupVigencia"
+            HeaderText="@TituloPopupVigencia"
             ShowCloseButton="false"
             Width="500px"
             Height="Auto"
@@ -269,12 +266,12 @@
                         <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                         CaptionPosition="CaptionPosition.Vertical">
                             <CaptionTemplate>
-                                <span>@ObtenerTexto(AppResources.Common.MesDesde)</span><span class="mandatory"></span>
+                                <span>@ObtenerTexto(TextosApp.Common.MesDesde)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
-                                <DxComboBox Data="@_meses"
+                                <DxComboBox Data="@Meses"
                                             Id="comboBoxMesDesde"
-                                            @bind-Value="@_mesDesdeVigenciaSeleccionado"
+                                            @bind-Value="@MesDesdeVigenciaSeleccionado"
                                             ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                             TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                             ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -291,12 +288,12 @@
                         <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                         CaptionPosition="CaptionPosition.Vertical">
                             <CaptionTemplate>
-                                <span>@ObtenerTexto(AppResources.Common.MesHasta)</span><span class="mandatory"></span>
+                                <span>@ObtenerTexto(TextosApp.Common.MesHasta)</span><span class="mandatory"></span>
                             </CaptionTemplate>
                             <Template>
-                                <DxComboBox Data="@_meses"
+                                <DxComboBox Data="@Meses"
                                             Id="comboBoxMesHasta"
-                                            @bind-Value="@_mesHastaVigenciaSeleccionado"
+                                            @bind-Value="@MesHastaVigenciaSeleccionado"
                                             ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                             TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                             ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
@@ -315,13 +312,13 @@
                     <div class="popupFooter">
                         <DxButton CssClass="btnCustom"
                         RenderStyle=ButtonRenderStyle.None
-                        Text="@ObtenerTexto(AppResources.Common.Save)"
+                        Text="@ObtenerTexto(TextosApp.Common.Save)"
                         IconCssClass="fa-solid fa-save"
                         Click="@GrabarVigencia" />
 
                         <DxButton CssClass="btnCustom"
                         RenderStyle=ButtonRenderStyle.None
-                        Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                        Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
 
                         IconCssClass="fa-solid fa-cancel"
                         Click="@OcultarPopupVigencia" />
@@ -335,7 +332,7 @@
         @* GRID CONDICIONES *@
         <DxFormLayout>
             <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
-            Visible="@(_vigenciaSeleccionada != null ?  true : false)"
+            Visible="@(VigenciaSeleccionada != null ?  true : false)"
             Caption="Condiciones"
             ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
             AnimationType="LayoutAnimationType.Slide">
@@ -345,7 +342,7 @@
                 </CaptionTemplate>
                 <Items>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
-                        <DxGrid Data="@_condiciones"
+                        <DxGrid Data="@Condiciones"
                                 @ref="GridCondiciones"
                         KeyFieldName="Key"
                         ValidationEnabled="false"
@@ -365,16 +362,16 @@
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                     RenderStyle=ButtonRenderStyle.None
-                                    Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                    Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                                     Click="CancelarCambiosCondiciones"
                                     IconCssClass="fa-solid fa-cancel"
-                                    Enabled="@(_condicionesNoGuardados.Count > 0)" />
+                                    Enabled="@(CondicionesNoGuardados.Count > 0)" />
                                 </div>
                             </ToolbarTemplate>
                             <Columns>
 
                                 <DxGridDataColumn FieldName="DescripcionMedio" 
-                                Caption="@ObtenerTexto("Pages:PlanificacionCondiciones:Medio:label")" 
+                                Caption="@ObtenerTexto(TextosApp.Common.Medio)" 
                                 ReadOnly="true"
                                 Width="35%"
                                 CaptionAlignment="GridTextAlignment.Center"
@@ -383,7 +380,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var dataItem = (CondicionDto)context.DataItem;
+                                            var dataItem = (CondicionViewModel)context.DataItem;
                                             string toolTip = dataItem.MedioAccesible ? "" : "Medio no accesible para el NetWork seleccinado";
                                         }
                                         <span class="dxgrid-readonly-cell" title="@toolTip">@context.DisplayText</span>
@@ -393,19 +390,19 @@
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
-                                                  FieldName="@nameof(CondicionDto.PctSAG)" 
+                                                  FieldName="@nameof(CondicionViewModel.PctSAG)" 
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" >
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is CondicionDto item)
+                                        @if (context.DataItem is CondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -430,8 +427,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((CondicionDto)context.EditModel);
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = ((CondicionViewModel)context.EditModel);
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctSAG"
                                                         ShowSpinButtons="false"
@@ -448,19 +445,19 @@
                                 </DxGridDataColumn>
 
                                 <DxGridDataColumn DisplayFormat="{0:N2} %" 
-                                                  FieldName="@nameof(CondicionDto.PctManPower)"
+                                                  FieldName="@nameof(CondicionViewModel.PctManPower)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" >
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is CondicionDto item)
+                                        @if (context.DataItem is CondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -485,8 +482,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((CondicionDto)context.EditModel);
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = ((CondicionViewModel)context.EditModel);
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctManPower"
                                                         ShowSpinButtons="false"
@@ -501,22 +498,22 @@
                                 </DxGridDataColumn>
 
 
-                                <DxGridDataColumn FieldName="@nameof(CondicionDto.IndicadorCalculoDevolucion)"
+                                <DxGridDataColumn FieldName="@nameof(CondicionViewModel.IndicadorCalculoDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.BCDevolucion)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.BCDevolucion)"
                                                   Width="13%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
                                     <CellDisplayTemplate>
 
                                         @{
-                                            var item = (CondicionDto)context.DataItem;
+                                            var item = (CondicionViewModel)context.DataItem;
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
                                                 classCSSReadonly = "dxgrid-readonly-cell";
                                             }
-                                            var descripcion = _indicadoresDevolucion.FirstOrDefault(o => o.Codigo == item.IndicadorCalculoDevolucion)?.Descripcion ?? "";
+                                            var descripcion = IndicadoresDevolucion.FirstOrDefault(o => o.Codigo == item.IndicadorCalculoDevolucion)?.Descripcion ?? "";
 
                                             string clase = "";
                                             if (HaCambiadoValorConceptoCondiciones(item, ConceptosCondiciones.BaseCalculoDevolucion))
@@ -530,12 +527,12 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (CondicionDto)context.EditModel;
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = (CondicionViewModel)context.EditModel;
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.IndicadorCalculoDevolucion != dataItem.IndicadorCalculoDevolucion ? "grid-modified-cell" : "";
                                         }
-                                        <DxComboBox Data="@_indicadoresDevolucion"
+                                        <DxComboBox Data="@IndicadoresDevolucion"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                                     ValueFieldName=@nameof(CodigoDescripcion.Codigo)
                                                     Value="editItem.IndicadorCalculoDevolucion"
@@ -545,19 +542,19 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(CondicionDto.PctDevolucion)"
+                                <DxGridDataColumn FieldName="@nameof(CondicionViewModel.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="10%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is CondicionDto item)
+                                        @if (context.DataItem is CondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -583,8 +580,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((CondicionDto)context.EditModel);
-                                            var dataItem = ((CondicionDto)context.DataItem);
+                                            var editItem = ((CondicionViewModel)context.EditModel);
+                                            var dataItem = ((CondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctDevolucion"
                                                         ShowSpinButtons="false"
@@ -599,8 +596,8 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(CondicionDto.NumeroExcepciones)"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.NumExcepciones)"
+                                <DxGridDataColumn FieldName="@nameof(CondicionViewModel.NumeroExcepciones)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.NumExcepciones)"
                                                   ReadOnly="true"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -613,16 +610,16 @@
                                 </DxGridDataColumn>
 
                                 <DxGridCommandColumn Width="11%" NewButtonVisible="false" 
-                                                    Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.FiltroExcepciones)"
+                                                    Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.FiltroExcepciones)"
                                                     CaptionAlignment="GridTextAlignment.Center">
                                     <FilterRowCellTemplate>
                                     </FilterRowCellTemplate>
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (CondicionDto)context.DataItem;
+                                            var item = (CondicionViewModel)context.DataItem;
                                             var isSelected = _codigoMedioleccionadoParaFiltro == item.CodigoMedio; 
                                             var clase = isSelected ? "valor-filtrado" : "";
-                                            string toolTip = isSelected ? ObtenerTexto(AppResources.Common.FiltroQuitar) : ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.FiltroPorMedio);
+                                            string toolTip = isSelected ? ObtenerTexto(TextosApp.Common.FiltroQuitar) : ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.FiltroPorMedio);
                                         }
                                         <div class="grid-cell-align-center">
                                             <DxButton IconCssClass="fas fa-filter"
@@ -654,13 +651,13 @@
         @* GRID MEDIOS EXCEPCIONES *@
         <DxFormLayout>
             <DxFormLayoutGroup ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
-                                Visible="@(_vigenciaSeleccionada != null ?  true : false)"
-                               Caption="@(_tituloGridExcepciones)"
+                                Visible="@(VigenciaSeleccionada != null ?  true : false)"
+                               Caption="@(TituloGridExcepciones)"
                                 ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
                                 AnimationType="LayoutAnimationType.Slide">
                 <ChildContent>
                     <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12" Context="formLayout">
-                        <DxGrid Data="@_excepciones"
+                        <DxGrid Data="@Excepciones"
                                 @ref="GridExcepciones"
                                 KeyFieldName="Key" 
                                 ValidationEnabled="false"
@@ -678,8 +675,8 @@
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                             RenderStyle=ButtonRenderStyle.None
-                                            Text="@ObtenerTexto(AppResources.Common.Nuevo)"
-                                            Click="AñadirExcepcion"
+                                            Text="@ObtenerTexto(TextosApp.Common.Nuevo)"
+                                            Click="AÃ±adirExcepcion"
                                               Enabled=@ActivarBotonNuevaExcepcion 
                                             IconCssClass="fa-solid fa-plus" />
                                 </div>
@@ -687,7 +684,7 @@
                                 <div class="d-flex justify-content-start">
                                     <DxButton CssClass="toolbarButtonCustom"
                                               RenderStyle=ButtonRenderStyle.None
-                                              Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                              Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                                               Click="CancelarCambiosExcepciones"
                                               IconCssClass="fa-solid fa-cancel"
                                               Enabled="@(ExcepcionesNoGuardadas.Count > 0)" />
@@ -696,8 +693,8 @@
 
                             <Columns>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.Jerarquia)"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Jerarquia)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.Jerarquia)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Jerarquia)"
                                                   ReadOnly="true"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -705,7 +702,7 @@
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             if (item.MedioAccesible)
                                             {
                                                 if (item.Jerarquia != 1)
@@ -716,7 +713,7 @@
                                                     </i>
                                                 }
 
-                                                int max = _excepciones.Where(c => c.CodigoMedio == item.CodigoMedio).Max(c=> c.Jerarquia);
+                                                int max = Excepciones.Where(c => c.CodigoMedio == item.CodigoMedio).Max(c=> c.Jerarquia);
                                                 if (item.Jerarquia < max)
                                                 {
                                                     <i class="fas fa-arrow-down icono-accion"
@@ -739,7 +736,7 @@
                                         
                                     <CellEditTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             if (item.MedioAccesible)
                                             {
                                                 if (item.Jerarquia != 1)
@@ -750,7 +747,7 @@
                                                     </i>
                                                 }
 
-                                                int max = _excepciones.Where(c => c.CodigoMedio == item.CodigoMedio).Max(c=> c.Jerarquia);
+                                                int max = Excepciones.Where(c => c.CodigoMedio == item.CodigoMedio).Max(c=> c.Jerarquia);
                                                 if (item.Jerarquia < max)
                                                 {
                                                     <i class="fas fa-arrow-down icono-accion"
@@ -773,8 +770,8 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.DescripcionMedio)"
-                                                  Caption="@ObtenerTexto("Pages:PlanificacionCondiciones:Medio:label")"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.DescripcionMedio)"
+                                                  Caption="@ObtenerTexto(TextosApp.Common.Medio)"
                                                   ReadOnly="true"
                                                   Width="13%"
                                                   CaptionAlignment="GridTextAlignment.Center"
@@ -784,18 +781,18 @@
                                     </CellDisplayTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionDto.PctSAG)"
+                                <DxGridDataColumn  DisplayFormat="{0:N2} %" FieldName="@nameof(ExcepcionCondicionViewModel.PctSAG)"
                                                   FilterRowEditorVisible="true"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right">
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipSagTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is ExcepcionDto item)
+                                        @if (context.DataItem is ExcepcionCondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -819,8 +816,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((ExcepcionDto)context.EditModel);
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = ((ExcepcionCondicionViewModel)context.EditModel);
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctSAG"
                                                         ShowSpinButtons="false"
@@ -837,19 +834,19 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctManPower)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.PctManPower)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipManpowerTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is ExcepcionDto item)
+                                        @if (context.DataItem is ExcepcionCondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -874,8 +871,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((ExcepcionDto)context.EditModel);
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = ((ExcepcionCondicionViewModel)context.EditModel);
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctManPower"
                                                         ShowSpinButtons="false"
@@ -892,19 +889,19 @@
 
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.PctDevolucion)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.PctDevolucion)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)"
                                                   Width="8%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Right" DisplayFormat="{0:N2} %">
 
                                     <HeaderCaptionTemplate>
-                                        <span title="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
+                                        <span title="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTipDevolucionTpc)">@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc)</span>
                                     </HeaderCaptionTemplate>
 
                                     <CellDisplayTemplate>
-                                        @if (context.DataItem is ExcepcionDto item)
+                                        @if (context.DataItem is ExcepcionCondicionViewModel item)
                                         {
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -929,8 +926,8 @@
 
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = ((ExcepcionDto)context.EditModel);
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = ((ExcepcionCondicionViewModel)context.EditModel);
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             <DxSpinEdit value="@editItem.PctDevolucion"
                                                         ShowSpinButtons="false"
@@ -946,17 +943,17 @@
                                   
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoAlcance)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoAlcance)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Alcance)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Alcance)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
-                                            var descripcion = _alcances.FirstOrDefault(o => o.Codigo == item.CodigoAlcance)?.Descripcion ?? "";
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
+                                            var descripcion = Alcances.FirstOrDefault(o => o.Codigo == item.CodigoAlcance)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -974,12 +971,12 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             var css = editItem.CodigoAlcance != dataItem.CodigoAlcance ? "grid-modified-cell" : "";
                                             bool soloLectura = !dataItem.MedioAccesible;
                                          }
-                                        <DxComboBox Data="@_alcances"
+                                        <DxComboBox Data="@Alcances"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                                     ValueFieldName=@nameof(CodigoDescripcion.Codigo)
                                                     Value="editItem.CodigoAlcance"
@@ -990,16 +987,16 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoDisciplina)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoTipoDisciplina)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoDisciplina)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.TipoDisciplina)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             // var descripcion = TiposDisciplina.FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
                                             var descripcion = (item.TiposDisciplinaDisponibles ?? _tiposDisciplina).FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
 
@@ -1019,8 +1016,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoTipoDisciplina != dataItem.CodigoTipoDisciplina ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.TiposDisciplinaDisponibles ?? _tiposDisciplina;
@@ -1037,16 +1034,16 @@
                                 </DxGridDataColumn>
 
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplinaGrupo)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDisciplinaGrupo)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DisciplinaGrupo)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DisciplinaGrupo)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _disciplinasGrupo.FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
                                             var descripcion = (item.DisciplinasGrupoDisponibles ?? _disciplinasGrupo).FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
@@ -1065,8 +1062,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDisciplinaGrupo != dataItem.CodigoDisciplinaGrupo ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.DisciplinasGrupoDisponibles ?? _disciplinasGrupo;
@@ -1084,16 +1081,16 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDisciplina)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDisciplina)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Disciplina)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Disciplina)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             var descripcion = (item.DisciplinasDisponibles ?? _disciplinas).FirstOrDefault(o => o.Codigo == item.CodigoDisciplina)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -1110,8 +1107,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDisciplina != dataItem.CodigoDisciplina ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.DisciplinasDisponibles ?? _disciplinas;
@@ -1129,16 +1126,16 @@
 
                                 </DxGridDataColumn>
 
-                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoDiversified)"
+                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoDiversified)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Diversified)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Diversified)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
-                                            var descripcion = _diversifieds.FirstOrDefault(o => o.Codigo == item.CodigoDiversified)?.Descripcion ?? "";
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
+                                            var descripcion = Diversifieds.FirstOrDefault(o => o.Codigo == item.CodigoDiversified)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -1156,12 +1153,12 @@
                                     <CellEditTemplate>
                                        
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDiversified != dataItem.CodigoDiversified ? "grid-modified-cell" : "";
                                         }
-                                        <DxComboBox Data="@_diversifieds"
+                                        <DxComboBox Data="@Diversifieds"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
                                                     ValueFieldName=@nameof(CodigoDescripcion.Codigo)
                                                     Value="editItem.CodigoDiversified"
@@ -1171,16 +1168,16 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoObjetivo)"
+                                <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoObjetivo)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Objetivo)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Objetivo)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _objetivos.FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
                                             var descripcion = (item.ObjetivosDisponibles ?? _objetivos).FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
@@ -1198,8 +1195,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoObjetivo != dataItem.CodigoObjetivo ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.ObjetivosDisponibles ?? _objetivos;
@@ -1215,16 +1212,16 @@
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
-                                 <DxGridDataColumn FieldName="@nameof(ExcepcionDto.CodigoTipoCompra)"
+                                 <DxGridDataColumn FieldName="@nameof(ExcepcionCondicionViewModel.CodigoTipoCompra)"
                                                   FilterRowEditorVisible="false"
-                                                  Caption="@ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoCompra)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.TipoCompra)"
                                                   Width="11%"
                                                   CaptionAlignment="GridTextAlignment.Center"
                                                   TextAlignment="GridTextAlignment.Left">
 
                                     <CellDisplayTemplate>
                                         @{
-                                            var item = (ExcepcionDto)context.DataItem;
+                                            var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _tiposCompra.FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
                                             var descripcion = (item.TiposCompraDisponibles ?? _tiposCompra).FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
@@ -1243,8 +1240,8 @@
                                     </CellDisplayTemplate>
                                     <CellEditTemplate>
                                         @{
-                                            var editItem = (ExcepcionDto)context.EditModel;
-                                            var dataItem = ((ExcepcionDto)context.DataItem);
+                                            var editItem = (ExcepcionCondicionViewModel)context.EditModel;
+                                            var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoTipoCompra != dataItem.CodigoTipoCompra ? "grid-modified-cell" : "";
                                             var opcionesDisponibles = dataItem.TiposCompraDisponibles ?? _tiposCompra;
@@ -1268,7 +1265,7 @@
                                             <DxButton IconCssClass="fas fa-trash"
                                                       RenderStyle="ButtonRenderStyle.Link"
                                                       aria-label="Delete"
-                                                      title="@ObtenerTexto(AppResources.Common.EliminarRegistro)"
+                                                      title="@ObtenerTexto(TextosApp.Common.EliminarRegistro)"
                                                       Click="@(() => EliminarExcepcion(context.DataItem))" />
                                         </div>
                                     </CellDisplayTemplate>
@@ -1293,7 +1290,7 @@
         </DxFormLayout>
 
 
-        @if (_vigenciaSeleccionada != null)
+        @if (VigenciaSeleccionada != null)
         {
             <DxFormLayout  >
                 <DxFormLayoutItem ColSpanSm="4" ColSpanMd="3" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2" BeginRow="true">
@@ -1301,7 +1298,7 @@
                         <div class="d-flex justify-content-start">
                             <DxButton CssClass="btnCustom"
                                       RenderStyle=ButtonRenderStyle.None
-                                      Text="@ObtenerTexto(AppResources.Common.Save)"
+                                      Text="@ObtenerTexto(TextosApp.Common.Save)"
                                       Click="Grabar"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayCambiosPendientes" />
@@ -1315,7 +1312,7 @@
                     <div class="d-flex justify-content-end">
                         <DxButton CssClass="btnCustom"
                                   RenderStyle=ButtonRenderStyle.None
-                                  Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                                  Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                                   Click="CancelarCambios"
                                   IconCssClass="fa-solid fa-cancel"
                                   Enabled="@HayCambiosPendientes" />
@@ -1325,9 +1322,9 @@
         }
 
         @* POPUP EDIT MEDIOS *@
-        <DxPopup Visible="@_popupMediosVisible"
+        <DxPopup Visible="@PopupMediosVisible"
                  ShowFooter="true"
-                 HeaderText="Selección de medios para nueva Excepción"
+                 HeaderText="SelecciÃ³n de medios para nueva ExcepciÃ³n"
                  ShowCloseButton="false"
                  Width="500px"
                  Height="Auto"
@@ -1340,12 +1337,12 @@
                     <DxFormLayoutItem ColSpanSm="6" ColSpanMd="6" ColSpanLg="6" ColSpanXl="6" ColSpanXxl="6"
                                       CaptionPosition="CaptionPosition.Vertical">
                         <CaptionTemplate>
-                            <span>@ObtenerTexto(AppResources.Common.Medios)</span><span class="mandatory"></span>
+                            <span>@ObtenerTexto(TextosApp.Common.Medios)</span><span class="mandatory"></span>
                         </CaptionTemplate>
                         <Template>
-                            <DxComboBox Data="@_mediosMaster"
+                            <DxComboBox Data="@MediosMaster"
                                         Id="comboBoxMedios"
-                                        @bind-Value="@_medioSeleccionadoDesdePopup"
+                                        @bind-Value="@MedioSeleccionadoDesdePopup"
                                         ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                         TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                         SearchMode="@ListSearchMode.AutoSearch"
@@ -1363,14 +1360,14 @@
                 <div class="popupFooter">
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None
-                              Text="@ObtenerTexto(AppResources.Common.Aceptar)"
+                              Text="@ObtenerTexto(TextosApp.Common.Aceptar)"
                               IconCssClass="fa-solid fa-save"
-                              Enabled="@(_medioSeleccionadoDesdePopup != null)"
-                              Click="@AñadirExcepcionDesdePopup" />
+                              Enabled="@(MedioSeleccionadoDesdePopup != null)"
+                              Click="@AÃ±adirExcepcionDesdePopup" />
 
                     <DxButton CssClass="btnCustom"
                               RenderStyle=ButtonRenderStyle.None
-                              Text="@ObtenerTexto(AppResources.Botones.Cancelar)"
+                              Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
                               IconCssClass="fa-solid fa-cancel"
                               Click="@OcultarPopupMedios" />
                 </div>

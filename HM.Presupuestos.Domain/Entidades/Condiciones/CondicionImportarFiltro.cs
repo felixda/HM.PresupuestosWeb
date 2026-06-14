@@ -1,4 +1,4 @@
-﻿
+
 using System.Text.Json.Serialization;
 
 namespace HM.Presupuestos.Domain.Entidades

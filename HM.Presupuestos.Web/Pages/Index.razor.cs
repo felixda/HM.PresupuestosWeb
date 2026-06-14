@@ -23,7 +23,7 @@ namespace HM.Presupuestos.Web.Pages
             {
                 await base.OnUsuarioDisponibleAsync();
 
-                LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
+                LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
                 
                 ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
@@ -44,7 +44,7 @@ namespace HM.Presupuestos.Web.Pages
         {
             try
             {
-                LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {TituloPagina}");
+                LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
                 await base.OnUsuarioImpersonadoDesconectado();
                 ObtenerFavoritos(Usuario);
                 await InvokeAsync(StateHasChanged);
@@ -63,10 +63,10 @@ namespace HM.Presupuestos.Web.Pages
 
         #endregion
 
-        #region Métodos Privados
+        #region MÃ©todos Privados
 
         /// <summary>
-        /// Actualiza los menús favoritos del usuario
+        /// Actualiza los menÃºs favoritos del usuario
         /// </summary>
         private void ObtenerFavoritos(UsuarioEntidad usuario)
         {

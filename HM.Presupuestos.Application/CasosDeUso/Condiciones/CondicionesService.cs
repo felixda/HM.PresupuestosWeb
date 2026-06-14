@@ -1,3 +1,4 @@
+using HM.Presupuestos.Application.CasosDeUso.Compartido;
 using HM.Presupuestos.Application.CasosDeUso.LogAcciones;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Domain.Compartido;
@@ -8,8 +9,8 @@ using System.Runtime.CompilerServices;
 namespace HM.Presupuestos.Application.CasosDeUso
 { 
     /// <summary>
-    /// Servicio de gestión de condiciones comerciales, excepciones y vigencias
-    /// Gestiona condiciones SAG, Manpower, Devolución y sus excepciones por medio con conceptos NMD
+    /// Servicio de gestiÃ³n de condiciones comerciales, excepciones y vigencias
+    /// Gestiona condiciones SAG, Manpower, DevoluciÃ³n y sus excepciones por medio con conceptos NMD
     /// </summary>
     /// <remarks>
     /// ?? Arquitectura CORRECTA:
@@ -21,21 +22,21 @@ namespace HM.Presupuestos.Application.CasosDeUso
     /// 
     /// Ventajas de usar servicios en lugar de repositorios directos:
     /// - Arquitectura: Respeta capas
-    /// - Encapsulación: Encapsula lógica de negocio
+    /// - EncapsulaciÃ³n: Encapsula lÃ³gica de negocio
     /// - Mantenibilidad: Desacoplado
-    /// - Testabilidad: Más simple
-    /// - Reutilización: Lógica centralizada
-    /// - Evolución: Cambio en un solo lugar
+    /// - Testabilidad: MÃ¡s simple
+    /// - ReutilizaciÃ³n: LÃ³gica centralizada
+    /// - EvoluciÃ³n: Cambio en un solo lugar
     /// </remarks>
     public class CondicionesService(
         ILogger<CondicionesService> logger, 
         ICondicionesRepository condicionesRepository, 
-        IPresupuestosService presupuestosService, 
+        IMaestrosService maestrosService, 
         ILogAccionesService logAccionesService) : ICondicionesService
     {
         private readonly ILogger<CondicionesService> _logger = logger;
         private readonly ICondicionesRepository _condicionesRepository = condicionesRepository;
-        private readonly IPresupuestosService _presupuestosService = presupuestosService;
+        private readonly IMaestrosService _maestrosService = maestrosService;
         private readonly ILogAccionesService _logAccionesService = logAccionesService;
 
         /// <summary>
@@ -52,19 +53,19 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public Task<List<Vigencia>> ObtenerVigencias(CondicionFiltro filtro)
         {
-            _logger.LogTrace("Llamando método ObtenerVigencias");
+            _logger.LogTrace("Llamando mÃ©todo ObtenerVigencias");
             return _condicionesRepository.ObtenerVigencias(filtro);
         }
 
         public async Task InsertarVigencia(Vigencia item)
         {
-            _logger.LogTrace("Llamando método InsertarVigencia");
+            _logger.LogTrace("Llamando mÃ©todo InsertarVigencia");
             await _condicionesRepository.InsertarVigencia(item);
         }
 
         public async Task ActualizarVigencia( Vigencia vigencia)
         {
-            _logger.LogTrace("Llamando método ActualizarVigencia");
+            _logger.LogTrace("Llamando mÃ©todo ActualizarVigencia");
             await _condicionesRepository.ActualizarVigencia(vigencia);
         }
 
@@ -74,11 +75,11 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <param name="vigencia">Vigencia a validar con sus fechas desde/hasta</param>
         /// <returns>True si no hay solapamiento, false si existe al menos un solapamiento</returns>
         /// <remarks>
-        /// Este método realiza las siguientes validaciones:
-        /// 1. Busca vigencias con los mismos criterios (versión, grupo cliente, network, acuerdo)
-        /// 2. Excluye la propia vigencia si ya existe (comparación por código)
+        /// Este mÃ©todo realiza las siguientes validaciones:
+        /// 1. Busca vigencias con los mismos criterios (versiÃ³n, grupo cliente, network, acuerdo)
+        /// 2. Excluye la propia vigencia si ya existe (comparaciÃ³n por cÃ³digo)
         /// 3. Verifica solapamiento de rangos: [MesDesde..MesHasta]
-        /// La lógica de solapamiento: vigencia.MesDesde &lt;= existente.MesHasta AND existente.MesDesde &lt;= vigencia.MesHasta
+        /// La lÃ³gica de solapamiento: vigencia.MesDesde &lt;= existente.MesHasta AND existente.MesDesde &lt;= vigencia.MesHasta
         /// </remarks>
         public async Task<bool> ValidarSolapesVigencia(Vigencia vigencia)
         {
@@ -115,14 +116,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// - Condiciones de la vigencia
         /// - Excepciones asociadas
         /// - Conceptos NMD de las excepciones
-        /// Se registra la acción de auditoría después de la eliminación exitosa
+        /// Se registra la acciÃ³n de auditorÃ­a despuÃ©s de la eliminaciÃ³n exitosa
         /// </remarks>
         public async Task EliminarVigencia(Vigencia vigencia)
         {
-            _logger.LogTrace("Llamando método EliminarVigencia");
+            _logger.LogTrace("Llamando mÃ©todo EliminarVigencia");
             await _condicionesRepository.EliminarVigencia(vigencia.Codigo);
 
-            // Registrar auditoría después de eliminación exitosa
+            // Registrar auditorÃ­a despuÃ©s de eliminaciÃ³n exitosa
             try
             {
                 await _logAccionesService.Insertar(
@@ -131,41 +132,41 @@ namespace HM.Presupuestos.Application.CasosDeUso
             }
             catch (Exception logEx)
             {
-                _logger.LogError(logEx, "Error registrando auditoría (eliminación exitosa)");
-                // No propagar - la eliminación fue exitosa
+                _logger.LogError(logEx, "Error registrando auditorÃ­a (eliminaciÃ³n exitosa)");
+                // No propagar - la eliminaciÃ³n fue exitosa
             }
         }
 
         public Task<bool> ExistenCondicionesVigencias(int codigoVigencia)
         {
-            _logger.LogTrace("Llamando método ExistenCondicionesVigencias");
-            return _condicionesRepository.ExistenCondicionesVigencias(codigoVigencia);
+            _logger.LogTrace("Llamando mÃ©todo ExistenCondicionesVigencias");
+            return _condicionesRepository.LaVigenciaTieneCondiciones(codigoVigencia);
         }
 
         #endregion
 
         /// <summary>
-        /// Obtiene las condiciones por vigencia o devuelve una colección vacía basada en medios del network
+        /// Obtiene las condiciones por vigencia o devuelve una colecciÃ³n vacÃ­a basada en medios del network
         /// </summary>
-        /// <param name="codigoVigencia">Código de la vigencia</param>
-        /// <param name="codigoNetwork">Código del network para obtener medios si no hay condiciones</param>
-        /// <returns>Lista de condiciones existentes o estructura vacía con medios del network</returns>
+        /// <param name="codigoVigencia">CÃ³digo de la vigencia</param>
+        /// <param name="codigoNetwork">CÃ³digo del network para obtener medios si no hay condiciones</param>
+        /// <returns>Lista de condiciones existentes o estructura vacÃ­a con medios del network</returns>
         /// <remarks>
-        /// Lógica del método:
+        /// LÃ³gica del mÃ©todo:
         /// 1. Si existen condiciones para la vigencia ? las devuelve
-        /// 2. Si NO existen condiciones ? devuelve una colección con CondicionDto vacíos para cada medio del network
+        /// 2. Si NO existen condiciones ? devuelve una colecciÃ³n con CondicionDto vacÃ­os para cada medio del network
         /// Esto permite que la UI muestre todos los medios disponibles aunque no tengan condiciones configuradas
         /// </remarks>
         public async Task<List<CondicionDto>> ObtenerCondicionesPorVigencia(int codigoVigencia, int codigoNetwork)
         {
-            _logger.LogTrace("Llamando método ObtenerCondicionesPorVigencia");
+            _logger.LogTrace("Llamando mÃ©todo ObtenerCondicionesPorVigencia");
 
-            List<CondicionDto> resultado = await _condicionesRepository.ObtenerCondicionesPorVigencia(codigoVigencia);
+            List<CondicionDto> resultado = await _condicionesRepository.ObtenerCondicionesDeLaVigencia(codigoVigencia);
 
             if (resultado.Count > 0) return resultado;
 
-            // Si no hay datos, devolvemos la colección de condiciones para cada medio accesible por network
-            List<CodigoDescripcion> medios = await _presupuestosService.ObtenerMediosPorNetWork(codigoNetwork.ToString());
+            // Si no hay datos, devolvemos la colecciÃ³n de condiciones para cada medio accesible por network
+            List<CodigoDescripcion> medios = await _maestrosService.ObtenerMediosPorNetWork(codigoNetwork.ToString());
 
             return [.. medios.Select(m => new CondicionDto
             {
@@ -176,41 +177,41 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public Task<List<ExcepcionDto>> ObtenerExcepcionesCondiciones(int codigoVigencia)
         {
-            _logger.LogTrace("Llamando método ObtenerExcepcionesCondiciones");
-            return _condicionesRepository.ObtenerExcepcionesCondiciones(codigoVigencia);
+            _logger.LogTrace("Llamando mÃ©todo ObtenerExcepcionesCondiciones");
+            return _condicionesRepository.ObtenerExcepcionesDeLaVigencia(codigoVigencia);
         }
 
         /// <summary>
-        /// Guarda condiciones y excepciones comerciales con sus conceptos asociados en una única transacción
+        /// Guarda condiciones y excepciones comerciales con sus conceptos asociados en una Ãºnica transacciÃ³n
         /// </summary>
         /// <param name="condicionesNoGuardadas">Diccionario de condiciones modificadas con sus campos cambiados</param>
         /// <param name="excepcionesNoGuardadas">Diccionario de excepciones modificadas con sus campos cambiados</param>
-        /// <param name="codigoVigencia">Código de la vigencia a la que pertenecen</param>
+        /// <param name="codigoVigencia">CÃ³digo de la vigencia a la que pertenecen</param>
         /// <remarks>
-        /// Este método realiza un proceso complejo en una transacción:
+        /// Este mÃ©todo realiza un proceso complejo en una transacciÃ³n:
         /// 
         /// CONDICIONES:
-        /// - Para cada condición procesa 3 conceptos: SAG, Manpower, Devolución
+        /// - Para cada condiciÃ³n procesa 3 conceptos: SAG, Manpower, DevoluciÃ³n
         /// - Inserta si es nueva y tiene porcentaje
-        /// - Actualiza si cambió el porcentaje o indicador de devolución
-        /// - Elimina si el porcentaje pasa a null (también elimina excepciones relacionadas)
+        /// - Actualiza si cambiÃ³ el porcentaje o indicador de devoluciÃ³n
+        /// - Elimina si el porcentaje pasa a null (tambiÃ©n elimina excepciones relacionadas)
         /// 
         /// EXCEPCIONES:
-        /// - Pre-tratamiento: Si cambió jerarquía, pone valores negativos temporales para evitar duplicados UK
-        /// - Para cada excepción procesa 3 conceptos: SAG, Manpower, Devolución
-        /// - Para cada excepción gestiona 7 conceptos NMD: Alcance, Objetivo, Disciplina, Diversified, TipoCompra, TipoDisciplina, DisciplinaGrupo
-        /// - Solo actualiza campos que cambiaron (optimización mediante HashSet CamposCambiados)
+        /// - Pre-tratamiento: Si cambiÃ³ jerarquÃ­a, pone valores negativos temporales para evitar duplicados UK
+        /// - Para cada excepciÃ³n procesa 3 conceptos: SAG, Manpower, DevoluciÃ³n
+        /// - Para cada excepciÃ³n gestiona 7 conceptos NMD: Alcance, Objetivo, Disciplina, Diversified, TipoCompra, TipoDisciplina, DisciplinaGrupo
+        /// - Solo actualiza campos que cambiaron (optimizaciÃ³n mediante HashSet CamposCambiados)
         /// 
-        /// Si cualquier operación falla, hace rollback de toda la transacción
+        /// Si cualquier operaciÃ³n falla, hace rollback de toda la transacciÃ³n
         /// </remarks>
         public async Task GrabarCondicionesExcepciones(
             Dictionary<CondicionDto, DatosCondicionCambiados> condicionesNoGuardadas,
             Dictionary<ExcepcionDto, DatosExcepcionesCondicionCambiados> excepcionesNoGuardadas,
             int codigoVigencia)
         {
-            _logger.LogTrace("Llamando método GrabarCondicionesExcepciones");
+            _logger.LogTrace("Llamando mÃ©todo GrabarCondicionesExcepciones");
 
-            List<ConceptoCondicion> conceptos = await _condicionesRepository.ObtenerConceptos();
+            List<ConceptoCondicion> conceptos = await _condicionesRepository.ObtenerConceptosDeCondicion();
 
             using var transaction = _condicionesRepository.ObtenerTransaccion();
 
@@ -248,14 +249,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
                 #region Grabar Excepciones
 
-                // Pre-tratamiento de jerarquías. Si se han modificado las jerarquías, tenemos que hacer una operación previa para que no dé problemas
+                // Pre-tratamiento de jerarquÃ­as. Si se han modificado las jerarquÃ­as, tenemos que hacer una operaciÃ³n previa para que no dÃ© problemas
                 // a la hora de editarlas ya que forma parte de una UK en la tabla
                 foreach (var (excepcionDto, datos) in excepcionesNoGuardadas)
                 {
                     if (datos.CamposCambiados.Contains(nameof(ExcepcionDto.Jerarquia)))
                     {
-                        // Si es > 0 es porque existe en BD, le ponemos la jerarquía en negativo para saber que no se va a duplicar
-                        // y luego se modifica con la jerarquía correspondiente
+                        // Si es > 0 es porque existe en BD, le ponemos la jerarquÃ­a en negativo para saber que no se va a duplicar
+                        // y luego se modifica con la jerarquÃ­a correspondiente
                         foreach (var codigos in excepcionDto.CodigosConceptosCondiciones.Where(c => c.CodigoCondicion > 0))
                         {
                             var jerarquiaNegativa = excepcionDto.Jerarquia * -1;
@@ -313,22 +314,22 @@ namespace HM.Presupuestos.Application.CasosDeUso
         }
 
         /// <summary>
-        /// Elimina una excepción de condición y ajusta las jerarquías de excepciones posteriores
+        /// Elimina una excepciÃ³n de condiciÃ³n y ajusta las jerarquÃ­as de excepciones posteriores
         /// </summary>
-        /// <param name="codigosConceptosCondiciones">Lista de códigos de conceptos a eliminar</param>
-        /// <param name="jerarquia">Jerarquía de la excepción eliminada</param>
-        /// <param name="codigoVigencia">Código de vigencia para buscar excepciones afectadas</param>
-        /// <param name="codigoMedio">Código de medio para filtrar excepciones del mismo medio</param>
-        /// <param name="codigoUsuario">Código de usuario que realiza la operación</param>
+        /// <param name="codigosConceptosCondiciones">Lista de cÃ³digos de conceptos a eliminar</param>
+        /// <param name="jerarquia">JerarquÃ­a de la excepciÃ³n eliminada</param>
+        /// <param name="codigoVigencia">CÃ³digo de vigencia para buscar excepciones afectadas</param>
+        /// <param name="codigoMedio">CÃ³digo de medio para filtrar excepciones del mismo medio</param>
+        /// <param name="codigoUsuario">CÃ³digo de usuario que realiza la operaciÃ³n</param>
         /// <remarks>
-        /// Este método realiza las siguientes operaciones en una transacción:
-        /// 1. Elimina los 7 conceptos NMD de cada condición (Alcance, Objetivo, Disciplina, etc.)
-        /// 2. Elimina las excepciones de condición
-        /// 3. Busca excepciones posteriores del mismo medio (jerarquía mayor)
-        /// 4. Decrementa en 1 la jerarquía de todas las excepciones posteriores
-        /// 5. Actualiza las jerarquías en base de datos
+        /// Este mÃ©todo realiza las siguientes operaciones en una transacciÃ³n:
+        /// 1. Elimina los 7 conceptos NMD de cada condiciÃ³n (Alcance, Objetivo, Disciplina, etc.)
+        /// 2. Elimina las excepciones de condiciÃ³n
+        /// 3. Busca excepciones posteriores del mismo medio (jerarquÃ­a mayor)
+        /// 4. Decrementa en 1 la jerarquÃ­a de todas las excepciones posteriores
+        /// 5. Actualiza las jerarquÃ­as en base de datos
         /// 
-        /// Esto mantiene la integridad de la jerarquía secuencial de excepciones por medio
+        /// Esto mantiene la integridad de la jerarquÃ­a secuencial de excepciones por medio
         /// </remarks>
         public async Task EliminarExcepcionCondicion(
             List<CodigosConceptoCondicion> codigosConceptosCondiciones,
@@ -337,7 +338,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
             int codigoMedio,
             int codigoUsuario)
         {
-            _logger.LogTrace("Llamando método EliminarExcepcionCondicion");
+            _logger.LogTrace("Llamando mÃ©todo EliminarExcepcionCondicion");
 
             using var transaction = _condicionesRepository.ObtenerTransaccion();
 
@@ -348,24 +349,24 @@ namespace HM.Presupuestos.Application.CasosDeUso
                 {
                     foreach (var concepto in Enum.GetValues<ConceptosCondicionesNMD>())
                     {
-                        await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigos.CodigoCondicion, concepto);
+                        await _condicionesRepository.EliminarConceptoDeExcepcion(codigos.CodigoCondicion, concepto);
                     }
 
                     await _condicionesRepository.EliminarExcepcionCondicion(codigos.CodigoCondicion);
                 }
 
-                // Ajustar jerarquías de excepciones posteriores
-                var excepciones = await _condicionesRepository.ObtenerExcepcionesCondiciones(codigoVigencia);
+                // Ajustar jerarquÃ­as de excepciones posteriores
+                var excepciones = await _condicionesRepository.ObtenerExcepcionesDeLaVigencia(codigoVigencia);
 
-                // Filtrar por el medio y cogemos las que tengan la jerarquía mayor que la eliminada
+                // Filtrar por el medio y cogemos las que tengan la jerarquÃ­a mayor que la eliminada
                 var excepcionesFiltradas = excepciones
                     .Where(c => c.CodigoMedio == codigoMedio && c.Jerarquia > jerarquia)
                     .ToList();
 
-                // Decrementar jerarquía
+                // Decrementar jerarquÃ­a
                 excepcionesFiltradas.ForEach(c => c.Jerarquia--);
 
-                // Actualizar jerarquías en base de datos
+                // Actualizar jerarquÃ­as en base de datos
                 foreach (var excepcion in excepcionesFiltradas)
                 {
                     var tareasActualizar = excepcion.CodigosConceptosCondiciones
@@ -391,14 +392,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
             }
             else
             {
-                await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigoCondicionMedio, conceptoNMD);
+                await _condicionesRepository.EliminarConceptoDeExcepcion(codigoCondicionMedio, conceptoNMD);
             }
         }
 
         private async Task TratarExcepcion(Condicion excepcion, ExcepcionDto itemModificado, HashSet<string> camposConCambios)
         {
-            // Buscar excepción existente
-            var excepcionBD = await _condicionesRepository.ObtenerExcepcionOrCondicion(excepcion.CodigoCondicion);
+            // Buscar excepciÃ³n existente
+            var excepcionBD = await _condicionesRepository.ObtenerCondicionPorCodigo(excepcion.CodigoCondicion);
 
             // Caso 1: No existe ? insertar si porcentaje no es null 
             if (excepcionBD == null)
@@ -424,15 +425,15 @@ namespace HM.Presupuestos.Application.CasosDeUso
             // Caso 2: Existe 
             int codigoCondicion = excepcionBD.CodigoCondicion;
 
-            // Si cambió Porcentaje o Jerarquía
+            // Si cambiÃ³ Porcentaje o JerarquÃ­a
             if (excepcionBD.Porcentaje != excepcion.Porcentaje || excepcionBD.Jerarquia != excepcion.Jerarquia)
             {
                 if (!excepcion.Porcentaje.HasValue)
                 {
-                    // Eliminar conceptos y excepción
+                    // Eliminar conceptos y excepciÃ³n
                     foreach (var concepto in Enum.GetValues<ConceptosCondicionesNMD>())
                     {
-                        await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigoCondicion, concepto);
+                        await _condicionesRepository.EliminarConceptoDeExcepcion(codigoCondicion, concepto);
                     }
 
                     await _condicionesRepository.EliminarExcepcionCondicion(codigoCondicion);
@@ -473,8 +474,8 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         private async Task TratarCondicion(Condicion condicion)
         {
-            // Buscar condición  
-            Condicion? condicionBD = await _condicionesRepository.ObtenerExcepcionOrCondicion(condicion);
+            // Buscar condiciÃ³n  
+            Condicion? condicionBD = await _condicionesRepository.ObtenerCondicionPorClave(condicion);
 
             // Caso 1: No existe ? grabar solo si tiene porcentaje
             if (condicionBD == null)
@@ -486,7 +487,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
                 return;
             }
 
-            // Caso 2.1: Si es Devolución, comprobar si ha cambiado el indicador
+            // Caso 2.1: Si es DevoluciÃ³n, comprobar si ha cambiado el indicador
             if (condicion.CodigoConcepto == ConceptosCondiciones.Devolucion)
             {
                 if (condicion.IndicadorCalculo == condicionBD.IndicadorCalculo)
@@ -495,32 +496,32 @@ namespace HM.Presupuestos.Application.CasosDeUso
                     if (condicionBD.Porcentaje == condicion.Porcentaje) return;
                 }
             }
-            // Caso 2.2: Si no es Devolución
+            // Caso 2.2: Si no es DevoluciÃ³n
             else
             {
                 // Existe pero el porcentaje no ha cambiado ? no se hace nada
                 if (condicionBD.Porcentaje == condicion.Porcentaje) return;
             }
 
-            // Caso 3: Existe y cambió el porcentaje o el tipo de devolución
+            // Caso 3: Existe y cambiÃ³ el porcentaje o el tipo de devoluciÃ³n
 
-            // 3.1 Si el nuevo porcentaje es null ? eliminar condición (y sus excepciones)
+            // 3.1 Si el nuevo porcentaje es null ? eliminar condiciÃ³n (y sus excepciones)
             if (condicion.Porcentaje == null)
             {
-                // Buscar códigos de excepciones del medio
-                List<int> codigos = await _condicionesRepository.ObtenerCodigosExcepcionesCondiciones(condicion);
+                // Buscar cÃ³digos de excepciones del medio
+                List<int> codigos = await _condicionesRepository.ObtenerCodigosDeExcepcionesDeCondicion(condicion);
 
                 foreach (var codigo in codigos)
                 {
                     foreach (var concepto in Enum.GetValues<ConceptosCondicionesNMD>())
                     {
-                        await _condicionesRepository.EliminarConceptoNMDExcepcionCondicion(codigo, concepto);
+                        await _condicionesRepository.EliminarConceptoDeExcepcion(codigo, concepto);
                     }
                     await _condicionesRepository.EliminarExcepcionCondicion(codigo);
                 }
                 await _condicionesRepository.EliminarCondicion(condicion);
             }
-            // 3.2 Si el nuevo porcentaje no es null ? grabar condición
+            // 3.2 Si el nuevo porcentaje no es null ? grabar condiciÃ³n
             else
             {
                 await _condicionesRepository.GrabarCondicion(condicion);
@@ -528,24 +529,24 @@ namespace HM.Presupuestos.Application.CasosDeUso
         }
 
         /// <summary>
-        /// Importa condiciones desde MMS (Media Management System) registrando inicio y fin en auditoría
+        /// Importa condiciones desde MMS (Media Management System) registrando inicio y fin en auditorÃ­a
         /// </summary>
-        /// <param name="param">Parámetros de filtro para la importación desde MMS</param>
-        /// <param name="nombreMetodoLlamador">Nombre del método llamador (se obtiene automáticamente con CallerMemberName)</param>
+        /// <param name="param">ParÃ¡metros de filtro para la importaciÃ³n desde MMS</param>
+        /// <param name="nombreMetodoLlamador">Nombre del mÃ©todo llamador (se obtiene automÃ¡ticamente con CallerMemberName)</param>
         /// <remarks>
         /// Flujo del proceso:
-        /// 1. Registra en log de auditoría el inicio de la importación
-        /// 2. Ejecuta la importación en una transacción
-        /// 3. Si tiene éxito: registra en auditoría la finalización
-        /// 4. Si falla: hace rollback y propaga la excepción
+        /// 1. Registra en log de auditorÃ­a el inicio de la importaciÃ³n
+        /// 2. Ejecuta la importaciÃ³n en una transacciÃ³n
+        /// 3. Si tiene Ã©xito: registra en auditorÃ­a la finalizaciÃ³n
+        /// 4. Si falla: hace rollback y propaga la excepciÃ³n
         /// 
-        /// Los logs de auditoría quedan registrados incluso si falla la importación,
+        /// Los logs de auditorÃ­a quedan registrados incluso si falla la importaciÃ³n,
         /// lo que permite trazabilidad de intentos fallidos
         /// </remarks>
         public async Task ImportarCondicionesMMS(CondicionImportarFiltro param, [CallerMemberName] string nombreMetodoLlamador = "")
         {
 
-            // Registrar auditoría antes de lanzar el proceso
+            // Registrar auditorÃ­a antes de lanzar el proceso
             try
             {
                 await _logAccionesService.Insertar(
@@ -554,18 +555,18 @@ namespace HM.Presupuestos.Application.CasosDeUso
             }
             catch (Exception logEx)
             {
-                _logger.LogError(logEx, "Error registrando auditoría (lanzando proceso importacion de condiciones)");
+                _logger.LogError(logEx, "Error registrando auditorÃ­a (lanzando proceso importacion de condiciones)");
                 // No propagar
             }
 
             using var transaction = _condicionesRepository.ObtenerTransaccion();
             try
             {
-                _logger.LogInformation("Llamando método ImportarCondicionesMMS");
+                _logger.LogInformation("Llamando mÃ©todo ImportarCondicionesMMS");
                 await _condicionesRepository.ImportarCondicionesMMS(param);
                 await transaction.CommitAsync();
 
-                // Registrar auditoría después de proceso realizado
+                // Registrar auditorÃ­a despuÃ©s de proceso realizado
                 try
                 {
                     await _logAccionesService.Insertar(
@@ -574,8 +575,8 @@ namespace HM.Presupuestos.Application.CasosDeUso
                 }
                 catch (Exception logEx)
                 {
-                    _logger.LogError(logEx, "Error registrando auditoría (Proceso finalizado)");
-                    // No propagar - El proceso de importación se ha realizado correctamente, solo ha fallado el registro en auditoría
+                    _logger.LogError(logEx, "Error registrando auditorÃ­a (Proceso finalizado)");
+                    // No propagar - El proceso de importaciÃ³n se ha realizado correctamente, solo ha fallado el registro en auditorÃ­a
                 }
             }
             catch
@@ -587,7 +588,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
             }
             finally
             {
-                _logger.LogInformation("Saliendo del método ImportarCondicionesMMS");
+                _logger.LogInformation("Saliendo del mÃ©todo ImportarCondicionesMMS");
             }
         }
     }

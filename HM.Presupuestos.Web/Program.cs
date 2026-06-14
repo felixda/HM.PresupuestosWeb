@@ -1,6 +1,5 @@
 using HM.Core.Comun.v6.Agentes;
 using HM.Core.Comun.v6.Agentes.Interfaces;
-using HM.Core.Comun.v6.Loggers;
 using HM.Core.Comun.v6.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Servidor.v6;
@@ -9,6 +8,7 @@ using HM.Core.Servidor.v6.Pack.Entidades.Configuracion;
 using HM.Core.Servidor.v6.Pack.UserProviders;
 using HM.Core.Servidor.v6.UserProviders.Interfaces;
 using HM.Presupuestos.Application.CasosDeUso;
+using HM.Presupuestos.Application.CasosDeUso.Compartido;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Infrastructure.Servicios;
 using HM.Presupuestos.Infrastructure.Persistencia;
@@ -30,7 +30,7 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddUserSecrets<Program>(optional: true)
     .Build();
 
-var urlBaseCore = configuration.GetValue<string>("ServicioCore:Core");
+var urlBaseCore = configuration.GetValue<string>("ServicioCore:UrlBase");
 var urlBase = configuration.GetValue<string>("Presupuestos:UrlBaseApi");
 var hoursExpired = configuration.GetValue<int>("Presupuestos:CookieJwtExpire");
 var puerto = configuration.GetValue<int>("Hosting:PuertoHttp");
@@ -53,7 +53,7 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.WebHost.UseConfiguration(configuration);
 
 
-// SSO authentication - ESTE ORDEN ES CRÍTICO
+// SSO authentication - ESTE ORDEN ES CRÃTICO
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AppSettings:AzureAd"));
@@ -74,8 +74,7 @@ configuration.Bind(configuracionCore);
 
 builder.Services.AddTransient<IUserProvider, AzureAdProvider>();
 
-ApiCoreCli.ConfigurarUrlBaseCore(urlBaseCore ?? String.Empty);
-ApiCoreCli.ConfigurarLogger(new NLogLogger(new LogUtility()));
+builder.Services.AddHttpClient<IClienteApiCore, ClienteApiCore>();
 
 builder.Services.AddControllers();
 
@@ -125,21 +124,20 @@ builder.Services.AddScoped<IApiCoreClient, ApiCoreClient>(client => new ApiCoreC
 builder.Services.AddScoped<IControlador, Controlador>();
 builder.Services.AddHttpContextAccessor();
 
-// ===== SERVICIOS DE APLICACIÓN =====
+// ===== ADAPTADORES DE APLICACIÃ“N =====
 builder.Services.AddScoped<ThemeService>();
-builder.Services.AddScoped<PresupuestosService>();
+builder.Services.AddScoped<MaestrosService>();
 builder.Services.AddScoped<VersionesService>();
 builder.Services.AddScoped<ISobreprimasService, SobreprimasService>();
 builder.Services.AddScoped<CondicionesService>();
 builder.Services.AddScoped<IndicadoresService>();
 builder.Services.AddSingleton<IProveedorRecursosJson, ProveedorRecursosJson>();
 builder.Services.AddScoped<ILocalizadorRecursos, LocalizadorRecursos>();
-builder.Services.AddScoped<IMapaMenu, MapaMenu>();
+builder.Services.AddScoped<IRecursosApp, RecursosApp>();
 builder.Services.AddScoped<IGestorIdioma, GestorIdioma>();
 builder.Services.AddScoped<IAlmacenSesionUsuario, AlmacenSesionUsuario>();
 builder.Services.AddScoped<IRegistroAplicacion, RegistroAplicacion>();
 builder.Services.AddScoped<MensajesHelper>();
-builder.Services.AddScoped<TraduccionesHelper>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<DialogoErrores>();
 builder.Services.AddScoped<ParametrosNavegacion>();
@@ -158,12 +156,15 @@ builder.Services.AddScoped<IValidadorMenusUsuario, ValidadorMenusUsuario>();
 
 
 // ===== SERVICIOS DATOS =====
-builder.Services.AddScoped<IPresupuestosService, PresupuestosService>();
+builder.Services.AddScoped<IMaestrosService, MaestrosService>();
+builder.Services.Configure<MaestrosCacheOptions>(builder.Configuration.GetSection("MaestrosCache"));
+builder.Services.AddScoped<IMaestrosCacheService, MaestrosCacheService>();
 builder.Services.AddScoped<IVersionesService, VersionesService>();
 builder.Services.AddScoped<IIndicadoresService, IndicadoresService>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<ILogAccionesService, LogAccionesService>();
+builder.Services.AddScoped<IMenuFavoritosService, MenuFavoritosService>();
 builder.Services.AddScoped<IRegistroErroresCore, RegistroErroresCore>();
 
 
@@ -189,7 +190,7 @@ builder.WebHost.UseWebRoot("wwwroot");
 
 
 
-// Agregar servicios de sesión
+// Agregar servicios de sesiÃ³n
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromSeconds(3600); // Session expiration time
@@ -197,7 +198,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Set cookie using
 });
 
-// ===== LOCALIZACIÓN =====
+// ===== LOCALIZACIÃ“N =====
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[]
@@ -219,7 +220,7 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/HttpError", createScopeForErrors: true); // Redirige a la página de error en caso de una excepción no controlada
+    app.UseExceptionHandler("/HttpError", createScopeForErrors: true); // Redirige a la pÃ¡gina de error en caso de una excepciÃ³n no controlada
     app.UseHsts();  //Fuerza el uso de HTTPS en el navegador
     app.UseStatusCodePagesWithReExecute("/HttpError", "?StatusCode={0}");
 }
@@ -231,19 +232,19 @@ else
 }
 
 //Metodos DE ASP.NET Core
-app.UseHttpsRedirection();  // Redirige automáticamente HTTP a HTTPS
+app.UseHttpsRedirection();  // Redirige automÃ¡ticamente HTTP a HTTPS
 app.UseRouting();           // Habilita el enrutamiento
 app.UseAntiforgery();       // Protege los formularios contra CSRF (Cross-Site Request Forgery).
-app.UseSession();           // Habilita el soporte de sesiones en la aplicación
-app.UseAuthentication();    // Habilita autenticación y autorización
+app.UseSession();           // Habilita el soporte de sesiones en la aplicaciÃ³n
+app.UseAuthentication();    // Habilita autenticaciÃ³n y autorizaciÃ³n
 app.UseAuthorization();
 
 
 
-// Por defecto, ASP.NET Core solo permite servir archivos estáticos desde la carpeta wwwroot.
+// Por defecto, ASP.NET Core solo permite servir archivos estÃ¡ticos desde la carpeta wwwroot.
 // No se puede acceder a archivos fuera de esa carpeta sin configuraciones adicionales.
-// Como hay archivos estáticos que no cambian con frecuencia (por ejemplo, bibliotecas JavaScript o imágenes),
-// se configura el control de caché para mejorar el rendimiento.
+// Como hay archivos estÃ¡ticos que no cambian con frecuencia (por ejemplo, bibliotecas JavaScript o imÃ¡genes),
+// se configura el control de cachÃ© para mejorar el rendimiento.
 app.UseStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = context =>
@@ -253,13 +254,13 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 
-// Definimos los endpoints de la aplicación, o puntos
-// en los que se procesarán peticiones:
+// Definimos los endpoints de la aplicaciÃ³n, o puntos
+// en los que se procesarÃ¡n peticiones:
 app.MapControllers(); // Mapea los controladores API
-app.MapRazorComponents<App>()  // Mapea Blazor en toda la aplicación
+app.MapRazorComponents<App>()  // Mapea Blazor en toda la aplicaciÃ³n
 .AddInteractiveServerRenderMode(); // Habilita la interactividad en Blazor Server
 
-// Endpoint para que JavaScript obtenga textos localizados sin depender de interop estático
+// Endpoint para que JavaScript obtenga textos localizados sin depender de interop estÃ¡tico
 app.MapGet("/api/recursos/{expresion}/{idioma}", (string expresion, string idioma, ILocalizadorRecursos localizador) =>
     Results.Ok(localizador.ObtenerTexto(Uri.UnescapeDataString(expresion), idioma)))
     .AllowAnonymous();

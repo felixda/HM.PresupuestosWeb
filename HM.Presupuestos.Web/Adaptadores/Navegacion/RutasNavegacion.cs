@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Components;
 
 namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
@@ -35,7 +34,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             return NormalizarRuta(requestUri.AbsolutePath.ToLower());
         }
         /// <summary>
-        /// Normalizar URL eliminando parámetros numéricos y convirtiendo a minúsculas
+        /// Normalizar URL eliminando parÃ¡metros numÃ©ricos y convirtiendo a minÃºsculas
         /// </summary>
         public string NormalizarRuta(string url)
         {
@@ -66,7 +65,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
         }
 
         /// <summary>
-        /// Obtiene la URL base de la aplicación
+        /// Obtiene la URL base de la aplicaciÃ³n
         /// </summary>
         public string ObtenerUrlBase()
         {

@@ -10,7 +10,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
         public async Task<List<int>> ObtenerMesesBloqueados(int anio)
         {
-            logger.Trace($"Llamando método ObtenerVigencias");
+            logger.Trace($"Llamando mÃ©todo ObtenerVigencias");
 
             return await adminRepository.ObtenerMesesBloqueados(anio);
         }
@@ -22,7 +22,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
             var transaction = adminRepository.ObtenerTransaccion();
             try
             {
-                logger.Trace($"Llamando método InsertarMesBloqueado");
+                logger.Trace($"Llamando mÃ©todo InsertarMesBloqueado");
 
                 await adminRepository.EliminarMesesBloqueados(anio);
 

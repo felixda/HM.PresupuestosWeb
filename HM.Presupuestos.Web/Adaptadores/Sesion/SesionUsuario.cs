@@ -61,7 +61,10 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
             var usuario = new ContextoUsuario();
 
-            UsuarioEntidad usuarioSSO = await _sesionUsuario.ObtenerUsuarioSSO(); 
+            UsuarioEntidad? usuarioSSO = await _sesionUsuario.ObtenerUsuarioSSO();
+            if (usuarioSSO is null)
+                return;
+
             UsuarioEntidad? usuarioLogin = await _sesionUsuario.ObtenerUsuarioImpersonado();
 
             usuario.AsignarUsuarioAutenticado(usuarioSSO);
@@ -93,7 +96,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                 RespuestaLogin respuestaLogin = await _servicioAutenticacion.ValidarUsuario(applicationCode, usuarioName, password);
                 if (respuestaLogin.LoginStatus != LoginStatusEnum.Correcto)
                 {
-                    _logger.LogWarning("ValidaciÛn de usuario fallÛ: {Status}", respuestaLogin.LoginStatus);
+                    _logger.LogWarning("Validaci√≥n de usuario fall√≥: {Status}", respuestaLogin.LoginStatus);
                     return false;
                 }
 
@@ -104,8 +107,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                 UsuarioApp ??= new ContextoUsuario();
                 UsuarioApp.AsignarUsuarioImpersonado(usuario);
 
-                // Disparar evento de forma asÌncrona SIN esperar (fire-and-forget)
-                // Esto permite que el mÈtodo retorne inmediatamente sin bloquearse
+                // Disparar evento de forma as√≠ncrona SIN esperar (fire-and-forget)
+                // Esto permite que el m√©todo retorne inmediatamente sin bloquearse
                 if (UsuarioCargado != null)
                 {
                     _ = Task.Run(async () =>
@@ -166,7 +169,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
                 if (respuestaLogin.LoginStatus != LoginStatusEnum.Correcto)
                 {
-                    _logger.LogWarning("ValidaciÛn de usuario fallÛ: {Status}", respuestaLogin.LoginStatus);
+                    _logger.LogWarning("Validaci√≥n de usuario fall√≥: {Status}", respuestaLogin.LoginStatus);
                     return null;
                 }
 
@@ -197,7 +200,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             var usuarioLogin = UsuarioApp.UsuarioImpersonado;
             if (usuarioLogin == null)
             {
-                _logger.LogWarning("[UsuarioServicio] No hay usuario login para eliminar");
+                _logger.LogWarning("[SesionUsuario] No hay usuario login para eliminar");
                 return;
             }
 
@@ -228,9 +231,9 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
         /// Crea un LogAccion basado en una copia segura del usuario (sin JWT ni Token)
         /// </summary>
         /// <param name="usuario">Usuario original</param>
-        /// <param name="accion">AcciÛn del log</param>
+        /// <param name="accion">Acci√≥n del log</param>
         /// <returns>LogAccion configurado y listo para insertar</returns>
-        private LogAccion CrearRegistroAccionUsuario(UsuarioEntidad usuario, AccionesLog accion)
+        private static LogAccion CrearRegistroAccionUsuario(UsuarioEntidad usuario, AccionesLog accion)
         {
             // Crear copia del usuario sin datos sensibles para el log
             var usuarioCopia = DatosHelper.ClonarObjeto(usuario);
@@ -240,7 +243,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             return new LogAccion
             {
                 CodigoUsuario = usuario.CodigoUsuario,
-                Accion = $"(UsuarioServicio) -> {accion.ObtenerDescripcion()}",
+                Accion = $"[{(int)accion}](SesionUsuario) -> {accion.ObtenerDescripcion()}",
                 Parametros = JsonSerializer.Serialize(usuarioCopia, new JsonSerializerOptions { WriteIndented = true })
             };
         }
@@ -268,36 +271,52 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             usuario.Jwt = respuestaLogin.Jwt;
             usuario.Login = nombreUsuario;
 
-            // TODO: Eliminar esta lÌnea cuando ya no sea necesario
-            usuario.Menus.RemoveAll(m => m.Id == 1);
+            // TODO: Eliminar esta l√≠nea cuando ya no sea necesario
+           usuario.Menus.RemoveAll(m => m.Id == 1);
 
-            // ? VALIDAR Y FILTRAR MEN⁄S CON URLs INV¡LIDAS
+            // TODO-TEMPORAL: A√±adir men√∫ 26 (Auditor√≠as) como hijo de Administraci√≥n (20) hasta que se configure en HM.CORE.
+            //                ELIMINAR este bloque cuando el men√∫ est√© dado de alta en el core.
+            usuario.Menus.Add(new Menu
+            {
+                Id = (int)CodigosMenu.Auditorias,
+                IdPadre = (int)CodigosMenu.Administracion,
+                NombreMenu = "Auditor√≠as",
+                IndOrdenacion = 99
+            });
+            // FIN TODO-TEMPORAL
+
+            // ‚úÖ VALIDAR Y FILTRAR MEN√öS CON URLs INV√ÅLIDAS
             await FiltrarMenusInvalidosAsync(usuario);
 
 
-            // ? Determinar la descripciÛn de la acciÛn del log seg˙n el origen de validaciÛn y si es una recuperaciÛn de sesiÛn (F5)
-            // Este switch utiliza pattern matching con tuplas (caracterÌstica de C# 8.0+)
-            // Eval˙a la combinaciÛn de dos valores: 'origen' (enum) y 'esRecargaPagina' (bool)
+            // ? Determinar la descripci√≥n de la acci√≥n del log seg√∫n el origen de validaci√≥n y si es una recuperaci√≥n de sesi√≥n (F5)
+            // Este switch utiliza pattern matching con tuplas (caracter√≠stica de C# 8.0+)
+            // Eval√∫a la combinaci√≥n de dos valores: 'origen' (enum) y 'esRecargaPagina' (bool)
             AccionesLog accionLog = (origen, esRecargaPagina) switch
             {
-                // Caso 1: Usuario autenticado por SSO que recarga la p·gina (F5)
+                // Caso 1: Usuario autenticado por SSO que recarga la p√°gina (F5)
                 (OrigenValidacionUsuario.SSO, true) => AccionesLog.RecuperarSesionDespuesDeF5SSO,
 
                 // Caso 2: Usuario autenticado por SSO que entra por primera vez
                 (OrigenValidacionUsuario.SSO, false) => AccionesLog.EntrarEnPresupuestosWebSSO,
 
-                // Caso 3: Usuario con login manual (impersonaciÛn) que recarga la p·gina (F5)
+                // Caso 3: Usuario con login manual (impersonaci√≥n) que recarga la p√°gina (F5)
                 (OrigenValidacionUsuario.Login, true) => AccionesLog.RecuperarSesionDespuesDeF5Impersonacion,
 
-                // Caso 4: Usuario con login manual (impersonaciÛn) que entra por primera vez
+                // Caso 4: Usuario con login manual (impersonaci√≥n) que entra por primera vez
                 (OrigenValidacionUsuario.Login, false) => AccionesLog.EntrarEnPresupuestosWebImpersonacion,
 
-                // Caso por defecto: Si no coincide ninguna combinaciÛn, usar SSO como predeterminado
+                // Caso por defecto: Si no coincide ninguna combinaci√≥n, usar SSO como predeterminado
                 _ => AccionesLog.EntrarEnPresupuestosWebSSO
             };
 
 
             LogAccion logAccion = CrearRegistroAccionUsuario(usuario, accionLog);
+
+            // Asignar _jwt.Usuario antes del log para que LogAccionesService
+            // pueda acceder al usuario activo durante la inserci√≥n de auditor√≠a.
+            // Init.razor.cs asigna Jwt.Usuario despu√©s del await, demasiado tarde.
+            _jwt.Usuario = usuario;
 
             await _registroAcciones.Insertar(logAccion);
 
@@ -309,7 +328,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
 
         /// <summary>
-        /// Valida y filtra los men˙s del usuario, dejando solo aquellos cuya URL existe como p·gina Blazor
+        /// Valida y filtra los men√∫s del usuario, dejando solo aquellos cuya URL existe como p√°gina Blazor
         /// </summary>
         /// <param name="usuario">Usuario a validar</param>
         private async Task FiltrarMenusInvalidosAsync(UsuarioEntidad usuario)
@@ -318,21 +337,21 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             {
                 if (usuario?.Menus == null || !usuario.Menus.Any())
                 {
-                    _logger.LogWarning("[UsuarioServicio] Usuario sin men˙s para validar");
+                    _logger.LogWarning("[UsuarioServicio] Usuario sin men√∫s para validar");
                     return;
                 }
 
                 var totalMenusOriginales = usuario.Menus.Count;
                 var menusHijosOriginales = usuario.Menus.Count(m => m.IdPadre != null);
 
-                _logger.LogDebug("[UsuarioServicio] ?? Iniciando validaciÛn de men˙s para usuario {Login}", usuario.Login);
-                _logger.LogDebug("[UsuarioServicio] Total men˙s: {Total}, Men˙s hijos: {Hijos}",
+                _logger.LogDebug("[UsuarioServicio] ?? Iniciando validaci√≥n de men√∫s para usuario {Login}", usuario.Login);
+                _logger.LogDebug("[UsuarioServicio] Total men√∫s: {Total}, Men√∫s hijos: {Hijos}",
                     totalMenusOriginales, menusHijosOriginales);
 
-                // Validar men˙s hijos (los que tienen URL)
+                // Validar men√∫s hijos (los que tienen URL)
                 var resultadosValidacion = await _validadorMenusUsuario.ValidarSubmenusDe(usuario);
 
-                // Obtener IDs de men˙s inv·lidos
+                // Obtener IDs de men√∫s inv√°lidos
                 var menusInvalidosIds = resultadosValidacion
                     .Where(r => !r.Existe)
                     .Select(r => r.CodigoMenu)
@@ -340,13 +359,13 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
 
                 if (menusInvalidosIds.Count != 0)
                 {
-                    _logger.LogWarning("[UsuarioServicio] ?? Se encontraron {Count} men˙s con URLs inv·lidas que ser·n eliminados:",
+                    _logger.LogWarning("[UsuarioServicio] ?? Se encontraron {Count} men√∫s con URLs inv√°lidas que ser√°n eliminados:",
                         menusInvalidosIds.Count);
 
-                    // Loggear men˙s que ser·n eliminados
+                    // Loggear men√∫s que ser√°n eliminados
                     foreach (var resultado in resultadosValidacion.Where(r => !r.Existe))
                     {
-                        _logger.LogWarning("[UsuarioServicio]   ? Men˙ ID: {Id}, Nombre: {Nombre}, URL: {Url}",
+                        _logger.LogWarning("[UsuarioServicio]   ? Men√∫ ID: {Id}, Nombre: {Nombre}, URL: {Url}",
                             resultado.CodigoMenu,
                             resultado.NombreMenu,
                             resultado.UrlOriginal);
@@ -358,15 +377,15 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                         }
                     }
 
-                    // Eliminar men˙s inv·lidos de la colecciÛn
+                    // Eliminar men√∫s inv√°lidos de la colecci√≥n
                     var menusEliminados = usuario.Menus.RemoveAll(m => menusInvalidosIds.Contains(m.Id));
 
-                    _logger.LogWarning("[UsuarioServicio] ??? Se eliminaron {Count} men˙s inv·lidos", menusEliminados);
-                    _logger.LogInformation("[UsuarioServicio] ? Men˙s restantes: {Total} (Hijos: {Hijos})",
+                    _logger.LogWarning("[UsuarioServicio] ??? Se eliminaron {Count} men√∫s inv√°lidos", menusEliminados);
+                    _logger.LogInformation("[UsuarioServicio] ? Men√∫s restantes: {Total} (Hijos: {Hijos})",
                         usuario.Menus.Count,
                         usuario.Menus.Count(m => m.IdPadre != null));
 
-                    // TambiÈn eliminar men˙s padres que se quedaron sin hijos
+                    // Tambi√©n eliminar men√∫s padres que se quedaron sin hijos
                     var menusPadresIdsConHijos = usuario.Menus
                         .Where(m => m.IdPadre != null)
                         .Select(m => m.IdPadre)
@@ -381,23 +400,23 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                     if (menusPadresSinHijos.Count != 0)
                     {
                         var padresEliminados = usuario.Menus.RemoveAll(m => menusPadresSinHijos.Contains(m.Id));
-                        _logger.LogWarning("[UsuarioServicio] ??? Se eliminaron {Count} men˙s padres sin hijos: {Ids}",
+                        _logger.LogWarning("[UsuarioServicio] ??? Se eliminaron {Count} men√∫s padres sin hijos: {Ids}",
                             padresEliminados,
                             string.Join(", ", menusPadresSinHijos));
                     }
                 }
                 else
                 {
-                    _logger.LogInformation("[UsuarioServicio] ? Todos los men˙s ({Count}) tienen URLs v·lidas",
+                    _logger.LogInformation("[UsuarioServicio] ? Todos los men√∫s ({Count}) tienen URLs v√°lidas",
                         menusHijosOriginales);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "[UsuarioServicio] ? Error al validar y filtrar men˙s del usuario {Login}",
+                _logger.LogError(ex, "[UsuarioServicio] ? Error al validar y filtrar men√∫s del usuario {Login}",
                     usuario.Login);
-                // No lanzamos la excepciÛn para no bloquear el login, solo registramos el error
-                // El usuario seguir· con sus men˙s originales si hay error en la validaciÛn
+                // No lanzamos la excepci√≥n para no bloquear el login, solo registramos el error
+                // El usuario seguir√° con sus men√∫s originales si hay error en la validaci√≥n
             }
         }
 

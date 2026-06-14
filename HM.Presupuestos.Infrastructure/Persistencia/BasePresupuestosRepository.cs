@@ -5,13 +5,13 @@ using HM.Core.Servidor.v6.DAL.Interfaces;
 namespace HM.Presupuestos.Infrastructure.Persistencia
 {
     /// <summary>
-    /// Clase base para repositorios de Presupuestos que proporciona funcionalidad com˙n
+    /// Clase base para repositorios de Presupuestos que proporciona funcionalidad com√∫n
     /// </summary>
     /// <remarks>
     /// Constructor base que inicializa las dependencias comunes
     /// </remarks>
     /// <param name="dah">Data Access Helper Secure</param>
-    /// <param name="jwt">Servicio JWT para obtener informaciÛn del usuario autenticado</param>
+    /// <param name="jwt">Servicio JWT para obtener informaci√≥n del usuario autenticado</param>
 
     public abstract class BasePresupuestosRepository(
         IDataAccessHelperSecure dah,
@@ -20,55 +20,55 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         protected readonly IJwt Jwt = jwt ?? throw new ArgumentNullException(nameof(jwt));
 
         // Propiedades calculadas en lugar de campos
-        // Se eval˙an solo cuando se acceden, no en la construcciÛn
+        // Se eval√∫an solo cuando se acceden, no en la construcci√≥n
 
         //        Timeline correcto:
         //1.	Startup ? Se registran servicios
         //2.	Constructor ejecuta ? Solo guarda referencia a Jwt ? ? OK
         //3.	Usuario navega y se autentica ? JWT se llena
-        //4.	MÈtodo usa CodigoAplicacion ? Se eval˙a con usuario autenticado ? ? OK
+        //4.	M√©todo usa CodigoAplicacion ? Se eval√∫a con usuario autenticado ? ? OK
         //---
         //?? Ventajas de las propiedades:
         //Aspecto           Campo(readonly)     Propiedad(=>)               Resultado
-        //EvaluaciÛn        En constructor      Al acceder	                ? Propiedad
+        //Evaluaci√≥n        En constructor      Al acceder	                ? Propiedad
         //Usuario null	    ?? Falla siempre	? Solo si se usa sin auth	? Propiedad
-        //Performance	    ? 1 evaluaciÛn	    ?? Cada acceso	            ?? Campo
-        //Flexibilidad	    ? Fijo	            ? Din·mico	                ? Propiedad
+        //Performance	    ? 1 evaluaci√≥n	    ?? Cada acceso	            ?? Campo
+        //Flexibilidad	    ? Fijo	            ? Din√°mico	                ? Propiedad
         //Blazor compatible	? Falla	        ? Funciona	                ? Propiedad
 
 
 
 
         /// <summary>
-        /// CÛdigo de aplicaciÛn del usuario autenticado actual
+        /// C√≥digo de aplicaci√≥n del usuario autenticado actual
         /// </summary>
-        /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado v·lido</exception>
+        /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado v√°lido</exception>
         protected int CodigoAplicacion => 
             Jwt.Usuario?.CodigoAplicacion 
-            ?? throw new InvalidOperationException("No se puede obtener el cÛdigo de aplicaciÛn: no hay un usuario autenticado v·lido.");
+            ?? throw new InvalidOperationException("No se puede obtener el c√≥digo de aplicaci√≥n: no hay un usuario autenticado v√°lido.");
 
         /// <summary>
-        /// CÛdigo del usuario autenticado actual
+        /// C√≥digo del usuario autenticado actual
         /// </summary>
-        /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado v·lido</exception>
+        /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado v√°lido</exception>
         protected int CodigoUsuario => 
             Jwt.Usuario?.CodigoUsuario 
-            ?? throw new InvalidOperationException("No se puede obtener el cÛdigo de usuario: no hay un usuario autenticado v·lido.");
+            ?? throw new InvalidOperationException("No se puede obtener el c√≥digo de usuario: no hay un usuario autenticado v√°lido.");
 
         /// <summary>
-        /// CÛdigo del paÌs del usuario autenticado actual
+        /// C√≥digo del pa√≠s del usuario autenticado actual
         /// </summary>
-        /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado v·lido</exception>
+        /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado v√°lido</exception>
         protected int CodigoPais => 
             Jwt.Usuario?.CodigoPais 
-            ?? throw new InvalidOperationException("No se puede obtener el cÛdigo de paÌs: no hay un usuario autenticado v·lido.");
+            ?? throw new InvalidOperationException("No se puede obtener el c√≥digo de pa√≠s: no hay un usuario autenticado v√°lido.");
 
         /// <summary>
-        /// AÒade el par·metro multicompaÒÌa basado en el usuario actual
+        /// A√±ade el par√°metro multicompa√±√≠a basado en el usuario actual
         /// </summary>
-        /// <param name="dahHelper">Data Access Helper al que se le aÒadir· el par·metro</param>
+        /// <param name="dahHelper">Data Access Helper al que se le a√±adir√° el par√°metro</param>
         /// <exception cref="InvalidOperationException">Si no hay un usuario autenticado</exception>
-        protected async Task AÒadirParametroMulticompania(IDataAccessHelperBase dahHelper)
+        protected async Task A√±adirParametroMulticompania(IDataAccessHelperBase dahHelper)
         {
             ArgumentNullException.ThrowIfNull(dahHelper);
 
@@ -77,7 +77,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             if (usuario == null || usuario.CodigoUsuario <= 0)
             {
                 throw new InvalidOperationException(
-                    "No se puede aÒadir el par·metro multicompaÒÌa: no hay un usuario autenticado v·lido.");
+                    "No se puede a√±adir el par√°metro multicompa√±√≠a: no hay un usuario autenticado v√°lido.");
             }
 
             dahHelper.AddParameterMulticompania(usuario.Companias);

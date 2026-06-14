@@ -1,4 +1,5 @@
 using HM.Core.Comun.v6.Entidades.Logger;
+using HM.Presupuestos.Domain.Extensiones;
 using HM.Presupuestos.Infrastructure.Servicios;
 using NLog;
 using NLog.Targets;
@@ -22,9 +23,8 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         Task RegistrarEvento(string category, string message, string? stackTrace, string comments, NivelRegistro logLevel = NivelRegistro.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task RegistrarExcepcion(string category, Exception exception, string comments = "", NivelRegistro logLevel = NivelRegistro.Error, bool insertDBLog = true, bool insertFileLog = true);
         Task RegistrarExcepcion(Exception exception, string comments = "", NivelRegistro logLevel = NivelRegistro.Error, bool insertDBLog = true, bool insertFileLog = true, [CallerFilePath] string callerFilePath = "", [CallerMemberName] string callerMemberName = "");
-        Task RegistrarAccesoAPagina( string tituloPagina);
-
-        Task RegistrarIntentoAccesoNoAutorizado( string ruta);
+        Task RegistrarAccesoAPagina(string tituloPagina);
+        Task RegistrarIntentoAccesoNoAutorizado(string ruta);
     }
 
     public class RegistroAplicacion:IRegistroAplicacion
@@ -36,6 +36,9 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         private readonly ISesionUsuario _sesionUsuario;
         private readonly IRutasNavegacion _rutasNavegacion;
         private readonly ILogAccionesService _logAccionesService;
+        private readonly IClienteApiCore _clienteApiCore;
+
+        private readonly IRecursosApp _recursosApp;
 
         #endregion
 
@@ -45,13 +48,17 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             IAlmacenSesionUsuario almacenSesionUsuario, 
             ISesionUsuario sesionUsuario, 
             IRutasNavegacion rutasNavegacion, 
-            ILogAccionesService logAccionesService )
+            ILogAccionesService logAccionesService,
+            IClienteApiCore clienteApiCore,
+            IRecursosApp recursosApp)
         {
             _configuration = configuracion;
             _almacenSesionService = almacenSesionUsuario;
             _sesionUsuario = sesionUsuario;
             _rutasNavegacion = rutasNavegacion;
             _logAccionesService = logAccionesService;
+            _clienteApiCore = clienteApiCore;
+            _recursosApp = recursosApp;
         }
 
         #endregion
@@ -61,8 +68,16 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         public async Task RegistrarAccesoAPagina(string tituloPagina)
         {
             var urlActual = _rutasNavegacion.ObtenerRutaActual();
-            var accion = $"Acceso a página {tituloPagina} [{urlActual}]";
-            await _logAccionesService.Insertar(accion);
+            int codigoMenu = _recursosApp.ObtenerCodigoMenuPorUrl(urlActual);
+            var accion = AccionesLog.AccesoAPagina.ObtenerDescripcion();
+            var usuario = _sesionUsuario.UsuarioApp?.UsuarioActivo;
+
+            string accionConDetalle = $"[{(int)AccionesLog.AccesoAPagina}](RegistrarAccesoAPagina) -> {string.Format(accion.ToString(), tituloPagina)} [{urlActual}] [{codigoMenu}]";
+            string parametros = usuario != null
+                ? $"{{\"Login\":\"{usuario.Login}\",\"Nombre\":\"{usuario.Nombre} {usuario.Apellido1}\"}}"
+                : string.Empty;
+
+            await _logAccionesService.Insertar(new LogAccion { Accion = accionConDetalle, Parametros = parametros });
         }
 
 
@@ -104,9 +119,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             [CallerFilePath] string callerFilePath = "", 
             [CallerMemberName] string callerMemberName = "")
         {
-            // Extraer nombre de la clase desde el FilePath
             var category = ExtraerNombreClaseDesdeFilePath(callerFilePath);
-            // Llamar al método original
             await RegistrarExcepcion(category, exception, comments, logLevel, insertDBLog, insertFileLog);
         }
 
@@ -120,12 +133,10 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             if (string.IsNullOrEmpty(filePath))
                 return "Unknown";
 
-            // Obtener nombre del archivo sin extensión
             var fileName = Path.GetFileNameWithoutExtension(filePath);
 
-            // Si termina en .razor (archivos .razor.cs), eliminar ese sufijo
             if (fileName.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
-                fileName = fileName[..^6]; // Eliminar ".razor"
+                fileName = fileName[..^6];
 
             return fileName;
         }
@@ -213,12 +224,12 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
                 DominioAplicacion = _configuration.GetValue<string>("AppSettings:AppDomain")
             };
 
-            await ApiCoreCli.SaveLog(usuario.Jwt, data);
+            await _clienteApiCore.RegistrarLog(usuario.Jwt, data);
         }
 
 
         /// <summary>
-        /// Inserta log en archivo según nivel
+        /// Inserta log en archivo segÃºn nivel
         /// </summary>
         private void RegistrarEnArchivo(NivelRegistro logLevel, string userName, string category, string message, string stackTraceText, string comments)
         {
@@ -253,7 +264,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         /// <summary>
         /// Obtener instancia de logger configurada para el tipo de log (log o err)
         /// </summary>
-        /// <param name="extension">Extensión del archivo de log (log o err)</param>
+        /// <param name="extension">ExtensiÃ³n del archivo de log (log o err)</param>
         /// <returns>Instancia de Logger configurada</returns>
         private static Logger ObtenerLogger(string extension = "log")
         {

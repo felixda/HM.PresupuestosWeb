@@ -1,7 +1,6 @@
 using HM.Core.Comun.v6.Entidades.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Presupuestos.Web.Adaptadores.Sesion;
-using HM.Presupuestos.Web.Adaptadores.Ui;
 
 using HM.Presupuestos.Web.Componentes.Ui;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +11,6 @@ namespace HM.Presupuestos.Web.Pages
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         [Inject] private IRegistroAplicacion LogService { get; set; } = default!;
-        [Inject] private IAlmacenSesionUsuario SessionService { get; set; } = default!;
         [Inject] private ISesionUsuario SesionUsuario { get; set; } = default!;
         [Inject] private IGestorCookies GestorCookies { get; set; } = default!;
         [Inject] private IJwt Jwt { get; set; } = default!;
@@ -22,15 +20,15 @@ namespace HM.Presupuestos.Web.Pages
         private const string IDIOMA_POR_DEFECTO = "es";
 
         private bool _componentInitialized = false;
-        private UsuarioEntidad _user = new UsuarioEntidad();
+        private UsuarioEntidad _usuario = new UsuarioEntidad();
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            InicializarIdiomaDesdeoCookie();
+            InicializarIdiomaDesdeCookie();
         }
 
-        private void InicializarIdiomaDesdeoCookie()
+        private void InicializarIdiomaDesdeCookie()
         {
             try
             {
@@ -44,7 +42,7 @@ namespace HM.Presupuestos.Web.Pages
                 }
                 else
                 {
-                    Console.WriteLine($"[Init] Cookie de idioma leída: {languageCode}");
+                    Console.WriteLine($"[Init] Cookie de idioma leÃ­da: {languageCode}");
                 }
             }
             catch (Exception ex)
@@ -89,15 +87,15 @@ namespace HM.Presupuestos.Web.Pages
             }
         }
 
-        public async Task<bool> CrearPerfilUsuario()
+        private async Task<bool> CrearPerfilUsuario()
         {
             var authorized = false;
             var usuarioSSO = await SesionUsuario.AutenticarUsuarioSSOAsync();
 
             if (usuarioSSO != null)
             {
-                _user = usuarioSSO;
-                Jwt.Usuario = _user;
+                _usuario = usuarioSSO;
+                Jwt.Usuario = _usuario;
                 authorized = true;
             }
 

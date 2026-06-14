@@ -1,4 +1,4 @@
-﻿
+
 namespace HM.Presupuestos.Domain.Entidades
 {
     /// <summary>
@@ -10,9 +10,6 @@ namespace HM.Presupuestos.Domain.Entidades
 
         public int CodigoMedio { get; set; }
         public int Jerarquia { get; set; }
-
-        public bool MedioAccesible { get; set; }
-
 
         /// <summary>
         /// Combinacion de Cod_Concepto_Condicion - Cod_Condicion_Medio separados por comas
@@ -79,17 +76,6 @@ namespace HM.Presupuestos.Domain.Entidades
 
         public int? CodigoTipoDisciplina { get; set; }
         public int? CodigoDisciplinaGrupo { get; set; }
-
-        /// <summary>
-        /// Naturaleza
-        /// </summary>
-        public List<CodigoDescripcion>? TiposDisciplinaDisponibles { get; set; }
-        public List<CodigoDescripcion>? DisciplinasGrupoDisponibles { get; set; }
-        public List<CodigoDescripcion>? DisciplinasDisponibles { get; set; }
-        public List<CodigoDescripcion>? ObjetivosDisponibles { get; set; }
-        public List<CodigoDescripcion>? TiposCompraDisponibles { get; set; }
-       
-
 
     }
 

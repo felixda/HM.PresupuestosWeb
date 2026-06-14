@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
         private UsuarioEntidad? _usuarioImpersonado = null;
 
         /// <summary>
-        /// Devuelve el usuario activo en la aplicación.
+        /// Devuelve el usuario activo en la aplicaciÃ³n.
         /// Si hay un usuario impersonado, se devuelve ese; de lo contrario, se devuelve el usuario autenticado.
         /// </summary>
         public UsuarioEntidad UsuarioActivo

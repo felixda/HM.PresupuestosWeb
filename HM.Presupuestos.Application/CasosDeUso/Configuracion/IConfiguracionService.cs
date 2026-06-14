@@ -3,7 +3,7 @@ using HM.Presupuestos.Domain.Entidades;
 namespace HM.Presupuestos.Application.CasosDeUso
 {
     /// <summary>
-    /// Interfaz del servicio de gestión de configuración de la aplicación
+    /// Interfaz del servicio de gestiÃ³n de configuraciÃ³n de la aplicaciÃ³n
     /// </summary>
     public interface IConfiguracionService
     {

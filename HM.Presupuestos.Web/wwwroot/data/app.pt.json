@@ -1,4 +1,4 @@
-﻿{
+{
 "Language":  {
                  "ES":  {
                             "label":  "Espanhol",
@@ -190,6 +190,13 @@
                                  "icono":  "fa-solid fa-clock",
                                  "visible":  true,
                                  "code":  25
+                             },
+                 "Menu_26":  {
+                                 "label":  "Auditorias",
+                                 "url":  "/admin/auditorias",
+                                 "icono":  "fa-solid fa-magnifying-glass-chart",
+                                 "visible":  true,
+                                 "code":  26
                              }
              },
     "Pages":  {
@@ -290,9 +297,12 @@
                                                                   },
                                       "Grabar":  {
                                                      "label":  "Gravar"
-                                                 }
+                                                 },
+                                      "Actualizar":  {
+                                                         "label":  "Atualizar"
+                                                     }
                                   },
-                 
+
                   "Index":  {
                                 "Hola":  {
                                              "label":  "Olá"
@@ -389,6 +399,9 @@
                                                    "EditarVigencia":  {
                                                                           "label":  "Editar Vigencia"
                                                                       },
+                                                   "VigenciaSeleccion":  {
+                                                                              "label":  "Por favor, selecione uma vigência"
+                                                                          },
                                                    "FiltroPorMedio":  {
                                                                           "label":  "Filtrar por Media"
                                                                       },
@@ -452,7 +465,10 @@
                                                                                                    },
                                                                     "BCCondicionSinPctDevolucion":  {
                                                                                                         "label":  "Por favor, ao introduzir uma Base de Cálculo nas condiÁ§Áµes, voce deve introduzir uma Percentagem."
-                                                                                                    }
+                                                                                                    },
+                                                                    "VigenciaAñadida":  {
+                                                                                            "label":  "Vigência adicionada"
+                                                                                        }
                                                                 }
                                                },
                  
@@ -540,6 +556,29 @@
                                                                   "label":  "Meses Bloqueados"
                                                               }
                                       },
+                  "Auditorias":  {
+                                     "ToolTip":  {
+                                                     "label":  "Auditorias do sistema"
+                                                 },
+                                     "TipoAuditoria":  {
+                                                           "label":  "Tipo de auditoria"
+                                                       },
+                                     "FechaInicio":  {
+                                                         "label":  "Data início"
+                                                     },
+                                     "FechaFin":  {
+                                                      "label":  "Data fim"
+                                                  },
+                                     "Usuario":  {
+                                                     "label":  "Utilizador"
+                                                 },
+                                     "CamposObligatorios":  {
+                                                                "label":  "Deve selecionar o tipo de auditoria"
+                                                            },
+                                     "Pagina":  {
+                                                    "label":  "Página"
+                                                }
+                                 },
                   "AnioDiario":  {
                                      "ToolTip":  {
                                                      "label":  "Permite selecionar ano para o Diário de orÁ§amentos"
@@ -708,6 +747,11 @@
                    "UnauthorizedUser":{
                                             "label":  "Usuário NÁ£o Autorizado"
                                         },
+                   "AccesoDenegado": {
+                       "Titulo": { "label": "Acesso Negado" },
+                       "Mensaje": { "label": "Voc\u00ea n\u00e3o tem permiss\u00e3o para acessar" },
+                       "Contacto": { "label": "Entre em contato com o administrador se achar que deveria ter acesso." }
+                   },
                    "Version":  {
                                    "label":  "VersÁ£o"
                                },
@@ -735,7 +779,7 @@
       }
                },
     "Botones":  {
-                    "Anadir":  {
+                    "Añadir":  {
                                    "label":  "Adicionar"
                                },
                     "Cancelar":  {
@@ -849,6 +893,36 @@
                                              "label":  "Aviso do gestor de base de dados"
                                          }
                  },
+    "AccionesLog": {
+        "ImpersonacionUsuario": { "label": "Impersonação de utilizador", "visible": true },
+        "ImpersonacionUsuarioInvalida": { "label": "Impersonação de utilizador inválida", "visible": true },
+        "BloquearMesesAño": { "label": "Bloquear meses do ano", "visible": true },
+        "ModificarVigencia": { "label": "Modificar vigência", "visible": true },
+        "EliminarVigencia": { "label": "Eliminar vigência", "visible": true },
+        "CopiarInversiones": { "label": "Iniciar processo de cópia de investimentos", "visible": true },
+        "CopiarInversionesFinalizado": { "label": "Processo de cópia de investimentos concluído", "visible": false },
+        "ImportarCondicionesMMS": { "label": "Importar condições de MMS", "visible": true },
+        "ImportarCondicionesMMSFinalizado": { "label": "Processo de importação de condições MMS concluído", "visible": false },
+        "CopiarVersiones": { "label": "Iniciar processo de cópia de versões", "visible": true },
+        "CopiarVersionesFinalizado": { "label": "Processo de cópia de versões concluído", "visible": false },
+        "EntrarEnPresupuestosWebSSO": { "label": "Entrar no Presupuestos Web (SSO)", "visible": true },
+        "DesimpersonacionUsuario": { "label": "Terminar impersonação de utilizador", "visible": true },
+        "ActualizacionUsuario": { "label": "Atualização de utilizador", "visible": true },
+        "ActualizarSobreprimas": { "label": "Atualizar sobreprimas", "visible": true },
+        "EliminarSobreprima": { "label": "Eliminar sobreprima", "visible": true },
+        "ImportarSobreprimasMMS": { "label": "Importar sobreprimas de MMS", "visible": true },
+        "RecuperarSesionDespuesDeF5SSO": { "label": "Recuperar sessão após F5 (SSO)", "visible": false },
+        "IntentoAccesoNoAutorizado": { "label": "Tentativa de acesso não autorizado", "visible": true },
+        "EntrarEnPresupuestosWebImpersonacion": { "label": "Entrar no Presupuestos Web (Impersonação)", "visible": true },
+        "RecuperarSesionDespuesDeF5Impersonacion": { "label": "Recuperar sessão após F5 (Impersonação)", "visible": false },
+        "CerrarSesionUsuarioLogin": { "label": "Fechar sessão de utilizador impersonado", "visible": true },
+        "VolverEntrarEnPresupuestosWebSSO": { "label": "Voltar ao Presupuestos Web (SSO)", "visible": true },
+        "EliminarIndicador": { "label": "Eliminar indicador", "visible": true },
+        "GrabarIndicador": { "label": "Guardar indicador", "visible": true },
+        "EnviarAviso": { "label": "Enviar aviso", "visible": true },
+        "ErrorAlEnviarAviso": { "label": "Erro ao enviar aviso", "visible": false },
+        "AccesoAPagina": { "label": "Acesso a página", "visible": true }
+    },
     "Meses":  {
 
               },

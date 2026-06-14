@@ -1,4 +1,4 @@
-using HM.Core.Comun.v6.Seguridad.Interfaces;
+ï»¿using HM.Presupuestos.Application.CasosDeUso.Compartido;
 using static HM.Presupuestos.Application.CasosDeUso.CondicionesService;
 
 namespace HM.Presupuestos.Web.Pages.Condiciones
@@ -7,13 +7,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
     {
         #region Inyecci?n de Dependencias
 
-        [Inject] protected IJwt Jwt { get; set; } = default!;
-        [Inject] protected IPresupuestosService PresupuestosService { get; set; } = default!;
+        [Inject] protected IMaestrosService PresupuestosService { get; set; } = default!;
         [Inject] protected ICondicionesService CondicionesService { get; set; } = default!;
-        [Inject] protected ILogAccionesService LogAccionesService { get; set; } = default!;
-
-        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-        [Inject] protected TraduccionesHelper Traducciones { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
@@ -23,41 +18,40 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Page
 
-        private bool _componentInitialized = false;
-        private string PageTitle { get; set; } = string.Empty;
         private string TextoToolTipAyuda { get; set; } = string.Empty;
+        private string TituloActual => string.IsNullOrEmpty(RadioGroupAcuerdoChecked) ? TituloPagina : RadioGroupAcuerdoChecked;
 
-        private bool HayCambiosPendientes => _condicionesNoGuardados.Count > 0 || ExcepcionesNoGuardadas.Count > 0;
+        private bool HayCambiosPendientes => CondicionesNoGuardados.Count > 0 || ExcepcionesNoGuardadas.Count > 0;
 
         #endregion
 
         #region Filtro
 
-        private string _radioGroupAcuerdoChecked { get; set; } = string.Empty;
-        private IEnumerable<string>? _radioGroupAcuerdoButtonList;
+        private string RadioGroupAcuerdoChecked { get; set; } = string.Empty;
+        private IEnumerable<string>? RadioGroupAcuerdoButtonList { get; set; }
         
         private CondicionFiltro _filtroCondiciones = new();
 
-        private List<CodigoDescripcion> _networks = [];
-        private CodigoDescripcion? _networkSeleccionado { get; set; } = null;
+        private List<CodigoDescripcion> Networks { get; set; } = [];
+        private CodigoDescripcion? NetworkSeleccionado { get; set; } = null;
 
-        private List<CodigoDescripcion> _gruposClientes = [];
-        private int? _codigoGrupoSeleccionado { get; set; }
+        private List<CodigoDescripcion> GruposClientes { get; set; } = [];
+        private int? CodigoGrupoSeleccionado { get; set; }
 
-        private List<CodigoDescripcion> _anios = [];
-        private CodigoDescripcion? _anioSeleccionado { get; set; } = null;
+        private List<CodigoDescripcion> Anios { get; set; } = [];
+        private CodigoDescripcion? AnioSeleccionado { get; set; } = null;
 
-        private List<VersionResumen> _versiones = [];
-        private VersionResumen? _versionSeleccionada { get; set; } = null;
+        private List<VersionResumen> Versiones { get; set; } = [];
+        private VersionResumen? VersionSeleccionada { get; set; } = null;
 
-        private List<CodigoDescripcion> _mediosMaster = [];
+        private List<CodigoDescripcion> MediosMaster { get; set; } = [];
 
         #endregion
 
         #region Vigencias
 
-        List<Vigencia> _vigencias = []; //Todas las vigencias encontradas
-        Vigencia? _vigenciaSeleccionada { get; set; } = null;
+        private List<Vigencia> Vigencias { get; set; } = []; //Todas las vigencias encontradas
+        private Vigencia? VigenciaSeleccionada { get; set; } = null;
 
         private string LeftCaptionVigencias = string.Empty;
         private string RightCaptionVigencias = string.Empty;
@@ -73,33 +67,33 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #region Grid Condiciones
 
         private DxGrid GridCondiciones { get; set; } = new DxGrid();
-        private List<CondicionDto> _condiciones = [];
-        private List<CondicionDto> _condicionesCache = [];
+        private List<CondicionViewModel> Condiciones { get; set; } = [];
+        private List<CondicionViewModel> _condicionesCache = [];
 
-        private List<CodigoDescripcion> _indicadoresDevolucion = [];
-        private Dictionary<CondicionDto, DatosCondicionCambiados> _condicionesNoGuardados { get; } = [];
+        private List<CodigoDescripcion> IndicadoresDevolucion { get; set; } = [];
+        private Dictionary<CondicionViewModel, DatosCondicionCambiados> CondicionesNoGuardados { get; } = [];
 
         #endregion
 
         #region Grid Excepciones
 
         private DxGrid GridExcepciones { get; set; } = new DxGrid();
-        private List<ExcepcionDto> _excepciones = [];
-        private List<ExcepcionDto> _excepcionesCache = [];
+        private List<ExcepcionCondicionViewModel> Excepciones { get; set; } = [];
+        private List<ExcepcionCondicionViewModel> _excepcionesCache = [];
 
-        private List<CodigoDescripcion> _alcances = [];
+        private List<CodigoDescripcion> Alcances { get; set; } = [];
         private List<CodigoDescripcion> _disciplinas = [];
-        private List<CodigoDescripcion> _diversifieds = [];
+        private List<CodigoDescripcion> Diversifieds { get; set; } = [];
         private List<CodigoDescripcion> _objetivos = [];
         private List<CodigoDescripcion> _tiposCompra = [];
         private List<CodigoDescripcion> _tiposDisciplina = [];
         private List<CodigoDescripcion> _disciplinasGrupo = [];
-        private Dictionary<ExcepcionDto, DatosExcepcionesCondicionCambiados> ExcepcionesNoGuardadas { get; } = [];
+        private Dictionary<ExcepcionCondicionViewModel, DatosExcepcionesCondicionCambiados> ExcepcionesNoGuardadas { get; } = [];
 
-        private string _tituloGridExcepciones = string.Empty;
+        private string TituloGridExcepciones { get; set; } = string.Empty;
 
         // Cach? para optimizar b?squedas de condiciones por medio
-        private Dictionary<int, List<CondicionDto>>? _condicionesPorMedio;
+        private Dictionary<int, List<CondicionViewModel>>? _condicionesPorMedio;
 
         private enum AccionJerarquias
         {
@@ -114,20 +108,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Popup Vigencia
 
-        private bool _popupVigenciaVisible { get; set; } = false;
-        private string _tituloPopupVigencia = string.Empty;
+        private bool PopupVigenciaVisible { get; set; } = false;
+        private string TituloPopupVigencia { get; set; } = string.Empty;
         private Vigencia _vigenciaNueva = new();
-        private List<CodigoDescripcion> _meses = [];
-        private CodigoDescripcion? _mesDesdeVigenciaSeleccionado { get; set; } = null;
-        private CodigoDescripcion? _mesHastaVigenciaSeleccionado { get; set; } = null;
-        private CodigoDescripcion? _medioSeleccionadoDesdePopup { get; set; } = null;
+        private List<CodigoDescripcion> Meses { get; set; } = [];
+        private CodigoDescripcion? MesDesdeVigenciaSeleccionado { get; set; } = null;
+        private CodigoDescripcion? MesHastaVigenciaSeleccionado { get; set; } = null;
+        private CodigoDescripcion? MedioSeleccionadoDesdePopup { get; set; } = null;
         private ModoEdicion _modoEdicionVigencia = ModoEdicion.Alta;
 
         #endregion
 
         #region Popup Medios
 
-        private bool _popupMediosVisible { get; set; } = false;
+        private bool PopupMediosVisible { get; set; } = false;
         private List<CodigoDescripcion> _medios = [];
         private int? _codigoMedioleccionadoParaFiltro;
 
@@ -137,74 +131,45 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #endregion
 
 
-        #region Page
+        #region Ciclo de Vida del Componente
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override Task OnPermisoDenegadoAsync()
         {
-            if (firstRender)
-            {
-                await base.OnAfterRenderAsync(firstRender);
-                try
-                {
-                    PageTitle = ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.PlanificacionCondiciones}:label");
-                    LayerOverlayService.Start($"{ObtenerTexto(AppResources.Common.Loading)} {PageTitle}");
-                    await PageInitialize();
-                }
-                catch (Exception ex)
-                {
-                    await ErrorService.MostrarErrorInicializandoPagina(PageTitle, ex);
-                    return;
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
-
-                if (!_componentInitialized)
-                {
-                    _componentInitialized = true;
-                    await InvokeAsync(StateHasChanged);
-                }
-            }
+            return Task.CompletedTask;
         }
 
-        private async Task PageInitialize()
+        protected override async Task InicializarPaginaAsync()
         {
-            _radioGroupAcuerdoButtonList = [ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones), 
-                ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.CondicionesAcuerdos)];
-            _radioGroupAcuerdoChecked = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones);
+            LayerOverlayService.Start($"{ObtenerTexto(TextosApp.Common.Loading)} {TituloPagina}");
 
-            TextoToolTipAyuda = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ToolTip);
-            
-            LeftCaptionVigencias = ObtenerTexto("Pages: PlanificacionCondiciones: Vigencias: label");
-            LeftCaptionCondiciones = ObtenerTexto("Pages: PlanificacionCondiciones: Condiciones: label");
+            RadioGroupAcuerdoButtonList = [ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Condiciones),
+                ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.CondicionesAcuerdos)];
+            RadioGroupAcuerdoChecked = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Condiciones);
 
-            if (!String.IsNullOrEmpty(_radioGroupAcuerdoChecked))
-            {
-                PageTitle = _radioGroupAcuerdoChecked;
-            }
+            TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ToolTip);
 
-           // Jwt.Usuario = User;
+            LeftCaptionVigencias = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Vigencias);
+            LeftCaptionCondiciones = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Condiciones);
 
-            _anios = await VersionesService.ObtenerAniosConVersiones();
-            _networks = await PresupuestosService.ObtenerNetworks();
-            _meses = await Traducciones.ObtenerMeses();
+            Anios = await VersionesService.ObtenerAniosConVersiones();
+            Networks = await PresupuestosService.ObtenerNetworks();
+            Meses = GestorIdioma.ObtenerMeses();
 
-            _indicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 0, Descripcion = "" });
-            _indicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 1, Descripcion = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.NetoVenta) });
-            _indicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 2, Descripcion = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Sobreprima) });
+            IndicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 0, Descripcion = "" });
+            IndicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 1, Descripcion = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.NetoVenta) });
+            IndicadoresDevolucion.Add(new CodigoDescripcion { Codigo = 2, Descripcion = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Sobreprima) });
 
-            _alcances = await PresupuestosService.ObtenerAlcances();
-            _alcances.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
-            InsertarFilaVacia(_alcances);
+            Alcances = await PresupuestosService.ObtenerAlcances();
+            Alcances.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
+            InsertarFilaVacia(Alcances);
 
             _disciplinas = await PresupuestosService.ObtenerDisciplinas();
             _disciplinas.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_disciplinas);
 
-            _diversifieds = await PresupuestosService.ObtenerDiversifiedsNCB();
-            _diversifieds.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
-            InsertarFilaVacia(_diversifieds);
+            Diversifieds = await PresupuestosService.ObtenerDiversifiedsNCB();
+            Diversifieds.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
+            InsertarFilaVacia(Diversifieds);
 
             _objetivos = await PresupuestosService.ObtenerObjetivos();
             _objetivos.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
@@ -222,11 +187,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             _tiposDisciplina.ForEach(m => m.Descripcion = StringHelper.Capitalize(m.Descripcion));
             InsertarFilaVacia(_tiposDisciplina);
 
-            _tituloGridExcepciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Excepciones);
+            TituloGridExcepciones = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Excepciones);
 
             await ManageRequest();
-          
-           
         }
 
         #endregion
@@ -239,15 +202,15 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         /// </summary>
         private async Task FilterInit()
         {
-            if (_networks.Count == 1)
+            if (Networks.Count == 1)
             {
-                _networkSeleccionado = _networks[0];
-                _gruposClientes = await PresupuestosService.ObtenerGruposClientePorNetwork(_networkSeleccionado.Codigo);
-                _mediosMaster = await PresupuestosService.ObtenerMediosPorNetWork(_networkSeleccionado.Codigo.ToString());
+                NetworkSeleccionado = Networks[0];
+                GruposClientes = await PresupuestosService.ObtenerGruposClientePorNetwork(NetworkSeleccionado.Codigo);
+                MediosMaster = await PresupuestosService.ObtenerMediosPorNetWork(NetworkSeleccionado.Codigo.ToString());
             }
-            if ( _gruposClientes.Count == 1)
+            if ( GruposClientes.Count == 1)
             {
-                _codigoGrupoSeleccionado = _gruposClientes[0].Codigo;
+                CodigoGrupoSeleccionado = GruposClientes[0].Codigo;
             }
         }
 
@@ -257,37 +220,33 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             {
                 return;
             }
-            _radioGroupAcuerdoChecked = newValue;
-            if (!String.IsNullOrEmpty(_radioGroupAcuerdoChecked))
-            {
-                PageTitle = _radioGroupAcuerdoChecked;
-            }
+            RadioGroupAcuerdoChecked = newValue;
         }
 
         private async Task ComboBoxNetwork_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource == SelectionChangeSource.UserAction)
             {
-                _codigoGrupoSeleccionado = null;
-                _gruposClientes = [];
-                _networkSeleccionado = e.DataItem;
-                if (_networkSeleccionado is null) return;
+                CodigoGrupoSeleccionado = null;
+                GruposClientes = [];
+                NetworkSeleccionado = e.DataItem;
+                if (NetworkSeleccionado is null) return;
 
                 try
                 {
                     LayerOverlayService.Start();
-                    _gruposClientes = await PresupuestosService.ObtenerGruposClientePorNetwork(_networkSeleccionado.Codigo);
-                    if (_gruposClientes.Count == 1)
+                    GruposClientes = await PresupuestosService.ObtenerGruposClientePorNetwork(NetworkSeleccionado.Codigo);
+                    if (GruposClientes.Count == 1)
                     {
-                        _codigoGrupoSeleccionado = _gruposClientes[0].Codigo;
+                        CodigoGrupoSeleccionado = GruposClientes[0].Codigo;
                     }
 
-                    _mediosMaster = await PresupuestosService.ObtenerMediosPorNetWork(_networkSeleccionado.Codigo.ToString());
+                    MediosMaster = await PresupuestosService.ObtenerMediosPorNetWork(NetworkSeleccionado.Codigo.ToString());
                 }
                 catch (Exception ex)
                 {
                     await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
+                    await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
                 {
@@ -300,20 +259,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (e.ChangeSource == SelectionChangeSource.UserAction)
             {
-                _versionSeleccionada = null;
-                _versiones = [];
+                VersionSeleccionada = null;
+                Versiones = [];
                 if (e.DataItem is null) return;
 
                 int anioSeleccionado = e.DataItem.Codigo;
                 try
                 {
                     LayerOverlayService.Start();
-                    _versiones = await ObtenerVersionesPorPermisos(anioSeleccionado);
+                    Versiones = await ObtenerVersionesPorPermisos(anioSeleccionado);
                 }
                 catch (Exception ex)
                 {
                     await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
+                    await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
                 {
@@ -334,19 +293,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 }
                 else
                 {
-                    _condiciones.Clear();
+                    Condiciones.Clear();
                     _condicionesCache.Clear();
-                    _excepciones.Clear();
+                    Excepciones.Clear();
                     _excepcionesCache.Clear();
 
-                    _tituloGridExcepciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Excepciones);
+                    TituloGridExcepciones = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Excepciones);
                     _codigoMedioleccionadoParaFiltro = null;
                 }
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
@@ -354,21 +313,21 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         private void ActualizarCondicionesConMedioAccesible()
         {
             var codigosMediosAccesibles = new HashSet<int>(
-                   _mediosMaster.Select(m => m.Codigo));
+                   MediosMaster.Select(m => m.Codigo));
 
-            foreach (var item in _condiciones)
+            foreach (var item in Condiciones)
             {
                 item.MedioAccesible = codigosMediosAccesibles.Contains(item.CodigoMedio);
             }
 
-            _condiciones.RemoveAll(c => c.PctSAG == 0 && c.PctDevolucion == 0 && c.PctManPower == 0 && c.MedioAccesible == false);
+            Condiciones.RemoveAll(c => c.PctSAG == 0 && c.PctDevolucion == 0 && c.PctManPower == 0 && c.MedioAccesible == false);
         }
 
         private void ActulizarExcepcionesConMedioAccesible()
         {
             var codigosMediosAccesibles = new HashSet<int>(
-                _mediosMaster.Select(m => m.Codigo));
-            foreach (var item in _excepciones)
+                MediosMaster.Select(m => m.Codigo));
+            foreach (var item in Excepciones)
             {
                 item.MedioAccesible = codigosMediosAccesibles.Contains(item.CodigoMedio);
             }
@@ -378,15 +337,24 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 LayerOverlayService.Start();
-                _condiciones = await CondicionesService.ObtenerCondicionesPorVigencia(codigoVigencia, _networkSeleccionado!.Codigo);
-                _condiciones.ForEach(m => m.DescripcionMedio = StringHelper.Capitalize(m.DescripcionMedio));
+                var condicionesDto = await CondicionesService.ObtenerCondicionesPorVigencia(codigoVigencia, NetworkSeleccionado!.Codigo);
+                Condiciones = [.. condicionesDto.Select(dto => new CondicionViewModel
+                {
+                    CodigoMedio = dto.CodigoMedio,
+                    DescripcionMedio = StringHelper.Capitalize(dto.DescripcionMedio),
+                    PctSAG = dto.PctSAG,
+                    PctManPower = dto.PctManPower,
+                    PctDevolucion = dto.PctDevolucion,
+                    IndicadorCalculoDevolucion = dto.IndicadorCalculoDevolucion,
+                    NumeroExcepciones = dto.NumeroExcepciones
+                })];
 
                 ActualizarCondicionesConMedioAccesible();
 
-                _condicionesCache = DatosHelper.ClonarObjeto(_condiciones);
+                _condicionesCache = DatosHelper.ClonarObjeto(Condiciones);
                 _condicionesPorMedio = null; // Limpiar cach?
 
-                _medios = [.. _condiciones
+                _medios = [.. Condiciones
                                 .Select(x => new CodigoDescripcion
                                 {
                                     Codigo = x.CodigoMedio,
@@ -398,7 +366,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -408,19 +376,36 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task ObtenerExcepciones(int codigoVigencia)
         {
-            _excepciones = await CondicionesService.ObtenerExcepcionesCondiciones(codigoVigencia);
-            _excepciones.ForEach(m => m.DescripcionMedio = StringHelper.Capitalize(m.DescripcionMedio));
+            var excepcionesDto = await CondicionesService.ObtenerExcepcionesCondiciones(codigoVigencia);
+            Excepciones = [.. excepcionesDto.Select(dto => new ExcepcionCondicionViewModel
+            {
+                CodigoMedio = dto.CodigoMedio,
+                Jerarquia = dto.Jerarquia,
+                CodigoCondicionMedio = dto.CodigoCondicionMedio,
+                DescripcionMedio = StringHelper.Capitalize(dto.DescripcionMedio),
+                PctSAG = dto.PctSAG,
+                PctManPower = dto.PctManPower,
+                PctDevolucion = dto.PctDevolucion,
+                IndicadorCalculoDevolucion = dto.IndicadorCalculoDevolucion,
+                CodigoAlcance = dto.CodigoAlcance,
+                CodigoDisciplina = dto.CodigoDisciplina,
+                CodigoDiversified = dto.CodigoDiversified,
+                CodigoObjetivo = dto.CodigoObjetivo,
+                CodigoTipoCompra = dto.CodigoTipoCompra,
+                CodigoTipoDisciplina = dto.CodigoTipoDisciplina,
+                CodigoDisciplinaGrupo = dto.CodigoDisciplinaGrupo
+            })];
 
             //Actualiza el indicador de Base de calculo de las excepciones a partir del indicador de Base de calculo de la Condicion del mismo Medio
-            foreach (CondicionDto condicion in _condiciones)
+            foreach (CondicionViewModel condicion in Condiciones)
             {
                 int indicadorCalculoDevolucion = condicion.IndicadorCalculoDevolucion;
-                _excepciones.Where(c => c.CodigoMedio == condicion.CodigoMedio).ToList().ForEach(c => c.IndicadorCalculoDevolucion = indicadorCalculoDevolucion);
+                Excepciones.Where(c => c.CodigoMedio == condicion.CodigoMedio).ToList().ForEach(c => c.IndicadorCalculoDevolucion = indicadorCalculoDevolucion);
             }
 
             ActulizarExcepcionesConMedioAccesible();
 
-            _excepcionesCache = DatosHelper.ClonarObjeto(_excepciones);
+            _excepcionesCache = DatosHelper.ClonarObjeto(Excepciones);
         }
 
         private async Task FiltroBuscar()
@@ -429,49 +414,49 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
             if (!ValidarCamposObligatoriosFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.CamposObligatorios));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
                 return;
             }
             try
             {
                 LayerOverlayService.Start();
-                _filtroCondiciones.CodigoNetwork = _networkSeleccionado!.Codigo;
+                _filtroCondiciones.CodigoNetwork = NetworkSeleccionado!.Codigo;
 
-                var grupoSeleccionado = _gruposClientes.First(c=> c.Codigo == _codigoGrupoSeleccionado!.Value);
-                _filtroCondiciones.CodigoGrupoCliente = _codigoGrupoSeleccionado!.Value;
-                _filtroCondiciones.Anio = Convert.ToInt32(_anioSeleccionado!.Descripcion);
-                _filtroCondiciones.CodigoVersion = _versionSeleccionada!.Codigo;
+                var grupoSeleccionado = GruposClientes.First(c=> c.Codigo == CodigoGrupoSeleccionado!.Value);
+                _filtroCondiciones.CodigoGrupoCliente = CodigoGrupoSeleccionado!.Value;
+                _filtroCondiciones.Anio = Convert.ToInt32(AnioSeleccionado!.Descripcion);
+                _filtroCondiciones.CodigoVersion = VersionSeleccionada!.Codigo;
 
-                if (_radioGroupAcuerdoChecked == ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.CondicionesAcuerdos))
+                if (RadioGroupAcuerdoChecked == ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.CondicionesAcuerdos))
                 {
-                    _filtroCondiciones.IndicadorAcuerdo = Convert.ToInt32(ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.CondicionesAcuerdosCodigo));
+                    _filtroCondiciones.IndicadorAcuerdo = Convert.ToInt32(ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.CondicionesAcuerdosCodigo));
                 }
-                else if (_radioGroupAcuerdoChecked == ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Condiciones))
+                else if (RadioGroupAcuerdoChecked == ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Condiciones))
                 { 
-                    _filtroCondiciones.IndicadorAcuerdo = Convert.ToInt32(ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.CondicionesCodigo));
+                    _filtroCondiciones.IndicadorAcuerdo = Convert.ToInt32(ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.CondicionesCodigo));
                 }
 
-                _vigencias = await CondicionesService.ObtenerVigencias(_filtroCondiciones);
+                Vigencias = await CondicionesService.ObtenerVigencias(_filtroCondiciones);
                 
                 LayerOverlayService.Stop();
-                if (_vigencias.Count == 0)
+                if (Vigencias.Count == 0)
                 {
-                    _vigenciaSeleccionada = null;
+                    VigenciaSeleccionada = null;
                     if (!_desdePaginaImportarMMS)
                     {
-                        await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.RegistrosNoEncontrados));
+                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
                     }
                 }
                 else
                 {
-                    await Traducciones.TraducirMesesVigencias(_vigencias);
+                    GestorIdioma.TraducirMesesVigencias(Vigencias);
                     SeleccionarVigencia();
                 }
 
-                _tituloGridExcepciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Excepciones);
+                TituloGridExcepciones = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Excepciones);
                 _codigoMedioleccionadoParaFiltro = null;
 
-                RightCaptionVigencias = $"[{_networkSeleccionado?.Descripcion ?? ""}, {grupoSeleccionado!.Descripcion}, {Convert.ToInt32(_anioSeleccionado!.Descripcion)}, {_versionSeleccionada!.Descripcion}]";
+                RightCaptionVigencias = $"[{NetworkSeleccionado?.Descripcion ?? ""}, {grupoSeleccionado!.Descripcion}, {Convert.ToInt32(AnioSeleccionado!.Descripcion)}, {VersionSeleccionada!.Descripcion}]";
 
                 ActivarBotonNuevaExcepcion = true;
 
@@ -489,10 +474,10 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private bool ValidarCamposObligatoriosFiltro()
         {
-            return _networkSeleccionado != null
-                && _codigoGrupoSeleccionado != null
-                && _anioSeleccionado != null
-                && _versionSeleccionada != null;
+            return NetworkSeleccionado != null
+                && CodigoGrupoSeleccionado != null
+                && AnioSeleccionado != null
+                && VersionSeleccionada != null;
         }
 
         private async Task FiltroLimpiar()
@@ -502,21 +487,21 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 if (!await ComprobarSiHayCambiosPendienteAndSeguir()) return;
 
                 LayerOverlayService.Start();
-                _anioSeleccionado = null;
-                _versionSeleccionada = null;
-                _codigoGrupoSeleccionado = null;
+                AnioSeleccionado = null;
+                VersionSeleccionada = null;
+                CodigoGrupoSeleccionado = null;
                 _codigoMedioleccionadoParaFiltro = null;
 
                 //Limpiar vigencias. aL poner esta a null, se limpia automaticamente las condiciones y las excepciones
-                _vigencias = [];
-                _vigenciaSeleccionada = null;
+                Vigencias = [];
+                VigenciaSeleccionada = null;
 
                 await FilterInit();
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -532,93 +517,93 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private void SeleccionarVigencia()
         {
-            if (_vigencias.Count == 0)
+            if (Vigencias.Count == 0)
             {
-                _vigenciaSeleccionada = null;
+                VigenciaSeleccionada = null;
                 return;
             }
 
-            if (_vigencias.Count == 1)
+            if (Vigencias.Count == 1)
             {
-                _vigenciaSeleccionada = _vigencias[0];
+                VigenciaSeleccionada = Vigencias[0];
             }
             else
             {
                 //Se usa el operador ^ al calcular un ?ndice desde el final de una colecci?n.
-                _vigenciaSeleccionada = _vigencias[^1];
+                VigenciaSeleccionada = Vigencias[^1];
             }
         }
 
-        private void AñadirVigencia()
+        private void AÃ±adirVigencia()
         {
             _vigenciaNueva.CodigoNetWork = _filtroCondiciones.CodigoNetwork;
             _vigenciaNueva.CodigoVersion = _filtroCondiciones.CodigoVersion;
             _vigenciaNueva.CodigoGrupoCliente = _filtroCondiciones.CodigoGrupoCliente;
             _vigenciaNueva.IndicadorAcuerdo = _filtroCondiciones.IndicadorAcuerdo;
 
-            _tituloPopupVigencia =  ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.NuevaVigencia);
+            TituloPopupVigencia =  ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.NuevaVigencia);
 
             _modoEdicionVigencia = ModoEdicion.Alta;
-            _popupVigenciaVisible = true;
+            PopupVigenciaVisible = true;
         }
 
         private async Task EditarVigencia()
         {
-            if (_vigenciaSeleccionada == null)
+            if (VigenciaSeleccionada == null)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:VigenciaSeleccion:label"));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.VigenciaSeleccion));
                 return;
             }
 
-            int codigoVigencia = _vigenciaSeleccionada.Codigo;
+            int codigoVigencia = VigenciaSeleccionada.Codigo;
 
-            Vigencia? vigencia = _vigencias.Find(c=> c.Codigo == codigoVigencia);
+            Vigencia? vigencia = Vigencias.Find(c=> c.Codigo == codigoVigencia);
 
             if (vigencia == null)
             {
                 return;
             }
 
-            CodigoDescripcion mesDesde = _meses[vigencia.MesDesde - 1];
-            CodigoDescripcion mesHasta = _meses[vigencia.MesHasta - 1];
+            CodigoDescripcion mesDesde = Meses[vigencia.MesDesde - 1];
+            CodigoDescripcion mesHasta = Meses[vigencia.MesHasta - 1];
 
-            _mesDesdeVigenciaSeleccionado = mesDesde;
-            _mesHastaVigenciaSeleccionado = mesHasta;
+            MesDesdeVigenciaSeleccionado = mesDesde;
+            MesHastaVigenciaSeleccionado = mesHasta;
 
-            _tituloPopupVigencia = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.EditarVigencia);
+            TituloPopupVigencia = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.EditarVigencia);
 
             _modoEdicionVigencia = ModoEdicion.Edicion;
-            _popupVigenciaVisible = true;
+            PopupVigenciaVisible = true;
         }
 
         private async Task EliminarVigencia()
         {
-            bool confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+            bool confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar));
             if (!confirm) return;
 
             try
             {
-                int codigoVigencia = _vigenciaSeleccionada!.Codigo;
+                int codigoVigencia = VigenciaSeleccionada!.Codigo;
 
                 if (await CondicionesService.ExistenCondicionesVigencias(codigoVigencia))
                 {
-                    confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaConCondiciones));
+                    confirm = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.VigenciaConCondiciones));
                     if (!confirm)  return;
                 }
                 LayerOverlayService.Start();
-                await CondicionesService.EliminarVigencia(_vigenciaSeleccionada);
-                _vigencias.Remove(_vigenciaSeleccionada);
+                await CondicionesService.EliminarVigencia(VigenciaSeleccionada);
+                Vigencias.Remove(VigenciaSeleccionada);
                 SeleccionarVigencia();
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistroEliminado));
             }
             catch (ExcepcionBaseDatos exBd)
             {
-                await TratarExcepcionGeneradaEnBD(exBd, PageTitle);
+                await TratarExcepcionGeneradaEnBD(exBd, TituloPagina);
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -634,8 +619,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 LayerOverlayService.Start();
-                int mesDesde = _mesDesdeVigenciaSeleccionado!.Codigo;
-                int mesHasta = _mesHastaVigenciaSeleccionado!.Codigo;
+                int mesDesde = MesDesdeVigenciaSeleccionado!.Codigo;
+                int mesHasta = MesHastaVigenciaSeleccionado!.Codigo;
 
                 Vigencia vigencia = new ();
 
@@ -645,7 +630,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 }
                 else
                 {
-                    vigencia = DatosHelper.ClonarObjeto(_vigenciaSeleccionada!);
+                    vigencia = DatosHelper.ClonarObjeto(VigenciaSeleccionada!);
                 }
 
                 vigencia.MesDesde = mesDesde;
@@ -653,7 +638,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (! await CondicionesService.ValidarSolapesVigencia(vigencia))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciasSolapadas));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.VigenciasSolapadas));
                     return;
                 }
 
@@ -661,12 +646,12 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
 
                     await CondicionesService.InsertarVigencia(vigencia );
-                    _vigencias.Add(vigencia);
+                    Vigencias.Add(vigencia);
                 }
                 else
                 {
                     await CondicionesService.ActualizarVigencia(vigencia);
-                    Vigencia? vigenciamodificada = _vigencias.Find(c => c.Codigo == _vigenciaSeleccionada!.Codigo);
+                    Vigencia? vigenciamodificada = Vigencias.Find(c => c.Codigo == VigenciaSeleccionada!.Codigo);
                     if (vigenciamodificada != null)
                     {
                         vigenciamodificada.MesDesde = vigencia.MesDesde;
@@ -674,27 +659,27 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     }
                 }
 
-                await Traducciones.TraducirMesesVigencias(_vigencias);
+                GestorIdioma.TraducirMesesVigencias(Vigencias);
 
-                _vigenciaSeleccionada = vigencia;
+                VigenciaSeleccionada = vigencia;
 
                 if (_modoEdicionVigencia == ModoEdicion.Alta)
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto("Pages:PlanificacionCondiciones:Mensajes:VigenciaAñadida:label"));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.VigenciaAnadida));
                 }
                 else
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaModificada));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.VigenciaModificada));
                 }
 
-                _popupVigenciaVisible = false;
-                _mesDesdeVigenciaSeleccionado = null;
-                _mesHastaVigenciaSeleccionado = null;
+                PopupVigenciaVisible = false;
+                MesDesdeVigenciaSeleccionado = null;
+                MesHastaVigenciaSeleccionado = null;
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
             finally
             {
@@ -704,20 +689,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private void OcultarPopupVigencia()
         {
-            _popupVigenciaVisible = false;
+            PopupVigenciaVisible = false;
         }
 
         private async Task<bool> ValidarFechasVigencia()
         {
-            if (_mesDesdeVigenciaSeleccionado == null || _mesHastaVigenciaSeleccionado == null)
+            if (MesDesdeVigenciaSeleccionado == null || MesHastaVigenciaSeleccionado == null)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaSinMeses));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.VigenciaSinMeses));
                 return  false;
             }
 
-            if (_mesDesdeVigenciaSeleccionado.Codigo > _mesHastaVigenciaSeleccionado.Codigo)
+            if (MesDesdeVigenciaSeleccionado.Codigo > MesHastaVigenciaSeleccionado.Codigo)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.VigenciaValidacion));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.VigenciaValidacion));
                 return false;
             }
             return true;
@@ -733,7 +718,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             if (ea.ElementType != GridElementType.DataCell) return;
 
             var column = (IGridDataColumn)ea.Column;
-            var condicion = (CondicionDto)GridCondiciones.GetDataItem(ea.VisibleIndex);
+            var condicion = (CondicionViewModel)GridCondiciones.GetDataItem(ea.VisibleIndex);
 
             if (condicion == null) return;
           
@@ -748,19 +733,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 var comparadores = new Dictionary<string, Func<(object? original, object? actual)>>
                 {
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc),
                         () => (itemCondicionOriginal.PctSAG, condicion.PctSAG)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc),
                         () => (itemCondicionOriginal.PctManPower, condicion.PctManPower)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.BCDevolucion),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.BCDevolucion),
                         () => (itemCondicionOriginal.IndicadorCalculoDevolucion, condicion.IndicadorCalculoDevolucion)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc),
                         () => (itemCondicionOriginal.PctDevolucion, condicion.PctDevolucion)
                     }
                 };
@@ -777,11 +762,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
-        private bool HaCambiadoValorConceptoCondiciones(CondicionDto item, ConceptosCondiciones concepto)
+        private bool HaCambiadoValorConceptoCondiciones(CondicionViewModel item, ConceptosCondiciones concepto)
         {
             var medio = _condicionesCache.Find(c => c.CodigoMedio == item.CodigoMedio);
             if (medio == null)
@@ -798,11 +783,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private async void Condicion_SetPct(CondicionDto itemEditable, CondicionDto itemDestino, ConceptosCondiciones concepto, decimal? value)
+        private async void Condicion_SetPct(CondicionViewModel itemEditable, CondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
         {
             try 
             { 
-                CondicionDto? itemToActualizar = _condiciones.Find(c => c.CodigoMedio == itemEditable.CodigoMedio);
+                CondicionViewModel? itemToActualizar = Condiciones.Find(c => c.CodigoMedio == itemEditable.CodigoMedio);
 
                 switch (concepto)
                 {
@@ -841,11 +826,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
-        private async void Condicion_SetDev(CondicionDto itemEditable, CondicionDto itemDestino, int? value)
+        private async void Condicion_SetDev(CondicionViewModel itemEditable, CondicionViewModel itemDestino, int? value)
         {
             try
             {
@@ -854,7 +839,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 itemEditable.IndicadorCalculoDevolucion = valor;
 
-                _condiciones
+                Condiciones
                    .Where(c => c.CodigoMedio == codigoMedio)
                    .ToList()
                    .ForEach(c =>
@@ -867,7 +852,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                        }
                    });
 
-                _excepciones
+                Excepciones
                     .Where(c => c.CodigoMedio == codigoMedio)
                     .ToList()
                     .ForEach(c =>
@@ -885,11 +870,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
-        private async Task ControlarCambiosCondiciones(CondicionDto itemEditable, CondicionDto itemDestino)
+        private async Task ControlarCambiosCondiciones(CondicionViewModel itemEditable, CondicionViewModel itemDestino)
         {
             var itemOrigen = _condicionesCache.Find(c => c.CodigoMedio == itemEditable.CodigoMedio)!;
             var camposConCambios = DatosHelper.ObtenerCamposModificados(itemEditable, itemOrigen);
@@ -897,20 +882,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             if (camposConCambios.Count > 0)
             {
                 DatosHelper.AplicarCambios(itemEditable, itemDestino);
-                if (_condicionesNoGuardados.TryGetValue(itemDestino, out var cambios))
+                if (CondicionesNoGuardados.TryGetValue(itemDestino, out var cambios))
                 {
                     cambios.CamposCambiados.UnionWith(camposConCambios);
                 }
                 else
                 {
-                    _condicionesNoGuardados.Add(itemDestino, new(TiposCambiosdeDatos.Modificados, camposConCambios));
+                    CondicionesNoGuardados.Add(itemDestino, new(TiposCambiosdeDatos.Modificados, camposConCambios));
                 }
             }
             else
             {
-                if (_condicionesNoGuardados.Count > 0)
+                if (CondicionesNoGuardados.Count > 0)
                 {
-                    _condicionesNoGuardados.Remove(itemDestino);
+                    CondicionesNoGuardados.Remove(itemDestino);
                 }
             }
 
@@ -929,7 +914,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 var column = (IGridDataColumn)ea.Column;
-                var excepcion = (ExcepcionDto)GridExcepciones.GetDataItem(ea.VisibleIndex);
+                var excepcion = (ExcepcionCondicionViewModel)GridExcepciones.GetDataItem(ea.VisibleIndex);
 
                 if (excepcion == null) return;
                 var itemOriginal = _excepcionesCache.Find(x => x.Key == excepcion.Key);
@@ -945,47 +930,47 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 var comparadores = new Dictionary<string, Func<(object? original, object? actual)>>()
                 { 
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Jerarquia),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Jerarquia),
                         () => (itemOriginal!.Jerarquia, excepcion.Jerarquia)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.SagTpc),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.SagTpc),
                         () => (itemOriginal!.PctSAG, excepcion.PctSAG)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ManpowerTpc),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ManpowerTpc),
                         () => (itemOriginal!.PctManPower, excepcion.PctManPower)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DevolucionTpc),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DevolucionTpc),
                         () => (itemOriginal!.PctDevolucion, excepcion.PctDevolucion)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Alcance),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Alcance),
                         () => (itemOriginal!.CodigoAlcance, excepcion.CodigoAlcance)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Disciplina),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Disciplina),
                         () => (itemOriginal!.CodigoDisciplina, excepcion.CodigoDisciplina)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Diversified),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Diversified),
                         () => (itemOriginal!.CodigoDiversified, excepcion.CodigoDiversified)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Objetivo),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Objetivo),
                         () => (itemOriginal!.CodigoObjetivo, excepcion.CodigoObjetivo)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoCompra),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.TipoCompra),
                         () => (itemOriginal!.CodigoTipoCompra, excepcion.CodigoTipoCompra)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.TipoDisciplina),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.TipoDisciplina),
                         () => (itemOriginal!.CodigoTipoDisciplina, excepcion.CodigoTipoDisciplina)
                     },
                     {
-                        ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.DisciplinaGrupo),
+                        ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.DisciplinaGrupo),
                         () => (itemOriginal!.CodigoDisciplinaGrupo, excepcion.CodigoDisciplinaGrupo)
                     }
                 };
@@ -1003,11 +988,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
-        private bool HaCambiadoValorExcepciones(ExcepcionDto item, ConceptosCondicionesNMD concepto)
+        private bool HaCambiadoValorExcepciones(ExcepcionCondicionViewModel item, ConceptosCondicionesNMD concepto)
         {
             var excepcion = _excepcionesCache.Find(c => c.CodigoCondicionMedio == item.CodigoCondicionMedio);
 
@@ -1029,7 +1014,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private bool HaCambiadoValorExcepciones(ExcepcionDto item, ConceptosCondiciones concepto)
+        private bool HaCambiadoValorExcepciones(ExcepcionCondicionViewModel item, ConceptosCondiciones concepto)
         {
             var excepcion = _excepcionesCache.Find(c => c.CodigoCondicionMedio == item.CodigoCondicionMedio);
             if (excepcion == null)
@@ -1045,7 +1030,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private bool HaCambiadoValorJerarquia(ExcepcionDto item)
+        private bool HaCambiadoValorJerarquia(ExcepcionCondicionViewModel item)
         {
             var excepcion = _excepcionesCache.Find(c => c.CodigoCondicionMedio == item.CodigoCondicionMedio);
             if (excepcion == null)
@@ -1055,11 +1040,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             return item.Jerarquia != excepcion.Jerarquia;
         }
 
-        private async void ExcepcionMedioCondicion_SetConceptosNMD(ExcepcionDto itemEditable, ExcepcionDto itemDestino, ConceptosCondicionesNMD concepto, int? value)
+        private async void ExcepcionMedioCondicion_SetConceptosNMD(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondicionesNMD concepto, int? value)
         {
             try
             { 
-                ExcepcionDto? itemToActualizar = _excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
+                ExcepcionCondicionViewModel? itemToActualizar = Excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
 
                 int valor = value ?? 0;
 
@@ -1134,15 +1119,15 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
-        private async void MedioCondicionExcepcion_SetPct(ExcepcionDto itemEditable, ExcepcionDto itemDestino, ConceptosCondiciones concepto, decimal? value)
+        private async void MedioCondicionExcepcion_SetPct(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
         {
             try
             {
-                ExcepcionDto? itemToActualizar = _excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
+                ExcepcionCondicionViewModel? itemToActualizar = Excepciones.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio);
                 switch (concepto)
                 {
                     case ConceptosCondiciones.Sag:
@@ -1182,11 +1167,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
-        private async Task ControlarCambiosExcepciones(ExcepcionDto itemEditable, ExcepcionDto itemDestino, bool aplicarCambios = true)
+        private async Task ControlarCambiosExcepciones(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, bool aplicarCambios = true)
         {
             var itemOrigen = _excepcionesCache.Find(c => c.CodigoCondicionMedio == itemEditable.CodigoCondicionMedio)!;
 
@@ -1218,7 +1203,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             StateHasChanged();
         }
 
-        private async void AñadirExcepcion()
+        private async void AÃ±adirExcepcion()
         {
             if (_codigoMedioleccionadoParaFiltro.HasValue)
             {
@@ -1227,7 +1212,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     LayerOverlayService.Start();
                     int codigoMedio = _codigoMedioleccionadoParaFiltro!.Value;
 
-                    var nuevaExcepcion = new ExcepcionDto();
+                    var nuevaExcepcion = new ExcepcionCondicionViewModel();
                     nuevaExcepcion.MedioAccesible = true;
 
                     string codigoCondicion = ObtenerNuevoCodigoExcepcion();
@@ -1240,7 +1225,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     nuevaExcepcion.DescripcionMedio = descripcionMedio;
 
                     int jerarquia = 1;
-                    var excepcionesPorMedio = _excepciones.Where(c => c.CodigoMedio == codigoMedio);
+                    var excepcionesPorMedio = Excepciones.Where(c => c.CodigoMedio == codigoMedio);
 
                     if (excepcionesPorMedio.Any())
                     {
@@ -1255,9 +1240,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     nuevaExcepcion.CodigoTipoDisciplina = 0;
                     nuevaExcepcion.CodigoDisciplinaGrupo = 0;
 
-                    _excepciones.Insert(jerarquia - 1, nuevaExcepcion);
+                    Excepciones.Insert(jerarquia - 1, nuevaExcepcion);
 
-                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
+                    ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
 
                     GridExcepciones.Reload();
                     await ActualizarEstadoCambios(true);
@@ -1265,7 +1250,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 catch (Exception ex)
                 {
                     await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(PageTitle);
+                    await MensajesHelper.MostrarMensajeError(TituloPagina);
                 }
                 finally
                 {
@@ -1274,14 +1259,14 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
             else
             {
-                _popupMediosVisible = true;
+                PopupMediosVisible = true;
             }
         }
 
         private string ObtenerNuevoCodigoExcepcion()
         {
             //Se busca en las excepciones aquella cuyo condigo empiza por -, que son la que ha a?adido el usuario y aun no se han grabado
-            var codigosNuevos = _excepciones
+            var codigosNuevos = Excepciones
                 .Select(x => x.CodigoCondicionMedio)
                 .Where(c => c.StartsWith("-"))
                 .Select(c => int.Parse(c))
@@ -1302,7 +1287,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             return nuevoCodigoNumerico.ToString();
         }
 
-        private async Task MoverJerarquia(ExcepcionDto item, AccionJerarquias accion)
+        private async Task MoverJerarquia(ExcepcionCondicionViewModel item, AccionJerarquias accion)
         {
             try
             {
@@ -1311,7 +1296,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 int nuevoValorJerarquia = accion == AccionJerarquias.Subir ? jerarquia - 1 : jerarquia + 1;
 
-                var excepcion = _excepciones.Find(c => c.CodigoMedio == codigoMedio && c.Jerarquia == nuevoValorJerarquia);
+                var excepcion = Excepciones.Find(c => c.CodigoMedio == codigoMedio && c.Jerarquia == nuevoValorJerarquia);
                 if (excepcion != null)
                 {
                     excepcion.Jerarquia = jerarquia;
@@ -1330,13 +1315,13 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle);
+                await MensajesHelper.MostrarMensajeError(TituloPagina);
             }
         }
 
         private void OrdenarExcepciones()
         {
-            _excepciones.Sort((a, b) =>
+            Excepciones.Sort((a, b) =>
             {
                 int result = a.CodigoMedio.CompareTo(b.CodigoMedio);
                 if (result == 0)
@@ -1352,41 +1337,41 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             try
             {
                 LayerOverlayService.Start();
-                bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.ConfirmacionEliminar));
+                bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar));
                 if (!confirmar) return;
 
-                var item = (ExcepcionDto)dataItem;
+                var item = (ExcepcionCondicionViewModel)dataItem;
 
                 //Si el codigo empieza por -, es que es excepcion nueva y solo lo eliminamos de la lista
                 if (item.CodigoCondicionMedio.StartsWith('-'))
                 {
-                    _excepciones.Remove(item);
+                    Excepciones.Remove(item);
                     GridCondiciones.Reload();
                 }
                 else
                 {
-                    await CondicionesService.EliminarExcepcionCondicion(item.CodigosConceptosCondiciones, item.Jerarquia, _vigenciaSeleccionada!.Codigo, item.CodigoMedio, Usuario!.CodigoUsuario);
+                    await CondicionesService.EliminarExcepcionCondicion(item.CodigosConceptosCondiciones, item.Jerarquia, VigenciaSeleccionada!.Codigo, item.CodigoMedio, Usuario!.CodigoUsuario);
 
                     //Obtenemos de nuevo las excepciones ya que se ha eliminado y actualizado jerarquias
-                    await ObtenerExcepciones(_vigenciaSeleccionada!.Codigo);
+                    await ObtenerExcepciones(VigenciaSeleccionada!.Codigo);
 
                     if (_codigoMedioleccionadoParaFiltro != null)
                     {
-                        CondicionDto? medio = _condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
+                        CondicionViewModel? medio = Condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
                         if (medio != null)
                         {
                             await FiltrarExcepcionesPorMedio(medio);
                         }
                     }
 
-                    await MensajesHelper.MostrarMensajeExito(PageTitle, ObtenerTexto(AppResources.Mensajes.RegistroEliminado));
+                    await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistroEliminado));
                 }
                 ExcepcionesNoGuardadas.Remove(item);
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorDelete));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorDelete));
             }
             finally
             {
@@ -1397,35 +1382,35 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Filtro excepciones por medio
 
-        private async Task FiltrarExcepcionesPorMedio(CondicionDto item)
+        private async Task FiltrarExcepcionesPorMedio(CondicionViewModel item)
         {
             if (_codigoMedioleccionadoParaFiltro == item.CodigoMedio)
             {
                 //Hay que a?adir las excepciones que se han quitado al hacer el filtro por medio
-                foreach (ExcepcionDto excepcion in _excepcionesCache)
+                foreach (ExcepcionCondicionViewModel excepcion in _excepcionesCache)
                 {
-                    ExcepcionDto? exc = _excepciones.Find(c => c.CodigoCondicionMedio == excepcion.CodigoCondicionMedio);
+                    ExcepcionCondicionViewModel? exc = Excepciones.Find(c => c.CodigoCondicionMedio == excepcion.CodigoCondicionMedio);
                     if (exc == null)
                     {
-                        _excepciones.Add(excepcion);
+                        Excepciones.Add(excepcion);
                     }
                 }
                 OrdenarExcepciones();
-                _tituloGridExcepciones = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Excepciones);
+                TituloGridExcepciones = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Excepciones);
                 _codigoMedioleccionadoParaFiltro = null;
-                _medioSeleccionadoDesdePopup = null;
+                MedioSeleccionadoDesdePopup = null;
             }
             else
             {
                 if (ExcepcionesNoGuardadas.Count != 0)
                 {
                     
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.AlFiltrarExcepcionesConCambios));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.AlFiltrarExcepcionesConCambios));
                     return;
                 }
                 _codigoMedioleccionadoParaFiltro = item.CodigoMedio;
-                _excepciones = DatosHelper.ClonarObjeto(_excepcionesCache.Where(x => x.CodigoMedio == _codigoMedioleccionadoParaFiltro).ToList());
-                _tituloGridExcepciones = $"{ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.ExcepcionesMedio)} {item.DescripcionMedio}";
+                Excepciones = DatosHelper.ClonarObjeto(_excepcionesCache.Where(x => x.CodigoMedio == _codigoMedioleccionadoParaFiltro).ToList());
+                TituloGridExcepciones = $"{ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.ExcepcionesMedio)} {item.DescripcionMedio}";
             }
             ActivarBotonNuevaExcepcion = item.MedioAccesible;
 
@@ -1445,7 +1430,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             bool resultado = true;
 
-            foreach (var datoNoGuardado in _condicionesNoGuardados)
+            foreach (var datoNoGuardado in CondicionesNoGuardados)
             {
                 var itemModificado = datoNoGuardado.Key;
 
@@ -1453,7 +1438,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (itemModificado.IndicadorCalculoDevolucion < 1)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctDevCondicionSinBC));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.PctDevCondicionSinBC));
                         resultado = false;
                     }
                 }
@@ -1462,7 +1447,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (!itemModificado.PctDevolucion.HasValue)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.BCCondicionSinPctDevolucion));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.BCCondicionSinPctDevolucion));
                         resultado = false;
                     }
                 }
@@ -1474,17 +1459,17 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task<bool> ValidarExcepciones()
         {
-            if (CondicionesCacheTodasSinDatos() && _condicionesNoGuardados.Count == 0)
+            if (CondicionesCacheTodasSinDatos() && CondicionesNoGuardados.Count == 0)
             {
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesSinCondiciones));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesSinCondiciones));
                 return false;
             }
 
             // Validaci?n de duplicados optimizada con HashSet
             var excepcionesVistas = new HashSet<string>();
-            ExcepcionDto? primerDuplicado = null;
+            ExcepcionCondicionViewModel? primerDuplicado = null;
 
-            foreach (var excepcion in _excepciones)
+            foreach (var excepcion in Excepciones)
             {
                 // Crear clave ?nica basada en los valores que identifican duplicados
                 var clave = $"{excepcion.CodigoMedio}|{excepcion.PctManPower}|{excepcion.PctSAG}|{excepcion.PctDevolucion}|" +
@@ -1501,8 +1486,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
             if (primerDuplicado != null)
             {
-                string mensaje = ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.MedioExcepcionConDatosDuplicados);
-                await MensajesHelper.MostrarMensajeError(PageTitle, string.Format(mensaje, primerDuplicado.DescripcionMedio));
+                string mensaje = ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.MedioExcepcionConDatosDuplicados);
+                await MensajesHelper.MostrarMensajeError(TituloPagina, string.Format(mensaje, primerDuplicado.DescripcionMedio));
                 return false;
             }
 
@@ -1512,20 +1497,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
                 if (itemModificado.PctSAG == null && itemModificado.PctManPower == null && itemModificado.PctDevolucion == null)
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctEnTodasExcepciones));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.PctEnTodasExcepciones));
                     return false;
                 }
                 if (itemModificado.CodigoAlcance == 0 && itemModificado.CodigoDisciplina == 0 && itemModificado.CodigoDiversified == 0 
                     && itemModificado.CodigoObjetivo == 0 && itemModificado.CodigoTipoCompra == 0
                     && itemModificado.CodigoTipoDisciplina == 0 && itemModificado.CodigoDisciplinaGrupo == 0)
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ConceptoNMDEnTodasExcepciones));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.ConceptoNMDEnTodasExcepciones));
                     return false;
                 }
 
                 //Buscamos por si hay condiciones cambiadas por medio, por si se hubieran dejado a null los porcentajes
                 int codigoMedio = itemModificado.CodigoMedio;
-                var existeCondicion = _condicionesNoGuardados.Keys.Any(c => c.CodigoMedio == codigoMedio);
+                var existeCondicion = CondicionesNoGuardados.Keys.Any(c => c.CodigoMedio == codigoMedio);
 
                 //Si no hay, tenemos que ver si hay datos en las condiciones originales para el medio
                 if (!existeCondicion)
@@ -1539,7 +1524,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                         );
                     if (todasNull)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesConCondicionesEnMedio));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.ExcepcionesConCondicionesEnMedio));
                         return false;
                     }
                 }
@@ -1548,7 +1533,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (itemModificado.IndicadorCalculoDevolucion < 1)
                     {
-                        await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctDevExcepcionSinBD));
+                        await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.PctDevExcepcionSinBD));
                         return false;
                     }
                 }
@@ -1556,19 +1541,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 // Validaciones de porcentajes optimizadas con cach?
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctSAG, codigoMedio, c => c.PctSAG))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctSAGCondicion));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctSAGCondicion));
                     return false;
                 }
 
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctManPower, codigoMedio, c => c.PctManPower))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctManPowerCondicion));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctManPowerCondicion));
                     return false;
                 }
 
                 if (!ValidarPorcentajeExcepcion(itemModificado.PctDevolucion, codigoMedio, c => c.PctDevolucion))
                 {
-                    await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctDEVCondicion));
+                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.PctExcepcionSinPctDEVCondicion));
                     return false;
                 }
             }
@@ -1588,11 +1573,11 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         /// <summary>
         /// Obtiene las condiciones agrupadas por medio usando cach? para optimizar b?squedas
         /// </summary>
-        private Dictionary<int, List<CondicionDto>> ObtenerCondicionesPorMedio()
+        private Dictionary<int, List<CondicionViewModel>> ObtenerCondicionesPorMedio()
         {
             if (_condicionesPorMedio == null)
             {
-                _condicionesPorMedio = _condiciones
+                _condicionesPorMedio = Condiciones
                     .GroupBy(c => c.CodigoMedio)
                     .ToDictionary(g => g.Key, g => g.ToList());
             }
@@ -1603,7 +1588,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         /// Valida si existe una condici?n con el porcentaje especificado para un medio (O(1) con cach?)
         /// </summary>
         private bool ValidarPorcentajeExcepcion(decimal? porcentaje, int codigoMedio, 
-    Func<CondicionDto, decimal?> selector)
+    Func<CondicionViewModel, decimal?> selector)
         {
             if (!porcentaje.HasValue) return true;
 
@@ -1618,13 +1603,13 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             try
             {
-                if (_condicionesNoGuardados.Count == 0 && ExcepcionesNoGuardadas.Count == 0) 
+                if (CondicionesNoGuardados.Count == 0 && ExcepcionesNoGuardadas.Count == 0) 
                 {
-                    await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Mensajes.SinModificaciones));
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SinModificaciones));
                     return;
                 }
 
-                if (_condicionesNoGuardados.Count > 0)
+                if (CondicionesNoGuardados.Count > 0)
                 {
                     bool validarCondiciones = await ValidarCondiciones();
                     if (!validarCondiciones)
@@ -1642,16 +1627,20 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     }
                 }
                 LayerOverlayService.Start();
-                await CondicionesService.GrabarCondicionesExcepciones(_condicionesNoGuardados, ExcepcionesNoGuardadas, _vigenciaSeleccionada!.Codigo);
+                var condicionesParaGrabar = CondicionesNoGuardados
+                    .ToDictionary(kvp => (CondicionDto)kvp.Key, kvp => kvp.Value);
+                var excepcionesParaGrabar = ExcepcionesNoGuardadas
+                    .ToDictionary(kvp => (ExcepcionDto)kvp.Key, kvp => kvp.Value);
+                await CondicionesService.GrabarCondicionesExcepciones(condicionesParaGrabar, excepcionesParaGrabar, VigenciaSeleccionada!.Codigo);
                
-                await ObtenerCondicionesExcepciones(_vigenciaSeleccionada!.Codigo);
-                await MensajesHelper.MostrarMensajeInfo(PageTitle, ObtenerTexto(AppResources.Common.DatosGrabados));
+                await ObtenerCondicionesExcepciones(VigenciaSeleccionada!.Codigo);
+                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
                 await LimpiarCambiosPendientes();
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorAlGrabar));
             }
             finally
             {
@@ -1662,24 +1651,24 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         #endregion
 
 
-        #region Popup Añadir Excepcion
+        #region Popup AÃ±adir Excepcion
 
-        private async Task AñadirExcepcionDesdePopup()
+        private async Task AÃ±adirExcepcionDesdePopup()
         {
             try
             {
                 LayerOverlayService.Start();
-                int codigoMedio = _medioSeleccionadoDesdePopup!.Codigo;
+                int codigoMedio = MedioSeleccionadoDesdePopup!.Codigo;
                 string codigoCondicion = ObtenerNuevoCodigoExcepcion();
 
-                var nuevaExcepcion = new ExcepcionDto();
+                var nuevaExcepcion = new ExcepcionCondicionViewModel();
                 nuevaExcepcion.CodigoCondicionMedio = codigoCondicion;
                 nuevaExcepcion.CodigoMedio = codigoMedio;
-                nuevaExcepcion.DescripcionMedio = _medioSeleccionadoDesdePopup.Descripcion;
+                nuevaExcepcion.DescripcionMedio = MedioSeleccionadoDesdePopup.Descripcion;
                 nuevaExcepcion.MedioAccesible = true;
 
                 int jerarquia = 1;
-                var excepcionesPorMedio = _excepciones.Where(c => c.CodigoMedio == codigoMedio);
+                var excepcionesPorMedio = Excepciones.Where(c => c.CodigoMedio == codigoMedio);
 
                 if (excepcionesPorMedio.Any())
                 {
@@ -1695,28 +1684,28 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 nuevaExcepcion.CodigoDisciplinaGrupo = 0;
 
                 //Buscar el indicador de devolucion
-                int indicadorCalculoDevolucion = _condiciones.Find(c => c.CodigoMedio == codigoMedio)!.IndicadorCalculoDevolucion;
+                int indicadorCalculoDevolucion = Condiciones.Find(c => c.CodigoMedio == codigoMedio)!.IndicadorCalculoDevolucion;
                 nuevaExcepcion.IndicadorCalculoDevolucion = indicadorCalculoDevolucion;
 
-                int indice = _excepciones.IndexOf(_excepciones.Find(c => c.CodigoMedio == codigoMedio && c.Jerarquia == jerarquia - 1)!);
+                int indice = Excepciones.IndexOf(Excepciones.Find(c => c.CodigoMedio == codigoMedio && c.Jerarquia == jerarquia - 1)!);
 
-                _excepciones.Insert(indice + 1, nuevaExcepcion);
+                Excepciones.Insert(indice + 1, nuevaExcepcion);
 
                 OrdenarExcepciones();
 
-                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.Añadidos, []);
+                ExcepcionesNoGuardadas[nuevaExcepcion] = new(TiposCambiosdeDatos.AÃ±adidos, []);
 
                 GridExcepciones.Reload(); //Porque si no desplaza la ultima fila y no se ve
                 await ActualizarEstadoCambios(true);
 
 
-                _medioSeleccionadoDesdePopup = null;
-                _popupMediosVisible = false;
+                MedioSeleccionadoDesdePopup = null;
+                PopupMediosVisible = false;
             }
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorAlGrabar));
             }
             finally
             {
@@ -1726,7 +1715,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private void OcultarPopupMedios()
         {
-            _popupMediosVisible = false;
+            PopupMediosVisible = false;
         }
 
         #endregion
@@ -1736,7 +1725,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task CancelarCambiosCondiciones()
         {
-            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosCondiciones));
+            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosCondiciones));
             if (confirmar)
             {
                 LimpiarCambiosCondicionesPendientes();
@@ -1745,7 +1734,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task CancelarCambiosExcepciones()
         {
-            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosExcepciones));
+            bool confirmar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.Mensajes.CancelarCambiosExcepciones));
             if (confirmar)
             {
                 await LimpiarCambiosExcepcionesPendientes();
@@ -1756,7 +1745,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         {
             if (HayCambiosPendientes)
             {
-                bool continuar = await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.AvisoAntesCancelar));
+                bool continuar = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.AvisoAntesCancelar));
                 if (continuar)
                 {
                     await LimpiarCambiosPendientes();
@@ -1775,8 +1764,8 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private void LimpiarCambiosCondicionesPendientes()
         {
-            _condiciones = DatosHelper.ClonarObjeto(_condicionesCache);
-            _condicionesNoGuardados.Clear();
+            Condiciones = DatosHelper.ClonarObjeto(_condicionesCache);
+            CondicionesNoGuardados.Clear();
 
             if (ExcepcionesNoGuardadas.Count == 0)
             {
@@ -1786,20 +1775,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task LimpiarCambiosExcepcionesPendientes()
         {
-            _excepciones = DatosHelper.ClonarObjeto(_excepcionesCache);
+            Excepciones = DatosHelper.ClonarObjeto(_excepcionesCache);
             ExcepcionesNoGuardadas.Clear();
 
             if (_codigoMedioleccionadoParaFiltro != null)
             {
-                CondicionDto? condicion = new CondicionDto();
-                condicion = _condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
+                CondicionViewModel? condicion = Condiciones.Find(c => c.CodigoMedio == _codigoMedioleccionadoParaFiltro.Value);
                 if (condicion != null)
                 {
                     await FiltrarExcepcionesPorMedio(condicion);
                 }
             }
 
-            if (_condicionesNoGuardados.Count == 0)
+            if (CondicionesNoGuardados.Count == 0)
             {
                 base.LimpiarCambiosPendientes();
             }
@@ -1807,7 +1795,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         private async Task CancelarCambios()
         {
-            if (await MensajesHelper.MostrarMensajeParaConfirmacion(PageTitle, ObtenerTexto(AppResources.Mensajes.Cancelar)))
+            if (await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.Cancelar)))
             {
                 await LimpiarCambiosPendientes();
             }
@@ -1825,7 +1813,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         }
 
 
-        private async Task CargarConceptosNMD(ExcepcionDto fila, ConceptosCondicionesNMD concepto)
+        private async Task CargarConceptosNMD(ExcepcionCondicionViewModel fila, ConceptosCondicionesNMD concepto)
         {
             try
             {
@@ -1850,7 +1838,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         }
 
 
-        private void AsignarConceptosAFila(ExcepcionDto fila, ConceptosCondicionesNMD concepto, List<CodigoDescripcion> datos)
+        private void AsignarConceptosAFila(ExcepcionCondicionViewModel fila, ConceptosCondicionesNMD concepto, List<CodigoDescripcion> datos)
         {
             var listaFinal = new List<CodigoDescripcion>
             {
@@ -1881,7 +1869,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                     break;
             }
         }
-        private async Task<List<CodigoDescripcion>> ObtenerConceptosNMD(ExcepcionDto excepcion, ConceptosCondicionesNMD concepto)
+        private async Task<List<CodigoDescripcion>> ObtenerConceptosNMD(ExcepcionCondicionViewModel excepcion, ConceptosCondicionesNMD concepto)
         {
             try
             {
@@ -1900,7 +1888,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Mensajes.ErrorAlGrabar));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorAlGrabar));
                 return new List<CodigoDescripcion>();
             }
         }
@@ -1926,33 +1914,33 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 {
                     if (filtro.CodigosNetwork.Length == 1)
                     {
-                        _networkSeleccionado = _networks.FirstOrDefault(n => n.Codigo == filtro.CodigosNetwork[0]);
+                        NetworkSeleccionado = Networks.FirstOrDefault(n => n.Codigo == filtro.CodigosNetwork[0]);
 
-                        if (_networkSeleccionado != null)
+                        if (NetworkSeleccionado != null)
                         {
-                            _gruposClientes = await PresupuestosService.ObtenerGruposClientePorNetwork(_networkSeleccionado.Codigo);
+                            GruposClientes = await PresupuestosService.ObtenerGruposClientePorNetwork(NetworkSeleccionado.Codigo);
 
-                            _mediosMaster = await PresupuestosService.ObtenerMediosPorNetWork(_networkSeleccionado.Codigo.ToString());
+                            MediosMaster = await PresupuestosService.ObtenerMediosPorNetWork(NetworkSeleccionado.Codigo.ToString());
 
                             if (filtro.CodigosGrupoCliente.Length == 1)
                             {
-                                _codigoGrupoSeleccionado = _gruposClientes.FirstOrDefault(n => n.Codigo == filtro.CodigosGrupoCliente[0])?.Codigo;
+                                CodigoGrupoSeleccionado = GruposClientes.FirstOrDefault(n => n.Codigo == filtro.CodigosGrupoCliente[0])?.Codigo;
                             }
-                            else if (_gruposClientes.Count == 1)
+                            else if (GruposClientes.Count == 1)
                             {
-                                _codigoGrupoSeleccionado = _gruposClientes[0].Codigo;
+                                CodigoGrupoSeleccionado = GruposClientes[0].Codigo;
                             }
                         }
                     }
                     
-                    _anioSeleccionado = _anios.FirstOrDefault(n => n.Codigo == filtro.Anio);
-                    if (_anioSeleccionado != null)
+                    AnioSeleccionado = Anios.FirstOrDefault(n => n.Codigo == filtro.Anio);
+                    if (AnioSeleccionado != null)
                     {
-                        _versiones = await ObtenerVersionesPorPermisos(_anioSeleccionado.Codigo);
+                        Versiones = await ObtenerVersionesPorPermisos(AnioSeleccionado.Codigo);
                     }
-                    _versionSeleccionada = _versiones.FirstOrDefault(n => n.Codigo == filtro.CodigoVersion);
+                    VersionSeleccionada = Versiones.FirstOrDefault(n => n.Codigo == filtro.CodigoVersion);
 
-                    if (!String.IsNullOrEmpty(_radioGroupAcuerdoChecked) && _anioSeleccionado != null && _networkSeleccionado != null && _versionSeleccionada != null && _codigoGrupoSeleccionado != null)
+                    if (!String.IsNullOrEmpty(RadioGroupAcuerdoChecked) && AnioSeleccionado != null && NetworkSeleccionado != null && VersionSeleccionada != null && CodigoGrupoSeleccionado != null)
                     {
                         _desdePaginaImportarMMS = true;
                         await FiltroBuscar();
@@ -1966,7 +1954,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             catch (Exception ex)
             {
                 await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(PageTitle, ObtenerTexto(AppResources.Common.Messages.UndefinedError));
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Common.Messages.UndefinedError));
             }
         }
     }

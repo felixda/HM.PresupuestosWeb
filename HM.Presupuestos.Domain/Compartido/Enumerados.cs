@@ -7,7 +7,7 @@ namespace HM.Presupuestos.Domain.Compartido
     {
         SinCambios,
         Modificados,
-        A馻didos,
+        A帽adidos,
         Eliminados
     }
 
@@ -16,7 +16,7 @@ namespace HM.Presupuestos.Domain.Compartido
         SinCambios,
         Eliminados,
         Modificados,
-        A馻didos
+        A帽adidos
     }
 
     public enum CodigosMenu
@@ -35,6 +35,7 @@ namespace HM.Presupuestos.Domain.Compartido
         Impersonacion = 22,
         MesesBloqueados = 23,
         AnioDiario = 25,
+        Auditorias = 26,
     }
 
     /// <summary>
@@ -130,58 +131,62 @@ namespace HM.Presupuestos.Domain.Compartido
 
     public enum AccionesLog
     {
-        [Description("Impersonaci髇 de Usuario")]
-        ImpersonacionUsuario,
-        [Description("Impersonaci髇 de Usuario inv醠ida")]
-        ImpersonacionUsuarioInvalida,
-        [Description("Bloquear meses del a駉")]
-        BloquearMesesA駉,
+        [Description("Impersonaci贸n de Usuario")]
+        ImpersonacionUsuario = 1,
+        [Description("Impersonaci贸n de Usuario inv谩lida")]
+        ImpersonacionUsuarioInvalida = 2,
+        [Description("Bloquear meses del a帽o")]
+        BloquearMesesA帽o = 3,
         [Description("Modificar Vigencia")]
-        ModificarVigencia,
+        ModificarVigencia = 4,
         [Description("Eliminar Vigencia")]
-        EliminarVigencia,
-        AccederAplicacion,
+        EliminarVigencia = 5,
         [Description("Lanzar proceso copia Inversiones (PKG_COPIAR_PREVISIONES.SET_COPIAR_PREVISIONES)")]
-        CopiarInversiones,
+        CopiarInversiones = 7,
         [Description("Poceso copia Inversiones finalizado (PKG_COPIAR_PREVISIONES.SET_COPIAR_PREVISIONES)")]
-        CopiarInversionesFinalizado,
+        CopiarInversionesFinalizado = 8,
         [Description("Lanzar proceso importar Condiciones de MMS (PKG_CARGA_DATOS_CONDICIONES.SET_CARGA_CONDICIONES_MMS)")]
-        ImportarCondicionesMMS,
+        ImportarCondicionesMMS = 9,
         [Description("Proceso importar Condiciones de MMS finalizado (PKG_CARGA_DATOS_CONDICIONES.SET_CARGA_CONDICIONES_MMS) ")]
-        ImportarCondicionesMMSFinalizado,
+        ImportarCondicionesMMSFinalizado = 10,
         [Description("Lanzar proceso copiar Versiones (PKG_CARGA_DATOS_VERSIONES.SET_COPIA)")]
-        CopiarVersiones,
+        CopiarVersiones = 11,
         [Description("Proceso copiar Versiones finalizado (PKG_CARGA_DATOS_VERSIONES.SET_COPIA)")]
-        CopiarVersionesFinalizado,
+        CopiarVersionesFinalizado = 12,
         [Description("Entrar en la aplicacion Presupuestos Web con SSO")]
-        EntrarEnPresupuestosWebSSO,
-        [Description("Desimpersonaci髇 de Usuario")]
-        DesimpersonacionUsuario,
+        EntrarEnPresupuestosWebSSO = 13,
+        [Description("Desimpersonaci贸n de Usuario")]
+        DesimpersonacionUsuario = 14,
         [Description("Actualizacion de Usuario")]
-        ActualizacionUsuario,
-        [Description("Actualizaci髇 de Sobreprimas")]
-        ActualizarSobreprimas,
+        ActualizacionUsuario = 15,
+        [Description("Actualizaci贸n de Sobreprimas")]
+        ActualizarSobreprimas = 16,
         [Description("Eliminar Sobreprima")]
-        EliminarSobreprima,
+        EliminarSobreprima = 17,
         [Description("Lanzar proceso importar sobreprimas de MMS (PKG_CARGA_DATOS_SOBREPRIMAS.SET_CARGA_SOBREPRIMAS_MMS)")]
-        ImportarSobreprimasMMS,
-        [Description("Recuperar sesi髇 despu閟 de F5 con SSO")]
-        RecuperarSesionDespuesDeF5SSO,
-        [Description("Intento de acceso no autorizado a la p醙ina -> (mirar campo Par醡etros)")]
-        IntentoAccesoNoAutorizado,
-        [Description("Entrar en la aplicacion Presupuestos Web con Impersonaci髇")]
-        EntrarEnPresupuestosWebImpersonacion,
-        [Description("Recuperar sesi髇 despu閟 de F5 con Impersonaci髇")]
-        RecuperarSesionDespuesDeF5Impersonacion,
-        [Description("Cerrar sesi髇 de usuario Impersonado")]
-        CerrarSesionUsuarioLogin,
+        ImportarSobreprimasMMS = 18,
+        [Description("Recuperar sesi贸n despu茅s de F5 con SSO")]
+        RecuperarSesionDespuesDeF5SSO = 19,
+        [Description("Intento de acceso no autorizado a la p谩gina -> (mirar campo Par谩metros)")]
+        IntentoAccesoNoAutorizado = 20,
+        [Description("Entrar en la aplicacion Presupuestos Web con Impersonaci贸n")]
+        EntrarEnPresupuestosWebImpersonacion = 21,
+        [Description("Recuperar sesi贸n despu茅s de F5 con Impersonaci贸n")]
+        RecuperarSesionDespuesDeF5Impersonacion = 22,
+        [Description("Cerrar sesi贸n de usuario Impersonado")]
+        CerrarSesionUsuarioLogin = 23,
         [Description("Volver a la aplicacion Presupuestos Web con SSO")]
-        VolverEntrarEnPresupuestosWebSSO,
+        VolverEntrarEnPresupuestosWebSSO = 24,
         [Description("Eliminar Indicador")]
-        EliminarIndicador,
+        EliminarIndicador = 25,
         [Description("Grabar Indicador")]
-        GrabarIndicador,
-
+        GrabarIndicador = 26,
+        [Description("Enviar aviso")]
+        EnviarAviso = 27,
+        [Description("Error al enviar aviso")]
+        ErrorAlEnviarAviso = 28,
+        [Description("Acceso a la p谩gina: {0}")]
+        AccesoAPagina = 29,
     }
 
     public enum OrigenValidacionUsuario

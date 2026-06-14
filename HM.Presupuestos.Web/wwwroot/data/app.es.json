@@ -181,6 +181,13 @@
       "icono": "fa-solid fa-clock",
       "visible": true,
       "code": 25
+    },
+    "Menu_26": {
+      "label": "Auditorías",
+      "url": "/admin/auditorias",
+      "icono": "fa-solid fa-magnifying-glass-chart",
+      "visible": true,
+      "code": 26
     }
   },
   "Pages": {
@@ -281,6 +288,9 @@
       },
       "Grabar": {
         "label": "Grabar"
+      },
+      "Actualizar": {
+        "label": "Actualizar"
       }
     },
 
@@ -380,6 +390,9 @@
       "EditarVigencia": {
         "label": "Editar Vigencia"
       },
+      "VigenciaSeleccion": {
+        "label": "Por favor, seleccione una vigencia"
+      },
       "FiltroPorMedio": {
         "label": "Filtrar por Medio"
       },
@@ -443,6 +456,9 @@
         },
         "BCCondicionSinPctDevolucion": {
           "label": "Por favor, al haber introducido una Base de Cálculo en las condiciones tiene que introducir un Porcentaje."
+        },
+        "VigenciaAñadida": {
+          "label": "Vigencia añadida"
         }
       }
     },
@@ -529,6 +545,62 @@
       },
       "MesesBloqueados": {
         "label": "Meses Bloqueados"
+      }
+    },
+    "Auditorias": {
+      "ToolTip": {
+        "label": "Auditorías del sistema"
+      },
+      "TipoAuditoria": {
+        "label": "Tipo auditoria"
+      },
+      "FechaInicio": {
+        "label": "Fecha inicio"
+      },
+      "FechaFin": {
+        "label": "Fecha fin"
+      },
+      "Usuario": {
+        "label": "Usuario"
+      },
+      "CamposObligatorios": {
+        "label": "Debe seleccionar el tipo de auditoría"
+      },
+      "Pagina": {
+        "label": "Página"
+      },
+      "Parametros": {
+        "label": "Parámetros"
+      },
+      "TituloPopupParametros": {
+        "label": "Parámetros de la acción"
+      },
+      "ResumenPeriodo": {
+        "label": "Resumen del período"
+      },
+      "TotalAcciones": {
+        "label": "Acciones"
+      },
+      "UsuariosUnicos": {
+        "label": "Usuarios"
+      },
+      "UsuarioMasActivo": {
+        "label": "Usuario más activo"
+      },
+      "PaginaMasVisitada": {
+        "label": "Página más visitada"
+      },
+      "TopUsuarios": {
+        "label": "Top usuarios"
+      },
+      "ActividadDiaria": {
+        "label": "Actividad diaria"
+      },
+      "RangoDemasiadoAmplio": {
+        "label": "El rango supera 90 días. La gráfica diaria no está disponible."
+      },
+      "FechasObligatorias": {
+        "label": "Las fechas de inicio y fin son obligatorias"
       }
     },
     "AnioDiario": {
@@ -702,6 +774,11 @@
     "UnauthorizedUser":{
       "label": "Usuario no autorizado"
     },
+    "AccesoDenegado": {
+      "Titulo": { "label": "Acceso Denegado" },
+      "Mensaje": { "label": "No tiene permisos para acceder a" },
+      "Contacto": { "label": "Contacte al administrador si cree que deber\u00eda tener acceso." }
+    },
     "Version": {
       "label": "Versión"
     },
@@ -729,7 +806,7 @@
     }
   },
   "Botones": {
-    "Anadir": {
+    "Añadir": {
       "label": "Añadir"
     },
     "Cancelar": {
@@ -842,6 +919,36 @@
     "DatabaseWarning": {
       "label": "Advertencia de gestor de base de datos"
     }
+  },
+  "AccionesLog": {
+    "ImpersonacionUsuario": { "label": "Impersonación de usuario", "visible": true },
+    "ImpersonacionUsuarioInvalida": { "label": "Impersonación de usuario inválida", "visible": true },
+    "BloquearMesesAño": { "label": "Bloquear meses del año", "visible": true },
+    "ModificarVigencia": { "label": "Modificar vigencia", "visible": true },
+    "EliminarVigencia": { "label": "Eliminar vigencia", "visible": true },
+    "CopiarInversiones": { "label": "Lanzar copia de inversiones", "visible": true },
+    "CopiarInversionesFinalizado": { "label": "Proceso copia inversiones finalizado", "visible": false },
+    "ImportarCondicionesMMS": { "label": "Importar condiciones de MMS", "visible": true },
+    "ImportarCondicionesMMSFinalizado": { "label": "Proceso importar condiciones MMS finalizado", "visible": false },
+    "CopiarVersiones": { "label": "Lanzar copia de versiones", "visible": true },
+    "CopiarVersionesFinalizado": { "label": "Proceso copiar versiones finalizado", "visible": false },
+    "EntrarEnPresupuestosWebSSO": { "label": "Entrar en Presupuestos Web (SSO)", "visible": true },
+    "DesimpersonacionUsuario": { "label": "Desimpersonación de usuario", "visible": true },
+    "ActualizacionUsuario": { "label": "Actualización de usuario", "visible": true },
+    "ActualizarSobreprimas": { "label": "Actualizar sobreprimas", "visible": true },
+    "EliminarSobreprima": { "label": "Eliminar sobreprima", "visible": true },
+    "ImportarSobreprimasMMS": { "label": "Importar sobreprimas de MMS", "visible": true },
+    "RecuperarSesionDespuesDeF5SSO": { "label": "Recuperar sesión F5 (SSO)", "visible": false },
+    "IntentoAccesoNoAutorizado": { "label": "Intento de acceso no autorizado", "visible": true },
+    "EntrarEnPresupuestosWebImpersonacion": { "label": "Entrar en Presupuestos Web (Impersonación)", "visible": true },
+    "RecuperarSesionDespuesDeF5Impersonacion": { "label": "Recuperar sesión F5 (Impersonación)", "visible": false },
+    "CerrarSesionUsuarioLogin": { "label": "Cerrar sesión de usuario impersonado", "visible": true },
+    "VolverEntrarEnPresupuestosWebSSO": { "label": "Volver a Presupuestos Web (SSO)", "visible": true },
+    "EliminarIndicador": { "label": "Eliminar indicador", "visible": true },
+    "GrabarIndicador": { "label": "Grabar indicador", "visible": true },
+    "EnviarAviso": { "label": "Enviar aviso", "visible": true },
+    "ErrorAlEnviarAviso": { "label": "Error al enviar aviso", "visible": false },
+    "AccesoAPagina": { "label": "Acceso a página", "visible": true }
   },
   "Meses": {
 

@@ -4,34 +4,36 @@ using HM.Core.Comun.v6.Loggers.Interfaces;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
+using HM.Presupuestos.Domain.Entidades.LogAcciones;
 using System.Runtime.CompilerServices;
 using HM.Presupuestos.Domain.Extensiones;
 
 namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
 {
-    public class LogAccionesService(ILogger logger, IJwt jwt, ILogAccionesRepository logAccionesRepository, IRegistroErroresCore coreLoggerService) : ILogAccionesService
+    public class LogAccionesService(ILogger logger, IJwt jwt, ILogAccionesRepository logAccionesRepository, 
+        IRegistroErroresCore registroErroresCore) : ILogAccionesService
     {
         private readonly ILogger _logger = logger;
         private readonly IJwt _jwt = jwt;
         private readonly ILogAccionesRepository _logAccionesRepository = logAccionesRepository;
-        private readonly IRegistroErroresCore _coreLoggerService = coreLoggerService;
+        private readonly IRegistroErroresCore _registroErroresCore = registroErroresCore;
 
-        private int CodigoUsuario => _jwt.Usuario.CodigoUsuario;
+        private int CodigoUsuario => _jwt.Usuario?.CodigoUsuario ?? 0;
 
         /// <summary>
-        /// Registra una acciÛn de auditorÌa con un mensaje personalizado
+        /// Registra una acci√≥n de auditor√≠a con un mensaje personalizado
         /// </summary>
-        /// <param name="accion">DescripciÛn textual de la acciÛn realizada</param>
-        /// <param name="parametros">Objeto opcional con par·metros adicionales que se serializar·n a JSON</param>
-        /// <param name="nombreMetodoLlamador">Nombre del mÈtodo que invoca este log (se obtiene autom·ticamente con CallerMemberName)</param>
+        /// <param name="accion">Descripci√≥n textual de la acci√≥n realizada</param>
+        /// <param name="parametros">Objeto opcional con par√°metros adicionales que se serializar√°n a JSON</param>
+        /// <param name="nombreMetodoLlamador">Nombre del m√©todo que invoca este log (se obtiene autom√°ticamente con CallerMemberName)</param>
         /// <remarks>
-        /// Este mÈtodo serializa los par·metros a JSON y construye un mensaje de log con el formato:
+        /// Este m√©todo serializa los par√°metros a JSON y construye un mensaje de log con el formato:
         /// (NombreMetodo) -> Accion
-        /// Si ocurre un error durante la inserciÛn, se registra el error sin propagarlo
+        /// Si ocurre un error durante la inserci√≥n, se registra el error sin propagarlo
         /// </remarks>
         public async Task Insertar(string accion, object? parametros = null, [CallerMemberName] string nombreMetodoLlamador = "")
         {
-            _logger.Trace($"Llamando mÈtodo Insertar");
+            _logger.Trace($"Llamando m√©todo Insertar");
             try
             {
                 string parametrosJson = parametros != null
@@ -49,52 +51,80 @@ namespace HM.Presupuestos.Application.CasosDeUso.LogAcciones
             }
             catch (Exception ex)
             {
-                await InsertErrorLog(this.GetType().Name,ex, CodigoUsuario);
+                await InsertErrorLog(ex, CodigoUsuario);
             }
         }
 
-
         /// <summary>
-        /// Registra una acciÛn de auditorÌa utilizando un enum de acciones predefinidas
+        /// Registra una acci√≥n de auditor√≠a utilizando un enum de acciones predefinidas
         /// </summary>
-        /// <param name="accion">AcciÛn predefinida del enum AccionesLog</param>
-        /// <param name="parametros">Objeto opcional con par·metros adicionales que se serializar·n a JSON</param>
-        /// <param name="nombreMetodoLlamador">Nombre del mÈtodo que invoca este log (se obtiene autom·ticamente con CallerMemberName)</param>
+        /// <param name="accion">Acci√≥n predefinida del enum AccionesLog</param>
+        /// <param name="parametros">Objeto opcional con par√°metros adicionales que se serializar√°n a JSON</param>
+        /// <param name="nombreMetodoLlamador">Nombre del m√©todo que invoca este log (se obtiene autom√°ticamente con CallerMemberName)</param>
         /// <remarks>
-        /// Este mÈtodo es similar a la sobrecarga con string pero usa un enum AccionesLog.
-        /// La descripciÛn se obtiene mediante el mÈtodo de extensiÛn ObtenerDescripcion() del enum.
+        /// Este m√©todo es similar a la sobrecarga con string pero usa un enum AccionesLog.
+        /// La descripci√≥n se obtiene mediante el m√©todo de extensi√≥n ObtenerDescripcion() del enum.
         /// Formato del mensaje: (NombreMetodo) -> DescripcionAccion
         /// </remarks>
         public async Task Insertar(AccionesLog accion, object? parametros = null, [CallerMemberName] string nombreMetodoLlamador = "")
         {
-            await Insertar(accion.ObtenerDescripcion(), parametros, nombreMetodoLlamador);
+            _logger.Trace($"Llamando m√©todo Insertar");
+            try
+            {
+                string parametrosJson = parametros != null
+                    ? System.Text.Json.JsonSerializer.Serialize(parametros)
+                    : string.Empty;
+
+                LogAccion logAccion = new()
+                {
+                    CodigoUsuario = CodigoUsuario,
+                    Accion = $"[{(int)accion}] ({nombreMetodoLlamador}) -> {accion.ObtenerDescripcion()} ",
+                    Parametros = parametrosJson
+                };
+
+                await _logAccionesRepository.Insertar(logAccion);
+            }
+            catch (Exception ex)
+            {
+                await InsertErrorLog(ex, CodigoUsuario);
+            }
         }
 
 
         public async Task Insertar(LogAccion logAccion)
         {
-            _logger.Trace($"Llamando mÈtodo Insertar");
+            _logger.Trace($"Llamando m√©todo Insertar");
             try
             {
                 await _logAccionesRepository.Insertar(logAccion);
             }
             catch (Exception ex)
             {
-                await InsertErrorLog(this.GetType().Name, ex, logAccion.CodigoUsuario);
+                await InsertErrorLog( ex, logAccion.CodigoUsuario);
             }
         }
 
 
-        private async Task InsertErrorLog(string methodName, Exception exception, int codigoUsuario)
+        public async Task<List<Auditoria>> ObtenerAuditorias(AccionesLog tipo, DateTime? fechaInicio, DateTime? fechaFin, int? codigoPagina = null)
+        {
+            return await _logAccionesRepository.ObtenerAuditorias(tipo, fechaInicio, fechaFin, codigoPagina);
+        }
+
+        public async Task<EstadisticasAuditoria> ObtenerEstadisticas(AccionesLog tipo, DateTime fechaInicio, DateTime fechaFin, int? codigoPagina = null)
+        {
+            return await _logAccionesRepository.ObtenerEstadisticas(tipo, fechaInicio, fechaFin, codigoPagina);
+        }
+
+        private async Task InsertErrorLog(Exception exception, int codigoUsuario, [CallerMemberName] string nombreMetodoLlamador = "")
         {
             var data = new DetalleError
             {
                 UserName = codigoUsuario.ToString(),
-                Mensaje = $"{methodName} > {exception.Message[..Math.Min(exception.Message.Length, 1500)]}",
+                Mensaje = $"{nombreMetodoLlamador} > {exception.Message[..Math.Min(exception.Message.Length, 1500)]}",
                 StackTrace = exception.StackTrace ?? string.Empty
             };
 
-            await _coreLoggerService.RegistrarErrorSaveLog(data);
+            await _registroErroresCore.RegistrarErrorSaveLog(data);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace HM.Presupuestos.E2ETest.Base;
 [TestFixture]
 public abstract class E2ETestBase : PageTest
 {
-    // Ruta donde se guarda el estado de sesión SSO (generado con GuardarSesion.ps1)
+    // Ruta donde se guarda el estado de sesiÃ³n SSO (generado con GuardarSesion.ps1)
     private static readonly string SesionPath = Path.Combine(
         AppContext.BaseDirectory, "sesion_auth.json");
 
@@ -29,7 +29,7 @@ public abstract class E2ETestBase : PageTest
 
     public override BrowserNewContextOptions ContextOptions()
     {
-        // Si existe sesión guardada, se reutiliza para evitar pasar por SSO
+        // Si existe sesiÃ³n guardada, se reutiliza para evitar pasar por SSO
         var opciones = new BrowserNewContextOptions
         {
             IgnoreHTTPSErrors = true

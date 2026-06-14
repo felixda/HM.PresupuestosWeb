@@ -6,7 +6,7 @@ namespace HM.Presupuestos.Domain.Puertos
     public interface ICondicionesRepository
     {
                
-        Task<List<ConceptoCondicion>> ObtenerConceptos();
+        Task<List<ConceptoCondicion>> ObtenerConceptosDeCondicion();
         Task<List<Vigencia>> ObtenerVigencias(CondicionFiltro filtro);
         Task InsertarVigencia(Vigencia item);
 
@@ -14,17 +14,17 @@ namespace HM.Presupuestos.Domain.Puertos
 
         Task EliminarVigencia(int codigoVigencia);
 
-        Task<bool> ExistenCondicionesVigencias(int codigoVigencia);
+        Task<bool> LaVigenciaTieneCondiciones(int codigoVigencia);
 
-        Task<List<CondicionDto>> ObtenerCondicionesPorVigencia(int codigoVigencia);
+        Task<List<CondicionDto>> ObtenerCondicionesDeLaVigencia(int codigoVigencia);
 
         Task GrabarCondicion(Condicion medioCondicion);
 
         Task EliminarCondicion(Condicion condicion);
 
-        Task<List<ExcepcionDto>> ObtenerExcepcionesCondiciones(int codigoVigencia);
+        Task<List<ExcepcionDto>> ObtenerExcepcionesDeLaVigencia(int codigoVigencia);
 
-        Task EliminarConceptoNMDExcepcionCondicion(int codigoCondicionMeido, ConceptosCondicionesNMD concepto);
+        Task EliminarConceptoDeExcepcion(int codigoCondicionMeido, ConceptosCondicionesNMD concepto);
 
         Task EliminarExcepcionCondicion(int codigoCondicionMedio);
 
@@ -32,11 +32,11 @@ namespace HM.Presupuestos.Domain.Puertos
 
         Task GrabarConceptoNMD(int codigoCondicionMedio, ConceptosCondicionesNMD codigoConceptoNMD, int codigo);
 
-        Task<List<int>> ObtenerCodigosExcepcionesCondiciones(Condicion condicion);
+        Task<List<int>> ObtenerCodigosDeExcepcionesDeCondicion(Condicion condicion);
 
-        Task<Condicion?> ObtenerExcepcionOrCondicion(Condicion item);
+        Task<Condicion?> ObtenerCondicionPorClave(Condicion condicion);
       
-        Task<Condicion?> ObtenerExcepcionOrCondicion(int codigoCondicionMedio);
+        Task<Condicion?> ObtenerCondicionPorCodigo(int codigoCondicionMedio);
 
         Task InsertarCondicion( Condicion condicion);
  

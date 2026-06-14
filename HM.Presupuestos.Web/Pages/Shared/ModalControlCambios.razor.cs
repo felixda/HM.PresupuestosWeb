@@ -3,9 +3,9 @@ namespace HM.Presupuestos.Web.Pages.Shared
 {
     public partial class ModalControlCambios
     {
-        #region Inyección de Dependencias
+        #region InyecciÃ³n de Dependencias
 
-        [Inject] protected TraduccionesHelper TraduccionesHelper { get; set; } = default!;
+        [Inject] protected ILocalizadorRecursos LocalizadorRecursos { get; set; } = default!;
 
         #endregion
 
@@ -14,15 +14,15 @@ namespace HM.Presupuestos.Web.Pages.Shared
         private TaskCompletionSource<bool>? _tcs;
         private bool Mostrar = false;
         private string Mensaje = "";
-        private string Si = "Sí";
+        private string Si = "SÃ­";
 
         #endregion
 
-        #region Métodos Públicos
+        #region MÃ©todos PÃºblicos
 
         public async Task<bool> Show(string mensaje)
         {
-            Si = await TraduccionesHelper.GetResourceValue("Common:Si:label");
+            Si = LocalizadorRecursos.ObtenerTexto(TextosApp.Common.Si);
             Mensaje = mensaje;
             Mostrar = true;
             StateHasChanged();
@@ -34,7 +34,7 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         #endregion
 
-        #region Métodos Privados
+        #region MÃ©todos Privados
 
         private void Confirmar()
         {

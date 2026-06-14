@@ -5,7 +5,6 @@ using HM.Core.Servidor.v6.DAL.Interfaces;
 using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Puertos;
 using System.Data;
-using System.Text;
 
 namespace HM.Presupuestos.Infrastructure.Persistencia
 {
@@ -22,35 +21,23 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<Sobreprima> list = [];
             try
             {
-                StringBuilder query = new();
+                string query = $@"
+                    SELECT PSM.COD_SOBREPRIMA_MEDIO, PSM.COD_VERSION, PSM.COD_CONCEPTO_SOBREPRIMA, PSM.COD_NETWORK,
+                           PSM.COD_PAIS, PSM.COD_MEDIO, PSM.COD_EDITORIAL_COMERCIAL,
+                           VAC.COD_AGRUPACION_COMERCIAL, PSM.PCT_SOBREPRIMA
+                    FROM PPT_SOBREPRIMAS_MEDIO PSM
+                    LEFT JOIN V_AGRUPACION_COMERCIAL VAC ON PSM.COD_EDITORIAL_COMERCIAL = VAC.COD_EDITORIAL_COMERCIAL AND PSM.COD_PAIS = VAC.COD_PAIS
+                    WHERE PSM.COD_VERSION = :CodigoVersion
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoNetworkList)           ? $"AND PSM.COD_NETWORK IN ({filterSobreprima.CodigoNetworkList})"                        : "")}
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoMedioList)             ? $"AND PSM.COD_MEDIO IN ({filterSobreprima.CodigoMedioList})"                          : "")}
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoAgrupacionComercialList) ? $"AND VAC.COD_AGRUPACION_COMERCIAL IN ({filterSobreprima.CodigoAgrupacionComercialList})" : "")}
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoEditorialList)         ? $"AND PSM.COD_EDITORIAL_COMERCIAL IN ({filterSobreprima.CodigoEditorialList})"         : "")}";
 
-                query.Append("SELECT PSM.COD_SOBREPRIMA_MEDIO, ");
-                query.Append("PSM.COD_VERSION,");
-                query.Append("PSM.COD_CONCEPTO_SOBREPRIMA,");
-                query.Append("PSM.COD_NETWORK,");
-                query.Append("PSM.COD_PAIS,");
-                query.Append("PSM.COD_MEDIO,");
-                query.Append("PSM.COD_EDITORIAL_COMERCIAL,");
-                query.Append("VAC.COD_AGRUPACION_COMERCIAL,");
-                query.Append("PSM.PCT_SOBREPRIMA ");
-                query.Append("FROM PPT_SOBREPRIMAS_MEDIO PSM ");
-                query.Append("LEFT JOIN V_AGRUPACION_COMERCIAL VAC ON PSM.COD_EDITORIAL_COMERCIAL= VAC.COD_EDITORIAL_COMERCIAL AND PSM.COD_PAIS = VAC.COD_PAIS ");
-                query.Append("WHERE PSM.COD_VERSION = :CodigoVersion  ");
-
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoNetworkList))
-                    query.Append($"AND PSM.COD_NETWORK IN ({filterSobreprima.CodigoNetworkList}) ");
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoMedioList))
-                    query.Append($"AND PSM.COD_MEDIO IN ({filterSobreprima.CodigoMedioList}) ");
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoAgrupacionComercialList))
-                    query.Append($"AND VAC.COD_AGRUPACION_COMERCIAL IN ({filterSobreprima.CodigoAgrupacionComercialList}) ");
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoEditorialList))
-                    query.Append($"AND  PSM.COD_EDITORIAL_COMERCIAL IN ({filterSobreprima.CodigoEditorialList}) ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("CodigoVersion", filterSobreprima.CodigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 await Task.Run(() =>
                 {
@@ -90,35 +77,18 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                StringBuilder query = new();
-                query.Append("INSERT INTO PPT_SOBREPRIMAS_MEDIO (  ");
-                query.Append("COD_VERSION, ");
-                query.Append("COD_CONCEPTO_SOBREPRIMA, ");
-                query.Append("COD_NETWORK, ");
-                query.Append("COD_PAIS, ");
-                query.Append("COD_MEDIO, ");
-                query.Append("COD_EDITORIAL_COMERCIAL, ");
-                query.Append("PCT_SOBREPRIMA, ");
-                query.Append("F_ALTA, ");
-                query.Append("F_MODIFICACION, ");
-                query.Append("COD_USUARIO_ALTA, ");
-                query.Append("COD_USUARIO_MODIFICACION ) ");
-                query.Append("VALUES (:CodigoVersion, ");
-                query.Append(":CodigoConcepto, ");
-                query.Append(":CodigoNetwork, ");
-                query.Append(":CodigoPais, ");
-                query.Append(":CodigoMedio, ");
-                query.Append(":CodigoEditorial, ");
-                query.Append(":Porcentaje, ");
-                query.Append(":Fecha, ");
-                query.Append(":Fecha, ");
-                query.Append(":CodigoUsuario, ");
-                query.Append(":CodigoUsuario )");
-                query.Append("    RETURNING COD_SOBREPRIMA_MEDIO ");
-                query.Append("       INTO :Codigo ");
+                const string query = @"
+                    INSERT INTO PPT_SOBREPRIMAS_MEDIO (
+                        COD_VERSION, COD_CONCEPTO_SOBREPRIMA, COD_NETWORK, COD_PAIS, COD_MEDIO,
+                        COD_EDITORIAL_COMERCIAL, PCT_SOBREPRIMA, F_ALTA, F_MODIFICACION,
+                        COD_USUARIO_ALTA, COD_USUARIO_MODIFICACION)
+                    VALUES (
+                        :CodigoVersion, :CodigoConcepto, :CodigoNetwork, :CodigoPais, :CodigoMedio,
+                        :CodigoEditorial, :Porcentaje, :Fecha, :Fecha,
+                        :CodigoUsuario, :CodigoUsuario)
+                    RETURNING COD_SOBREPRIMA_MEDIO INTO :Codigo";
 
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("CodigoVersion", item.CodigoVersion);
                 dah.AddParameter("CodigoConcepto", item.CodigoConcepto);
@@ -147,15 +117,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                string query = @"DELETE FROM PPT_SOBREPRIMAS_MEDIO
+                const string query = @"DELETE FROM PPT_SOBREPRIMAS_MEDIO
                              WHERE COD_SOBREPRIMA_MEDIO = :Codigo";
 
                 dah.GetSqlStringComando(query);
                 dah.AddParameter("Codigo", codigoSobreprima);
 
                 await Task.Run(() => dah.ExecuteNonQuery());
-
-                int filasEliminadas = await Task.Run(() => dah.ExecuteNonQuery());
             }
             catch (Exception ex)
             {
@@ -167,7 +135,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             try
             {
-                string query = @"
+                const string query = @"
                 UPDATE PPT_SOBREPRIMAS_MEDIO 
                 SET COD_VERSION = :CodigoVersion,
                     COD_CONCEPTO_SOBREPRIMA = :CodigoConcepto, 
@@ -207,31 +175,20 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             bool result= false;
             try
             {
-                var query = new StringBuilder(@"
-                SELECT count (*) 
-                FROM PPT_SOBREPRIMAS_MEDIO 
-                WHERE COD_VERSION = :CodigoVersion");
+                string query = $@"
+                    SELECT COUNT(*)
+                    FROM PPT_SOBREPRIMAS_MEDIO
+                    WHERE COD_VERSION = :CodigoVersion
+                    {(!string.IsNullOrEmpty(codigosSobreprima)                              ? $"AND COD_SOBREPRIMA_MEDIO NOT IN ({codigosSobreprima})"                         : "")}
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoNetworkList)            ? $"AND COD_NETWORK IN ({filterSobreprima.CodigoNetworkList})"                     : "")}
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoMedioList)              ? $"AND COD_MEDIO IN ({filterSobreprima.CodigoMedioList})"                         : "")}
+                    {(!string.IsNullOrEmpty(filterSobreprima.CodigoEditorialList)          ? $"AND COD_EDITORIAL_COMERCIAL IN ({filterSobreprima.CodigoEditorialList})"       : "")}";
 
-                if (!string.IsNullOrEmpty(codigosSobreprima))
-                {
-                    query.Append($" AND COD_SOBREPRIMA_MEDIO NOT IN ({codigosSobreprima})");
-                }
-
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoNetworkList))
-                    query.Append($" AND COD_NETWORK IN ({filterSobreprima.CodigoNetworkList})");
-
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoMedioList))
-                    query.Append($" AND COD_MEDIO IN ({filterSobreprima.CodigoMedioList})");
-
-                if (!String.IsNullOrEmpty(filterSobreprima.CodigoEditorialList))
-                    query.Append($" AND  COD_EDITORIAL_COMERCIAL IN ({filterSobreprima.CodigoEditorialList})");
-
-                dah.GetSqlStringComando(query.ToString());
-
+                dah.GetSqlStringComando(query);
 
                 dah.AddParameter("CodigoVersion", filterSobreprima.CodigoVersion);
 
-                await AñadirParametroMulticompania(dah);
+                await AÃ±adirParametroMulticompania(dah);
 
                 int cuantos = await Task.Run(() => dah.ExecuteScalar<int>());
                 result = (cuantos > 0);

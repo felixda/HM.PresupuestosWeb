@@ -16,16 +16,16 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             var resultado = new List<int>();
 
-            var query = @"
+            const string query = @"
                 SELECT  MES
                 FROM PPT_MESES_CERRADOS
-                WHERE ANIO = :anio
+                WHERE ANIO = :Anio
                 ORDER BY MES";
 
             dah.GetSqlStringComando(query);
 
-            dah.AddParameter("anio", anio);
-            await AñadirParametroMulticompania(dah);
+            dah.AddParameter("Anio", anio);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -45,7 +45,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task InsertarMesBloqueado(int anio, int mes)
         {
-            var query = @"
+            const string query = @"
                 INSERT INTO PPT_MESES_CERRADOS(
                     ANIO,
                     MES
@@ -68,7 +68,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task EliminarMesesBloqueados(int anio)
         {
-            var query = @"
+            const string query = @"
                 DELETE FROM PPT_MESES_CERRADOS
                 WHERE ANIO = :Anio";
 

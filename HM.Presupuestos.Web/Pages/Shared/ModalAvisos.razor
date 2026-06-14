@@ -1,12 +1,9 @@
 
-@using HM.Presupuestos.Web.Adaptadores
+@inherits Context
 
 @inject IAvisosService AvisosService
-@inject TraduccionesHelper TraduccionesHelper
 
 @implements IDisposable
-
-@* @inherits UserContext *@
 
 @if (_mostrarModal)
 {
@@ -15,11 +12,11 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow-lg">
                 <div class="modal-header @($"bg-{_tipoClase}")">
-                    <h5 class="modal-title">@IconoAviso @_pageTitle</h5>
+                    <h5 class="modal-title">@IconoAviso @PageTitle</h5>
                 </div>
                 <div class="modal-body">
                     <p>@_mensaje</p>
-                    <button class="btn @($"btn-{_tipoClase}")" @onclick="Cerrar">@_cerrar</button>
+                    <button class="btn @($"btn-{_tipoClase}")" @onclick="Cerrar">@TextoCerrar</button>
                 </div>
             </div>
         </div>
@@ -31,25 +28,16 @@
 @code {
 
     private bool _mostrarModal = false;
-    private string _cerrar  { get; set; } = string.Empty;
     private string _mensaje = string.Empty;
-    private string _pageTitle { get; set; } = string.Empty;
     private string _tipoClase { get; set; } = "warning"; // warning, info, success, error
+
+    private string TextoCerrar => ObtenerTexto(TextosApp.Botones.Cerrar);
+    private string PageTitle => ObtenerTexto(TextosApp.Pages.Avisos.Titulo);
 
     protected override void OnInitialized()
     {
-
+        base.OnInitialized();
         AvisosService.OnAvisoActivado += ManejarAvisos;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-            _pageTitle = await TraduccionesHelper.GetResourceValue("Pages:Avisos:Titulo:label");
-            _cerrar = await TraduccionesHelper.GetResourceValue("Botones:Cerrar:label");
-        }
     }
 
     private async Task ManejarAvisos(string mensaje, TiposDeAviso tipo)

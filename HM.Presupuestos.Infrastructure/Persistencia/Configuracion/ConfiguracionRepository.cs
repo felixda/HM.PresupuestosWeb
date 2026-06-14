@@ -16,14 +16,14 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             var resultado = new CodigoDescripcion();
 
-            var query = @"
+            const string query = @"
                 SELECT  VALOR
                 FROM PPT_CONFIGURACION
                 WHERE COD_CONFIGURACION = 1";
 
             dah.GetSqlStringComando(query);
 
-            await AñadirParametroMulticompania(dah);
+            await AÃ±adirParametroMulticompania(dah);
 
             await Task.Run(() =>
             {
@@ -44,7 +44,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
         public async Task ActualizarAnioDiario(int anio)
         {
-            var query = @"
+            const string query = @"
                 UPDATE PPT_CONFIGURACION
                     SET VALOR = :Valor
                 WHERE COD_CONFIGURACION = 1";

@@ -22,7 +22,7 @@ namespace HM.Presupuestos.Web.Layout
 
         #endregion
 
-        #region Métodos Privados
+        #region MÃ©todos Privados
 
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace HM.Presupuestos.Web.Layout
             List<Menu> menusPadres = [.. user.Menus.Where(c => !c.TienePadre())];
             List<Menu> menusHijos = [.. user.Menus.Where(c => c.TienePadre())];
 
-            Console.WriteLine($"[NavMenu] 📋 Creando menú - Padres: {menusPadres.Count}, Hijos: {menusHijos.Count}");
+            Console.WriteLine($"[NavMenu] ðŸ“‹ Creando menÃº - Padres: {menusPadres.Count}, Hijos: {menusHijos.Count}");
 
             foreach (var menu in menusPadres)
             {
@@ -48,14 +48,14 @@ namespace HM.Presupuestos.Web.Layout
                 };
 
                 Menu.Add(menuPadre);
-                Console.WriteLine($"[NavMenu] 📁 Menú padre creado: {menu.Id} - {menu.NombreMenu}");
+                Console.WriteLine($"[NavMenu] Menú padre creado: {menu.Id} - {menu.NombreMenu}");
             }
 
             foreach (var menu in menusHijos)
             {
-                var url = menu.Url(MapaMenu) ?? "";
+                var url = menu.Url(RecursosApp) ?? "";
 
-                ConfiguracionMenu menuHijo = new ConfiguracionMenu
+                ConfiguracionMenu menuHijo = new()
                 {
                     CodigoMenu = menu.Id,
                     CodigoMenuPadre = menu.IdPadre,
@@ -69,17 +69,17 @@ namespace HM.Presupuestos.Web.Layout
                 if (menuPadre != null)
                 {
                     menuPadre.Submenus.Add(menuHijo);
-                    Console.WriteLine($"[NavMenu] ✅ Submenú agregado: {menu.Id} - {menu.NombreMenu} (Padre: {menu.IdPadre}, URL: {url})");
+                    Console.WriteLine($"[NavMenu] Submenú agregado: {menu.Id} - {menu.NombreMenu} (Padre: {menu.IdPadre}, URL: {url})");
                 }
                 else
                 {
-                    Console.WriteLine($"[NavMenu] ⚠️ Padre no encontrado para submenú: {menu.Id} - IdPadre: {menu.IdPadre}");
+                    Console.WriteLine($"[NavMenu] Padre no encontrado para submenú: {menu.Id} - IdPadre: {menu.IdPadre}");
                 }
             }
 
             foreach (var menu in Menu)
             {
-                Console.WriteLine($"[NavMenu] 🔍 Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenús");
+                Console.WriteLine($"[NavMenu] Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenÃºs");
             }
         }
 
@@ -89,7 +89,7 @@ namespace HM.Presupuestos.Web.Layout
 
             if (!string.IsNullOrEmpty(urlNormalizada))
             {
-                var codigoMenuActivo = MapaMenu.ObtenerCodigoMenuPorUrl(urlNormalizada);
+                var codigoMenuActivo = RecursosApp.ObtenerCodigoMenuPorUrl(urlNormalizada);
 
                 if (codigoMenuActivo > 0)
                 {

@@ -34,7 +34,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                 // Primero verificar cache en memoria
                 if (_cookiesPendientes.TryGetValue(clave, out var pendingValue))
                 {
-                    _logger.LogDebug("Cookie {Key} leÌda desde cachÈ: {Value}", clave, pendingValue);
+                    _logger.LogDebug("Cookie {Key} le√≠da desde cach√©: {Value}", clave, pendingValue);
                     return pendingValue;
                 }
 
@@ -46,7 +46,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
                 }
 
                 var value = httpContext.Request.Cookies[clave];
-                _logger.LogDebug("Cookie {Key} leÌda: {Value}", clave, value ?? "null");
+                _logger.LogDebug("Cookie {Key} le√≠da: {Value}", clave, value ?? "null");
                 return value;
             }
             catch (Exception ex)
@@ -111,7 +111,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             {
                 if (_jsRuntime == null)
                 {
-                    _logger.LogWarning("JSRuntime no disponible, usando SetCookie est·ndar");
+                    _logger.LogWarning("JSRuntime no disponible, usando SetCookie est√°ndar");
                     Grabar(key, valor, diasExpiracion);
                     return;
                 }

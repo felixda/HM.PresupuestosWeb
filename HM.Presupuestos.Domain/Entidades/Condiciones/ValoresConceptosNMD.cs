@@ -1,4 +1,4 @@
-﻿
+
 namespace HM.Presupuestos.Domain.Entidades
 {
     public class ValoresConceptosNMD

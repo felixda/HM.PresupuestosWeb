@@ -1,0 +1,94 @@
+schema: spec-driven
+
+context: |
+  Tech stack: .NET 10, Blazor Server (Interactive Server Components), DevExpress Blazor UI (DxGrid, DxPopup, DxFormLayout, DxTreeView, DxDrawer)
+  Auth: Azure AD SSO via Microsoft.Identity.Web + OpenIdConnect
+  Architecture: Hexagonal por capas horizontales con organización vertical por módulo de negocio
+  Layers: Domain (entidades, enums, puertos) → Application (casos de uso, servicios) → Infrastructure (repositorios, adaptadores) → Web (páginas Blazor, componentes)
+  Testing: NUnit + Playwright (E2E), NUnit (unit tests)
+  Todo el código en C#. Textos de UI siempre a través del sistema de recursos multiidioma (ObtenerTexto / TextosApp)
+  Idioma de código y comentarios: castellano
+
+  Project guidelines (fuente de verdad): toda creación de artefactos e implementación
+  DEBE leer y seguir las guías en .github/skills/guidelines/:
+  - guidelines/architecture-hexagonal — capas, estructura de módulos, puertos y adaptadores
+  - guidelines/design-principles — nomenclatura, funciones, clases, manejo de errores
+  - guidelines/testing-standards — nomenclatura de tests, estructura AAA, principios FIRST, mocks
+  - guidelines/xp-tdd-practices — ciclo TDD de 5 pasos, TPP, inside-out
+  - guidelines/frontend-patterns — componentes Blazor, ciclo de vida, CSS isolation, DevExpress
+  - guidelines/infrastructure — patrones de queries Oracle en repositorios
+  - guidelines/git-strategy — feature branching, conventional commits
+
+  Componentes Blazor:
+  - Heredan de Context (base) o ContextProtegido (páginas con permisos), nunca de ComponentBase
+  - El usuario está disponible solo en OnUsuarioDisponibleAsync(), nunca en OnInitializedAsync()
+  - Las páginas con permisos implementan InicializarPaginaAsync() y OnPermisoDenegadoAsync()
+  - Las operaciones async se envuelven en EjecutarAsync(async () => { ... }) para overlay + manejo de errores
+  - Inyección de dependencias siempre con [Inject] en el .razor.cs, nunca @inject en el .razor
+
+  Nomenclatura:
+  - Campo privado interno: _camelCase (flags, refs de componentes, estado interno)
+  - Propiedad con binding Razor: PascalCase con { get; set; }
+  - Propiedad calculada: PascalCase con =>
+  - CSS: kebab-case
+  - URLs: kebab-case
+
+  Arquitectura — reglas que nunca romper:
+  - Web no referencia Infrastructure
+  - Application no referencia Infrastructure ni Web
+  - Domain no referencia ningún otro proyecto de la solución
+  - Un servicio solo accede a su propio repositorio; para datos de otro dominio usa el servicio de ese dominio
+  - La auditoría (LogAcciones) se registra siempre desde el servicio, nunca desde la página
+  - Los puertos secundarios (IXxxRepository) viven en Domain/Puertos/Repositorios/
+  - Los puertos primarios (IXxxService) viven en Application/CasosDeUso/ junto a su implementación
+
+  Gestión de errores:
+  - Nunca catch & rethrow sin valor añadido (no envolver en new Exception sin logging)
+  - Errores de BD -20001 a -20999 son controlados; usar TratarExcepcionGeneradaEnBD / TratarWarningGeneradoEnBD
+  - EjecutarAsync actúa como barrera de error en la capa Web
+
+  Traducciones:
+  - Ante cualquier texto nuevo en UI seguir el proceso de .github/prompts/anadir-traduccion.prompt.md
+  - Nunca usar strings literales en la UI
+
+rules:
+  proposal:
+    - Incluir siempre una sección "No incluido / Fuera de alcance"
+    - Identificar qué capas se ven afectadas (Domain, Application, Infrastructure, Web)
+    - Indicar si requiere nuevas claves de traducción (TextosApp)
+    - Indicar si requiere nuevas acciones de auditoría (AccionesLog)
+    - Indicar si requiere nuevos permisos (CodigosMenu)
+
+  specs:
+    - Escribir escenarios en formato Given/When/Then (Dado/Cuando/Entonces)
+    - Organizar por módulo de negocio siguiendo la estructura de carpetas del proyecto
+    - Incluir casos de error y edge cases
+    - Especificar qué permisos son necesarios para cada operación
+    - Especificar qué acciones de auditoría se deben registrar
+
+  design:
+    - Leer .github/skills/guidelines/architecture-hexagonal/ antes de diseñar
+    - Leer .github/skills/guidelines/frontend-patterns/ para diseño de UI
+    - Mapear componentes a las capas hexagonales (Domain, Application, Infrastructure, Web)
+    - Identificar puertos (interfaces) y adaptadores (implementaciones) nuevos o modificados
+    - Diseñar entidades nuevas siguiendo el modelo en Domain/Entidades/
+    - Si la operación requiere auditoría, especificar el AccionesLog correspondiente
+    - Si la operación requiere textos en UI, listar las claves TextosApp necesarias
+    - Indicar si se necesitan nuevas entradas en CodigosMenu para gestión de permisos
+    - Respetar el patrón de inyección con primary constructor (C# 12) en servicios
+
+  tasks:
+    - Leer .github/skills/guidelines/xp-tdd-practices/ antes de crear tareas
+    - Leer .github/skills/guidelines/testing-standards/ para la estrategia de tests por capa
+    - Ordenar tareas de dentro hacia fuera: Domain → Application → Infrastructure → Web
+    - Las tareas con comportamiento de negocio (entidades, servicios, repositorios) usan formato TDD — RED escribe test que falla → GREEN implementa → COMMIT (conventional commit) → REFACTOR
+    - Las tareas de estructura (interfaces, DTOs, configuración, registro DI) son tareas planas sin test
+    - Estrategia de tests por capa:
+      - Domain (entidades, enums) — unit tests en HM.Presupuestos.UnitTest
+      - Application (servicios/casos de uso) — unit tests con repositorios en memoria (HM.Presupuestos.UnitTest)
+      - Infrastructure (repositorios) — no se testean directamente; se validan vía integración o E2E
+      - Web (páginas, flujos de usuario) — E2E tests con Playwright en HM.Presupuestos.E2ETest
+    - Si la tarea añade textos en UI, incluir paso previo: seguir .github/prompts/anadir-traduccion.prompt.md
+    - Si la tarea añade auditoría, incluir paso: añadir valor al enum AccionesLog en Domain/Compartido/Enumerados.cs
+    - Incluir siempre un grupo de validación final — ejecutar /task-validate, /task-code-review, /task-architecture-review, /task-testing-review y para cambios de UI /task-frontend-review
+    - Incluir siempre una tarea final de commit con mensaje de commit convencional en castellano

@@ -1,4 +1,4 @@
-﻿
+
 namespace HM.Presupuestos.Domain.Entidades
 {
     public class CondicionDto
@@ -34,8 +34,6 @@ namespace HM.Presupuestos.Domain.Entidades
         public int  IndicadorCalculoDevolucion { get; set; }
 
         public int NumeroExcepciones { get; set; }
-
-        public bool MedioAccesible { get; set; }
 
     }
 }

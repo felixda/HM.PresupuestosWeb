@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 namespace HM.Presupuestos.Application.CasosDeUso
 {
     /// <summary>
-    /// Servicio de gesti髇 de sobreprimas comerciales
+    /// Servicio de gesti贸n de sobreprimas comerciales
     /// Gestiona los tres conceptos de sobreprimas: Default, SLA y HVP
     /// </summary>
     public class SobreprimasService(
@@ -24,11 +24,11 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <summary>
         /// Obtiene lista de sobreprimas filtradas
         /// </summary>
-        /// <param name="filterSobreprima">Filtro de b鷖queda (pa韘, versi髇, etc.)</param>
+        /// <param name="filterSobreprima">Filtro de b煤squeda (pa铆s, versi贸n, etc.)</param>
         /// <returns>Lista de objetos Sobreprima</returns>
         public async Task<List<Sobreprima>> ObtenerSobreprimas(SobreprimaFiltro filterSobreprima)
         {
-            _logger.LogTrace("Llamando m閠odo GetSobreprimaList");
+            _logger.LogTrace("Llamando m茅todo GetSobreprimaList");
 
             var resultado = await _sobreprimasRepository.ObtenerSobreprimas(filterSobreprima);
 
@@ -36,76 +36,76 @@ namespace HM.Presupuestos.Application.CasosDeUso
         }
 
         /// <summary>
-        /// Verifica si existen sobreprimas que coincidan con el filtro, excluyendo opcionalmente c骴igos espec韋icos
+        /// Verifica si existen sobreprimas que coincidan con el filtro, excluyendo opcionalmente c贸digos espec铆ficos
         /// </summary>
-        /// <param name="filterSobreprima">Filtro para buscar sobreprimas (pa韘, versi髇, etc.)</param>
-        /// <param name="sobreprima">Sobreprima opcional con conceptos (Default, HVP, SLA) a excluir de la b鷖queda</param>
-        /// <returns>True si existen sobreprimas que coincidan (excluyendo los c骴igos especificados), false en caso contrario</returns>
+        /// <param name="filterSobreprima">Filtro para buscar sobreprimas (pa铆s, versi贸n, etc.)</param>
+        /// <param name="sobreprima">Sobreprima opcional con conceptos (Default, HVP, SLA) a excluir de la b煤squeda</param>
+        /// <returns>True si existen sobreprimas que coincidan (excluyendo los c贸digos especificados), false en caso contrario</returns>
         /// <remarks>
-        /// L骻ica del m閠odo:
+        /// L贸gica del m茅todo:
         /// 1. Si NO se proporciona sobreprima ? busca sin exclusiones
-        /// 2. Si se proporciona sobreprima ? construye lista de c骴igos a excluir de los 3 conceptos (Default, HVP, SLA)
-        /// 3. Solo incluye en la exclusi髇 los conceptos con c骴igo > 0
-        /// 趖il para validar duplicados excluyendo el registro actual en ediciones
+        /// 2. Si se proporciona sobreprima ? construye lista de c贸digos a excluir de los 3 conceptos (Default, HVP, SLA)
+        /// 3. Solo incluye en la exclusi贸n los conceptos con c贸digo > 0
+        /// 脷til para validar duplicados excluyendo el registro actual en ediciones
         /// </remarks>
         public async Task<bool> ExistenSobreprimas(SobreprimaFiltro filterSobreprima, SobreprimaGridModel? sobreprima = null)
         {
-            _logger.LogTrace("Llamando m閠odo ExistenSobreprimas");
+            _logger.LogTrace("Llamando m茅todo ExistenSobreprimas");
 
-            // Caso 1: Sin sobreprima espec韋ica ? buscar sin exclusiones
+            // Caso 1: Sin sobreprima espec铆fica ? buscar sin exclusiones
             if (sobreprima == null)
             {
                 return await _sobreprimasRepository.ExistenSobreprimas(filterSobreprima);
             }
 
-            // Caso 2: Con sobreprima ? construir c骴igos a excluir usando LINQ
+            // Caso 2: Con sobreprima ? construir c贸digos a excluir usando LINQ
             var codigosExcluir = new[]
             {
                 sobreprima.ConceptoDefaul.Codigo,
                 sobreprima.ConceptoHVP.Codigo,
                 sobreprima.ConceptoSLA.Codigo
             }
-            .Where(codigo => codigo > 0)           // Solo c骴igos v醠idos
+            .Where(codigo => codigo > 0)           // Solo c贸digos v谩lidos
             .Select(codigo => codigo.ToString());  // Convertir a string
 
-            // Si no hay c骴igos v醠idos, no hay nada que excluir
+            // Si no hay c贸digos v谩lidos, no hay nada que excluir
             if (!codigosExcluir.Any())
             {
                 return false;
             }
 
-            // Buscar con exclusi髇 de c骴igos
+            // Buscar con exclusi贸n de c贸digos
             string codigosCSV = string.Join(",", codigosExcluir);
             return await _sobreprimasRepository.ExistenSobreprimas(filterSobreprima, codigosCSV);
         }
 
         /// <summary>
-        /// Elimina los tres conceptos de sobreprimas (Default, SLA, HVP) en una 鷑ica transacci髇
+        /// Elimina los tres conceptos de sobreprimas (Default, SLA, HVP) en una 煤nica transacci贸n
         /// </summary>
-        /// <param name="sobreprima">Modelo de grid con los c骴igos de los tres conceptos a eliminar</param>
+        /// <param name="sobreprima">Modelo de grid con los c贸digos de los tres conceptos a eliminar</param>
         /// <remarks>
-        /// Este m閠odo elimina en una transacci髇:
-        /// - ConceptoDefault (si c骴igo != 0)
-        /// - ConceptoSLA (si c骴igo != 0)
-        /// - ConceptoHVP (si c骴igo != 0)
-        /// Solo elimina los conceptos que tengan c骴igo asignado (existen en BD)
-        /// Si cualquier eliminaci髇 falla, hace rollback de toda la operaci髇
+        /// Este m茅todo elimina en una transacci贸n:
+        /// - ConceptoDefault (si c贸digo != 0)
+        /// - ConceptoSLA (si c贸digo != 0)
+        /// - ConceptoHVP (si c贸digo != 0)
+        /// Solo elimina los conceptos que tengan c贸digo asignado (existen en BD)
+        /// Si cualquier eliminaci贸n falla, hace rollback de toda la operaci贸n
         /// </remarks>
         public async Task EliminarSobreprimas(SobreprimaGridModel sobreprima)
         {
-            _logger.LogTrace("Llamando m閠odo EliminarSobreprimas");
+            _logger.LogTrace("Llamando m茅todo EliminarSobreprimas");
 
             using var transaction = _sobreprimasRepository.ObtenerTransaccion();
             try
             {
-                // Obtener c骴igos de los 3 conceptos a eliminar
+                // Obtener c贸digos de los 3 conceptos a eliminar
                 var codigosAEliminar = new[]
                 {
                     sobreprima.ConceptoDefaul.Codigo,
                     sobreprima.ConceptoSLA.Codigo,
                     sobreprima.ConceptoHVP.Codigo
                 }
-                .Where(codigo => codigo != 0);  // Solo c骴igos v醠idos (existen en BD)
+                .Where(codigo => codigo != 0);  // Solo c贸digos v谩lidos (existen en BD)
 
                 // Eliminar cada concepto 
                 foreach (var codigo in codigosAEliminar)
@@ -115,7 +115,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
                 await transaction.CommitAsync();
 
-                // Registrar auditor韆 fuera de la transacci髇
+                // Registrar auditor铆a fuera de la transacci贸n
                 try
                 {
                     await _logAccionesService.Insertar(
@@ -124,8 +124,8 @@ namespace HM.Presupuestos.Application.CasosDeUso
                 }
                 catch (Exception logEx)
                 {
-                    _logger.LogError(logEx, "Error registrando auditor韆 (eliminaci髇 exitosa)");
-                    // No propagar - la eliminaci髇 fue exitosa
+                    _logger.LogError(logEx, "Error registrando auditor铆a (eliminaci贸n exitosa)");
+                    // No propagar - la eliminaci贸n fue exitosa
                 }
             }
             catch
@@ -136,26 +136,26 @@ namespace HM.Presupuestos.Application.CasosDeUso
         }
 
         /// <summary>
-        /// Guarda una lista de sobreprimas aplicando l骻ica condicional seg鷑 c骴igo y porcentaje
+        /// Guarda una lista de sobreprimas aplicando l贸gica condicional seg煤n c贸digo y porcentaje
         /// </summary>
         /// <param name="items">Lista de sobreprimas a procesar</param>
-        /// <param name="nombreMetodoLlamador">Nombre del m閠odo llamador (se obtiene autom醫icamente con CallerMemberName)</param>
+        /// <param name="nombreMetodoLlamador">Nombre del m茅todo llamador (se obtiene autom谩ticamente con CallerMemberName)</param>
         /// <remarks>
-        /// Este m閠odo aplica la siguiente l骻ica para cada sobreprima en una transacci髇:
+        /// Este m茅todo aplica la siguiente l贸gica para cada sobreprima en una transacci贸n:
         /// 
         /// 1. Si Codigo == 0 Y Porcentaje > 0 ? INSERTAR (nueva sobreprima)
         /// 2. Si Codigo > 0 Y Porcentaje == 0 ? ELIMINAR (limpiar sobreprima)
         /// 3. Si Codigo > 0 Y Porcentaje > 0 ? ACTUALIZAR (modificar existente)
         /// 4. Si Codigo == 0 Y Porcentaje == 0 ? IGNORAR (no hacer nada)
         /// 
-        /// Se registra en auditor韆 el inicio de la operaci髇 antes de la transacci髇.
-        /// Si cualquier operaci髇 falla, hace rollback de todos los cambios.
+        /// Se registra en auditor铆a el inicio de la operaci贸n antes de la transacci贸n.
+        /// Si cualquier operaci贸n falla, hace rollback de todos los cambios.
         /// </remarks>
         public async Task GrabarSobreprimas(List<Sobreprima> items, [CallerMemberName] string nombreMetodoLlamador = "")
         {
-            _logger.LogInformation("Llamando m閠odo GrabarSobreprimas");
+            _logger.LogInformation("Llamando m茅todo GrabarSobreprimas");
 
-            // Registrar auditor韆 antes de la transacci髇
+            // Registrar auditor铆a antes de la transacci贸n
             
 
             using var transaction = _sobreprimasRepository.ObtenerTransaccion();
@@ -164,7 +164,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
                 foreach (var item in items)
                 {
-                    // Caso 1: Nueva sobreprima (sin c骴igo y con porcentaje)
+                    // Caso 1: Nueva sobreprima (sin c贸digo y con porcentaje)
                     if (item.Codigo == 0 && item.Porcentaje > 0)
                     {
                         await _sobreprimasRepository.InsertSobreprima(item);
@@ -183,12 +183,12 @@ namespace HM.Presupuestos.Application.CasosDeUso
                             await _sobreprimasRepository.ActualizarSobreprima(item);
                         }
                     }
-                    // Caso 3: Ignorar (c骴igo = 0 y porcentaje = 0)
+                    // Caso 3: Ignorar (c贸digo = 0 y porcentaje = 0)
                 }
 
                 await transaction.CommitAsync();
 
-                // Registrar auditor韆 fuera de la transacci髇
+                // Registrar auditor铆a fuera de la transacci贸n
                 try
                 {
                     await _logAccionesService.Insertar(
@@ -197,8 +197,8 @@ namespace HM.Presupuestos.Application.CasosDeUso
                 }
                 catch (Exception logEx)
                 {
-                    _logger.LogError(logEx, "Error registrando auditor韆 (Grabaci髇 exitosa)");
-                    // No propagar - la grabaci髇 fue exitosa
+                    _logger.LogError(logEx, "Error registrando auditor铆a (Grabaci贸n exitosa)");
+                    // No propagar - la grabaci贸n fue exitosa
                 }
             }
             catch

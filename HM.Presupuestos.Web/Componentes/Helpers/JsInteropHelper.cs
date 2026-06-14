@@ -1,5 +1,3 @@
-using HM.Presupuestos.Web.Adaptadores;
-using Microsoft.JSInterop;
 
 namespace HM.Presupuestos.Web.Componentes.Helpers
 {
