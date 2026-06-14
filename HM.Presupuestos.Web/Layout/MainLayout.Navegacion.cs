@@ -34,6 +34,7 @@ namespace HM.Presupuestos.Web.Layout
                 if (!string.IsNullOrEmpty(loginSSO))
                 {
                     RegistroSesionesActivas.ActualizarPagina(loginSSO, urlNormalizada);
+                    HistorialNavegacion.RegistrarVisita(loginSSO, urlNormalizada);
                 }
 
                 await InvokeAsync(StateHasChanged);
