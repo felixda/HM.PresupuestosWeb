@@ -1,0 +1,12 @@
+.usuarios-conectados-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.usuarios-conectados-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-text-secondary, #6c757d);
+    font-style: italic;
+}

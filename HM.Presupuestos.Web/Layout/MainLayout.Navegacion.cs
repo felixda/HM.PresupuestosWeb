@@ -29,6 +29,13 @@ namespace HM.Presupuestos.Web.Layout
                 }
 
                 await ActualizarSubscripcionesInactividad();
+
+                var loginSSO = SesionUsuario.UsuarioApp?.UsuarioAutenticado?.Login;
+                if (!string.IsNullOrEmpty(loginSSO))
+                {
+                    RegistroSesionesActivas.ActualizarPagina(loginSSO, urlNormalizada);
+                }
+
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)

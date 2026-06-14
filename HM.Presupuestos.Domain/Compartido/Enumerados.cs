@@ -36,6 +36,7 @@ namespace HM.Presupuestos.Domain.Compartido
         MesesBloqueados = 23,
         AnioDiario = 25,
         Auditorias = 26,
+        UsuariosConectados = 27,
     }
 
     /// <summary>

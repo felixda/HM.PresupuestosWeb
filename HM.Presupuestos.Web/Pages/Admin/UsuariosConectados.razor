@@ -1,0 +1,62 @@
+@page "/admin/usuarios-conectados"
+
+@inherits ContextProtegido
+
+@attribute [Authorize]
+
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.UsuariosConectados"
+                Titulo="@TituloPagina" />
+
+    <div class="layoutContainer">
+
+        <div class="usuarios-conectados-toolbar">
+            <DxButton Text="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.Actualizar)"
+                      IconCssClass="fa-solid fa-rotate-right"
+                      Click="@ActualizarAsync"
+                      RenderStyle="ButtonRenderStyle.Secondary" />
+        </div>
+
+        @if (_sesiones.Count == 0)
+        {
+            <div class="usuarios-conectados-empty">
+                <span>@ObtenerTexto(TextosApp.Pages.UsuariosConectados.SinUsuariosConectados)</span>
+            </div>
+        }
+        else
+        {
+            <DxGrid Data="@_sesiones"
+                    ShowFilterRow="false"
+                    PageSize="50">
+                <Columns>
+                    <DxGridDataColumn FieldName="@nameof(SesionActivaInfo.Login)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.Login)"
+                                      MinWidth="150" />
+                    <DxGridDataColumn FieldName="@nameof(SesionActivaInfo.PaginaActual)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.PaginaActual)"
+                                      MinWidth="200" />
+                    <DxGridDataColumn FieldName="@nameof(SesionActivaInfo.Inicio)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.ConectadoDesde)"
+                                      DisplayFormat="HH:mm:ss"
+                                      MinWidth="130" />
+                    <DxGridDataColumn Caption="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.TiempoEnSesion)"
+                                      MinWidth="130">
+                        <CellDisplayTemplate Context="ctx">
+                            @FormatearTiempo((SesionActivaInfo)ctx.DataItem)
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
+                </Columns>
+            </DxGrid>
+        }
+    </div>
+}
