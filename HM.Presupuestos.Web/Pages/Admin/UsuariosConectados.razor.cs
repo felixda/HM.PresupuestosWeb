@@ -7,12 +7,15 @@ namespace HM.Presupuestos.Web.Pages.Admin
         #region Inyección de Dependencias
 
         [Inject] private IRegistroSesionesActivas RegistroSesiones { get; set; } = default!;
+        [Inject] private IHistorialNavegacion HistorialNavegacion { get; set; } = default!;
 
         #endregion
 
         #region Propiedades Privadas
 
         private IReadOnlyList<SesionActivaInfo> _sesiones = [];
+        private SesionActivaInfo? _usuarioSeleccionado;
+        private IReadOnlyList<EntradaHistorial> _historialUsuario = [];
 
         #endregion
 
@@ -36,6 +39,20 @@ namespace HM.Presupuestos.Web.Pages.Admin
         private Task ActualizarAsync()
         {
             _sesiones = RegistroSesiones.ObtenerTodas();
+
+            if (_usuarioSeleccionado != null)
+                _historialUsuario = HistorialNavegacion.ObtenerHistorial(_usuarioSeleccionado.Login);
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnUsuarioSeleccionadoAsync(object? dataItem)
+        {
+            _usuarioSeleccionado = dataItem as SesionActivaInfo;
+            _historialUsuario = _usuarioSeleccionado != null
+                ? HistorialNavegacion.ObtenerHistorial(_usuarioSeleccionado.Login)
+                : [];
+
             return Task.CompletedTask;
         }
 

@@ -148,6 +148,7 @@ builder.Services.AddScoped<IControlCambiosNavegacion, ControlCambiosNavegacion>(
 builder.Services.AddScoped<ModalControlCambios>();
 builder.Services.AddSingleton<IAvisosService, AvisosService>();
 builder.Services.AddSingleton<IRegistroSesionesActivas, RegistroSesionesActivas>();
+builder.Services.AddSingleton<IHistorialNavegacion, HistorialNavegacion>();
 builder.Services.AddScoped<ConfiguracionService>();
 builder.Services.AddScoped<ILayerOverlayService, LayerOverlayService>();
 builder.Services.AddScoped<IGestorCookies, GestorCookies>(); 

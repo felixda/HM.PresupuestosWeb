@@ -39,6 +39,13 @@ else
                     ShowFilterRow="false"
                     PageSize="50">
                 <Columns>
+                    <DxGridDataColumn Caption="" Width="50px">
+                        <CellDisplayTemplate Context="histCtx">
+                            <DxButton IconCssClass="fa-solid fa-clock-rotate-left"
+                                      RenderStyle="ButtonRenderStyle.Link"
+                                      Click="@(async () => await OnUsuarioSeleccionadoAsync(histCtx.DataItem))" />
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
                     <DxGridDataColumn FieldName="@nameof(SesionActivaInfo.Login)"
                                       Caption="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.Login)"
                                       MinWidth="150" />
@@ -57,6 +64,36 @@ else
                     </DxGridDataColumn>
                 </Columns>
             </DxGrid>
+
+            @if (_usuarioSeleccionado != null)
+            {
+                <div class="usuarios-conectados-historial">
+                    <h4>@ObtenerTexto(TextosApp.Pages.HistorialNavegacion.Titulo) — @_usuarioSeleccionado.Login</h4>
+
+                    @if (_historialUsuario.Count == 0)
+                    {
+                        <div class="usuarios-conectados-empty">
+                            <span>@ObtenerTexto(TextosApp.Pages.HistorialNavegacion.SinHistorial)</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <DxGrid Data="@_historialUsuario"
+                                ShowFilterRow="false"
+                                PageSize="50">
+                            <Columns>
+                                <DxGridDataColumn FieldName="@nameof(EntradaHistorial.Pagina)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.HistorialNavegacion.PaginaVisitada)"
+                                                  MinWidth="200" />
+                                <DxGridDataColumn FieldName="@nameof(EntradaHistorial.Hora)"
+                                                  Caption="@ObtenerTexto(TextosApp.Pages.HistorialNavegacion.Hora)"
+                                                  DisplayFormat="HH:mm:ss"
+                                                  MinWidth="100" />
+                            </Columns>
+                        </DxGrid>
+                    }
+                </div>
+            }
         }
     </div>
 }

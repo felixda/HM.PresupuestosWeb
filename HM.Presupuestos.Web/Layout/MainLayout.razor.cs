@@ -18,6 +18,7 @@ namespace HM.Presupuestos.Web.Layout
         [Inject] private IRutasNavegacion RutasNavegacion { get; set; } = default!;
         [Inject] private IRecursosApp RecursosApp { get; set; } = default!;
         [Inject] private IRegistroSesionesActivas RegistroSesionesActivas { get; set; } = default!;
+        [Inject] private IHistorialNavegacion HistorialNavegacion { get; set; } = default!;
 
         #endregion
 

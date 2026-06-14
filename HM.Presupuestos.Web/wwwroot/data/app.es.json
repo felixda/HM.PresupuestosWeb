@@ -638,6 +638,20 @@
         "label": "No hay usuarios conectados en este momento"
       }
     },
+    "HistorialNavegacion": {
+      "Titulo": {
+        "label": "Historial de páginas visitadas"
+      },
+      "PaginaVisitada": {
+        "label": "Página visitada"
+      },
+      "Hora": {
+        "label": "Hora"
+      },
+      "SinHistorial": {
+        "label": "No hay historial de navegación para este usuario"
+      }
+    },
     "ImportacionCondiciones": {
       "ToolTip": {
         "label": "Permite importar las condiciones desde MMS filtrando por unos parámetros dados."
