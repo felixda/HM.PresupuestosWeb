@@ -10,3 +10,7 @@
     color: var(--color-text-secondary, #6c757d);
     font-style: italic;
 }
+
+.usuarios-conectados-historial {
+    margin-top: 2rem;
+}

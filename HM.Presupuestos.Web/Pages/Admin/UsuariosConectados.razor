@@ -37,9 +37,15 @@ else
         {
             <DxGrid Data="@_sesiones"
                     ShowFilterRow="false"
-                    PageSize="50"
-                    SelectedDataItemChanged="@OnUsuarioSeleccionadoAsync">
+                    PageSize="50">
                 <Columns>
+                    <DxGridDataColumn Caption="" Width="50px">
+                        <CellDisplayTemplate Context="histCtx">
+                            <DxButton IconCssClass="fa-solid fa-clock-rotate-left"
+                                      RenderStyle="ButtonRenderStyle.Link"
+                                      Click="@(async () => await OnUsuarioSeleccionadoAsync(histCtx.DataItem))" />
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
                     <DxGridDataColumn FieldName="@nameof(SesionActivaInfo.Login)"
                                       Caption="@ObtenerTexto(TextosApp.Pages.UsuariosConectados.Login)"
                                       MinWidth="150" />

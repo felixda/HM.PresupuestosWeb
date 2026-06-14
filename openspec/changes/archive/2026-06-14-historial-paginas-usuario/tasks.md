@@ -24,3 +24,9 @@
 - [x] 5.1 En `UsuariosConectados.razor.cs`, inyectar `IHistorialNavegacion`, añadir `_usuarioSeleccionado` y `_historialUsuario`, e implementar `OnUsuarioSeleccionadoAsync` que carga el historial
 - [x] 5.2 En `UsuariosConectados.razor`, añadir `SelectedDataItemChanged` al `DxGrid` existente y renderizar condicionalmente el segundo `DxGrid` con columnas Página visitada y Hora
 - [x] 5.3 Actualizar `ActualizarAsync` para recargar también el historial del usuario seleccionado si hay uno
+
+## 6. Web — Correcciones UX e historial
+
+- [x] 6.1 Sustituir `SelectedDataItemChanged` por columna con botón icono `fa-clock-rotate-left` en `UsuariosConectados.razor` para acceder al historial del usuario
+- [x] 6.2 Añadir `margin-top: 2rem` a `.usuarios-conectados-historial` en `UsuariosConectados.razor.css`
+- [x] 6.3 Excluir la página Home/Index del historial de navegación en `MainLayout.Navegacion.cs`
