@@ -919,6 +919,25 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
+            #region HistorialNavegacion
+
+            public static class HistorialNavegacion
+            {
+                /// <summary>Título del grid de historial</summary>
+                public const string Titulo = "Pages:HistorialNavegacion:Titulo:label";
+
+                /// <summary>Columna Página visitada</summary>
+                public const string PaginaVisitada = "Pages:HistorialNavegacion:PaginaVisitada:label";
+
+                /// <summary>Columna Hora</summary>
+                public const string Hora = "Pages:HistorialNavegacion:Hora:label";
+
+                /// <summary>Mensaje cuando no hay historial para el usuario seleccionado</summary>
+                public const string SinHistorial = "Pages:HistorialNavegacion:SinHistorial:label";
+            }
+
+            #endregion
+
             #region AnioDiario
 
             public static class AnioDiario
