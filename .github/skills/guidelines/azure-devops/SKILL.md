@@ -53,9 +53,14 @@ Ejemplos correctos:
 
 Todas las tareas deben crearse con `parentId` igual al ID del User Story. Esto las enlaza automáticamente como hijas del US en Azure DevOps.
 
-## Campo obligatorio
+## Campos obligatorios al crear una Task
 
-El campo `Custom.CompetencyCenter` debe establecerse siempre a `"Develop"` al crear cualquier Task.
+| Campo | Valor |
+|---|---|
+| `Custom.CompetencyCenter` | `"Develop"` |
+| `Microsoft.VSTS.Scheduling.OriginalEstimate` | Horas estimadas para esa tarea concreta |
+
+La estimación por tarea es libre, pero la suma de todas las tasks debe ser coherente con la estimación del US.
 
 ---
 
@@ -100,8 +105,60 @@ Por cada ítem de `tasks.md`, crear una Task en Azure DevOps vinculada al US pad
 - Seguir la numeración y prefijos de capa descritos arriba (`[N][PREFIJO] ...`).
 - Usar `parentId` = ID del US para que queden como hijas.
 - Establecer `Custom.CompetencyCenter` = `"Develop"`.
+- Establecer `Microsoft.VSTS.Scheduling.OriginalEstimate` con la estimación en horas de esa tarea.
 
 El **orden de creación** en DevOps debe coincidir con el orden de las tareas en `tasks.md`.
+
+### 5. Actualizar el US con estimación y fechas de inicio/fin previstas
+
+Tras crear las tasks, rellenar en el US:
+
+| Campo | Valor |
+|---|---|
+| `Microsoft.VSTS.Scheduling.OriginalEstimate` | Suma de estimaciones de tasks **+ 1 hora de margen** |
+| `Microsoft.VSTS.Scheduling.StartDate` | Fecha de inicio (solo fecha, sin hora) |
+| `Microsoft.VSTS.Scheduling.FinishDate` | Fecha objetivo de entrega (solo fecha, sin hora) |
+
+### 6. Implementar y hacer commits por tarea
+
+Al hacer commit de cada tarea, incluir en el mensaje:
+
+```
+#AB<ID_TASK> <descripción en inglés>
+```
+
+- `#AB<ID>` vincula automáticamente el commit a la Task en Azure DevOps.
+- Si un commit cubre varias tasks del mismo commit: `#AB112691 #AB112692 #AB112693 ...`
+
+### 7. Añadir comentario con el commit de GitHub en cada Task
+
+Tras hacer push, añadir en el comentario de cada Task el enlace al commit exacto de GitHub:
+
+```markdown
+**Commit GitHub:** [<sha7> — <descripción>](https://github.com/<org>/<repo>/commit/<sha_completo>)
+```
+
+### 8. Archivar el cambio OpenSpec
+
+Mover el directorio `openspec/changes/<nombre>` a `openspec/changes/archive/YYYY-MM-DD-<nombre>` y hacer un commit:
+
+```
+chore(openspec): archive <nombre> change
+```
+
+### 9. Cerrar las Tasks y el US
+
+Una vez archivado y pusheado, cerrar en este orden:
+
+1. **Cerrar cada Task** con:
+   - `System.State` → `Closed`
+   - `Microsoft.VSTS.Scheduling.CompletedWork` → horas reales invertidas en esa tarea
+
+2. **Cerrar el US** con:
+   - `System.State` → `Closed`
+   - `Microsoft.VSTS.Scheduling.CompletedWork` → horas totales reales
+   - `Microsoft.VSTS.Scheduling.StartDate` → fecha/hora real de inicio
+   - `Microsoft.VSTS.Scheduling.FinishDate` → fecha/hora real de cierre
 
 ### Resumen visual del flujo
 
@@ -118,8 +175,24 @@ git checkout -b feat/us-<ID>-<desc> (desde master)
 /opsx:apply    →  design.md + specs/ + tasks.md
        │
        ▼
-Crear Tasks en DevOps como hijas del US (una por ítem de tasks.md)
+Crear Tasks en DevOps como hijas del US
+(parentId + OriginalEstimate por tarea)
        │
        ▼
-Implementar (TDD) → commits → PR → merge a master
+Actualizar US: OriginalEstimate (tasks + 1h margen) + StartDate + FinishDate
+       │
+       ▼
+Implementar (TDD) → commit por tarea con #AB<ID> en el mensaje
+       │
+       ▼
+Añadir comentario con link al commit de GitHub en cada Task
+       │
+       ▼
+Archive OpenSpec → commit chore(openspec)
+       │
+       ▼
+Cerrar Tasks (CompletedWork real) → Cerrar US (CompletedWork + fechas reales)
+       │
+       ▼
+PR → merge a master
 ```
