@@ -891,6 +891,34 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
+            #region UsuariosConectados
+
+            public static class UsuariosConectados
+            {
+                /// <summary>Título de la página</summary>
+                public const string Titulo = "Pages:UsuariosConectados:Titulo:label";
+
+                /// <summary>Login del usuario</summary>
+                public const string Login = "Pages:UsuariosConectados:Login:label";
+
+                /// <summary>Página actual del usuario</summary>
+                public const string PaginaActual = "Pages:UsuariosConectados:PaginaActual:label";
+
+                /// <summary>Conectado desde (hora)</summary>
+                public const string ConectadoDesde = "Pages:UsuariosConectados:ConectadoDesde:label";
+
+                /// <summary>Tiempo en sesión</summary>
+                public const string TiempoEnSesion = "Pages:UsuariosConectados:TiempoEnSesion:label";
+
+                /// <summary>Botón actualizar</summary>
+                public const string Actualizar = "Pages:UsuariosConectados:Actualizar:label";
+
+                /// <summary>Mensaje cuando no hay usuarios conectados</summary>
+                public const string SinUsuariosConectados = "Pages:UsuariosConectados:SinUsuariosConectados:label";
+            }
+
+            #endregion
+
             #region AnioDiario
 
             public static class AnioDiario

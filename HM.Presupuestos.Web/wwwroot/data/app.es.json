@@ -188,6 +188,13 @@
       "icono": "fa-solid fa-magnifying-glass-chart",
       "visible": true,
       "code": 26
+    },
+    "Menu_27": {
+      "label": "Usuarios conectados",
+      "url": "/admin/usuarios-conectados",
+      "icono": "fa-solid fa-users",
+      "visible": true,
+      "code": 27
     }
   },
   "Pages": {
@@ -606,6 +613,29 @@
     "AnioDiario": {
       "ToolTip": {
         "label": "Permite seleccionar año para el Diario de presupuestos"
+      }
+    },
+    "UsuariosConectados": {
+      "Titulo": {
+        "label": "Usuarios conectados"
+      },
+      "Login": {
+        "label": "Usuario"
+      },
+      "PaginaActual": {
+        "label": "Página actual"
+      },
+      "ConectadoDesde": {
+        "label": "Conectado desde"
+      },
+      "TiempoEnSesion": {
+        "label": "Tiempo en sesión"
+      },
+      "Actualizar": {
+        "label": "Actualizar"
+      },
+      "SinUsuariosConectados": {
+        "label": "No hay usuarios conectados en este momento"
       }
     },
     "ImportacionCondiciones": {
