@@ -160,6 +160,12 @@ Una vez archivado y pusheado, cerrar en este orden:
    - `Microsoft.VSTS.Scheduling.StartDate` → fecha/hora real de inicio
    - `Microsoft.VSTS.Scheduling.FinishDate` → fecha/hora real de cierre
 
+### 10. Crear el Pull Request
+
+Crear un PR de la rama `feat/us-<ID>-<desc>` hacia `master`.
+
+> **El merge lo realiza siempre un usuario — nunca se automatiza ni se hace desde el agente.**
+
 ### Resumen visual del flujo
 
 ```
@@ -194,5 +200,8 @@ Archive OpenSpec → commit chore(openspec)
 Cerrar Tasks (CompletedWork real) → Cerrar US (CompletedWork + fechas reales)
        │
        ▼
-PR → merge a master
+Crear PR (Pull Request hacia master)
+       │
+       ▼
+⚠️  El merge lo realiza un usuario — NO se automatiza
 ```
