@@ -2,7 +2,7 @@
 
 ## Reglas
 
-1. **Tamaño contenido y responsabilidad única (SRP)**. Cada método debe "hacer exactamente lo que indica su nombre". Métodos de 10-15 líneas son una métrica para detectar si tienen más de una responsabilidad; si solo tienen una responsabilidad, el tamaño no importa. Los métodos complejos de dominio (transacciones, reglas de negocio) pueden ser más largos si encapsulan una única operación indivisible
+1. **Responsabilidad única (SRP)**. Cada método debe hacer **exactamente una cosa** — la que indica su nombre. Siempre que sea posible, descomponer métodos que mezclan responsabilidades (inicializar estado + cargar datos + actualizar UI) en métodos privados con nombre propio, uno por responsabilidad. Métodos de 10-15 líneas son una métrica para detectar si tienen más de una responsabilidad; si solo tienen una, el tamaño no importa. Los métodos complejos de dominio (transacciones, reglas de negocio) pueden ser más largos si encapsulan una única operación indivisible
 
 2. **Nomenclatura impecable**. Los nombres de método son **verbos en español** que describen con precisión la acción. Los métodos async siempre llevan el sufijo `Async`
 
@@ -167,6 +167,59 @@ public async Task<List<CodigoDescripcion>> ObtenerAniosConVersiones(bool incluir
     // bool obliga a leer el cuerpo para entender qué hace
 }
 ```
+
+---
+
+### Descomposición por Responsabilidades (SRP)
+
+```csharp
+// ❌ INCORRECTO — un método con tres responsabilidades mezcladas
+private async Task MostrarPopupEdicionAsync(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion)
+{
+    await EjecutarAsync(async () =>
+    {
+        // 1. Inicializar estado
+        AgrupacionesComercialesPopup.Clear();
+        SobreprimaEnEdicion = DatosHelper.ClonarObjeto(sobreprima);
+        SobreprimaEnEdicion.ModoOperacion = modoOperacion;
+
+        // 2. Cargar datos de BD
+        if (modoOperacion == ModoOperacion.Modificar)
+        {
+            MediosPopup = await PresupuestosService.ObtenerMediosPorNetWork(...);
+            AgrupacionesComercialesPopup = await PresupuestosService.ObtenerAgrupacionesComerciales(...);
+            EditorialesPopup = await PresupuestosService.ObtenerEditoriales(...);
+        }
+
+        // 3. Abrir popup
+        TituloPopupEdicion = ...;
+        PopupEdicionVisible = true;
+    });
+}
+
+// ✅ CORRECTO — orquestador + un método por responsabilidad
+private async Task MostrarPopupEdicionAsync(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion)
+{
+    await EjecutarAsync(async () =>
+    {
+        InicializarEdicionSobreprima(sobreprima, modoOperacion);     // estado
+
+        if (modoOperacion == ModoOperacion.Insertar)
+            await CargarMaestrosPopupInsertarAsync();                // datos inserción
+        else if (modoOperacion == ModoOperacion.Modificar)
+            await CargarMaestrosPopupModificarAsync(sobreprima);    // datos modificación
+
+        AbrirPopupEdicion(modoOperacion);                            // UI
+    });
+}
+
+private void InicializarEdicionSobreprima(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion) { ... }
+private async Task CargarMaestrosPopupInsertarAsync() { ... }
+private async Task CargarMaestrosPopupModificarAsync(SobreprimaGridModel sobreprima) { ... }
+private void AbrirPopupEdicion(ModoOperacion modoOperacion) { ... }
+```
+
+> **Señales de que un método tiene más de una responsabilidad**: comentarios separadores dentro del cuerpo (`// 1. Inicializar`, `// 2. Cargar`), nombre que usa "Y" o "También" (`CargarDatosYMostrarPopup`), o dificultad para nombrarlo con un único verbo concreto.
 
 ---
 

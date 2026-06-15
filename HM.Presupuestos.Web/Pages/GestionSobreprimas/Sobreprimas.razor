@@ -41,7 +41,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                                                                            ComboBoxAño_CambioSeleccion(args)">
+                                                                                                                       OnAnioSeleccionadoAsync(args)">
                             <EditBoxDisplayTemplate Context="contexto">
                                 @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                             </EditBoxDisplayTemplate>
@@ -90,7 +90,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxNetworks_CambioValores(values, context.DropDownBox, false))"
+                                       ValuesChanged="@(values => OnNetworksChangedAsync(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
                                        SearchMode="@ListSearchMode.AutoSearch"
@@ -120,7 +120,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxMedios_CambioValores(values, context.DropDownBox, false))"
+                                           ValuesChanged="@(values => OnMediosChangedAsync(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
                                        ShowCheckboxes="true">
@@ -154,7 +154,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxAgrupaciones_CambioValores(values, context.DropDownBox, false))"
+                                           ValuesChanged="@(values => OnAgrupacionesChangedAsync(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
@@ -191,7 +191,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxEditoriales_CambioValores(values, context.DropDownBox, false))"
+                                           ValuesChanged="@(values => OnEditorialesChanged(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
                                        ShowCheckboxes="true"
@@ -211,7 +211,7 @@ else
                                   RenderStyle=ButtonRenderStyle.None
                                   Text="@ObtenerTexto(TextosApp.Common.Buscar)"
                                   IconCssClass="fa-solid fa-search"
-                                  Click="@AplicarFiltro" />
+                                  Click="@AplicarFiltroAsync" />
                     </div>
                 </DxFormLayoutItem>
 
@@ -223,7 +223,7 @@ else
                                   RenderStyle=ButtonRenderStyle.None
                                   IconCssClass="fa-solid fa-trash"
                                   Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
-                                  Click="@LimpiarFiltro" />
+                                  Click="@LimpiarFiltroAsync" />
                     </div>
                 </DxFormLayoutItem>
 
@@ -255,7 +255,7 @@ else
                                 ShowFilterRow="true"
                                 ValidationEnabled="true"
                                 ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                                RowDoubleClick="GridSobreprimas_DobleClick"
+                                RowDoubleClick="GridSobreprimas_DobleClickAsync"
                                 TextWrapEnabled="false"
                                 HighlightRowOnHover="true"
                                 FocusedRowEnabled="true"
@@ -267,7 +267,7 @@ else
                                     <DxButton CssClass="toolbarButtonCustom"
                                               RenderStyle=ButtonRenderStyle.None
                                               Text="@ObtenerTexto(TextosApp.Common.Nuevo)"
-                                              Click="@NuevaSobreprima"
+                                              Click="@NuevaSobreprimaAsync"
                                               title="@ObtenerTexto(TextosApp.Common.Nuevo)"
                                               IconCssClass="fa-solid fa-add"
                                               Enabled="@HayVersionSeleccionada()" />
@@ -366,7 +366,7 @@ else
                                                           title="@(isReadOnly
                                                                                                                           ? "No puede editar estas sobreprimas por no tener acceso al Medio"
                                                                                                                           : ObtenerTexto(TextosApp.Common.EditarRegistro))"
-                                                          Click="() => MostrarPopupEdicion((SobreprimaGridModel)context.DataItem, ModoOperacion.Modificar)"
+                                                          Click="() => MostrarPopupEdicionAsync((SobreprimaGridModel)context.DataItem, ModoOperacion.Modificar)"
                                                           @onclick:stopPropagation />
                                             </div>
                                         </CellDisplayTemplate>
@@ -380,7 +380,7 @@ else
                                                       title="@ObtenerTexto(TextosApp.Common.EliminarRegistro)"
                                                       aria-label="Delete"
                                                       Enabled="true"
-                                                      Click="() => EliminarSobreprima((SobreprimaGridModel)context.DataItem)" />
+                                                      Click="() => EliminarSobreprimaAsync((SobreprimaGridModel)context.DataItem)" />
                                         </CellDisplayTemplate>
                                     </DxGridCommandColumn>
                                 </Columns>
@@ -418,7 +418,7 @@ else
                                             ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                             SearchMode="@ListSearchMode.AutoSearch"
                                             SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                                                                                    PopupComboBoxNetwork_CambioSeleccion(args)"
+                                                                                                                    PopupComboBoxNetwork_CambioSeleccionAsync(args)"
                                             SearchFilterCondition="@ListSearchFilterCondition.Contains">
                                     <EditBoxDisplayTemplate Context="contexto">
                                         @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
@@ -441,7 +441,7 @@ else
                                             SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                             ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                             SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                                                                                PopupComboBoxMedio_CambioSeleccion(args)">
+                                                                                                                PopupComboBoxMedio_CambioSeleccionAsync(args)">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -464,7 +464,7 @@ else
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         ListRenderMode="ListRenderMode.Virtual"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                                                                                PopupComboBoxAgrupacion_CambioSeleccion(args)">
+                                                                                                                PopupComboBoxAgrupacion_CambioSeleccionAsync(args)">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -561,7 +561,7 @@ else
                                   RenderStyle=ButtonRenderStyle.None
                                   Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
                                   IconCssClass="fa-solid fa-save"
-                                  Click="GuardarSobreprima" />
+                                  Click="GuardarSobreprimaAsync" />
                         <DxButton CssClass="btnCustom"
                                   RenderStyle=ButtonRenderStyle.None
                                   Text="@ObtenerTexto(TextosApp.Botones.Cancelar)"
