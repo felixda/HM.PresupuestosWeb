@@ -14,13 +14,12 @@ else if (TienePermiso == false)
 }
 else
 {
-    <PageTitle>@ObtenerTexto($"Menu:Menu_{(int)CodigosMenu.Avisos}:label")</PageTitle>
-    <PageHeader CodigoMenu="@CodigosMenu.Avisos" Titulo="@ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.Avisos))" TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.Avisos.ToolTip)" />
+    <PageHeader CodigoMenu="@CodigosMenu.Avisos" Titulo="@TituloPagina" TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.Avisos.ToolTip)" />
 
     <div class="layoutContainer">
         <div class="mb-3">
             <label for="mensaje" class="form-label">@ObtenerTexto(TextosApp.Pages.Avisos.Mensaje)</label>
-            <textarea id="mensaje" class="@ClseTextArea" rows="5" @bind="_mensaje"></textarea>
+            <textarea id="mensaje" class="@ClaseTextArea" rows="5" @bind="Mensaje"></textarea>
         </div>
 
         <div class="mb-3">
@@ -48,7 +47,7 @@ else
             RenderStyle=ButtonRenderStyle.None
             IconCssClass="fa-solid fa-paper-plane"
             Text="@ObtenerTexto(TextosApp.Botones.Enviar)"
-            Click="EnviarAviso" />
+            Click="EnviarAvisoAsync" />
     </div>
 }
 
