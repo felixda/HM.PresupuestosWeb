@@ -61,11 +61,11 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                     if (string.IsNullOrEmpty(codigosNetwork))
                     {
-                        _ = ActualizarMediosCuandoQuitamosNetworks();
+                        _ = ActualizarMediosCuandoQuitamosNetworksAsync();
                     }
                     else
                     {
-                        _ = ActualizarMediosCuandoModificamosNetworks(codigosNetwork);
+                        _ = ActualizarMediosCuandoModificamosNetworksAsync(codigosNetwork);
                     }
                 }
             }
@@ -83,7 +83,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (value == null)
                 {
-                    _ = ActualizarEditorialesCuandoQuitamosMedios();
+                    _ = ActualizarEditorialesCuandoQuitamosMediosAsync();
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (value == null)
                 {
-                    _ = ActualizarEditorialesCuandoQuitamosAgrupaciones();
+                    _ = ActualizarEditorialesCuandoQuitamosAgrupacionesAsync();
                 }
             }
         }
@@ -206,7 +206,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de año seleccionado
         /// Carga las versiones del año seleccionado
         /// </summary>
-        private async Task ComboBoxAño_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task ComboBoxAño_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.DataItem == null) return;
             if (_filtroSobreprima == null || _filtroSobreprima.Anio == e.DataItem.Codigo) return;
@@ -225,7 +225,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Actualiza la lista de medios cuando se modifican los networks seleccionados
         /// </summary>
-        private async Task ActualizarMediosCuandoModificamosNetworks(string codigosNetwork)
+        private async Task ActualizarMediosCuandoModificamosNetworksAsync(string codigosNetwork)
         {
             await EjecutarAsync(async () =>
             {
@@ -238,7 +238,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Actualiza la lista de medios cuando se quitan todos los networks
         /// Restaura la lista completa de medios maestros
         /// </summary>
-        private async Task ActualizarMediosCuandoQuitamosNetworks()
+        private async Task ActualizarMediosCuandoQuitamosNetworksAsync()
         {
             await EjecutarAsync(() =>
             {
@@ -250,20 +250,20 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Actualiza las editoriales cuando se quitan todos los medios
         /// </summary>
-        private async Task ActualizarEditorialesCuandoQuitamosMedios()
+        private async Task ActualizarEditorialesCuandoQuitamosMediosAsync()
         {
             await EjecutarAsync(async () =>
             {
                 string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
                 AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
-                await ComprobarAgrupacionesYEditoriales(codigosMedios);
+                await ComprobarAgrupacionesYEditorialesAsync(codigosMedios);
             }, showOverlay: false);
         }
 
         /// <summary>
         /// Actualiza las editoriales cuando se quitan todas las agrupaciones comerciales
         /// </summary>
-        private async Task ActualizarEditorialesCuandoQuitamosAgrupaciones()
+        private async Task ActualizarEditorialesCuandoQuitamosAgrupacionesAsync()
         {
             await EjecutarAsync(async () =>
             {
@@ -287,14 +287,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de networks seleccionados en el ListBox
         /// Actualiza la lista de medios disponibles
         /// </summary>
-        private async Task ListBoxNetworks_CambioValores(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private async Task ListBoxNetworks_CambioValoresAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
 
             if (!values.Any())
             {
-                await ActualizarMediosCuandoQuitamosNetworks();
+                await ActualizarMediosCuandoQuitamosNetworksAsync();
             }
 
             dropDownBox.EndUpdate();
@@ -306,7 +306,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de medios seleccionados en el ListBox
         /// Actualiza las agrupaciones comerciales y editoriales disponibles
         /// </summary>
-        private async Task ListBoxMedios_CambioValores(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private async Task ListBoxMedios_CambioValoresAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
@@ -321,7 +321,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 {
                     string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
                     AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
-                    await ComprobarAgrupacionesYEditoriales(codigosMedios);
+                    await ComprobarAgrupacionesYEditorialesAsync(codigosMedios);
                 });
             }
 
@@ -333,7 +333,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Comprueba y ajusta las agrupaciones y editoriales seleccionadas según los medios filtrados
         /// </summary>
-        private async Task ComprobarAgrupacionesYEditoriales(string codigosMedios)
+        private async Task ComprobarAgrupacionesYEditorialesAsync(string codigosMedios)
         {
             FiltroEditoriales filtro = new();
             filtro.CodigosMedios = codigosMedios;
@@ -403,7 +403,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de agrupaciones comerciales seleccionadas en el ListBox
         /// Actualiza las editoriales disponibles
         /// </summary>
-        private async Task ListBoxAgrupaciones_CambioValores(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private async Task ListBoxAgrupaciones_CambioValoresAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
@@ -458,7 +458,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Obtiene la lista de sobreprimas según los filtros aplicados
         /// Convierte la lista a SobreprimaGridModel para mostrar en el grid
         /// </summary>
-        private async Task AplicarFiltro()
+        private async Task AplicarFiltroAsync()
         {
             if (!HayVersionSeleccionada())
             {
@@ -489,7 +489,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 }
                 else
                 {
-                    SobreprimasGrid = await ConvertirSobreprimasEnModeloGrid(listaSobreprimas);
+                    SobreprimasGrid = await ConvertirSobreprimasEnModeloGridAsync(listaSobreprimas);
                     GridSobreprimas.SetFocusedRowIndex(0);
                 }
 
@@ -502,7 +502,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Limpia todos los filtros y reinicia el estado de la página
         /// </summary>
-        private async Task LimpiarFiltro()
+        private async Task LimpiarFiltroAsync()
         {
             await EjecutarAsync(() =>
             {
@@ -531,7 +531,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el doble clic en una fila del grid
         /// Abre el popup de edición si el medio es accesible
         /// </summary>
-        private async Task GridSobreprimas_DobleClick(GridRowClickEventArgs e)
+        private async Task GridSobreprimas_DobleClickAsync(GridRowClickEventArgs e)
         {
             var sobreprima = (SobreprimaGridModel?)GridSobreprimas.GetDataItem(e.VisibleIndex);
 
@@ -539,14 +539,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
             if (sobreprima.MedioAccesible)
             {
-                await MostrarPopupEdicion(sobreprima, ModoOperacion.Modificar);
+                await MostrarPopupEdicionAsync(sobreprima, ModoOperacion.Modificar);
             }
         }
 
         /// <summary>
         /// Crea una nueva sobreprima y abre el popup de edición
         /// </summary>
-        private async Task NuevaSobreprima()
+        private async Task NuevaSobreprimaAsync()
         {
             await EjecutarAsync(async () =>
             {
@@ -556,7 +556,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     CodigoVersion = VersionSeleccionada!.Codigo
                 };
 
-                await MostrarPopupEdicion(nuevaSobreprima, ModoOperacion.Insertar);
+                await MostrarPopupEdicionAsync(nuevaSobreprima, ModoOperacion.Insertar);
             }, showOverlay: false);
         }
 
@@ -564,7 +564,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Muestra el popup de edición de sobreprima
         /// Inicializa las listas maestras del popup según el modo de operación
         /// </summary>
-        private async Task MostrarPopupEdicion(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion)
+        private async Task MostrarPopupEdicionAsync(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion)
         {
             await EjecutarAsync(async () =>
             {
@@ -613,7 +613,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Elimina una sobreprima previa confirmación del usuario
         /// </summary>
-        private async Task EliminarSobreprima(SobreprimaGridModel sobreprima)
+        private async Task EliminarSobreprimaAsync(SobreprimaGridModel sobreprima)
         {
             if (sobreprima == null) return;
 
@@ -643,7 +643,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de agrupación comercial en el popup
         /// Actualiza la lista de editoriales disponibles
         /// </summary>
-        private async Task PopupComboBoxAgrupacion_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task PopupComboBoxAgrupacion_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource != SelectionChangeSource.UserAction) return;
 
@@ -670,7 +670,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de network en el popup
         /// Actualiza la lista de medios disponibles
         /// </summary>
-        private async Task PopupComboBoxNetwork_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task PopupComboBoxNetwork_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource != SelectionChangeSource.UserAction || e.DataItem == null) return;
 
@@ -684,7 +684,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de medio en el popup
         /// Actualiza las listas de agrupaciones comerciales y editoriales disponibles
         /// </summary>
-        private async Task PopupComboBoxMedio_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task PopupComboBoxMedio_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource != SelectionChangeSource.UserAction || e.DataItem == null) return;
 
@@ -783,7 +783,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Verifica si la sobreprima está duplicada en base de datos
         /// </summary>
-        private async Task<bool> SobreprimaEstaDuplicada(SobreprimaGridModel sobreprima)
+        private async Task<bool> SobreprimaEstaDuplicadaAsync(SobreprimaGridModel sobreprima)
         {
             var filtro = new SobreprimaFiltro
             {
@@ -809,7 +809,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Inserta o actualiza una sobreprima en el grid y en base de datos
         /// Realiza validaciones completas antes de guardar
         /// </summary>
-        private async Task GuardarSobreprima()
+        private async Task GuardarSobreprimaAsync()
         {
             bool grabacionExitosa = false;
             try
@@ -869,7 +869,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 }
 
                 // Validar duplicados en base de datos
-                if (await SobreprimaEstaDuplicada(SobreprimaEnEdicion))
+                if (await SobreprimaEstaDuplicadaAsync(SobreprimaEnEdicion))
                 {
                     await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
                     return;
@@ -966,7 +966,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     // Error después de grabar: mensaje especial y recargar
                     await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorDespuesDeGrabar));
                     OcultarPopupEdicion();
-                    await AplicarFiltro();
+                    await AplicarFiltroAsync();
                 }
                 else
                 {
@@ -985,7 +985,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Convierte una lista de Sobreprima en SobreprimaGridModel agrupando por clave compuesta
         /// Obtiene descripciones de entidades no accesibles por permisos
         /// </summary>
-        private async Task<List<SobreprimaGridModel>> ConvertirSobreprimasEnModeloGrid(List<Sobreprima> listaSobreprimas)
+        private async Task<List<SobreprimaGridModel>> ConvertirSobreprimasEnModeloGridAsync(List<Sobreprima> listaSobreprimas)
         {
             var agrupados = listaSobreprimas
                 .GroupBy(x => new
@@ -1164,7 +1164,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     if (AñoSeleccionado != null && NetworksSeleccionados != null && VersionSeleccionada != null && MediosSeleccionados != null)
                     {
                         _desdePaginaImportarMMS = true;
-                        await AplicarFiltro();
+                        await AplicarFiltroAsync();
                     }
                 }
                 else
