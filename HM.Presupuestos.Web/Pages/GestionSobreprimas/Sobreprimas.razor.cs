@@ -377,7 +377,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
             if (AgrupacionesComercialesSeleccionadas != null)
             {
-                var lista = ComprobarListaSeleccionadas(
+                var lista = FiltrarPorSeleccionadas(
                     AgrupacionesComercialesMaestras,
                     AgrupacionesComercialesSeleccionadas as List<CodigoDescripcion> ?? []
                 );
@@ -395,7 +395,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
             if (EditorialesSeleccionadas != null)
             {
-                var lista = ComprobarListaSeleccionadas(
+                var lista = FiltrarPorSeleccionadas(
                     EditorialesMaestras,
                     EditorialesSeleccionadas as List<CodigoDescripcion> ?? []
                 );
@@ -418,9 +418,9 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Para que el combo mantenga la selección, los objetos devueltos deben ser 
         /// los mismos que los de la lista maestra asignada
         /// </remarks>
-        private List<CodigoDescripcion> ComprobarListaSeleccionadas(List<CodigoDescripcion> listaDondeBuscar, List<CodigoDescripcion> listaSeleccionadas)
+        private List<CodigoDescripcion> FiltrarPorSeleccionadas(List<CodigoDescripcion> listaDondeBuscar, List<CodigoDescripcion> listaSeleccionadas)
         {
-            return [.. listaDondeBuscar.Where(item => listaSeleccionadas.Any(sel => sel.Codigo == item.Codigo))];
+            return listaDondeBuscar.Where(item => listaSeleccionadas.Any(sel => sel.Codigo == item.Codigo)).ToList();
         }
 
         /// <summary>
@@ -456,18 +456,53 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 dropDownBox.HideDropDown();
         }
 
+        private async Task OnAgrupacionesChangedAsync(
+            IEnumerable<CodigoDescripcion> values,
+            IDropDownBox dropDownBox)
+        {
+            dropDownBox.BeginUpdate();
+            dropDownBox.Value = values;
+
+            await ActualizarEditorialesPorAgrupacionesAsync(values);
+
+            dropDownBox.EndUpdate();
+        }
+
+        private async Task ActualizarEditorialesPorAgrupacionesAsync(IEnumerable<CodigoDescripcion> agrupaciones)
+        {
+            await EjecutarAsync(async () =>
+            {
+                var codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(
+                    MediosSeleccionadosBacking,
+                    x => x.Codigo,
+                    ","
+                );
+
+                var codigosAgrupaciones = ObtenerValoresSeleccionados<CodigoDescripcion, int>(
+                    agrupaciones,
+                    x => x.Codigo,
+                    ","
+                );
+
+                var filtro = new FiltroEditoriales
+                {
+                    CodigosMedios = codigosMedios,
+                    CodigosAgrupacionesComerciales = codigosAgrupaciones
+                };
+
+                EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
+                EditorialesSeleccionadas = null;
+            }, showOverlay: false);
+        }
+
         /// <summary>
         /// Maneja el cambio de editoriales seleccionadas en el ListBox
         /// </summary>
-        private void ListBoxEditoriales_CambioValores(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private void OnEditorialesChanged(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
             dropDownBox.EndUpdate();
-            if (esSingle)
-            {
-                dropDownBox.HideDropDown();
-            }
         }
 
         /// <summary>
