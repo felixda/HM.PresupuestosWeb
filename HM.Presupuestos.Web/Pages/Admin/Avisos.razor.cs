@@ -1,7 +1,3 @@
-using HM.Presupuestos.Domain.Compartido;
-using HM.Presupuestos.Application.CasosDeUso;
-using HM.Presupuestos.Web.Adaptadores;
-
 namespace HM.Presupuestos.Web.Pages.Admin
 {
     public partial class Avisos
@@ -15,7 +11,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #region Propiedades Privadas
 
-        private string _mensaje = "";
+        private string Mensaje { get; set; } = string.Empty;
         private TiposDeAviso TipoAviso { get; set; } = TiposDeAviso.Warning;
 
         #endregion
@@ -36,12 +32,12 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #region Métodos Privados
 
-        private async Task EnviarAviso()
+        private async Task EnviarAvisoAsync()
         {
             await EjecutarAsync(async () =>
             {
-                await AvisosService.ActivarAvisosAsync(_mensaje, TipoAviso);
-                await LogAccionesService.Insertar(AccionesLog.EnviarAviso, _mensaje);
+                await AvisosService.ActivarAvisosAsync(Mensaje, TipoAviso);
+                await LogAccionesService.Insertar(AccionesLog.EnviarAviso, Mensaje);
             });
         }
 
@@ -58,7 +54,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
             _ => "warning"
         };
 
-        private string ClseTextArea => $"form-control textarea-{ClaseAviso}";
+        private string ClaseTextArea => $"form-control textarea-{ClaseAviso}";
 
         private string ClaseMarco => TipoAviso switch
         {
