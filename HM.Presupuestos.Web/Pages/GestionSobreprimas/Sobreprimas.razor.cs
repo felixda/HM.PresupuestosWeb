@@ -302,32 +302,70 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 dropDownBox.HideDropDown();
         }
 
-        /// <summary>
-        /// Maneja el cambio de medios seleccionados en el ListBox
-        /// Actualiza las agrupaciones comerciales y editoriales disponibles
-        /// </summary>
-        private async Task ListBoxMedios_CambioValoresAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private async Task OnMediosChangedAsync(
+            IEnumerable<CodigoDescripcion> medios,
+            IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
-            dropDownBox.Value = values;
 
-            if (!values.Any())
+            try
             {
-                MediosSeleccionados = null;
+                dropDownBox.Value = medios;
+
+                await ActualizarSeleccionMediosAsync(medios);
             }
-            else
+            finally
             {
-                await EjecutarAsync(async () =>
-                {
-                    string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
-                    AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
-                    await ComprobarAgrupacionesYEditorialesAsync(codigosMedios);
-                });
+                dropDownBox.EndUpdate();
+            }
+        }
+
+        private async Task OnMedioSeleccionadoAsync(
+            IEnumerable<CodigoDescripcion> medios,
+            IDropDownBox dropDownBox)
+        {
+            await OnMediosChangedAsync(medios, dropDownBox);
+
+            dropDownBox.HideDropDown();
+        }
+
+        private async Task ActualizarSeleccionMediosAsync(
+            IEnumerable<CodigoDescripcion> medios)
+        {
+            if (!medios.Any())
+            {
+                LimpiarSeleccionMedios();
+                return;
             }
 
-            dropDownBox.EndUpdate();
-            if (esSingle)
-                dropDownBox.HideDropDown();
+            await EjecutarAsync(() =>
+                ActualizarAgrupacionesComercialesAsync(medios));
+        }
+
+        private async Task ActualizarAgrupacionesComercialesAsync(
+            IEnumerable<CodigoDescripcion> medios)
+        {
+            string codigosMedios = ObtenerCodigosMedios(medios);
+
+            AgrupacionesComercialesMaestras =
+                await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
+
+            await ComprobarAgrupacionesYEditorialesAsync(codigosMedios);
+        }
+
+        private string ObtenerCodigosMedios(
+            IEnumerable<CodigoDescripcion> medios)
+        {
+            return ObtenerValoresSeleccionados<CodigoDescripcion, int>(
+                medios,
+                medio => medio.Codigo,
+                ",");
+        }
+
+        private void LimpiarSeleccionMedios()
+        {
+            MediosSeleccionados = null;
+            AgrupacionesComercialesMaestras = [];
         }
 
         /// <summary>
@@ -335,30 +373,20 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task ComprobarAgrupacionesYEditorialesAsync(string codigosMedios)
         {
-            FiltroEditoriales filtro = new();
-            filtro.CodigosMedios = codigosMedios;
+            FiltroEditoriales filtro = new() { CodigosMedios = codigosMedios };
 
-            // ? Casting seguro con patrón as + ??
             if (AgrupacionesComercialesSeleccionadas != null)
             {
                 var lista = ComprobarListaSeleccionadas(
-                    AgrupacionesComercialesMaestras, 
+                    AgrupacionesComercialesMaestras,
                     AgrupacionesComercialesSeleccionadas as List<CodigoDescripcion> ?? []
                 );
 
-                if (lista.Count > 0)
-                {
-                    AgrupacionesComercialesSeleccionadas = new List<CodigoDescripcion>(lista);
-                }
-                else
-                {
-                    AgrupacionesComercialesSeleccionadas = new List<CodigoDescripcion>();
-                }
-                StateHasChanged();
+                AgrupacionesComercialesSeleccionadas = new List<CodigoDescripcion>(lista);
 
                 filtro.CodigosAgrupacionesComerciales = ObtenerValoresSeleccionados<CodigoDescripcion, int>(
-                    AgrupacionesComercialesSeleccionadas, 
-                    x => x.Codigo, 
+                    AgrupacionesComercialesSeleccionadas,
+                    x => x.Codigo,
                     ","
                 );
             }
@@ -368,21 +396,17 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             if (EditorialesSeleccionadas != null)
             {
                 var lista = ComprobarListaSeleccionadas(
-                    EditorialesMaestras, 
+                    EditorialesMaestras,
                     EditorialesSeleccionadas as List<CodigoDescripcion> ?? []
                 );
 
-                if (lista.Count > 0)
-                {
-                    EditorialesSeleccionadas = new List<CodigoDescripcion>(lista);
-                }
-                else
-                {
-                    EditorialesSeleccionadas = new List<CodigoDescripcion>();
-                }
-                StateHasChanged();
+                EditorialesSeleccionadas = new List<CodigoDescripcion>(lista);
             }
+
+            StateHasChanged();
         }
+
+
 
         /// <summary>
         /// Comprueba los items de una lista en otra y retorna solo los que existen en ambas
