@@ -169,12 +169,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 await InvokeAsync(StateHasChanged);
 
-                string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
-
-                // B: AgrupacionesComerciales + Editoriales en una sola query Oracle
-                var (agrupaciones, editoriales) = await PresupuestosService.ObtenerAgrupacionesYEditoriales(codigosMedios);
-                AgrupacionesComercialesMaestras = agrupaciones;
-                EditorialesMaestras = editoriales;
+                await CargarAgrupacionesYEditorialesAsync();
 
                 await InvokeAsync(StateHasChanged);
 
@@ -184,6 +179,16 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             {
                 await ManejarExcepcion(ex, null);
             }
+        }
+
+        private async Task CargarAgrupacionesYEditorialesAsync()
+        {
+            string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+
+            // AgrupacionesComerciales + Editoriales en una sola query Oracle
+            var (agrupaciones, editoriales) = await PresupuestosService.ObtenerAgrupacionesYEditoriales(codigosMedios);
+            AgrupacionesComercialesMaestras = agrupaciones;
+            EditorialesMaestras = editoriales;
         }
 
         #endregion
@@ -528,33 +533,43 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             {
                 SobreprimasGrid = [];
 
-                _filtroSobreprima.Anio = AñoSeleccionado!.Codigo;
-                _filtroSobreprima.CodigoVersion = VersionSeleccionada!.Codigo;
-                _filtroSobreprima.CodigoNetworkList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(NetworksSeleccionadosBacking, x => x.Codigo, ",");
-                _filtroSobreprima.CodigoMedioList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",");
-                _filtroSobreprima.CodigoAgrupacionComercialList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(AgrupacionesComercialesSeleccionadasBacking, x => x.Codigo, ",");
-                _filtroSobreprima.CodigoEditorialList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(EditorialesSeleccionadas, x => x.Codigo, ",");
+                ConstruirFiltroDesdeSeleccion();
 
                 var listaSobreprimas = await SobreprimasService.ObtenerSobreprimas(_filtroSobreprima);
 
-                if (listaSobreprimas.Count == 0)
-                {
-                    if (!_desdePaginaImportarMMS)
-                    {
-                        await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
-                    }
-                    GridSobreprimas.SetFocusedRowIndex(-1);
-                }
-                else
-                {
-                    SobreprimasGrid = await ConvertirSobreprimasEnModeloGridAsync(listaSobreprimas);
-                    GridSobreprimas.SetFocusedRowIndex(0);
-                }
+                await ActualizarGridConResultadosAsync(listaSobreprimas);
 
                 CaptionDerecha = $"[{AñoSeleccionado?.Descripcion ?? ""}, {VersionSeleccionada!.Descripcion}]";
             });
 
             _desdePaginaImportarMMS = false;
+        }
+
+        private void ConstruirFiltroDesdeSeleccion()
+        {
+            _filtroSobreprima.Anio = AñoSeleccionado!.Codigo;
+            _filtroSobreprima.CodigoVersion = VersionSeleccionada!.Codigo;
+            _filtroSobreprima.CodigoNetworkList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(NetworksSeleccionadosBacking, x => x.Codigo, ",");
+            _filtroSobreprima.CodigoMedioList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",");
+            _filtroSobreprima.CodigoAgrupacionComercialList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(AgrupacionesComercialesSeleccionadasBacking, x => x.Codigo, ",");
+            _filtroSobreprima.CodigoEditorialList = ObtenerValoresSeleccionados<CodigoDescripcion, int>(EditorialesSeleccionadas, x => x.Codigo, ",");
+        }
+
+        private async Task ActualizarGridConResultadosAsync(List<Sobreprima> listaSobreprimas)
+        {
+            if (listaSobreprimas.Count == 0)
+            {
+                if (!_desdePaginaImportarMMS)
+                {
+                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistrosNoEncontrados));
+                }
+                GridSobreprimas.SetFocusedRowIndex(-1);
+            }
+            else
+            {
+                SobreprimasGrid = await ConvertirSobreprimasEnModeloGridAsync(listaSobreprimas);
+                GridSobreprimas.SetFocusedRowIndex(0);
+            }
         }
 
         /// <summary>
@@ -889,9 +904,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             bool grabacionExitosa = false;
             try
             {
-                bool noHayCambios = DatosHelper.SonIguales(SobreprimaEnEdicion, SobreprimaOriginal);
-
-                if (noHayCambios)
+                if (DatosHelper.SonIguales(SobreprimaEnEdicion, SobreprimaOriginal))
                 {
                     await MensajesHelper.MostrarMensajeAviso(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SinCambios));
                     return;
@@ -899,136 +912,20 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 LayerOverlayService.Start();
 
-                // Validar campos obligatorios
-                var validaciones = new List<(bool Condicion, string ResourceKey)>
-                {
-                    (SobreprimaEnEdicion.CodigoNetwork == 0, TextosApp.Common.Network),
-                    (SobreprimaEnEdicion.CodigoMedio == null, TextosApp.Common.Medio),
-                    (SobreprimaEnEdicion.CodigoEditorial == null, TextosApp.Common.Editorial),
-                    (SobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
-                        && SobreprimaEnEdicion.ConceptoDefaul.Porcentaje == 0
-                        && SobreprimaEnEdicion.ConceptoSLA.Porcentaje == 0
-                        && SobreprimaEnEdicion.ConceptoHVP.Porcentaje == 0,
-                        TextosApp.Common.Porcentaje)
-                };
+                if (!await ValidarSobreprimaAsync()) return;
 
-                var campoError = validaciones
-                    .Where(v => v.Condicion)
-                    .Select(v => ObtenerTexto(v.ResourceKey))
-                    .FirstOrDefault();
-
-                if (!string.IsNullOrEmpty(campoError))
-                {
-                    await MensajesHelper.MostrarMensajeError(
-                        TituloPagina,
-                        $"{ObtenerTexto(TextosApp.Mensajes.MandatoryField)}: {campoError}"
-                    );
-                    return;
-                }
-
-                // Validar duplicados en lista local (inserción)
-                if (SobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
-                    && SobreprimasGrid.Find(x => x.KeyGrid == SobreprimaEnEdicion.KeyGrid) != null)
-                {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
-                    return;
-                }
-
-                // Validar duplicados en lista local (edición)
-                if (SobreprimaEnEdicion.ModoOperacion != ModoOperacion.Insertar
-                    && SobreprimasGrid.Find(x => x.KeyGrid == SobreprimaEnEdicion.KeyGrid
-                                                && x.Codigo != SobreprimaEnEdicion.Codigo) != null)
-                {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
-                    return;
-                }
-
-                // Validar duplicados en base de datos
-                if (await SobreprimaEstaDuplicadaAsync(SobreprimaEnEdicion))
-                {
-                    await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
-                    return;
-                }
-
-                // Actualizar descripciones para mostrar en el grid
-                var network = NetworksMaestros.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoNetwork);
-                SobreprimaEnEdicion.DescripcionNetwork = network?.Descripcion ?? "";
-
-                var medio = MediosFiltrados.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoMedio);
-                SobreprimaEnEdicion.DescripcionMedio = medio?.Descripcion ?? "";
-
-                var agrupacion = AgrupacionesComercialesMaestras.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoAgrupacionComercial);
-                SobreprimaEnEdicion.DescripcionAgrupacionComercial = agrupacion?.Descripcion ?? "";
-
-                var editorial = EditorialesMaestras.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoEditorial);
-                SobreprimaEnEdicion.DescripcionEditorial = editorial?.Descripcion ?? "";
+                ActualizarDescripcionesSobreprima();
 
                 SobreprimaEnEdicion.CodigoPais = Usuario!.CodigoPais;
 
-                // Convertir y guardar
                 List<Sobreprima> sobreprimas = ConvertirModeloGridEnSobreprimas(SobreprimaEnEdicion);
                 await SobreprimasService.GrabarSobreprimas(sobreprimas);
 
-                grabacionExitosa = true; // Marcamos que la grabación fue correcta
+                grabacionExitosa = true;
 
-                // Actualizar códigos de conceptos insertados (devueltos por el servicio)
-                foreach (var sobreprima in sobreprimas)
-                {
-                    switch (sobreprima.CodigoConcepto)
-                    {
-                        case (int)ConceptosSobreprimas.Sobreprima:
-                            SobreprimaEnEdicion.ConceptoDefaul.Codigo = sobreprima.Codigo;
-                            break;
-                        case (int)ConceptosSobreprimas.SLA:
-                            SobreprimaEnEdicion.ConceptoSLA.Codigo = sobreprima.Codigo;
-                            break;
-                        case (int)ConceptosSobreprimas.HVP:
-                            SobreprimaEnEdicion.ConceptoHVP.Codigo = sobreprima.Codigo;
-                            break;
-                    }
-                }
+                ActualizarCodigosConceptos(sobreprimas);
 
-                // Actualizar grid según modo de operación
-                if (SobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar)
-                {
-                    // Obtener el código mayor para asignar a la nueva fila
-                    int codigoMayor = 0;
-                    if (SobreprimasGrid.Count > 0)
-                    {
-                        codigoMayor = SobreprimasGrid.Max(x => x.Codigo);
-                    }
-
-                    SobreprimaEnEdicion.Codigo = codigoMayor + 1;
-
-                    SobreprimasGrid.Insert(0, SobreprimaEnEdicion);
-                    GridSobreprimas.SetFocusedRowIndex(0);
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
-                }
-                else
-                {
-                    // Actualizar la lista del grid
-                    var indice = SobreprimasGrid.FindIndex(x => x.Codigo == SobreprimaEnEdicion.Codigo);
-                    if (indice >= 0)
-                    {
-                        // Si todos los porcentajes son 0, se habrá eliminado de BD
-                        bool todosLosConceptosEnCero =
-                            SobreprimaEnEdicion.ConceptoDefaul.Porcentaje == 0 &&
-                            SobreprimaEnEdicion.ConceptoSLA.Porcentaje == 0 &&
-                            SobreprimaEnEdicion.ConceptoHVP.Porcentaje == 0;
-
-                        if (todosLosConceptosEnCero)
-                        {
-                            SobreprimasGrid.RemoveAt(indice);
-                        }
-                        else
-                        {
-                            SobreprimasGrid[indice] = SobreprimaEnEdicion;
-                        }
-                    }
-
-                    await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
-                    GridSobreprimas.Reload();
-                }
+                await ActualizarGridTrasGrabarAsync();
 
                 OcultarPopupEdicion();
             }
@@ -1038,14 +935,12 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (grabacionExitosa)
                 {
-                    // Error después de grabar: mensaje especial y recargar
                     await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorDespuesDeGrabar));
                     OcultarPopupEdicion();
                     await AplicarFiltroAsync();
                 }
                 else
                 {
-                    // Error antes de grabar: mensaje normal
                     OcultarPopupEdicion();
                     await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorAlGrabar));
                 }
@@ -1054,6 +949,120 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             {
                 LayerOverlayService.Stop();
             }
+        }
+
+        private async Task<bool> ValidarSobreprimaAsync()
+        {
+            var validaciones = new List<(bool Condicion, string ResourceKey)>
+            {
+                (SobreprimaEnEdicion.CodigoNetwork == 0, TextosApp.Common.Network),
+                (SobreprimaEnEdicion.CodigoMedio == null, TextosApp.Common.Medio),
+                (SobreprimaEnEdicion.CodigoEditorial == null, TextosApp.Common.Editorial),
+                (SobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
+                    && SobreprimaEnEdicion.ConceptoDefaul.Porcentaje == 0
+                    && SobreprimaEnEdicion.ConceptoSLA.Porcentaje == 0
+                    && SobreprimaEnEdicion.ConceptoHVP.Porcentaje == 0,
+                    TextosApp.Common.Porcentaje)
+            };
+
+            var campoError = validaciones
+                .Where(v => v.Condicion)
+                .Select(v => ObtenerTexto(v.ResourceKey))
+                .FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(campoError))
+            {
+                await MensajesHelper.MostrarMensajeError(TituloPagina, $"{ObtenerTexto(TextosApp.Mensajes.MandatoryField)}: {campoError}");
+                return false;
+            }
+
+            if (SobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar
+                && SobreprimasGrid.Find(x => x.KeyGrid == SobreprimaEnEdicion.KeyGrid) != null)
+            {
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
+                return false;
+            }
+
+            if (SobreprimaEnEdicion.ModoOperacion != ModoOperacion.Insertar
+                && SobreprimasGrid.Find(x => x.KeyGrid == SobreprimaEnEdicion.KeyGrid
+                                            && x.Codigo != SobreprimaEnEdicion.Codigo) != null)
+            {
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
+                return false;
+            }
+
+            if (await SobreprimaEstaDuplicadaAsync(SobreprimaEnEdicion))
+            {
+                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.SobreprimaDuplicated));
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ActualizarDescripcionesSobreprima()
+        {
+            var network = NetworksMaestros.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoNetwork);
+            SobreprimaEnEdicion.DescripcionNetwork = network?.Descripcion ?? "";
+
+            var medio = MediosFiltrados.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoMedio);
+            SobreprimaEnEdicion.DescripcionMedio = medio?.Descripcion ?? "";
+
+            var agrupacion = AgrupacionesComercialesMaestras.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoAgrupacionComercial);
+            SobreprimaEnEdicion.DescripcionAgrupacionComercial = agrupacion?.Descripcion ?? "";
+
+            var editorial = EditorialesMaestras.FirstOrDefault(x => x.Codigo == SobreprimaEnEdicion.CodigoEditorial);
+            SobreprimaEnEdicion.DescripcionEditorial = editorial?.Descripcion ?? "";
+        }
+
+        private void ActualizarCodigosConceptos(List<Sobreprima> sobreprimas)
+        {
+            foreach (var sobreprima in sobreprimas)
+            {
+                switch (sobreprima.CodigoConcepto)
+                {
+                    case (int)ConceptosSobreprimas.Sobreprima:
+                        SobreprimaEnEdicion.ConceptoDefaul.Codigo = sobreprima.Codigo;
+                        break;
+                    case (int)ConceptosSobreprimas.SLA:
+                        SobreprimaEnEdicion.ConceptoSLA.Codigo = sobreprima.Codigo;
+                        break;
+                    case (int)ConceptosSobreprimas.HVP:
+                        SobreprimaEnEdicion.ConceptoHVP.Codigo = sobreprima.Codigo;
+                        break;
+                }
+            }
+        }
+
+        private async Task ActualizarGridTrasGrabarAsync()
+        {
+            if (SobreprimaEnEdicion.ModoOperacion == ModoOperacion.Insertar)
+            {
+                int codigoMayor = SobreprimasGrid.Count > 0 ? SobreprimasGrid.Max(x => x.Codigo) : 0;
+                SobreprimaEnEdicion.Codigo = codigoMayor + 1;
+                SobreprimasGrid.Insert(0, SobreprimaEnEdicion);
+                GridSobreprimas.SetFocusedRowIndex(0);
+            }
+            else
+            {
+                var indice = SobreprimasGrid.FindIndex(x => x.Codigo == SobreprimaEnEdicion.Codigo);
+                if (indice >= 0)
+                {
+                    bool todosLosConceptosEnCero =
+                        SobreprimaEnEdicion.ConceptoDefaul.Porcentaje == 0 &&
+                        SobreprimaEnEdicion.ConceptoSLA.Porcentaje == 0 &&
+                        SobreprimaEnEdicion.ConceptoHVP.Porcentaje == 0;
+
+                    if (todosLosConceptosEnCero)
+                        SobreprimasGrid.RemoveAt(indice);
+                    else
+                        SobreprimasGrid[indice] = SobreprimaEnEdicion;
+                }
+
+                GridSobreprimas.Reload();
+            }
+
+            await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
         }
 
         /// <summary>
@@ -1132,18 +1141,22 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 .ThenBy(x => x.DescripcionEditorial)
                 .ToList();
 
-            // Asignar códigos secuenciales para identificación en el grid
             for (int i = 0; i < agrupados.Count; i++)
             {
                 agrupados[i].Codigo = i + 1;
             }
 
-            // Validar y obtener descripciones para sobreprimas sin acceso al medio
+            await EnriquecerSobreprimasInaccesiblesAsync(agrupados);
+
+            return agrupados;
+        }
+
+        private async Task EnriquecerSobreprimasInaccesiblesAsync(List<SobreprimaGridModel> agrupados)
+        {
             foreach (var item in agrupados.Where(x => string.IsNullOrEmpty(x.DescripcionMedio)))
             {
                 item.MedioAccesible = false;
 
-                // Obtener descripción del medio
                 if (item.CodigoMedio.HasValue)
                 {
                     var medio = await PresupuestosService.ObtenerMedio(item.CodigoMedio.Value);
@@ -1154,7 +1167,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     item.DescripcionMedio = "Sin Medio";
                 }
 
-                // Obtener descripción de agrupación comercial
                 if (item.CodigoAgrupacionComercial.HasValue)
                 {
                     var agrupacion = await PresupuestosService.ObtenerAgrupacionComercial(item.CodigoAgrupacionComercial.Value);
@@ -1165,7 +1177,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     item.DescripcionAgrupacionComercial = "Sin Agrupación comercial";
                 }
 
-                // Obtener descripción de editorial
                 if (item.CodigoEditorial.HasValue)
                 {
                     var editorial = await PresupuestosService.ObtenerEditorial(item.CodigoEditorial.Value);
@@ -1176,8 +1187,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     item.DescripcionEditorial = "Sin Editorial";
                 }
             }
-
-            return agrupados;
         }
 
         /// <summary>
