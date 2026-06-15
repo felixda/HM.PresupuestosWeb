@@ -4,30 +4,32 @@
 
 1. **Ámbito mínimo para máxima cohesión**. Si un campo o método solo lo usa una clase y nadie más, hazlo `private`. Si solo lo usa un método concreto, decláralo dentro de ese método.
 
-2. **Constructores simples**. Los constructores solo asignan dependencias. La validación de datos se hace en el método que los recibe, no en el constructor. No crear factory methods innecesarios cuando no hay validación compleja.
+2. **Sin `using` innecesarios**. Eliminar todos los `using` que el compilador o el IDE marquen como no utilizados. Solo deben aparecer los namespaces realmente referenciados en el fichero.
 
-3. **Organización de la clase**: primero `[Inject]` y propiedades públicas, luego propiedades privadas con `#region`, después ciclo de vida del componente (`InicializarPaginaAsync`, `OnPermisoDenegadoAsync`), finalmente métodos privados. Usar `#region` para agrupar secciones relacionadas en clases grandes.
+3. **Constructores simples**. Los constructores solo asignan dependencias. La validación de datos se hace en el método que los recibe, no en el constructor. No crear factory methods innecesarios cuando no hay validación compleja.
 
-4. **Encapsulación por defecto**. Usar `private` para campos y métodos que no necesita el exterior. Los campos de estado de la página son `private`. Las dependencias inyectadas son `protected` (accesibles desde la clase base). No exponer lo que no se necesita.
+4. **Organización de la clase**: primero `[Inject]` y propiedades públicas, luego propiedades privadas con `#region`, después ciclo de vida del componente (`InicializarPaginaAsync`, `OnPermisoDenegadoAsync`), finalmente métodos privados. Usar `#region` para agrupar secciones relacionadas en clases grandes.
 
-5. **Tell, Don't Ask**. En lugar de preguntar el estado al objeto y decidir fuera, decirle al objeto lo que tiene que hacer.
+5. **Encapsulación por defecto**. Usar `private` para campos y métodos que no necesita el exterior. Los campos de estado de la página son `private`. Las dependencias inyectadas son `protected` (accesibles desde la clase base). No exponer lo que no se necesita.
 
-6. **Sin modelos anémicos en el dominio**. Las entidades de dominio encapsulan comportamiento (propiedades calculadas, redondeo en setter). Los DTOs y ViewModels sí son planos — son objetos de transferencia, no de dominio.
+6. **Tell, Don't Ask**. En lugar de preguntar el estado al objeto y decidir fuera, decirle al objeto lo que tiene que hacer.
 
-7. **Objetos completos al construir**. Inicializar siempre con valores por defecto: `= []` para listas, `= string.Empty` para strings, `= new()` para objetos. Nunca dejar campos sin inicializar que puedan lanzar `NullReferenceException`.
+7. **Sin modelos anémicos en el dominio**. Las entidades de dominio encapsulan comportamiento (propiedades calculadas, redondeo en setter). Los DTOs y ViewModels sí son planos — son objetos de transferencia, no de dominio.
 
-8. **Getters/setters solo cuando tienen lógica**. No usar `get => _campo; set => _campo = value;` triviales — usar autopropiedades `{ get; set; }` directamente. Los getters/setters con lógica (redondeo, notificación de cambio) sí están justificados.
+8. **Objetos completos al construir**. Inicializar siempre con valores por defecto: `= []` para listas, `= string.Empty` para strings, `= new()` para objetos. Nunca dejar campos sin inicializar que puedan lanzar `NullReferenceException`.
 
-9. **Sin prefijo underscore en campos privados** cuando el campo es el parámetro del primary constructor asignado directamente. Sí usar `_` cuando se almacena el parámetro del primary constructor en un campo explícito (patrón del proyecto).
+9. **Getters/setters solo cuando tienen lógica**. No usar `get => _campo; set => _campo = value;` triviales — usar autopropiedades `{ get; set; }` directamente. Los getters/setters con lógica (redondeo, notificación de cambio) sí están justificados.
 
-10. **Sin singletons**. Todos los servicios se registran como `AddScoped` en `Program.cs`. El estado por-usuario vive en `SesionUsuario` (scoped), no en singletons.
+10. **Sin prefijo underscore en campos privados** cuando el campo es el parámetro del primary constructor asignado directamente. Sí usar `_` cuando se almacena el parámetro del primary constructor en un campo explícito (patrón del proyecto).
 
-11. **Composición sobre herencia** — salvo en las jerarquías establecidas del proyecto:
+11. **Sin singletons**. Todos los servicios se registran como `AddScoped` en `Program.cs`. El estado por-usuario vive en `SesionUsuario` (scoped), no en singletons.
+
+12. **Composición sobre herencia** — salvo en las jerarquías establecidas del proyecto:
     - Páginas heredan de `ContextProtegido` o `Context`
     - ViewModels heredan del DTO correspondiente (`CondicionViewModel : CondicionDto`)
     - Repositorios heredan de `BasePresupuestosRepository`
 
-12. **Tipos específicos del dominio**. Usar enumerados del dominio como tipos de propiedad en lugar de `int` cuando representen conceptos de negocio (`ConceptosCondiciones CodigoConcepto` en lugar de `int CodigoConcepto`).
+13. **Tipos específicos del dominio**. Usar enumerados del dominio como tipos de propiedad en lugar de `int` cuando representen conceptos de negocio (`ConceptosCondiciones CodigoConcepto` en lugar de `int CodigoConcepto`).
 
 ---
 

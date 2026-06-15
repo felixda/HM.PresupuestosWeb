@@ -1,9 +1,3 @@
-using DevExpress.Blazor;
-using HM.Presupuestos.Application.CasosDeUso;
-using HM.Presupuestos.Domain.Compartido;
-using HM.Presupuestos.Domain.Entidades;
-using HM.Presupuestos.Web.Adaptadores;
-
 namespace HM.Presupuestos.Web.Pages.Admin
 {
     public partial class MesesBloqueados
@@ -11,41 +5,50 @@ namespace HM.Presupuestos.Web.Pages.Admin
         #region Inyección de Dependencias
 
         [Inject] protected IAdminService AdminService { get; set; } = default!;
-        [Inject] protected IVersionesService VersionesService { get; set; } = default!;
+        [Inject] protected new IVersionesService VersionesService { get; set; } = default!;
 
         #endregion
 
+        #region Propiedades privadas
 
-        #region Private Properties
-
-        private string PageTitle { get; set; } = string.Empty;
         private string TextoToolTipAyuda { get; set; } = string.Empty;
-        private List<CodigoDescripcion> Anios = [];
-        private CodigoDescripcion? AnioSeleccionado { get; set; } = new();
+        private List<CodigoDescripcion> Anios { get; set; } = [];
+        private CodigoDescripcion? AnioSeleccionado { get; set; }
         private bool HayAnioSeleccionado => AnioSeleccionado is not null && AnioSeleccionado.Codigo > 0;
 
         #endregion
 
         #region Grid Meses
 
-        DxGrid GridMeses { get; set; } = new DxGrid();
-
-        private List<CodigoDescripcion> Meses = [];
-        IReadOnlyList<object> MesesSeleccionados { get; set; } = [];
+        private DxGrid GridMeses { get; set; } = new DxGrid();
+        private List<CodigoDescripcion> Meses { get; set; } = [];
+        private IReadOnlyList<object> MesesSeleccionados { get; set; } = [];
 
         #endregion
 
         #region Ciclo de Vida
 
-        protected override Task OnPermisoDenegadoAsync()
-        {
-            return Task.CompletedTask;
-        }
+        protected override Task OnPermisoDenegadoAsync() => Task.CompletedTask;
 
         protected override async Task InicializarPaginaAsync()
         {
+            InicializarTextos();
+            InicializarMeses();
+            await CargarAniosAsync();
+        }
+
+        private void InicializarTextos()
+        {
             TextoToolTipAyuda = ObtenerTexto(TextosApp.Pages.MesesBloqueados.ToolTip);
+        }
+
+        private void InicializarMeses()
+        {
             Meses = GestorIdioma.ObtenerMeses();
+        }
+
+        private async Task CargarAniosAsync()
+        {
             Anios = await VersionesService.ObtenerAniosConVersiones(true);
 
             if (Anios.Count > 0)
@@ -60,7 +63,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #region Eventos
 
-        private async Task ComboAnios_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task ComboAniosSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.DataItem != null)
             {
@@ -79,21 +82,19 @@ namespace HM.Presupuestos.Web.Pages.Admin
             }
         }
 
-        private async Task Grabar_Click()
+        private async Task GrabarAsync()
         {
             await EjecutarAsync(async () =>
             {
-                List<int> mesesSeleccionados = [
-                        .. (MesesSeleccionados?.Cast<CodigoDescripcion>()
-                                              .Select(x => x.Codigo) ?? [])
-                    ];
-
+                var mesesSeleccionados = ObtenerCodigosMesesSeleccionados();
                 await AdminService.InsertarMesesBloqueado(AnioSeleccionado!.Codigo, mesesSeleccionados);
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Common.DatosGrabados));
             });
         }
 
-       
+        private List<int> ObtenerCodigosMesesSeleccionados() =>
+            [.. (MesesSeleccionados?.Cast<CodigoDescripcion>().Select(x => x.Codigo) ?? [])];
+
         #endregion
 
     }

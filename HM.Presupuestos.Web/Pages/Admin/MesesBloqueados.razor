@@ -14,7 +14,7 @@ else if (TienePermiso == false)
 }
 else
 {
-    <PageHeader CodigoMenu="@CodigosMenu.MesesBloqueados" Titulo="@PageTitle" TextoToolTipAyuda="@TextoToolTipAyuda" />
+    <PageHeader CodigoMenu="@CodigosMenu.MesesBloqueados" Titulo="@TituloPagina" TextoToolTipAyuda="@TextoToolTipAyuda" />
 
     <div class="layoutContainer">
 
@@ -35,7 +35,7 @@ else
                                 SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                 ListRenderMode="ListRenderMode.Entire"
                                 @bind-Value="@AnioSeleccionado" SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                 ComboAnios_SelectedDataItemChanged(args)" >
+                                                 ComboAniosSelectedDataItemChangedAsync(args)" >
                         <EditBoxDisplayTemplate Context="contexto">
                             @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                         </EditBoxDisplayTemplate>
@@ -86,7 +86,7 @@ else
                             <DxButton CssClass="toolbarButtonCustom"
                                       RenderStyle=ButtonRenderStyle.None
                                       Text="@ObtenerTexto(TextosApp.Botones.Grabar)"
-                                      Click="Grabar_Click"
+                                      Click="GrabarAsync"
                                       IconCssClass="fa-solid fa-save"
                                       Enabled="@HayAnioSeleccionado" />
                         </div>
