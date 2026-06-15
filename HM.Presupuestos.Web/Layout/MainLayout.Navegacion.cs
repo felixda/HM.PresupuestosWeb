@@ -82,10 +82,11 @@ namespace HM.Presupuestos.Web.Layout
             }
         }
 
-        private async Task<bool> MostrarConfirmacionCambiosPendientes(string mensaje)
+        private async Task<bool> MostrarConfirmacionCambiosPendientes(string _)
         {
             if (ModalConfirmacionCambios is not null)
             {
+                string mensaje = LocalizadorRecursos.ObtenerTexto(TextosApp.Mensajes.AvisoAntesCancelar);
                 return await ModalConfirmacionCambios.Show(mensaje);
             }
 

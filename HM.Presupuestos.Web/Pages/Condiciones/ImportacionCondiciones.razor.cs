@@ -4,7 +4,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 {
     public partial class ImportacionCondiciones
     {
-        #region Inyecci?n de Dependencias
+        #region Inyección de Dependencias
 
         [Inject] protected IJwt Jwt { get; set; } = default!;
         [Inject] protected IMaestrosCacheService PresupuestosService { get; set; } = default!;
@@ -12,36 +12,28 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
-        #region Propiedades privadas
 
-        #region Page
+        #region Propiedades
 
         private string TextoToolTipAyuda { get; set; } = string.Empty;
 
+        private bool ImportacionRealizada { get; set; }
 
+        private string QuerySearchGrupoClientesList { get; set; } = string.Empty;
 
-        #endregion
-        #endregion
-
-        #region Filtro
-
-        bool ImportacionRealizada { get; set; } = false;
-
-        private string QuerySearchGrupoClientesList { get; set; } = String.Empty;
-
-        private CondicionImportarFiltro _filtro;
+        private CondicionImportarFiltro? _filtro;
 
         private List<CodigoDescripcion> Networks { get; set; } = [];
-        private object? NetworksSeleccionadosBackingField { get; set; } = null;
+        private object? _networksSeleccionados;
 
         private object? NetworkSeleccionados
         {
-            get => NetworksSeleccionadosBackingField;
+            get => _networksSeleccionados;
             set
             {
-                if (NetworksSeleccionadosBackingField != value)
+                if (_networksSeleccionados != value)
                 {
-                    NetworksSeleccionadosBackingField = value;
+                    _networksSeleccionados = value;
                     if (value == null)
                     {
                         GruposClientesSeleccionados = null;
@@ -51,20 +43,19 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-
-
         private List<CodigoDescripcion> GruposClientes { get; set; } = [];
 
         private object? GruposClientesSeleccionados { get; set; }
 
         private List<CodigoDescripcion> Anios { get; set; } = [];
-        private CodigoDescripcion? AnioSeleccionado { get; set; } = null;
+        private CodigoDescripcion? AnioSeleccionado { get; set; }
 
         private List<VersionResumen> Versiones { get; set; } = [];
-        private VersionResumen? VersionSeleccionada { get; set; } = null;
-
+        private VersionResumen? VersionSeleccionada { get; set; }
 
         #endregion
+
+        #region Ciclo de Vida del Componente
 
         protected override async Task InicializarPaginaAsync()
         {
@@ -73,24 +64,28 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             Networks = await PresupuestosService.ObtenerNetworks();
             Anios = await VersionesService.ObtenerAniosConVersiones();
 
-            FilterInit();
+            InicializarFiltro();
         }
 
         protected override Task OnPermisoDenegadoAsync() => Task.CompletedTask;
 
-        private void FilterInit()
+        #endregion
+
+        #region Métodos Privados
+
+        private void InicializarFiltro()
         {
             if (Networks.Count == 1)
             {
-                NetworksSeleccionadosBackingField = new List<CodigoDescripcion> { Networks[0] };
+                _networksSeleccionados = new List<CodigoDescripcion> { Networks[0] };
             }
             else if (Networks.Count > 1)
             {
-                NetworksSeleccionadosBackingField = null;
+                _networksSeleccionados = null;
             }
         }
 
-        private async Task DxListBoxNetwoks_ValuesChanged(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private async Task NetworksListBoxValuesChangedAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
@@ -107,12 +102,9 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
                 }
             });
             dropDownBox.EndUpdate();
-            if (esSingle)
-                dropDownBox.HideDropDown();
         }
 
-       
-        private async Task ComboAnios_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task ComboAniosSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             VersionSeleccionada = null;
             Versiones = [];
@@ -126,72 +118,72 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task ImportarCondicionesMMS()
+        private async Task ImportarCondicionesMMSAsync()
         {
-            if (!ValidarCamposObligatoriosFiltro())
+            if (!PuedeAplicarFiltro())
             {
-                await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
+                await MostrarCamposObligatoriosAsync();
                 return;
             }
 
-            bool confirmacion = await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.AvisoImportarCondiciones));
-            if (!confirmacion) return;
+            if (!await ConfirmarImportacionAsync()) return;
 
             await EjecutarAsync(async () =>
             {
-                _filtro = new CondicionImportarFiltro()
-                {
-                    CodigosNetwork = NetworksSeleccionadosBackingField == null
-                        ? [.. (Networks).Select(x => x.Codigo)]
-                        : [.. ((List<CodigoDescripcion>)NetworksSeleccionadosBackingField).Select(x => x.Codigo)],
-                    CodigosGrupoCliente = GruposClientesSeleccionados == null
-                        ? [-1]
-                        : [.. ((List<CodigoDescripcion>)GruposClientesSeleccionados).Select(x => x.Codigo)],
-                    Anio = Convert.ToInt32(AnioSeleccionado!.Descripcion),
-                    CodigoVersion = VersionSeleccionada!.Codigo
-                };
+                var filtro = CrearFiltroImportacion();
 
-                try
-                {
-                    await CondicionesService.ImportarCondicionesMMS(_filtro);
-                }
-                catch (ExcepcionBaseDatos exBd)
-                {
-                    await TratarExcepcionGeneradaEnBD(exBd, TituloPagina);
-                    ImportacionRealizada = false;
-                    return;
-                }
+                await ImportarCondicionesAsync(filtro);
 
-                await MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ImportacionCondicionesFinalizada));
+                await MostrarImportacionFinalizadaAsync();
                 ImportacionRealizada = true;
             });
         }
 
-        private bool ValidarCamposObligatoriosFiltro()
+        private Task MostrarCamposObligatoriosAsync() =>
+            MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
+
+        private Task<bool> ConfirmarImportacionAsync() =>
+            MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.AvisoImportarCondiciones));
+
+        private CondicionImportarFiltro CrearFiltroImportacion()
         {
-            bool validacion = true;
-
-            if ( AnioSeleccionado == null || VersionSeleccionada == null)
+            _filtro = new CondicionImportarFiltro
             {
-                validacion = false;
-            }
-
-            return validacion;
+                CodigosNetwork = _networksSeleccionados == null
+                    ? [.. Networks.Select(x => x.Codigo)]
+                    : [.. ((List<CodigoDescripcion>)_networksSeleccionados).Select(x => x.Codigo)],
+                CodigosGrupoCliente = GruposClientesSeleccionados == null
+                    ? [-1]
+                    : [.. ((List<CodigoDescripcion>)GruposClientesSeleccionados).Select(x => x.Codigo)],
+                Anio = AnioSeleccionado!.Codigo,
+                CodigoVersion = VersionSeleccionada!.Codigo
+            };
+            return _filtro;
         }
 
-        private async Task FiltroLimpiar()
+        private Task ImportarCondicionesAsync(CondicionImportarFiltro filtro) =>
+            CondicionesService.ImportarCondicionesMMS(filtro);
+
+        private Task MostrarImportacionFinalizadaAsync() =>
+            MensajesHelper.MostrarMensajeExito(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ImportacionCondicionesFinalizada));
+
+        private bool PuedeAplicarFiltro()
+        {
+            return AnioSeleccionado != null && VersionSeleccionada != null;
+        }
+
+        private async Task LimpiarFiltroAsync()
         {
             await EjecutarAsync(() =>
             {
                 AnioSeleccionado = null;
                 VersionSeleccionada = null;
                 GruposClientesSeleccionados = null;
-                FilterInit();
+                InicializarFiltro();
             }, showOverlay: false);
         }
 
-
-        private void DxListBox_ValuesChanged<T>(IEnumerable<T> values, IDropDownBox dropDownBox)
+        private void ListBoxValuesChanged<T>(IEnumerable<T> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
@@ -204,6 +196,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             NavigationManager.NavigateTo("/gestion/planificacion-condiciones");
         }
 
+        #endregion
     }
 }
 

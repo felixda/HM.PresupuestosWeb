@@ -363,10 +363,15 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
                 await action();
             }
+            catch (ExcepcionBaseDatos exBd)
+            {
+                await TratarExcepcionGeneradaEnBD(exBd, TituloPagina);
+            }
             catch (Exception ex)
             {
                 await ManejarExcepcion(ex, mensajePersonalizado);
             }
+            
             finally
             {
                 if (showOverlay)
