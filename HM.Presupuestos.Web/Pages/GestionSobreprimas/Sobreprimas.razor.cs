@@ -461,11 +461,17 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
-            dropDownBox.Value = values;
 
-            await ActualizarEditorialesPorAgrupacionesAsync(values);
+            try
+            {
+                dropDownBox.Value = values;
 
-            dropDownBox.EndUpdate();
+                await ActualizarEditorialesPorAgrupacionesAsync(values);
+            }
+            finally
+            {
+                dropDownBox.EndUpdate();
+            }
         }
 
         private async Task ActualizarEditorialesPorAgrupacionesAsync(IEnumerable<CodigoDescripcion> agrupaciones)
