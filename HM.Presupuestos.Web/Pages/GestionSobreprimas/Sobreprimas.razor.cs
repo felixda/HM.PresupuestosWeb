@@ -504,20 +504,13 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Maneja el cambio de editoriales seleccionadas en el ListBox
         /// </summary>
-        private void OnEditorialesChanged(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
+        private static void OnEditorialesChanged(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
             dropDownBox.EndUpdate();
         }
 
-        /// <summary>
-        /// Valida que se haya seleccionado una versión (campo obligatorio)
-        /// </summary>
-        private bool ValidarCamposObligatoriosFiltro()
-        {
-            return HayVersionSeleccionada();
-        }
 
         /// <summary>
         /// Obtiene la lista de sobreprimas según los filtros aplicados
@@ -637,6 +630,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 EditorialesPopup.Clear();
 
                 SobreprimaEnEdicion = DatosHelper.ClonarObjeto(sobreprima);
+                SobreprimaOriginal = DatosHelper.ClonarObjeto(SobreprimaEnEdicion);
+                SobreprimaEnEdicion.ModoOperacion = modoOperacion;
 
                 if (modoOperacion == ModoOperacion.Insertar)
                 {
@@ -648,30 +643,29 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 }
                 else if (modoOperacion == ModoOperacion.Modificar)
                 {
-                    MediosPopup = await PresupuestosService.ObtenerMediosPorNetWork(SobreprimaEnEdicion.CodigoNetwork.ToString());
+                    string codigosMedios = sobreprima.CodigoMedio?.ToString() ?? string.Empty;
+                    string codigosAgrupaciones = sobreprima.CodigoAgrupacionComercial?.ToString() ?? string.Empty;
+
+                    var mediosTask = PresupuestosService.ObtenerMediosPorNetWork(SobreprimaEnEdicion.CodigoNetwork.ToString());
+                    var agrupacionesTask = PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
+                    var editorialesTask = PresupuestosService.ObtenerEditoriales(new FiltroEditoriales
+                    {
+                        CodigosMedios = codigosMedios,
+                        CodigosAgrupacionesComerciales = codigosAgrupaciones
+                    });
+
+                    await Task.WhenAll(mediosTask, agrupacionesTask, editorialesTask);
+
+                    MediosPopup = mediosTask.Result;
+                    AgrupacionesComercialesPopup = agrupacionesTask.Result;
+                    EditorialesPopup = editorialesTask.Result;
                 }
 
-                SobreprimaOriginal = DatosHelper.ClonarObjeto(SobreprimaEnEdicion);
-                SobreprimaEnEdicion.ModoOperacion = modoOperacion;
-
-                if (modoOperacion == ModoOperacion.Modificar)
-                {
-                    FiltroEditoriales filtro = new();
-
-                    filtro.CodigosMedios = sobreprima.CodigoMedio?.ToString() ?? string.Empty;
-                    AgrupacionesComercialesPopup = await PresupuestosService.ObtenerAgrupacionesComerciales(filtro.CodigosMedios);
-
-                    filtro.CodigosAgrupacionesComerciales = sobreprima.CodigoAgrupacionComercial?.ToString() ?? string.Empty;
-                    EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
-                }
+                TituloPopupEdicion = modoOperacion == ModoOperacion.Insertar
+                    ? ObtenerTexto(TextosApp.Common.Nuevo)
+                    : ObtenerTexto(TextosApp.Common.Edit);
 
                 PopupEdicionVisible = true;
-                if (PopupSobreprimas != null)
-                {
-                    TituloPopupEdicion = modoOperacion == ModoOperacion.Insertar
-                        ? ObtenerTexto(TextosApp.Common.Nuevo)
-                        : ObtenerTexto(TextosApp.Common.Edit);
-                }
             });
         }
 
