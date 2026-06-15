@@ -41,7 +41,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                                                                            ComboBoxAño_CambioSeleccionAsync(args)">
+                                                                                                                       OnAnioSeleccionadoAsync(args)">
                             <EditBoxDisplayTemplate Context="contexto">
                                 @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                             </EditBoxDisplayTemplate>
@@ -90,7 +90,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxNetworks_CambioValoresAsync(values, context.DropDownBox, false))"
+                                       ValuesChanged="@(values => OnNetworksChangedAsync(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
                                        SearchMode="@ListSearchMode.AutoSearch"
@@ -120,7 +120,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxMedios_CambioValoresAsync(values, context.DropDownBox, false))"
+                                           ValuesChanged="@(values => OnMediosChangedAsync(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
                                        ShowCheckboxes="true">
@@ -154,7 +154,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxAgrupaciones_CambioValoresAsync(values, context.DropDownBox, false))"
+                                           ValuesChanged="@(values => OnAgrupacionesChangedAsync(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
@@ -191,7 +191,7 @@ else
                                        TData="CodigoDescripcion"
                                        TValue="CodigoDescripcion"
                                        Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                       ValuesChanged="@(values => ListBoxEditoriales_CambioValores(values, context.DropDownBox, false))"
+                                           ValuesChanged="@(values => OnEditorialesChanged(values, context.DropDownBox))"
                                        TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
                                        SelectionMode="ListBoxSelectionMode.Multiple"
                                        ShowCheckboxes="true"

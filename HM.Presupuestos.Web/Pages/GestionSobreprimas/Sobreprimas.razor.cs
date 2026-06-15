@@ -211,19 +211,37 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de año seleccionado
         /// Carga las versiones del año seleccionado
         /// </summary>
-        private async Task ComboBoxAño_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnAnioSeleccionadoAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
-            if (e.DataItem == null) return;
-            if (_filtroSobreprima == null || _filtroSobreprima.Anio == e.DataItem.Codigo) return;
+            if (DebeIgnorarCambioAnio(e)) return;
 
-            VersionesMaestras = [];
-            _filtroSobreprima.Anio = e.DataItem.Codigo;
+            AplicarCambioAnio(e.DataItem.Codigo);
+
+            await CargarVersionesAsync(_filtroSobreprima.Anio);
+
+        }
+
+        private bool DebeIgnorarCambioAnio(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        {
+            if (e.DataItem == null) return true;
+
+            return _filtroSobreprima == null || _filtroSobreprima.Anio == e.DataItem.Codigo;
+        }
+
+        private void AplicarCambioAnio(int codigoAnio)
+        {
+            _filtroSobreprima.Anio = codigoAnio;
             _filtroSobreprima.CodigoVersion = null;
-            VersionSeleccionada = null;
 
+            VersionesMaestras = new List<VersionResumen>();
+            VersionSeleccionada = null;
+        }
+
+        private async Task CargarVersionesAsync(int anio)
+        {
             await EjecutarAsync(async () =>
             {
-                VersionesMaestras = await ObtenerVersionesPorPermisos(_filtroSobreprima.Anio);
+                VersionesMaestras = await ObtenerVersionesPorPermisos(anio);
             });
         }
 
@@ -239,18 +257,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             }, showOverlay: false);
         }
 
-        /// <summary>
-        /// Actualiza la lista de medios cuando se quitan todos los networks
-        /// Restaura la lista completa de medios maestros
-        /// </summary>
-        private async Task ActualizarMediosCuandoQuitamosNetworksAsync()
-        {
-            await EjecutarAsync(() =>
-            {
-                MediosFiltrados = DatosHelper.ClonarObjeto(MediosMaestros);
-                MediosSeleccionados = null;
-            }, showOverlay: false);
-        }
 
         /// <summary>
         /// Actualiza las editoriales cuando se quitan todos los medios
@@ -292,19 +298,37 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de networks seleccionados en el ListBox
         /// Actualiza la lista de medios disponibles
         /// </summary>
-        private async Task ListBoxNetworks_CambioValoresAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
+        private async Task OnNetworksChangedAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
-            dropDownBox.Value = values;
 
-            if (!values.Any())
+            try
             {
-                await ActualizarMediosCuandoQuitamosNetworksAsync();
-            }
+                dropDownBox.Value = values;
 
-            dropDownBox.EndUpdate();
-            if (esSingle)
-                dropDownBox.HideDropDown();
+                if (!values.Any())
+                {
+                    await ActualizarMediosCuandoQuitamosNetworksAsync();
+                }
+            }
+            finally
+            {
+                dropDownBox.EndUpdate();
+            }
+        }
+
+
+        /// <summary>
+        /// Actualiza la lista de medios cuando se quitan todos los networks
+        /// Restaura la lista completa de medios maestros
+        /// </summary>
+        private async Task ActualizarMediosCuandoQuitamosNetworksAsync()
+        {
+            await EjecutarAsync(() =>
+            {
+                MediosFiltrados = DatosHelper.ClonarObjeto(MediosMaestros);
+                MediosSeleccionados = null;
+            }, showOverlay: false);
         }
 
         private async Task OnMediosChangedAsync(
