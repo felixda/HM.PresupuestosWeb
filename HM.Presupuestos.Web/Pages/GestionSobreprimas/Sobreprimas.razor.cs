@@ -447,43 +447,11 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Para que el combo mantenga la selección, los objetos devueltos deben ser 
         /// los mismos que los de la lista maestra asignada
         /// </remarks>
-        private List<CodigoDescripcion> FiltrarPorSeleccionadas(List<CodigoDescripcion> listaDondeBuscar, List<CodigoDescripcion> listaSeleccionadas)
+        private static List<CodigoDescripcion> FiltrarPorSeleccionadas(List<CodigoDescripcion> listaDondeBuscar, List<CodigoDescripcion> listaSeleccionadas)
         {
             return listaDondeBuscar.Where(item => listaSeleccionadas.Any(sel => sel.Codigo == item.Codigo)).ToList();
         }
 
-        /// <summary>
-        /// Maneja el cambio de agrupaciones comerciales seleccionadas en el ListBox
-        /// Actualiza las editoriales disponibles
-        /// </summary>
-        private async Task ListBoxAgrupaciones_CambioValoresAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox, bool esSingle)
-        {
-            dropDownBox.BeginUpdate();
-            dropDownBox.Value = values;
-
-            if (!values.Any())
-            {
-                FiltroEditoriales filtro = new() { CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",") };
-                EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
-            }
-            else
-            {
-                await EjecutarAsync(async () =>
-                {
-                    FiltroEditoriales filtro = new()
-                    {
-                        CodigosAgrupacionesComerciales = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ","),
-                        CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",")
-                    };
-                    EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
-                    EditorialesSeleccionadas = null;
-                });
-            }
-
-            dropDownBox.EndUpdate();
-            if (esSingle)
-                dropDownBox.HideDropDown();
-        }
 
         private async Task OnAgrupacionesChangedAsync(
             IEnumerable<CodigoDescripcion> values,
@@ -819,7 +787,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// <summary>
         /// Crea un objeto Sobreprima base a partir de un SobreprimaGridModel
         /// </summary>
-        private Sobreprima CrearSobreprimaBase(SobreprimaGridModel sobreprimaGrid)
+        private static Sobreprima CrearSobreprimaBase(SobreprimaGridModel sobreprimaGrid)
         {
             return new Sobreprima
             {
@@ -835,7 +803,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Convierte un SobreprimaGridModel en una lista de Sobreprimas (una por concepto)
         /// Solo incluye los conceptos que han cambiado (optimización)
         /// </summary>
-        public List<Sobreprima> ConvertirModeloGridEnSobreprimas(SobreprimaGridModel sobreprimaGrid)
+        private  List<Sobreprima> ConvertirModeloGridEnSobreprimas(SobreprimaGridModel sobreprimaGrid)
         {
             List<Sobreprima> lista = [];
 
@@ -1240,32 +1208,9 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (datos is SobreprimaImportarFiltro filtro)
                 {
-                    AñoSeleccionado = AñosMaestros.FirstOrDefault(n => n.Codigo == filtro.Anio);
-                    if (AñoSeleccionado != null)
-                    {
-                        VersionesMaestras = await ObtenerVersionesPorPermisos(AñoSeleccionado.Codigo);
-                    }
-                    VersionSeleccionada = VersionesMaestras.FirstOrDefault(n => n.Codigo == filtro.CodigoVersion);
-
-                    var listaNetworks = NetworksMaestros.Where(n => filtro.CodigosNetwork.Contains(n.Codigo)).ToList();
-
-                    var codigosListaNetworks = listaNetworks.Select(n => n.Codigo).OrderBy(c => c);
-                    var codigosMasterNetwork = NetworksMaestros.Select(n => n.Codigo).OrderBy(c => c);
-                    bool sonIguales = codigosListaNetworks.SequenceEqual(codigosMasterNetwork);
-
-                    NetworksSeleccionados = sonIguales
-                        ? Enumerable.Empty<CodigoDescripcion>()
-                        : listaNetworks;
-
-                    var listaMedios = MediosFiltrados.Where(n => filtro.CodigosMedio.Contains(n.Codigo)).ToList();
-
-                    var codigosListaMedios = listaMedios.Select(n => n.Codigo).OrderBy(c => c);
-                    var codigosMedioFiltro = MediosFiltrados.Select(n => n.Codigo).OrderBy(c => c);
-                    bool sonIgualesMedios = codigosListaMedios.SequenceEqual(codigosMedioFiltro);
-
-                    MediosSeleccionados = sonIgualesMedios
-                        ? Enumerable.Empty<CodigoDescripcion>()
-                        : listaMedios;
+                    await RestaurarVersionDesdeImportacionAsync(filtro);
+                    RestaurarNetworksDesdeImportacion(filtro);
+                    RestaurarMediosDesdeImportacion(filtro);
 
                     StateHasChanged();
 
@@ -1280,6 +1225,38 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                     InicializarFiltro();
                 }
             }, showOverlay: false);
+        }
+
+        private async Task RestaurarVersionDesdeImportacionAsync(SobreprimaImportarFiltro filtro)
+        {
+            AñoSeleccionado = AñosMaestros.FirstOrDefault(n => n.Codigo == filtro.Anio);
+            if (AñoSeleccionado != null)
+            {
+                VersionesMaestras = await ObtenerVersionesPorPermisos(AñoSeleccionado.Codigo);
+            }
+            VersionSeleccionada = VersionesMaestras.FirstOrDefault(n => n.Codigo == filtro.CodigoVersion);
+        }
+
+        private void RestaurarNetworksDesdeImportacion(SobreprimaImportarFiltro filtro)
+        {
+            var listaNetworks = NetworksMaestros.Where(n => filtro.CodigosNetwork.Contains(n.Codigo)).ToList();
+            NetworksSeleccionados = CalcularSeleccionOVacia(NetworksMaestros, listaNetworks);
+        }
+
+        private void RestaurarMediosDesdeImportacion(SobreprimaImportarFiltro filtro)
+        {
+            var listaMedios = MediosFiltrados.Where(n => filtro.CodigosMedio.Contains(n.Codigo)).ToList();
+            MediosSeleccionados = CalcularSeleccionOVacia(MediosFiltrados, listaMedios);
+        }
+
+        private static IEnumerable<CodigoDescripcion> CalcularSeleccionOVacia(
+            List<CodigoDescripcion> maestros,
+            List<CodigoDescripcion> filtrados)
+        {
+            bool sonTodos = filtrados.Select(x => x.Codigo).OrderBy(c => c)
+                .SequenceEqual(maestros.Select(x => x.Codigo).OrderBy(c => c));
+
+            return sonTodos ? Enumerable.Empty<CodigoDescripcion>() : filtrados;
         }
         #endregion
     }
