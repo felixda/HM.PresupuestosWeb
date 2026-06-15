@@ -78,7 +78,7 @@ El ciclo se ejecuta en **modo sin vinculación DevOps**:
 - **No** se incluye `#AB<ID>` en los mensajes de commit.
 - **No** se añaden comentarios con links a commits en Tasks.
 - **No** se cierra ningún US ni Task al finalizar.
-- La rama git sigue el convenio estándar `feat/<descripcion>` desde `develop` (no `feat/us-<ID>-...` desde `master`).
+- La rama git sigue el convenio estándar `feat/<descripcion>` desde `master`.
 - El ciclo OpenSpec (propose → apply → archive) se ejecuta igualmente.
 
 ### Si la respuesta es **SÍ**

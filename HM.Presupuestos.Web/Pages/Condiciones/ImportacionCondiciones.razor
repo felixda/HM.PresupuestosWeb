@@ -54,7 +54,7 @@ else
                                                TData="CodigoDescripcion"
                                                TValue="CodigoDescripcion"
                                                Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                               ValuesChanged="@(values => DxListBoxNetwoks_ValuesChanged(values, context.DropDownBox, false))"
+                                               ValuesChanged="@(values => NetworksListBoxValuesChangedAsync(values, context.DropDownBox))"
                                                TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
                                                SelectionMode="ListBoxSelectionMode.Multiple"
                                                SearchMode="@ListSearchMode.AutoSearch"
@@ -93,7 +93,7 @@ else
                                                TData="CodigoDescripcion"
                                                TValue="CodigoDescripcion"
                                                Values="@(context.DropDownBox.Value as IEnumerable<CodigoDescripcion> ?? Enumerable.Empty<CodigoDescripcion>())"
-                                               ValuesChanged="@(values => DxListBox_ValuesChanged(values, context.DropDownBox))"
+                                               ValuesChanged="@(values => ListBoxValuesChanged(values, context.DropDownBox))"
                                                TextFieldName="@nameof(CodigoDescripcion.CodigoConDescripcion)"
                                                ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
                                                SelectionMode="ListBoxSelectionMode.Multiple"
@@ -121,7 +121,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                    ComboAnios_SelectedDataItemChanged(args)" >
+                                    ComboAniosSelectedDataItemChangedAsync(args)" >
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -162,7 +162,7 @@ else
                                       RenderStyle="ButtonRenderStyle.None"
                                       Text="@ObtenerTexto(TextosApp.Pages.ImportacionCondiciones.ImportarCondicionesMMS)"
                                       IconCssClass="fa-solid fa-file-import"
-                                      Click="@ImportarCondicionesMMS" />
+                                      Click="@ImportarCondicionesMMSAsync" />
                         </div>
                     </DxFormLayoutItem>
 
@@ -184,7 +184,7 @@ else
                             RenderStyle=ButtonRenderStyle.None
                                       IconCssClass="fa-solid fa-trash"
                             Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
-                            Click="FiltroLimpiar" />
+                            Click="LimpiarFiltroAsync" />
                         </div>
                     </DxFormLayoutItem>
 

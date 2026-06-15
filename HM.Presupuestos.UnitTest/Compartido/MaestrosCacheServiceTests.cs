@@ -69,6 +69,111 @@ public class MaestrosCacheServiceTests
         _innerMock.Verify(s => s.ObtenerAgrupacionesYEditoriales(codigos), Times.Once);
     }
 
+    [Test]
+    public async Task ObtenerAlcances_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var alcances = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "Alcance1" } };
+        _innerMock.Setup(s => s.ObtenerAlcances()).ReturnsAsync(alcances);
+
+        // Act
+        await _sut.ObtenerAlcances();
+        await _sut.ObtenerAlcances();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerAlcances(), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerDisciplinas_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var disciplinas = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "Disciplina1" } };
+        _innerMock.Setup(s => s.ObtenerDisciplinas()).ReturnsAsync(disciplinas);
+
+        // Act
+        await _sut.ObtenerDisciplinas();
+        await _sut.ObtenerDisciplinas();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerDisciplinas(), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerDiversifiedsNCB_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var diversifieds = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "Div1" } };
+        _innerMock.Setup(s => s.ObtenerDiversifiedsNCB()).ReturnsAsync(diversifieds);
+
+        // Act
+        await _sut.ObtenerDiversifiedsNCB();
+        await _sut.ObtenerDiversifiedsNCB();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerDiversifiedsNCB(), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerObjetivos_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var objetivos = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "Objetivo1" } };
+        _innerMock.Setup(s => s.ObtenerObjetivos()).ReturnsAsync(objetivos);
+
+        // Act
+        await _sut.ObtenerObjetivos();
+        await _sut.ObtenerObjetivos();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerObjetivos(), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerTiposCompra_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var tiposCompra = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "TipoCompra1" } };
+        _innerMock.Setup(s => s.ObtenerTiposCompra()).ReturnsAsync(tiposCompra);
+
+        // Act
+        await _sut.ObtenerTiposCompra();
+        await _sut.ObtenerTiposCompra();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerTiposCompra(), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerDisciplinasGrupos_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var disciplinasGrupo = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "GrupoDisciplina1" } };
+        _innerMock.Setup(s => s.ObtenerDisciplinasGrupos()).ReturnsAsync(disciplinasGrupo);
+
+        // Act
+        await _sut.ObtenerDisciplinasGrupos();
+        await _sut.ObtenerDisciplinasGrupos();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerDisciplinasGrupos(), Times.Once);
+    }
+
+    [Test]
+    public async Task ObtenerTiposDisciplinas_SegundaLlamada_NoInvocaInnerService()
+    {
+        // Arrange
+        var tiposDisciplina = new List<CodigoDescripcion> { new() { Codigo = 1, Descripcion = "TipoDisciplina1" } };
+        _innerMock.Setup(s => s.ObtenerTiposDisciplinas()).ReturnsAsync(tiposDisciplina);
+
+        // Act
+        await _sut.ObtenerTiposDisciplinas();
+        await _sut.ObtenerTiposDisciplinas();
+
+        // Assert
+        _innerMock.Verify(s => s.ObtenerTiposDisciplinas(), Times.Once);
+    }
+
     #endregion
 
     #region 4.2 Invalidar(recurso) fuerza recarga en la siguiente llamada

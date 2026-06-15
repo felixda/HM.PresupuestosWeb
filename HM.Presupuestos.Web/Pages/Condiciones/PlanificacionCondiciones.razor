@@ -617,7 +617,7 @@ else
                                     <CellDisplayTemplate>
                                         @{
                                             var item = (CondicionViewModel)context.DataItem;
-                                            var isSelected = _codigoMedioleccionadoParaFiltro == item.CodigoMedio; 
+                                            var isSelected = _codigoMedioSeleccionadoParaFiltro == item.CodigoMedio; 
                                             var clase = isSelected ? "valor-filtrado" : "";
                                             string toolTip = isSelected ? ObtenerTexto(TextosApp.Common.FiltroQuitar) : ObtenerTexto(TextosApp.Pages.PlanificacionCondiciones.FiltroPorMedio);
                                         }
@@ -998,7 +998,7 @@ else
                                         @{
                                             var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             // var descripcion = TiposDisciplina.FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
-                                            var descripcion = (item.TiposDisciplinaDisponibles ?? _tiposDisciplina).FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
+                                            var descripcion = (item.TiposDisciplinaDisponibles ?? TiposDisciplina).FirstOrDefault(o => o.Codigo == item.CodigoTipoDisciplina)?.Descripcion ?? "";
 
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
@@ -1020,7 +1020,7 @@ else
                                             var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoTipoDisciplina != dataItem.CodigoTipoDisciplina ? "grid-modified-cell" : "";
-                                            var opcionesDisponibles = dataItem.TiposDisciplinaDisponibles ?? _tiposDisciplina;
+                                            var opcionesDisponibles = dataItem.TiposDisciplinaDisponibles ?? TiposDisciplina;
                                         }
                                         <DxComboBox Data="@opcionesDisponibles"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -1045,7 +1045,7 @@ else
                                         @{
                                             var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _disciplinasGrupo.FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
-                                            var descripcion = (item.DisciplinasGrupoDisponibles ?? _disciplinasGrupo).FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
+                                            var descripcion = (item.DisciplinasGrupoDisponibles ?? DisciplinasGrupo).FirstOrDefault(o => o.Codigo == item.CodigoDisciplinaGrupo)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -1066,7 +1066,7 @@ else
                                             var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDisciplinaGrupo != dataItem.CodigoDisciplinaGrupo ? "grid-modified-cell" : "";
-                                            var opcionesDisponibles = dataItem.DisciplinasGrupoDisponibles ?? _disciplinasGrupo;
+                                            var opcionesDisponibles = dataItem.DisciplinasGrupoDisponibles ?? DisciplinasGrupo;
                                         }
                                         <DxComboBox Data="@opcionesDisponibles"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -1091,7 +1091,7 @@ else
                                     <CellDisplayTemplate>
                                         @{
                                             var item = (ExcepcionCondicionViewModel)context.DataItem;
-                                            var descripcion = (item.DisciplinasDisponibles ?? _disciplinas).FirstOrDefault(o => o.Codigo == item.CodigoDisciplina)?.Descripcion ?? "";
+                                            var descripcion = (item.DisciplinasDisponibles ?? Disciplinas).FirstOrDefault(o => o.Codigo == item.CodigoDisciplina)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -1111,7 +1111,7 @@ else
                                             var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoDisciplina != dataItem.CodigoDisciplina ? "grid-modified-cell" : "";
-                                            var opcionesDisponibles = dataItem.DisciplinasDisponibles ?? _disciplinas;
+                                            var opcionesDisponibles = dataItem.DisciplinasDisponibles ?? Disciplinas;
                                         }
                                         <DxComboBox Data="@opcionesDisponibles"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -1179,7 +1179,7 @@ else
                                         @{
                                             var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _objetivos.FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
-                                            var descripcion = (item.ObjetivosDisponibles ?? _objetivos).FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
+                                            var descripcion = (item.ObjetivosDisponibles ?? Objetivos).FirstOrDefault(o => o.Codigo == item.CodigoObjetivo)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -1199,7 +1199,7 @@ else
                                             var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoObjetivo != dataItem.CodigoObjetivo ? "grid-modified-cell" : "";
-                                            var opcionesDisponibles = dataItem.ObjetivosDisponibles ?? _objetivos;
+                                            var opcionesDisponibles = dataItem.ObjetivosDisponibles ?? Objetivos;
                                         }
                                         <DxComboBox Data="@opcionesDisponibles"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)
@@ -1223,7 +1223,7 @@ else
                                         @{
                                             var item = (ExcepcionCondicionViewModel)context.DataItem;
                                             //var descripcion = _tiposCompra.FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
-                                            var descripcion = (item.TiposCompraDisponibles ?? _tiposCompra).FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
+                                            var descripcion = (item.TiposCompraDisponibles ?? TiposCompra).FirstOrDefault(o => o.Codigo == item.CodigoTipoCompra)?.Descripcion ?? "";
                                             string classCSSReadonly = "";
                                             if (!item.MedioAccesible)
                                             {
@@ -1244,7 +1244,7 @@ else
                                             var dataItem = ((ExcepcionCondicionViewModel)context.DataItem);
                                             bool soloLectura = !dataItem.MedioAccesible;
                                             var css = editItem.CodigoTipoCompra != dataItem.CodigoTipoCompra ? "grid-modified-cell" : "";
-                                            var opcionesDisponibles = dataItem.TiposCompraDisponibles ?? _tiposCompra;
+                                            var opcionesDisponibles = dataItem.TiposCompraDisponibles ?? TiposCompra;
                                         }
                                         <DxComboBox Data="@opcionesDisponibles"
                                                     TextFieldName=@nameof(CodigoDescripcion.Descripcion)

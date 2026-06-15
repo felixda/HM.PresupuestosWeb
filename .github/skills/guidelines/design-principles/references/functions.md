@@ -241,6 +241,52 @@ for (int i = 0; i < codigos.Count; i++)
 
 ---
 
+### SRP — Un Método, Una Responsabilidad
+
+Un método orquestador que hace demasiadas cosas debe descomponerse en métodos privados con nombre, cada uno con una única responsabilidad. El método coordinador queda legible como una secuencia de pasos.
+
+```csharp
+// ❌ INCORRECTO — un solo método hace textos, maestros y carga de datos
+protected override async Task InicializarPaginaAsync()
+{
+    RadioGroupAcuerdoButtonList = [...];
+    RadioGroupAcuerdoChecked = ...;
+    TextoToolTipAyuda = ...;
+    LeftCaptionVigencias = ...;
+    TituloGridExcepciones = ...;
+
+    Meses = GestorIdioma.ObtenerMeses();
+
+    IndicadoresDevolucion.Add(...);
+    IndicadoresDevolucion.Add(...);
+
+    var taskAnios = VersionesService.ObtenerAniosConVersiones();
+    // ... 8 tasks más
+    await Task.WhenAll(...);
+    Anios = taskAnios.Result;
+    // ... asignaciones
+
+    await ManejarRequest();
+}
+
+// ✅ CORRECTO — cada método hace exactamente lo que su nombre indica
+protected override async Task InicializarPaginaAsync()
+{
+    InicializarTextos();
+    InicializarMeses();
+    InicializarIndicadoresDevolucion();
+    await CargarCatalogosAsync();
+    await ManejarRequest();
+}
+
+private void InicializarTextos() { /* solo textos localizados */ }
+private void InicializarMeses() { Meses = GestorIdioma.ObtenerMeses(); }
+private void InicializarIndicadoresDevolucion() { /* solo indicadores */ }
+private async Task CargarCatalogosAsync() { /* solo llamadas async + asignaciones */ }
+```
+
+---
+
 ### Constantes Cerca del Uso
 
 ```csharp
