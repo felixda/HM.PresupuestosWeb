@@ -8,6 +8,8 @@ Triggers: "git", "commit", "branch", "feature branch", "conventional commits".
 
 Feature branching workflow with conventional commits and TDD-driven commit discipline. Every green test produces a commit.
 
+> ⚠️ **REGLA CRÍTICA: Nunca se hacen commits directamente sobre `master`.** Toda modificación de código, guideline, configuración o documentación debe realizarse en una rama. `master` solo recibe cambios a través de Pull Requests o merges desde ramas. Esta regla no tiene excepciones.
+
 ## Branching Model
 
 ### Feature Branching
