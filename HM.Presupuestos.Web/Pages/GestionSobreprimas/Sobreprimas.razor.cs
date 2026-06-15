@@ -14,10 +14,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         [Inject] protected ISobreprimasService SobreprimasService { get; set; } = default!;
         [Inject] protected IMaestrosCacheService PresupuestosService { get; set; } = default!;
-        [Inject] protected IVersionesService VersionesService { get; set; } = default!;
-        [Inject] protected MensajesHelper MensajesHelper { get; set; } = default!;
-        [Inject] protected DialogoErrores ErrorService { get; set; } = default!;
-        [Inject] protected ILayerOverlayService LayerOverlayService { get; set; } = default!;
         [Inject] protected ParametrosNavegacion NavegacionService { get; set; } = default!;
 
         #endregion
@@ -28,13 +24,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
         private string CaptionIzquierda { get; set; } = string.Empty;
         private string CaptionDerecha { get; set; } = string.Empty;
-
-       
-
-       // protected override CodigosMenu CodigoMenuPermiso => CodigosMenu.Sobreprimas;
-
-       // protected override string ObtenerTituloPagina() =>
-       //     ObtenerTexto(TextosApp.Menu.ObtenerEtiqueta((int)CodigosMenu.Sobreprimas));
 
         #endregion
 
@@ -111,7 +100,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 if (value == null)
                 {
-                    ActualizarEditorialesCuandoQuitamosAgrupaciones();
+                    _ = ActualizarEditorialesCuandoQuitamosAgrupaciones();
                 }
             }
         }
@@ -189,7 +178,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                 await InvokeAsync(StateHasChanged);
 
-                await ManajarRequest();
+                await ManejarRequestAsync();
             }
             catch (Exception ex)
             {
@@ -219,30 +208,18 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task ComboBoxAño_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
-            if (e.DataItem != null)
+            if (e.DataItem == null) return;
+            if (_filtroSobreprima == null || _filtroSobreprima.Anio == e.DataItem.Codigo) return;
+
+            VersionesMaestras = [];
+            _filtroSobreprima.Anio = e.DataItem.Codigo;
+            _filtroSobreprima.CodigoVersion = null;
+            VersionSeleccionada = null;
+
+            await EjecutarAsync(async () =>
             {
-                if (_filtroSobreprima != null && _filtroSobreprima.Anio != e.DataItem.Codigo)
-                {
-                    VersionesMaestras = [];
-                    _filtroSobreprima.Anio = e.DataItem.Codigo;
-                    _filtroSobreprima.CodigoVersion = null;
-                    VersionSeleccionada = null;
-                    try
-                    {
-                        LayerOverlayService.Start();
-                        VersionesMaestras = await ObtenerVersionesPorPermisos(_filtroSobreprima.Anio);
-                    }
-                    catch (Exception ex)
-                    {
-                        await RegistroAplicacion.RegistrarExcepcion(ex);
-                        await MensajesHelper.MostrarMensajeError(TituloPagina);
-                    }
-                    finally
-                    {
-                        LayerOverlayService.Stop();
-                    }
-                }
-            }
+                VersionesMaestras = await ObtenerVersionesPorPermisos(_filtroSobreprima.Anio);
+            });
         }
 
         /// <summary>
@@ -250,16 +227,11 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task ActualizarMediosCuandoModificamosNetworks(string codigosNetwork)
         {
-            try
+            await EjecutarAsync(async () =>
             {
                 MediosFiltrados = await PresupuestosService.ObtenerMediosPorNetWork(codigosNetwork);
                 MediosSeleccionados = null;
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
+            }, showOverlay: false);
         }
 
         /// <summary>
@@ -268,16 +240,11 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task ActualizarMediosCuandoQuitamosNetworks()
         {
-            try
+            await EjecutarAsync(() =>
             {
                 MediosFiltrados = DatosHelper.ClonarObjeto(MediosMaestros);
                 MediosSeleccionados = null;
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
+            }, showOverlay: false);
         }
 
         /// <summary>
@@ -285,29 +252,35 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task ActualizarEditorialesCuandoQuitamosMedios()
         {
-            string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
-            AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
-            await ComprobarAgrupacionesYEditoriales(codigosMedios);
+            await EjecutarAsync(async () =>
+            {
+                string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+                AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
+                await ComprobarAgrupacionesYEditoriales(codigosMedios);
+            }, showOverlay: false);
         }
 
         /// <summary>
         /// Actualiza las editoriales cuando se quitan todas las agrupaciones comerciales
         /// </summary>
-        private async void ActualizarEditorialesCuandoQuitamosAgrupaciones()
+        private async Task ActualizarEditorialesCuandoQuitamosAgrupaciones()
         {
-            FiltroEditoriales filtro = new();
-            if (MediosSeleccionadosBacking != null)
+            await EjecutarAsync(async () =>
             {
-                filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",");
-            }
-            else
-            {
-                filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
-            }
+                FiltroEditoriales filtro = new();
+                if (MediosSeleccionadosBacking != null)
+                {
+                    filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",");
+                }
+                else
+                {
+                    filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosFiltrados, x => x.Codigo, ",");
+                }
 
-            EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
-            EditorialesSeleccionadas = null;
-            StateHasChanged();
+                EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
+                EditorialesSeleccionadas = null;
+                StateHasChanged();
+            }, showOverlay: false);
         }
 
         /// <summary>
@@ -318,22 +291,10 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
-            try
+
+            if (!values.Any())
             {
-                if (!values.Any())
-                {
-                    LayerOverlayService.Start();
-                    await ActualizarMediosCuandoQuitamosNetworks();
-                }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
+                await ActualizarMediosCuandoQuitamosNetworks();
             }
 
             dropDownBox.EndUpdate();
@@ -349,30 +310,19 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
-            try
-            {
-                if (values.Count() == 0)
-                {
-                    MediosSeleccionados = null; // Ejecuta el set de la propiedad
-                }
-                else
-                {
-                    LayerOverlayService.Start();
-                    string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
 
-                    // Obtener las agrupaciones en función de los medios seleccionados
+            if (!values.Any())
+            {
+                MediosSeleccionados = null;
+            }
+            else
+            {
+                await EjecutarAsync(async () =>
+                {
+                    string codigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
                     AgrupacionesComercialesMaestras = await PresupuestosService.ObtenerAgrupacionesComerciales(codigosMedios);
                     await ComprobarAgrupacionesYEditoriales(codigosMedios);
-                }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
+                });
             }
 
             dropDownBox.EndUpdate();
@@ -458,41 +408,25 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
 
-            if (values.Count() == 0)
+            if (!values.Any())
             {
-                if (MediosSeleccionadosBacking != null)
-                {
-                    FiltroEditoriales filtro = new();
-                    filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",");
-                    EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
-                }
-                else
-                {
-                    EditorialesMaestras = await PresupuestosService.ObtenerEditoriales();
-                }
+                FiltroEditoriales filtro = new() { CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",") };
+                EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
             }
             else
             {
-                try
+                await EjecutarAsync(async () =>
                 {
-                    LayerOverlayService.Start();
-                    FiltroEditoriales filtro = new();
-                    filtro.CodigosAgrupacionesComerciales = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ",");
-                    filtro.CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",");
-
+                    FiltroEditoriales filtro = new()
+                    {
+                        CodigosAgrupacionesComerciales = ObtenerValoresSeleccionados<CodigoDescripcion, int>(values, x => x.Codigo, ","),
+                        CodigosMedios = ObtenerValoresSeleccionados<CodigoDescripcion, int>(MediosSeleccionadosBacking, x => x.Codigo, ",")
+                    };
                     EditorialesMaestras = await PresupuestosService.ObtenerEditoriales(filtro);
                     EditorialesSeleccionadas = null;
-                }
-                catch (Exception ex)
-                {
-                    await RegistroAplicacion.RegistrarExcepcion(ex);
-                    await MensajesHelper.MostrarMensajeError(TituloPagina);
-                }
-                finally
-                {
-                    LayerOverlayService.Stop();
-                }
+                });
             }
+
             dropDownBox.EndUpdate();
             if (esSingle)
                 dropDownBox.HideDropDown();
@@ -526,14 +460,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task AplicarFiltro()
         {
-            if (!ValidarCamposObligatoriosFiltro())
+            if (!HayVersionSeleccionada())
             {
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.CamposObligatorios));
                 return;
             }
-            try
+
+            await EjecutarAsync(async () =>
             {
-                LayerOverlayService.Start();
                 SobreprimasGrid = [];
 
                 _filtroSobreprima.Anio = AñoSeleccionado!.Codigo;
@@ -560,17 +494,9 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 }
 
                 CaptionDerecha = $"[{AñoSeleccionado?.Descripcion ?? ""}, {VersionSeleccionada!.Descripcion}]";
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-                _desdePaginaImportarMMS = false;
-            }
+            });
+
+            _desdePaginaImportarMMS = false;
         }
 
         /// <summary>
@@ -578,9 +504,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task LimpiarFiltro()
         {
-            try
+            await EjecutarAsync(() =>
             {
-                LayerOverlayService.Start();
                 _filtroSobreprima = new();
                 AñoSeleccionado = null;
                 VersionSeleccionada = null;
@@ -596,18 +521,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 CaptionDerecha = string.Empty;
 
                 InicializarFiltro();
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
         }
-
         #endregion
 
         #region Grid Sobreprimas - Eventos
@@ -633,7 +548,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task NuevaSobreprima()
         {
-            try
+            await EjecutarAsync(async () =>
             {
                 var nuevaSobreprima = new SobreprimaGridModel
                 {
@@ -642,12 +557,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 };
 
                 await MostrarPopupEdicion(nuevaSobreprima, ModoOperacion.Insertar);
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
+            }, showOverlay: false);
         }
 
         /// <summary>
@@ -656,9 +566,8 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task MostrarPopupEdicion(SobreprimaGridModel sobreprima, ModoOperacion modoOperacion)
         {
-            try
+            await EjecutarAsync(async () =>
             {
-                LayerOverlayService.Start();
                 AgrupacionesComercialesPopup.Clear();
                 EditorialesPopup.Clear();
 
@@ -698,16 +607,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                         ? ObtenerTexto(TextosApp.Common.Nuevo)
                         : ObtenerTexto(TextosApp.Common.Edit);
                 }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
         }
 
         /// <summary>
@@ -717,27 +617,14 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         {
             if (sobreprima == null) return;
 
-            if (!await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar)))
-            {
-                return;
-            }
+            if (!await MensajesHelper.MostrarMensajeParaConfirmacion(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ConfirmacionEliminar))) return;
 
-            try
+            await EjecutarAsync(async () =>
             {
-                LayerOverlayService.Start();
                 await SobreprimasService.EliminarSobreprimas(sobreprima);
                 SobreprimasGrid.Remove(sobreprima);
                 await MensajesHelper.MostrarMensajeInfo(TituloPagina, ObtenerTexto(TextosApp.Mensajes.RegistroEliminado));
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Mensajes.ErrorDelete));
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+            });
         }
 
         /// <summary>
@@ -758,42 +645,25 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task PopupComboBoxAgrupacion_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
-            try
+            if (e.ChangeSource != SelectionChangeSource.UserAction) return;
+
+            await EjecutarAsync(async () =>
             {
-                if (e.ChangeSource == SelectionChangeSource.UserAction)
+                FiltroEditoriales filtro = new() { CodigosMedios = SobreprimaEnEdicion.CodigoMedio?.ToString() ?? string.Empty };
+
+                if (e.DataItem != null)
                 {
-                    LayerOverlayService.Start();
-                    FiltroEditoriales filtro = new();
-                    if (e.DataItem != null)
-                    {
-                        int codigoAgrupacion = e.DataItem.Codigo;
-
-                        filtro.CodigosAgrupacionesComerciales = codigoAgrupacion.ToString();
-                        filtro.CodigosMedios = SobreprimaEnEdicion.CodigoMedio?.ToString() ?? string.Empty;
-
-                        EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
-
-                        SobreprimaEnEdicion.DescripcionAgrupacionComercial = e.DataItem.Descripcion;
-                        SobreprimaEnEdicion.CodigoEditorial = null;
-                    }
-                    else
-                    {
-                        filtro.CodigosMedios = SobreprimaEnEdicion.CodigoMedio?.ToString() ?? string.Empty;
-                        EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
-
-                        SobreprimaEnEdicion.DescripcionAgrupacionComercial = string.Empty;
-                    }
+                    filtro.CodigosAgrupacionesComerciales = e.DataItem.Codigo.ToString();
+                    EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
+                    SobreprimaEnEdicion.DescripcionAgrupacionComercial = e.DataItem.Descripcion;
+                    SobreprimaEnEdicion.CodigoEditorial = null;
                 }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina);
-            }
-            finally
-            {
-                LayerOverlayService.Stop();
-            }
+                else
+                {
+                    EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
+                    SobreprimaEnEdicion.DescripcionAgrupacionComercial = string.Empty;
+                }
+            });
         }
 
         /// <summary>
@@ -802,28 +672,12 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task PopupComboBoxNetwork_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
-            if (e.ChangeSource == SelectionChangeSource.UserAction)
-            {
-                if (e.DataItem != null)
-                {
-                    try
-                    {
-                        LayerOverlayService.Start();
-                        string codigoNetwork = e.DataItem.Codigo.ToString();
+            if (e.ChangeSource != SelectionChangeSource.UserAction || e.DataItem == null) return;
 
-                        MediosPopup = await PresupuestosService.ObtenerMediosPorNetWork(codigoNetwork);
-                    }
-                    catch (Exception ex)
-                    {
-                        await RegistroAplicacion.RegistrarExcepcion(ex);
-                        await MensajesHelper.MostrarMensajeError(TituloPagina);
-                    }
-                    finally
-                    {
-                        LayerOverlayService.Stop();
-                    }
-                }
-            }
+            await EjecutarAsync(async () =>
+            {
+                MediosPopup = await PresupuestosService.ObtenerMediosPorNetWork(e.DataItem.Codigo.ToString());
+            });
         }
 
         /// <summary>
@@ -832,31 +686,16 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// </summary>
         private async Task PopupComboBoxMedio_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
-            if (e.ChangeSource == SelectionChangeSource.UserAction)
-            {
-                if (e.DataItem != null)
-                {
-                    try
-                    {
-                        LayerOverlayService.Start();
-                        string codigoMedio = e.DataItem.Codigo.ToString();
-                        AgrupacionesComercialesPopup = await PresupuestosService.ObtenerAgrupacionesComerciales(codigoMedio);
+            if (e.ChangeSource != SelectionChangeSource.UserAction || e.DataItem == null) return;
 
-                        FiltroEditoriales filtro = new();
-                        filtro.CodigosMedios = codigoMedio;
-                        EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
-                    }
-                    catch (Exception ex)
-                    {
-                        await RegistroAplicacion.RegistrarExcepcion(ex);
-                        await MensajesHelper.MostrarMensajeError(TituloPagina);
-                    }
-                    finally
-                    {
-                        LayerOverlayService.Stop();
-                    }
-                }
-            }
+            await EjecutarAsync(async () =>
+            {
+                string codigoMedio = e.DataItem.Codigo.ToString();
+                AgrupacionesComercialesPopup = await PresupuestosService.ObtenerAgrupacionesComerciales(codigoMedio);
+
+                FiltroEditoriales filtro = new() { CodigosMedios = codigoMedio };
+                EditorialesPopup = await PresupuestosService.ObtenerEditoriales(filtro);
+            });
         }
 
         #endregion
@@ -1282,9 +1121,9 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja la navegación desde la página de importación de sobreprimas de MMS
         /// Aplica automáticamente los filtros recibidos
         /// </summary>
-        private async Task ManajarRequest()
+        private async Task ManejarRequestAsync()
         {
-            try
+            await EjecutarAsync(async () =>
             {
                 var datos = NavegacionService.Obtener<dynamic>();
                 if (datos == null) return;
@@ -1302,19 +1141,16 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                     var listaNetworks = NetworksMaestros.Where(n => filtro.CodigosNetwork.Contains(n.Codigo)).ToList();
 
-                    // Comprobar si se seleccionaron todos los networks
                     var codigosListaNetworks = listaNetworks.Select(n => n.Codigo).OrderBy(c => c);
                     var codigosMasterNetwork = NetworksMaestros.Select(n => n.Codigo).OrderBy(c => c);
                     bool sonIguales = codigosListaNetworks.SequenceEqual(codigosMasterNetwork);
 
-                    // ? Ya no usa object?, usa IEnumerable<CodigoDescripcion> directamente
                     NetworksSeleccionados = sonIguales
                         ? Enumerable.Empty<CodigoDescripcion>()
                         : listaNetworks;
 
                     var listaMedios = MediosFiltrados.Where(n => filtro.CodigosMedio.Contains(n.Codigo)).ToList();
 
-                    // Comprobar si se seleccionaron todos los medios
                     var codigosListaMedios = listaMedios.Select(n => n.Codigo).OrderBy(c => c);
                     var codigosMedioFiltro = MediosFiltrados.Select(n => n.Codigo).OrderBy(c => c);
                     bool sonIgualesMedios = codigosListaMedios.SequenceEqual(codigosMedioFiltro);
@@ -1325,7 +1161,6 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
 
                     StateHasChanged();
 
-                    // Aplicar filtro automáticamente si todos los campos están completos
                     if (AñoSeleccionado != null && NetworksSeleccionados != null && VersionSeleccionada != null && MediosSeleccionados != null)
                     {
                         _desdePaginaImportarMMS = true;
@@ -1336,12 +1171,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
                 {
                     InicializarFiltro();
                 }
-            }
-            catch (Exception ex)
-            {
-                await RegistroAplicacion.RegistrarExcepcion(ex);
-                await MensajesHelper.MostrarMensajeError(TituloPagina, ObtenerTexto(TextosApp.Common.Messages.UndefinedError));
-            }
+            }, showOverlay: false);
         }
         #endregion
     }
