@@ -94,7 +94,6 @@ namespace HM.Presupuestos.Application.CasosDeUso
             using var transaction = _indicadoresRepository.ObtenerTransaccion();
             try
             {
-                // Insertar o actualizar indicador principal
                 if (indicador.Estado == EstadoEntidad.Nuevo)
                 {
                     indicador.Codigo = await _indicadoresRepository.InsertarIndicador(indicador);
@@ -104,21 +103,18 @@ namespace HM.Presupuestos.Application.CasosDeUso
                     await _indicadoresRepository.ActualizarIndicador(indicador);
                 }
 
-                // Eliminar idiomas marcados
                 foreach (var idioma in idiomasEliminar)
                 {
                     if (idioma != null && idioma.Codigo != null)
                         await _indicadoresRepository.EliminarIdiomaIndicador((int)idioma.Codigo);
                 }
 
-                // Insertar nuevos idiomas
                 foreach (var idioma in idiomasNuevos)
                 {
                     idioma.CodigoIndicador = indicador.Codigo;
                     await _indicadoresRepository.InsertarIdiomaIndicador(idioma);
                 }
 
-                // Actualizar idiomas existentes
                 foreach (var idioma in idiomasActualizar)
                 {
                     await _indicadoresRepository.ActualizarIdiomaIndicador(idioma);

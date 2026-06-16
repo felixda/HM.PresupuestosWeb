@@ -31,10 +31,6 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         #region Ciclo de Vida del Componente
 
-        /// <summary>
-        /// Se ejecuta cuando el usuario está disponible y cargado
-        /// Inicializa el estado de favorito del menú actual
-        /// </summary>
         protected override async Task OnUsuarioDisponibleAsync()
         {
             var menuActual = Usuario.Menus.FirstOrDefault(x => x.Id == (int)CodigoMenu);
@@ -49,10 +45,6 @@ namespace HM.Presupuestos.Web.Pages.Shared
 
         #region Eventos de Botones
 
-        /// <summary>
-        /// Maneja el clic en el botón de favorito
-        /// Alterna el estado y actualiza la interfaz
-        /// </summary>
         private async Task OnFavorito()
         {
             EsFavorito = !EsFavorito;
@@ -60,9 +52,6 @@ namespace HM.Presupuestos.Web.Pages.Shared
             await GestionarFavorito(EsFavorito);
         }
 
-        /// <summary>
-        /// Navega a la página anterior usando el historial del navegador
-        /// </summary>
         private async Task OnVolver()
         {
             Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
@@ -77,17 +66,14 @@ namespace HM.Presupuestos.Web.Pages.Shared
         /// Gestiona los favoritos del usuario: agrega o elimina el menú actual
         /// Actualiza tanto la base de datos como la sesión del usuario
         /// </summary>
-        /// <param name="esFavorito">True para marcar como favorito, False para desmarcar</param>
         public async Task GestionarFavorito(bool esFavorito)
         {
             if (Usuario?.Jwt == null) return;
 
             var codigoMenuActual = ((int)CodigoMenu).ToString();
 
-            // Obtener lista actual de favoritos
             var favoritos = await ObtenerListaFavoritos();
 
-            // Actualizar lista según la acción
             if (esFavorito)
             {
                 favoritos.Add(codigoMenuActual);
@@ -97,39 +83,24 @@ namespace HM.Presupuestos.Web.Pages.Shared
                 favoritos.Remove(codigoMenuActual);
             }
 
-            // Guardar en base de datos
             await GuardarListaFavoritos(favoritos);
 
-            // Actualizar estado del menú en sesión
             ActualizarEstadoMenu(codigoMenuActual, esFavorito);
 
             // Persistir cambios en sesión del usuario SSO. Del impersonado no se pueden modificar los favoritos
             await AlmacenSesionUsuario.GuardarUsuarioSSO(Usuario);
         }
 
-        /// <summary>
-        /// Obtiene la lista de códigos de menús favoritos del usuario
-        /// </summary>
-        /// <returns>HashSet con los códigos de menús favoritos</returns>
         private async Task<HashSet<string>> ObtenerListaFavoritos()
         {
             return await MenuFavoritosService.ObtenerFavoritos();
         }
 
-        /// <summary>
-        /// Guarda la lista de favoritos en el perfil del usuario en base de datos
-        /// </summary>
-        /// <param name="favoritos">HashSet con códigos de menús favoritos</param>
         private async Task GuardarListaFavoritos(HashSet<string> favoritos)
         {
             await MenuFavoritosService.GuardarFavoritos(favoritos);
         }
 
-        /// <summary>
-        /// Actualiza el estado de favorito del menú actual en la colección de menús del usuario
-        /// </summary>
-        /// <param name="codigoMenu">Código del menú a actualizar</param>
-        /// <param name="esFavorito">Nuevo estado de favorito</param>
         private void ActualizarEstadoMenu(string codigoMenu, bool esFavorito)
         {
             var menuActual = Usuario!.Menus.FirstOrDefault(x => x.Id == int.Parse(codigoMenu));

@@ -6,9 +6,6 @@ using HM.Presupuestos.Domain.Puertos;
 
 namespace HM.Presupuestos.Infrastructure.Persistencia
 {
-    /// <summary>
-    /// Constructor del repositorio de presupuestos
-    /// </summary>
     public class PresupuestosRepository(
         IJwt jwt,
         IDataAccessHelperSecure dah) : BasePresupuestosRepository(dah,  jwt), IPresupuestosRepository
@@ -854,11 +851,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        /// <summary>
-        /// Obtiene lista de meses cerrados
-        /// </summary>
-        /// <param name="year">Año de filtro</param>
-        /// <returns>Lista de int</returns>
         public async Task<List<int>> ObtenerMesCerradoList(int year)
         {
             List<int> resultado = [];
@@ -895,11 +887,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        /// <summary>
-        /// Obtiene lista agrupaciones editoriales de un medio
-        /// </summary>
-        /// <param name="codeMedio">Código de medio</param>
-        /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetAgrupacionEditorialListByMedio(int codeMedio)
         {
             List<CodigoDescripcion> result = [];
@@ -948,11 +935,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
 
 
-        /// <summary>
-        /// Obtiene lista editoriales de un medio
-        /// </summary>
-        /// <param name="codeMedio">Código de medio</param>
-        /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByMedio(int codeMedio)
         {
             List<CodigoDescripcion> result = [];
@@ -1000,11 +982,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
 
 
-        /// <summary>
-        /// Obtiene lista editoriales de un medio
-        /// </summary>
-        /// <param name="codeAgrupacionEditorial">Código de Agrupación Editorial</param>
-        /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByAgrupacionEditorial(int codeAgrupacionEditorial)
         {
             List<CodigoDescripcion> result = [];

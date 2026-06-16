@@ -214,11 +214,6 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
             return resultado;
         }
 
-        /// <summary>
-        /// Obtiene lista de meses cerrados
-        /// </summary>
-        /// <param name="year">Año de filtro</param>
-        /// <returns>Lista de int</returns>
         public async Task<List<int>> ObtenerMesCerradoList(int year)
         {
             List<int> resultado;
@@ -229,11 +224,6 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
             return resultado;
         }
 
-        /// <summary>
-        /// Obtiene lista agrupaciones editoriales de un medio
-        /// </summary>
-        /// <param name="codeMedio">Código de medio</param>
-        /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetAgrupacionEditorialListByMedio(int codeMedio)
         {
             List<CodigoDescripcion> resultado;
@@ -244,11 +234,6 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
             return resultado;
         }
 
-        /// <summary>
-        /// Obtiene lista editoriales de un medio
-        /// </summary>
-        /// <param name="codeMedio">Código de medio</param>
-        /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByMedio(int codeMedio)
         {
             List<CodigoDescripcion> resultado;
@@ -259,11 +244,6 @@ namespace HM.Presupuestos.Application.CasosDeUso.Compartido
             return resultado;
         }
 
-        /// <summary>
-        /// Obtiene lista editoriales de una agrupacion
-        /// </summary>
-        /// <param name="codeAgrupacionEditorial">Código de Agrupación Editorial</param>
-        /// <returns>Lista de objeto CodigoDescripcion</returns>
         public async Task<List<CodigoDescripcion>> GetEditorialListByAgrupacionEditorial(int codeAgrupacionEditorial)
         {
             List<CodigoDescripcion> resultado;

@@ -8,16 +8,6 @@ namespace HM.Presupuestos.Domain.Entidades
         public int Codigo { get; set; }
         public string Descripcion { get; set; } = string.Empty;
 
-        //private string _descripcion = "";
-        //public string Descripcion
-        //{
-        //    get
-        //    {
-        //        return StringHelper.CapitalizeText(_descripcion, 3);
-        //    }
-        //    set { _descripcion = value; }
-        //}
-
         [Required]
         public int Anio { get; set; }
         [Required]

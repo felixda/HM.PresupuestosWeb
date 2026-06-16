@@ -12,8 +12,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         IJwt jwt,
         IDataAccessHelperSecure dah) : BasePresupuestosRepository(dah, jwt), IIndicadoresRepository
     {
-        //protected new readonly IDataAccessHelperSecure dah = dah;
-
         public async Task<List<Indicador>> ObtenerIndicadoresConIdiomas(string? descripcion = null)
         {
             List<Indicador> resultado = [];
@@ -238,7 +236,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
                 indicador.Codigo = Convert.ToInt32(dah.Comando.Parameters["Codigo"].Value);
                 result = indicador.Codigo.Value;
             }
@@ -302,7 +299,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
                 idiomaIndicador.Codigo = Convert.ToInt32(dah.Comando.Parameters["Codigo"].Value);
             }
             catch (Exception ex)
