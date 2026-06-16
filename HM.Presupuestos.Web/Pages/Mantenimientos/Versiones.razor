@@ -190,7 +190,7 @@ else
                                 <CellEditTemplate>
                                     @{
                                         var version = (Version)context.EditModel;
-                                        var isReadOnly = version?.IsDataLinked == true;
+                                        var isReadOnly = version?.TieneDatosVinculados == true;
                                     }
                                     @if (isReadOnly)
                                     {
@@ -213,7 +213,7 @@ else
                                 <CellDisplayTemplate>
                                     @{
                                         var version = (Version)context.DataItem;
-                                        var isReadOnly = version?.IsDataLinked == true;
+                                        var isReadOnly = version?.TieneDatosVinculados == true;
                                     }
                                     <div class="grid-cell-align-center">
                                         <DxButton IconCssClass="fas fa-trash"

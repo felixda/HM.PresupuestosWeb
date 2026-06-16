@@ -66,7 +66,7 @@ namespace HM.Presupuestos.Domain.Entidades
         /// <summary>
         /// Indica si la version tiene  datos relaciones con otras entidades (Previsiones, condiciones...)
         /// </summary>
-        public bool IsDataLinked { get; set; }
+        public bool TieneDatosVinculados { get; set; }
 
     }
 }

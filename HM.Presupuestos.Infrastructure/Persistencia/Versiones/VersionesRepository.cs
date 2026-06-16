@@ -414,8 +414,8 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         /// Comprueba si existen datos vinculados a la versión
         /// </summary>
         /// <param name="codigoVersion">Version code</param>
-        /// <returns>True when is data linked</returns>
-        public async Task<bool> IsDataLinked(int codigoVersion)
+        /// <returns>True si la versión tiene datos vinculados</returns>
+        public async Task<bool> TieneDatosVinculados(int codigoVersion)
         {
             bool result = false;
 
@@ -436,7 +436,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             }
             catch (Exception ex)
             {
-                throw new Exception("VersionesRepository.IsDataLinked", ex);
+                throw new Exception("VersionesRepository.TieneDatosVinculados", ex);
             }
             return result;
         }

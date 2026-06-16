@@ -31,7 +31,7 @@ namespace HM.Presupuestos.Application.CasosDeUso
         /// <param name="anio">Año para filtrar las versiones</param>
         /// <param name="estadoIncluido">Filtro opcional para buscar versiones que incluyan indicadores específicos mediante BitAnd. 
         /// Para múltiples indicadores, sumar sus valores BitAnd en binario</param>
-        /// <returns>Lista de versiones con su lista de indicadores (VersionIndicador) calculados y el estado IsDataLinked</returns>
+        /// <returns>Lista de versiones con su lista de indicadores (VersionIndicador) calculados y el estado TieneDatosVinculados</returns>
         /// <remarks>
         /// Este método realiza las siguientes operaciones:
         /// 1. Obtiene las versiones filtradas por año y estado opcional
