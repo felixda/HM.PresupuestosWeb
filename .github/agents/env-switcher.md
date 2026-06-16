@@ -32,13 +32,35 @@ Si no se indica o no es válido, preguntar antes de continuar.
 
 ### 3. Interpretar el resultado
 
-- Si termina con `OK — N secretos aplicados`: confirmar al usuario qué entorno está activo.
+- Si termina con `OK — N secretos aplicados`: mostrar la tabla de secretos activos (ver paso 4).
 - Si el error es `No se encontro 'secrets.local.json'`: explicar que debe copiar la plantilla y rellenar los valores reales.
 - Si el error es `no existe en secrets.local.json`: el JSON no tiene la sección del entorno pedido.
 - Si cualquier otro error: mostrar el mensaje de error literal y sugerir revisar el fichero.
 
+### 4. Leer y mostrar los secretos activos
+
+Tras el cambio exitoso, ejecutar:
+
+```powershell
+dotnet user-secrets list --project HM.Presupuestos.Web
+```
+
+Parsear la salida (formato `Clave = Valor`) y mostrarla en el chat como tabla Markdown:
+
+| Clave | Valor |
+|---|---|
+| `AppSettings:AppEnvironment` | ... |
+| `ServicioCore:Core` | ... |
+| ... | ... |
+
 ## Formato de respuesta
 
-Responder en una sola línea confirmando el cambio, por ejemplo:
+Confirmar el entorno activo, mostrar la tabla de secretos y añadir la línea de arranque:
 
-> Entorno cambiado a **PRU**. Ya puedes arrancar la aplicación con `dotnet run --project HM.Presupuestos.Web`.
+> Entorno cambiado a **PRU**.
+>
+> | Clave | Valor |
+> |---|---|
+> | ... | ... |
+>
+> Ya puedes arrancar con `dotnet run --project HM.Presupuestos.Web`.
