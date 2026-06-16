@@ -1,5 +1,7 @@
 schema: spec-driven
 
+setup: .github/setup.md
+
 context: |
   Tech stack: .NET 10, Blazor Server (Interactive Server Components), DevExpress Blazor UI (DxGrid, DxPopup, DxFormLayout, DxTreeView, DxDrawer)
   Auth: Azure AD SSO via Microsoft.Identity.Web + OpenIdConnect

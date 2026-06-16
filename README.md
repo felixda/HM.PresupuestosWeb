@@ -29,6 +29,8 @@ Aplicación web de gestión de presupuestos construida con **Blazor Server** y *
 - Acceso a la API HM.CORE (URL configurada en `appsettings.json`)
 - Visual Studio 2026 / VS Code con extensión C# Dev Kit
 
+> **Nuevo en el equipo?** Consulta la [guía completa de configuración del entorno](.github/setup.md) — incluye configuración de Azure AD, Oracle, tests E2E y GitHub Copilot/OpenSpec.
+
 ---
 
 ## Inicio rápido
