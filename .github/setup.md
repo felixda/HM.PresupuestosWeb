@@ -29,58 +29,52 @@ dotnet restore
 
 ---
 
-## 3. Configurar `appsettings.json`
+## 3. Configurar los secretos del entorno
 
-El fichero `HM.Presupuestos.Web/appsettings.json` contiene los valores de configuración.
-Los campos sensibles están **vacíos** en el repositorio. Debes rellenarlos localmente:
+La aplicación usa `dotnet user-secrets` para los valores sensibles (Azure AD, Oracle, JWT…).
+El repositorio incluye un script `Switch-Env.ps1` que automatiza el proceso.
 
-### 3.1 Azure AD (SSO)
+### 3.1 Crear tu fichero de secretos local
 
-```json
-"AzureAd": {
-  "Instance": "https://login.microsoftonline.com/",
-  "Domain": "havas.com",
-  "TenantId": "<pedir al equipo>",
-  "ClientId": "<pedir al equipo>",
-  "ClientSecret": "<pedir al equipo>",
-  "CallbackPath": "/init"
-}
+Copia la plantilla y rellena los valores reales (pídelos al equipo):
+
+```powershell
+cp secrets.local.template.json secrets.local.json
+# Editar secrets.local.json con los valores reales de cada entorno
 ```
 
-### 3.2 Cadenas de conexión Oracle
+> `secrets.local.json` está en `.gitignore` — nunca se subirá al repositorio.
 
-```json
-"ConnectionStrings": {
-  "CadenasConexion": [
-    {
-      "Nombre": "havas_seguridad",
-      "CadenaConexion": "<pedir al equipo>"
-    },
-    {
-      "Nombre": "Presupuestos",
-      "CadenaConexion": "<pedir al equipo>"
-    }
-  ]
-}
+### 3.2 Cambiar al entorno deseado
+
+```powershell
+.\Switch-Env.ps1 -Env DEV    # o PRU, PRE, PRO
 ```
 
-### 3.3 Token de autenticación interna
+El script limpia los secretos actuales y carga los del entorno indicado, usando `dotnet user-secrets`.
+Al terminar muestra un listado de los secretos activos para verificar.
 
-```json
-"Session": {
-  "TokenInternalAuthentication": "<pedir al equipo>"
-}
-```
+### 3.3 Desde GitHub Copilot (alternativa)
 
-### 3.4 JWT
+También puedes cambiar de entorno usando lenguaje natural:
 
-```json
-"Jwt": {
-  "Clave": "<pedir al equipo>"
-}
-```
+> *«Cambia al entorno PRU»*
 
-> **Recomendación**: usar `appsettings.Development.json` (ignorado por `.gitignore`) para sobreescribir estos valores localmente y no modificar nunca el `appsettings.json` del repositorio.
+El agente `env-switcher` detecta el entorno, ejecuta el script y confirma el cambio.
+
+### 3.4 Claves que se configuran por entorno
+
+| Clave | Descripción |
+|---|---|
+| `AppSettings:AppEnvironment` | Identificador del entorno (DEV / PRU / PRE / PRO) |
+| `AppSettings:AzureAd:TenantId` | Tenant de Azure AD |
+| `AppSettings:AzureAd:ClientId` | Client ID de la aplicación registrada |
+| `AppSettings:AzureAd:ClientSecret` | Secreto de la aplicación Azure AD |
+| `AppSettings:Session:TokenInternalAuthentication` | Token para llamadas internas al Core |
+| `Jwt:Clave` | Clave de firma JWT |
+| `ServicioCore:Core` | URL base del servicio HM.CORE |
+| `ConnectionStrings:CadenasConexion:0:CadenaConexion` | Cadena de conexión Oracle (havas_seguridad) |
+| `ConnectionStrings:CadenasConexion:1:CadenaConexion` | Cadena de conexión Oracle (Presupuestos) |
 
 ---
 
