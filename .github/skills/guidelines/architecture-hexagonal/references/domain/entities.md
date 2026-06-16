@@ -146,7 +146,7 @@ public class Version : IConIcono, IConCodigo
     public int Codigo { get; set; }
     public string Descripcion { get; set; } = string.Empty;
     public int IndEstado { get; set; }          // Valor BitAnd de estados
-    public bool IsDataLinked { get; set; }      // Calculado por el servicio, no en BD
+    public bool TieneDatosVinculados { get; set; }      // Calculado por el servicio, no en BD
 
     // Propiedad calculada: icono según estado BitAnd
     public string IconoCssClass

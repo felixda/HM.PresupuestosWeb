@@ -37,7 +37,7 @@ namespace HM.Presupuestos.Domain.Puertos
         Task<List<VersionResumen>> ObtenerVersionesResumen(int? anio = null, int? estadoIncluido = null, int? estadoExcluido = null);
 
 
-        Task<bool> IsDataLinked(int codigoVersion);
+        Task<bool> TieneDatosVinculados(int codigoVersion);
 
         ITransaccion ObtenerTransaccion();
     }
