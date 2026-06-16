@@ -15,6 +15,7 @@ Ver la guía de markup en: [blazor-razor.md](blazor-razor.md)
 | Campo **interno** no expuesto al razor | `_camelCase` | `private ModoEdicion _modoEdicion = ModoEdicion.Alta;` |
 | Propiedad computada (solo lectura) | `PascalCase` | `private bool HayCambios => ...;` |
 | Referencia a componente DevExpress (`@ref`) | `PascalCase` con `{ get; set; }` | `private DxGrid Grid { get; set; } = new DxGrid();` |
+| Event handler DevExpress (`EventName=`) | `On` + Componente + Descripción (PascalCase, sin guión bajo) | `OnGridVersionesElementCustomized`, `OnGridVersionesEditModelSaving` |
 
 > **Regla clave**: si el miembro aparece en el markup del `.razor` como valor de un atributo (aunque sea solo lectura desde el razor), debe ser una **propiedad PascalCase**. Esto garantiza que Blazor puede rastrear los cambios y el StateHasChanged funcione correctamente.
 
@@ -95,7 +96,7 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
 
         #region Filtro — Eventos
 
-        private async Task ComboAnio_CambioSeleccion(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnAnioChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.DataItem == null) return;
 
@@ -176,8 +177,9 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
         #region Grid — Event Handlers DevExpress
 
         // Los handlers de eventos DevExpress devuelven void — única excepción al sufijo Async
-        private async void Grid_EditModelSaving(GridEditModelSavingEventArgs e) { ... }
-        private async void Grid_CustomizeElement(GridCustomizeElementEventArgs e) { ... }
+        // Convención: On + Componente + Descripción (PascalCase, sin guión bajo)
+        private async void OnGridEditModelSaving(GridEditModelSavingEventArgs e) { ... }
+        private async void OnGridElementCustomized(GridCustomizeElementEventArgs e) { ... }
 
         #endregion
     }
@@ -482,5 +484,5 @@ private bool HayCambiosPendientes =>
 - [ ] Confirmación antes de cualquier acción destructiva (`MostrarMensajeParaConfirmacion`)
 - [ ] Todos los textos via `ObtenerTexto(TextosApp.*)`
 - [ ] Claves de traducción nuevas añadidas a los 3 JSON + `TextosApp.cs`
-- [ ] Los handlers de eventos DevExpress usan `async void` (no `async Task`)
+- [ ] Los handlers de eventos DevExpress usan `async void` (no `async Task`) y el nombre sigue el patrón `On` + Componente + Descripción (sin guión bajo), p.ej. `OnGridVersionesElementCustomized`
 - [ ] No redeclarar servicios ya heredados de `Context`
