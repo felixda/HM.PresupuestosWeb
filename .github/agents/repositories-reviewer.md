@@ -5,7 +5,7 @@ tools: read/getNotebookSummary, read/problems, read/readFile, read/viewImage, re
 
 # Queries Review Agent — HM.Presupuestos
 
-Revisa todos los repositorios de `HM.Presupuestos.Infrastructure/Persistencia/` contra los patrones definidos en `.github/skills/guidelines/infrastructure/repositories.md` y corrige todas las violaciones encontradas.
+Revisa todos los repositorios de `HM.Presupuestos.Infrastructure/Persistencia/` contra los patrones definidos en `.github/skills/guidelines/architecture-hexagonal/references/infrastructure/repositories.md` y corrige todas las violaciones encontradas.
 
 ## Pasos
 
@@ -14,7 +14,7 @@ Revisa todos los repositorios de `HM.Presupuestos.Infrastructure/Persistencia/` 
 Leer el contenido completo de:
 
 ```
-.github/skills/guidelines/infrastructure/repositories.md
+.github/skills/guidelines/architecture-hexagonal/references/infrastructure/repositories.md
 ```
 
 Retener los 5 patrones y los antipatrones antes de continuar.

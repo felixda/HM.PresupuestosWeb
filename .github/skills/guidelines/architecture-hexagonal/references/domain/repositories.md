@@ -146,7 +146,7 @@ public async Task GrabarCondicionesExcepciones(...)
 
 ## Implementación en Infrastructure
 
-Ver [infrastructure/repositories.md](../../infrastructure/repositories.md) para: clase base `BasePresupuestosRepository`, patrón de implementación con `IDataAccessHelperSecure`, propiedades calculadas del usuario y registro en el contenedor de DI.
+Ver [infrastructure/repositories.md](../infrastructure/repositories.md) para: clase base `BasePresupuestosRepository`, patrón de implementación con `IDataAccessHelperSecure`, propiedades calculadas del usuario y registro en el contenedor de DI.
 
 ---
 
