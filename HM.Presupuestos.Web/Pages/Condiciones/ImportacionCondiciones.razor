@@ -121,7 +121,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                    ComboAniosSelectedDataItemChangedAsync(args)" >
+                                    OnAnioSelectedDataItemChangedAsync(args)" >
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>

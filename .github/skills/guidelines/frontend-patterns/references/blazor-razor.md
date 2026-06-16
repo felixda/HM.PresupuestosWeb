@@ -126,7 +126,7 @@ else
                 <DxFormLayoutItem Caption="@ObtenerTexto(TextosApp.Common.Descripcion)"
                                   CaptionPosition="CaptionPosition.Vertical"
                                   ColSpanSm="12">
-                    <DxTextBox @bind-Text="@_entidadEnEdicion.Descripcion" />
+                    <DxTextBox @bind-Text="@EntidadEnEdicion.Descripcion" />
                 </DxFormLayoutItem>
             </DxFormLayout>
         </BodyContentTemplate>
@@ -293,7 +293,7 @@ El contenido real siempre empieza con `<PageHeader>` y `<div class="layoutContai
             SearchMode="@ListSearchMode.AutoSearch"
             SearchFilterCondition="@ListSearchFilterCondition.Contains"
             ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
-            SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => OnCombo_CambioSeleccion(args)">
+            SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => OnComboSelectedDataItemChangedAsync(args)">
     <EditBoxDisplayTemplate Context="ctx">
         @ListasTemplateHelper.GetComboBoxEditBoxTemplate(ctx.DataItem)
     </EditBoxDisplayTemplate>

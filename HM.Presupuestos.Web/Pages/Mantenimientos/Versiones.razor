@@ -52,7 +52,7 @@ else
                                 SearchMode="@ListSearchMode.AutoSearch"
                                 SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                 @bind-Value="@ItemYearSelected"
-                                SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => Param_Year_SelectedDataItemChanged(args)">
+                                SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => OnAnioSelectedDataItemChangedAsync(args)">
                         <EditBoxDisplayTemplate Context="contexto">
                             @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                         </EditBoxDisplayTemplate>

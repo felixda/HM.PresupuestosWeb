@@ -596,7 +596,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el doble clic en una fila del grid
         /// Abre el popup de edición si el medio es accesible
         /// </summary>
-        private async Task GridSobreprimas_DobleClickAsync(GridRowClickEventArgs e)
+        private async Task OnGridSobreprimasDoubleClickAsync(GridRowClickEventArgs e)
         {
             var sobreprima = (SobreprimaGridModel?)GridSobreprimas.GetDataItem(e.VisibleIndex);
 
@@ -725,7 +725,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de agrupación comercial en el popup
         /// Actualiza la lista de editoriales disponibles
         /// </summary>
-        private async Task PopupComboBoxAgrupacion_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnPopupComboAgrupacionChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource != SelectionChangeSource.UserAction) return;
 
@@ -752,7 +752,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de network en el popup
         /// Actualiza la lista de medios disponibles
         /// </summary>
-        private async Task PopupComboBoxNetwork_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnPopupComboNetworkChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource != SelectionChangeSource.UserAction || e.DataItem == null) return;
 
@@ -766,7 +766,7 @@ namespace HM.Presupuestos.Web.Pages.GestionSobreprimas
         /// Maneja el cambio de medio en el popup
         /// Actualiza las listas de agrupaciones comerciales y editoriales disponibles
         /// </summary>
-        private async Task PopupComboBoxMedio_CambioSeleccionAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnPopupComboMedioChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource != SelectionChangeSource.UserAction || e.DataItem == null) return;
 

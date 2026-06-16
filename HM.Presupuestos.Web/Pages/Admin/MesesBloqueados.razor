@@ -35,7 +35,7 @@ else
                                 SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                 ListRenderMode="ListRenderMode.Entire"
                                 @bind-Value="@AnioSeleccionado" SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                                 ComboAniosSelectedDataItemChangedAsync(args)" >
+                                                 OnAnioSelectedDataItemChangedAsync(args)" >
                         <EditBoxDisplayTemplate Context="contexto">
                             @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                         </EditBoxDisplayTemplate>

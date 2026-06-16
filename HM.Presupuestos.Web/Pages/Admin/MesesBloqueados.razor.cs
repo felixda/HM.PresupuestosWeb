@@ -63,7 +63,7 @@ namespace HM.Presupuestos.Web.Pages.Admin
 
         #region Eventos
 
-        private async Task ComboAniosSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnAnioSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.DataItem != null)
             {

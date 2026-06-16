@@ -87,7 +87,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// Abre el popup de edición para el indicador seleccionado
         /// </summary>
         /// <param name="e">Argumentos del evento de clic</param>
-        private async Task GridIndicadores_DoubleClick(GridRowClickEventArgs e)
+        private async Task OnGridIndicadoresDoubleClickAsync(GridRowClickEventArgs e)
         {
             var indicador = (Indicador?)GridIndicadores.GetDataItem(e.VisibleIndex);
 

@@ -225,7 +225,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task RadioGroupAcuerdo_ValueChanged(string newValue)
+        private async Task OnRadioGroupAcuerdoValueChangedAsync(string newValue)
         {
             if (!await ComprobarSiHayCambiosPendienteAndSeguir())
             {
@@ -234,7 +234,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             RadioGroupAcuerdoChecked = newValue;
         }
 
-        private async Task ComboBoxNetwork_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnComboNetworkSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource == SelectionChangeSource.UserAction)
             {
@@ -266,7 +266,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task ComboAnios_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnComboAniosSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.ChangeSource == SelectionChangeSource.UserAction)
             {
@@ -292,7 +292,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task ComboBoxVigencias_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<Vigencia> e)
+        private async Task OnComboVigenciasSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<Vigencia> e)
         {
             try
             {
@@ -794,7 +794,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             };
         }
 
-        private async void Condicion_SetPct(CondicionViewModel itemEditable, CondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
+        private async void OnCondicionSetPctAsync(CondicionViewModel itemEditable, CondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
         {
             try 
             { 
@@ -841,7 +841,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async void Condicion_SetDev(CondicionViewModel itemEditable, CondicionViewModel itemDestino, int? value)
+        private async void OnCondicionSetDevAsync(CondicionViewModel itemEditable, CondicionViewModel itemDestino, int? value)
         {
             try
             {
@@ -1051,7 +1051,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             return item.Jerarquia != excepcion.Jerarquia;
         }
 
-        private async void ExcepcionMedioCondicion_SetConceptosNMD(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondicionesNMD concepto, int? value)
+        private async void OnExcepcionConceptosNMDChangedAsync(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondicionesNMD concepto, int? value)
         {
             try
             { 
@@ -1134,7 +1134,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async void MedioCondicionExcepcion_SetPct(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
+        private async void OnMedioCondicionExcepcionSetPctAsync(ExcepcionCondicionViewModel itemEditable, ExcepcionCondicionViewModel itemDestino, ConceptosCondiciones concepto, decimal? value)
         {
             try
             {
@@ -1214,7 +1214,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             StateHasChanged();
         }
 
-        private async void AñadirExcepcion()
+        private async void OnAñadirExcepcionAsync()
         {
             if (_codigoMedioSeleccionadoParaFiltro.HasValue)
             {

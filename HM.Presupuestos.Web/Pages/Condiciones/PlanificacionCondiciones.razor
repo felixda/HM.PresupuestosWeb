@@ -1,4 +1,4 @@
-﻿@page "/gestion/planificacion-condiciones"
+@page "/gestion/planificacion-condiciones"
 
 @inherits ContextProtegido
 
@@ -34,7 +34,7 @@ else
                                           ItemAlignment="CheckBoxContentAlignment.Center"
                                           Items="@RadioGroupAcuerdoButtonList"
                                           Value="@RadioGroupAcuerdoChecked"
-                                          ValueChanged="@((string val) => RadioGroupAcuerdo_ValueChanged(val))"
+                                          ValueChanged="@((string val) => OnRadioGroupAcuerdoValueChangedAsync(val))"
                                           CssClass="dxradiogroup-horizontal" />
                         </div>
                     </div>
@@ -65,7 +65,7 @@ else
                                         ListRenderMode="ListRenderMode.Virtual"
                                         SearchMode="@ListSearchMode.AutoSearch"
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
-                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => ComboBoxNetwork_SelectedDataItemChanged(args)"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => OnComboNetworkSelectedDataItemChangedAsync(args)"
                                         @bind-Value="@NetworkSeleccionado">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
@@ -115,7 +115,7 @@ else
                                         SearchFilterCondition="@ListSearchFilterCondition.Contains"
                                         ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) =>
-                                    ComboAnios_SelectedDataItemChanged(args)" >
+                                    OnComboAniosSelectedDataItemChangedAsync(args)" >
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -202,7 +202,7 @@ else
                                         ListRenderMode="ListRenderMode.Entire"
                                         @bind-Value="@VigenciaSeleccionada"
                                         SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<Vigencia> args) =>
-                                                                             ComboBoxVigencias_SelectedDataItemChanged(args)">
+                                                                             OnComboVigenciasSelectedDataItemChangedAsync(args)">
                                 <EditBoxDisplayTemplate Context="contexto">
                                     @ListasTemplateHelper.GetComboBoxEditBoxTemplate(contexto.DataItem)
                                 </EditBoxDisplayTemplate>
@@ -436,7 +436,7 @@ else
                                                         MaxValue="100" 
                                                         MinValue="0"
                                                         ReadOnly="@soloLectura"
-                                                        ValueChanged="@((decimal? v) => Condicion_SetPct(editItem,dataItem, ConceptosCondiciones.Sag, v))">
+                                                        ValueChanged="@((decimal? v) => OnCondicionSetPctAsync(editItem,dataItem, ConceptosCondiciones.Sag, v))">
                                             </DxSpinEdit>
                                         }
 
@@ -491,7 +491,7 @@ else
                                                         MaxValue="100" 
                                                         MinValue="0"
                                                         ReadOnly="@soloLectura"
-                                                        ValueChanged="@((decimal? v) => Condicion_SetPct(editItem, dataItem, ConceptosCondiciones.Manpower, v))">
+                                                        ValueChanged="@((decimal? v) => OnCondicionSetPctAsync(editItem, dataItem, ConceptosCondiciones.Manpower, v))">
                                             </DxSpinEdit>
                                         }
                                     </CellEditTemplate>
@@ -538,7 +538,7 @@ else
                                                     Value="editItem.IndicadorCalculoDevolucion"
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
-                                                    ValueChanged="@((int? v) => Condicion_SetDev(editItem,dataItem, v))"  />
+                                                    ValueChanged="@((int? v) => OnCondicionSetDevAsync(editItem,dataItem, v))"  />
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
@@ -589,7 +589,7 @@ else
                                                         MaxValue="100" 
                                                         MinValue="0"
                                                         ReadOnly="@soloLectura"
-                                                        ValueChanged="@((decimal? v) => Condicion_SetPct(editItem,dataItem, ConceptosCondiciones.Devolucion, v))">
+                                                        ValueChanged="@((decimal? v) => OnCondicionSetPctAsync(editItem,dataItem, ConceptosCondiciones.Devolucion, v))">
                                             </DxSpinEdit>
                                         }
                                     </CellEditTemplate>
@@ -676,7 +676,7 @@ else
                                     <DxButton CssClass="toolbarButtonCustom"
                                             RenderStyle=ButtonRenderStyle.None
                                             Text="@ObtenerTexto(TextosApp.Common.Nuevo)"
-                                            Click="AñadirExcepcion"
+                                            Click="OnAñadirExcepcionAsync"
                                               Enabled=@ActivarBotonNuevaExcepcion 
                                             IconCssClass="fa-solid fa-plus" />
                                 </div>
@@ -825,7 +825,7 @@ else
                                                         MaxValue="100"
                                                         MinValue="0"
                                                         ReadOnly="@soloLectura"
-                                                        ValueChanged="@((decimal? v) => MedioCondicionExcepcion_SetPct(editItem,dataItem, ConceptosCondiciones.Sag, v))" >
+                                                        ValueChanged="@((decimal? v) => OnMedioCondicionExcepcionSetPctAsync(editItem,dataItem, ConceptosCondiciones.Sag, v))" >
                                                         >
                                             </DxSpinEdit>
                                         }
@@ -880,7 +880,7 @@ else
                                                         MaxValue="100"
                                                         MinValue="0"
                                                         ReadOnly="@soloLectura"
-                                                        ValueChanged="@((decimal? v) => MedioCondicionExcepcion_SetPct(editItem, dataItem, ConceptosCondiciones.Manpower, v))" >
+                                                        ValueChanged="@((decimal? v) => OnMedioCondicionExcepcionSetPctAsync(editItem, dataItem, ConceptosCondiciones.Manpower, v))" >
                                                         >
                                             </DxSpinEdit>
                                         }
@@ -935,7 +935,7 @@ else
                                                         MaxValue="100"
                                                         MinValue="0"
                                                         ReadOnly="@soloLectura"
-                                                        ValueChanged="@((decimal? v) => MedioCondicionExcepcion_SetPct(editItem, dataItem, ConceptosCondiciones.Devolucion, v))">
+                                                        ValueChanged="@((decimal? v) => OnMedioCondicionExcepcionSetPctAsync(editItem, dataItem, ConceptosCondiciones.Devolucion, v))">
                                             </DxSpinEdit>
                                         }
 
@@ -982,7 +982,7 @@ else
                                                     Value="editItem.CodigoAlcance"
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.Alcance, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem,dataItem,ConceptosCondicionesNMD.Alcance, v))" />
 
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
@@ -1029,7 +1029,7 @@ else
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
                                                     @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.TipoDisciplina)"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.TipoDisciplina, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem,dataItem,ConceptosCondicionesNMD.TipoDisciplina, v))" />
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
@@ -1075,7 +1075,7 @@ else
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
                                                     @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.DisciplinaGrupo)"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.DisciplinaGrupo, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem,dataItem,ConceptosCondicionesNMD.DisciplinaGrupo, v))" />
 
 
                                     </CellEditTemplate>
@@ -1120,7 +1120,7 @@ else
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
                                                     @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.Disciplina)"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem, dataItem, ConceptosCondicionesNMD.Disciplina, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem, dataItem, ConceptosCondicionesNMD.Disciplina, v))" />
 
                                     </CellEditTemplate>
 
@@ -1164,7 +1164,7 @@ else
                                                     Value="editItem.CodigoDiversified"
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.Diversified, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem,dataItem,ConceptosCondicionesNMD.Diversified, v))" />
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
@@ -1208,7 +1208,7 @@ else
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
                                                     @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.Objetivo)"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.Objetivo, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem,dataItem,ConceptosCondicionesNMD.Objetivo, v))" />
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 
@@ -1253,7 +1253,7 @@ else
                                                     CssClass="@css"
                                                     ReadOnly="@soloLectura"
                                                     @onfocus="() => CargarConceptosNMD(dataItem, ConceptosCondicionesNMD.TipoCompra)"
-                                                    ValueChanged="@((int? v) => ExcepcionMedioCondicion_SetConceptosNMD(editItem,dataItem,ConceptosCondicionesNMD.TipoCompra, v))" />
+                                                    ValueChanged="@((int? v) => OnExcepcionConceptosNMDChangedAsync(editItem,dataItem,ConceptosCondicionesNMD.TipoCompra, v))" />
                                     </CellEditTemplate>
                                 </DxGridDataColumn>
 

@@ -94,7 +94,7 @@ namespace HM.Presupuestos.Web.Pages.Configuracion
         /// Maneja el evento de clic en el botón Grabar
         /// Actualiza el año del diario en la configuración
         /// </summary>
-        private async Task Grabar_Click()
+        private async Task OnGrabarClickAsync()
         {
             await EjecutarAsync(async () =>
             {

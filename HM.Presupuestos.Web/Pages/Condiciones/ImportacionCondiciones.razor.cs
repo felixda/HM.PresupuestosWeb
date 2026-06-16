@@ -104,7 +104,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             dropDownBox.EndUpdate();
         }
 
-        private async Task ComboAniosSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnAnioSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             VersionSeleccionada = null;
             Versiones = [];

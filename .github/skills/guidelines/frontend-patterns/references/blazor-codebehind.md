@@ -174,12 +174,15 @@ namespace HM.Presupuestos.Web.Pages.MiSeccion
 
         #endregion
 
-        #region Grid — Event Handlers DevExpress
+        #region Event Handlers DevExpress
 
-        // Los handlers de eventos DevExpress devuelven void — única excepción al sufijo Async
+        // Aplica a TODOS los controles (Grid, ComboBox, RadioGroup, ListBox, etc.)
         // Convención: On + Componente + Descripción (PascalCase, sin guión bajo)
+        // Los que devuelven void son la única excepción al sufijo Async
         private async void OnGridEditModelSaving(GridEditModelSavingEventArgs e) { ... }
         private async void OnGridElementCustomized(GridCustomizeElementEventArgs e) { ... }
+        private async Task OnComboAniosSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e) { ... }
+        private async Task OnRadioGroupAcuerdoValueChangedAsync(string newValue) { ... }
 
         #endregion
     }
@@ -484,5 +487,5 @@ private bool HayCambiosPendientes =>
 - [ ] Confirmación antes de cualquier acción destructiva (`MostrarMensajeParaConfirmacion`)
 - [ ] Todos los textos via `ObtenerTexto(TextosApp.*)`
 - [ ] Claves de traducción nuevas añadidas a los 3 JSON + `TextosApp.cs`
-- [ ] Los handlers de eventos DevExpress usan `async void` (no `async Task`) y el nombre sigue el patrón `On` + Componente + Descripción (sin guión bajo), p.ej. `OnGridVersionesElementCustomized`
+- [ ] Los handlers de eventos DevExpress usan el patrón `On` + Componente + Descripción (PascalCase, sin guión bajo) para todos los controles — p.ej. `OnComboAniosSelectedDataItemChangedAsync`, `OnGridVersionesElementCustomized`. Los que retornan `void` (p.ej. `CustomizeElement`) son la única excepción al sufijo `Async`
 - [ ] No redeclarar servicios ya heredados de `Context`

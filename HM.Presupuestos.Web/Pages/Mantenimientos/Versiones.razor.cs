@@ -122,7 +122,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Event param Source Year changed
         ///</summary>
-        private async Task Param_Year_SelectedDataItemChanged(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
+        private async Task OnAnioSelectedDataItemChangedAsync(SelectedDataItemChangedEventArgs<CodigoDescripcion> e)
         {
             if (e.DataItem != null)
             {
