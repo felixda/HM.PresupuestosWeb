@@ -69,6 +69,19 @@ foreach ($prop in $envSecrets.PSObject.Properties) {
 Write-Host ""
 Write-Host "OK — $count secretos aplicados para el entorno $Env." -ForegroundColor Green
 Write-Host ""
-Write-Host "Secretos activos:" -ForegroundColor Gray
-dotnet user-secrets list --project $project
+Write-Host "Secretos activos:" -ForegroundColor Cyan
+Write-Host ("-" * 80) -ForegroundColor DarkGray
+
+$rawSecrets = dotnet user-secrets list --project $project 2>&1
+$rows = foreach ($line in $rawSecrets) {
+    if ($line -match "^(.+?)\s*=\s*(.+)$") {
+        [PSCustomObject]@{
+            Clave  = $Matches[1].Trim()
+            Valor  = $Matches[2].Trim()
+        }
+    }
+}
+$rows | Format-Table -AutoSize -Wrap
+
+Write-Host ("-" * 80) -ForegroundColor DarkGray
 Write-Host ""
