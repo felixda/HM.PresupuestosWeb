@@ -1,20 +1,20 @@
 ---
 name: git-strategy
-description: This skill should be used when working with git, creating commits, branching, or managing version control. Covers feature branching, conventional commits, and TDD commit discipline. 
+description: Esta skill se debe usar al trabajar con git, crear commits, gestionar ramas o el control de versiones. Cubre feature branching, conventional commits y disciplina de commits en TDD.
 Triggers: "git", "commit", "branch", "feature branch", "conventional commits".
 ---
 
-# Git Strategy
+# Estrategia Git
 
-Feature branching workflow with conventional commits and TDD-driven commit discipline. Every green test produces a commit.
+Flujo de trabajo con ramas por funcionalidad, conventional commits y disciplina de commits guiada por TDD. Cada test en verde produce un commit.
 
 > ⚠️ **REGLA CRÍTICA: Nunca se hacen commits directamente sobre `master`.** Toda modificación de código, guideline, configuración o documentación debe realizarse en una rama. `master` solo recibe cambios a través de Pull Requests o merges desde ramas. Esta regla no tiene excepciones.
 
-## Branching Model
+## Modelo de Ramas
 
-### Feature Branching
+### Ramas por Funcionalidad (Feature Branching)
 
-All work happens on feature branches created from `develop`.
+Todo el trabajo ocurre en ramas creadas desde `master`.
 
 **Excepción — User Stories de Azure DevOps:** cuando el punto de partida es un US en Azure DevOps, la rama se crea desde `master` con el convenio `feat/us-<ID>-<descripcion>`. Ver el flujo completo en [guidelines/azure-devops/SKILL.md](../azure-devops/SKILL.md).
 
@@ -29,68 +29,68 @@ master
  └── feat/us-5678-filtro-condiciones       ← US de DevOps
 ```
 
-### Branch Naming
+### Nomenclatura de Ramas
 
-Format: `<type>/<short-description>`
+Formato: `<tipo>/<descripcion-corta>`
 
-| Type | Use case |
-|------|----------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `refactor` | Code restructuring without behavior change |
-| `chore` | Tooling, config, dependencies |
-| `docs` | Documentation only |
-| `test` | Adding or fixing tests only |
+| Tipo | Uso |
+|------|-------|
+| `feat` | Nueva funcionalidad |
+| `fix` | Correción de bug |
+| `refactor` | Reestructuración de código sin cambio de comportamiento |
+| `chore` | Herramientas, configuración, dependencias |
+| `docs` | Solo documentación |
+| `test` | Añadir o corregir tests |
 
-Rules:
-- Lowercase, hyphens only (no underscores, no camelCase)
-- Max 50 characters for the description part
-- Descriptive but concise: `feat/user-login`, not `feat/add-the-new-login-feature-for-users`
+Reglas:
+- Minúsculas, solo guiones (sin guiones bajos, sin camelCase)
+- Máximo 50 caracteres en la parte descriptiva
+- Descriptivo pero conciso: `feat/user-login`, no `feat/add-the-new-login-feature-for-users`
 
-### Branch Lifecycle
+### Ciclo de Vida de una Rama
 
-1. Create branch from `develop`
-2. Develop with TDD commits (see below)
-3. Push and open PR
-4. Merge to `develop` (squash or merge commit per team preference)
-5. Delete branch after merge
+1. Crear rama desde `master`
+2. Desarrollar con commits TDD (ver más abajo)
+3. Push y abrir PR
+4. Merge a `master` (squash o merge commit según preferencia del equipo)
+5. Eliminar la rama tras el merge
 
 ## Conventional Commits
 
-Every commit message follows the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+Cada mensaje de commit sigue la especificación [Conventional Commits](https://www.conventionalcommits.org/).
 
-### Format
+### Formato
 
 ```
-<type>(<scope>): <description>
+<tipo>(<ámbito>): <descripción>
 ```
 
-- **type**: Required. See table below.
-- **scope**: Optional. Business module or component affected.
-- **description**: Required. Imperative, lowercase, no period. Max 50 characters.
+- **tipo**: Obligatorio. Ver tabla más abajo.
+- **ámbito**: Opcional. Módulo de negocio o componente afectado.
+- **descripción**: Obligatoria. Imperativo, minúsculas, sin punto final. Máximo 50 caracteres.
 
-### Types
+### Tipos
 
-| Type | When to use |
-|------|-------------|
-| `feat` | New functionality visible to the user |
-| `fix` | Bug fix |
-| `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `test` | Adding or correcting tests |
-| `chore` | Build, config, tooling changes |
-| `docs` | Documentation changes |
-| `style` | Formatting, whitespace (no logic change) |
+| Tipo | Cuándo usarlo |
+|------|---------------|
+| `feat` | Nueva funcionalidad visible para el usuario |
+| `fix` | Corrección de bug |
+| `refactor` | Cambio de código que no corrige un bug ni añade funcionalidad |
+| `test` | Añadir o corregir tests |
+| `chore` | Cambios de build, configuración o herramientas |
+| `docs` | Cambios en documentación |
+| `style` | Formato, espacios en blanco (sin cambio lógico) |
 
-### Conciseness Rules
+### Reglas de Concisión
 
-Commit messages must be extremely concise:
-- Max 50 characters in description
-- No articles ("a", "the") unless necessary for clarity
-- No filler words ("also", "just", "simply")
-- Start with verb in imperative: `add`, `fix`, `remove`, `extract`, `rename`
-- Describe the what, not the how
+Los mensajes de commit deben ser extremadamente concisos:
+- Máximo 50 caracteres en la descripción
+- Sin artículos innecesarios
+- Sin palabras de relleno
+- Empezar con verbo en imperativo: `add`, `fix`, `remove`, `extract`, `rename`
+- Describir el qué, no el cómo
 
-### Examples
+### Ejemplos correctos
 
 ```
 feat(user): add registration endpoint
@@ -100,62 +100,62 @@ test(order): add empty cart case
 chore: update typescript to 5.4
 ```
 
-### Bad Examples (avoid)
+### Ejemplos incorrectos (evitar)
 
 ```
-feat: Added the new user registration feature    # past tense, too long
-fix: fixing a bug in the login                   # gerund, vague
-update code                                      # no type, vague
-refactor(payment): refactor payment module        # redundant with type
+feat: Added the new user registration feature    # tiempo pasado, demasiado largo
+fix: fixing a bug in the login                   # gerundio, vago
+update code                                      # sin tipo, vago
+refactor(payment): refactor payment module       # redundante con el tipo
 ```
 
-## TDD Commit Discipline
+## Disciplina de Commits en TDD
 
-Commit on every green test. This creates a fine-grained, reversible history.
+Hacer commit en cada test en verde. Esto crea un historial granular y reversible.
 
-### Commit Flow During TDD
+### Flujo de Commits durante TDD
 
 ```
-RED    → write failing test         → no commit
-GREEN  → make test pass             → COMMIT
-REFACTOR → improve code             → COMMIT (if changes made)
+RED      → escribir test fallido      → sin commit
+GREEN    → hacer pasar el test        → COMMIT
+REFACTOR → mejorar el código          → COMMIT (si hay cambios)
 ```
 
-### TDD Commit Types
+### Tipos de Commit por Fase TDD
 
-| TDD Phase | Commit type | Example |
-|-----------|-------------|---------|
-| GREEN (first test) | `feat` or `fix` | `feat(user): add name validation` |
-| GREEN (additional case) | `test` | `test(user): add empty name case` |
+| Fase TDD | Tipo de commit | Ejemplo |
+|----------|----------------|---------|
+| GREEN (primer test) | `feat` o `fix` | `feat(user): add name validation` |
+| GREEN (caso adicional) | `test` | `test(user): add empty name case` |
 | REFACTOR | `refactor` | `refactor(user): extract validator` |
 
-### Decision Guide for Type
+### Guía de decisión para el tipo
 
-- First green test that introduces new behavior → `feat`
-- Subsequent test cases for the same behavior → `test`
-- Green test that fixes a bug → `fix`
-- Refactoring after green → `refactor`
-- Adding test infrastructure or helpers → `test`
+- Primer test en verde que introduce comportamiento nuevo → `feat`
+- Casos de test adicionales para el mismo comportamiento → `test`
+- Test en verde que corrige un bug → `fix`
+- Refactorización tras verde → `refactor`
+- Añadir infraestructura de tests o helpers → `test`
 
-### Workflow Example
+### Ejemplo de flujo
 
 ```
-1. test(order): add create order case           # first green
+1. test(order): add create order case           # primer verde
 2. refactor(order): extract price calculator    # refactor
-3. test(order): add discount case               # second green
-4. test(order): add zero quantity case           # third green
+3. test(order): add discount case               # segundo verde
+4. test(order): add zero quantity case          # tercer verde
 5. refactor(order): simplify discount logic     # refactor
-6. feat(order): add order repository port       # new behavior
+6. feat(order): add order repository port       # nuevo comportamiento
 ```
 
-## Non-Negotiable Rules
+## Reglas No Negociables
 
-- Never commit on red (failing tests)
-- Never skip commits after green — every passing test gets a commit
-- Never write long commit messages — 50 chars max in description
-- Never use past tense or gerunds in commit descriptions
-- Never commit directly to `develop` or `main` — always use feature branches
-- Always use conventional commit format
-- Always create feature branches from `develop`
-- Always use imperative mood in commit descriptions
-- Always include type; include scope when the change is scoped to a module
+- Nunca hacer commit en rojo (tests fallando)
+- Nunca omitir un commit tras verde — cada test que pasa recibe un commit
+- Nunca escribir mensajes de commit largos — máximo 50 caracteres en la descripción
+- Nunca usar tiempo pasado o gerundio en las descripciones de commit
+- Nunca hacer commit directamente en `develop` o `main` — usar siempre ramas
+- Usar siempre el formato de conventional commits
+- Crear siempre las ramas desde `develop`
+- Usar siempre imperativo en las descripciones de commit
+- Incluir siempre el tipo; incluir el ámbito cuando el cambio está acotado a un módulo
