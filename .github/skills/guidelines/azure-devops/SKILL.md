@@ -185,7 +185,9 @@ Una vez archivado y pusheado, cerrar en este orden:
 
 ### 10. Crear el Pull Request
 
-Crear un PR de la rama `feat/us-<ID>-<desc>` hacia `master`.
+Antes de crear el PR, **preguntar siempre al usuario** si desea crearlo en ese momento.
+
+Solo si el usuario confirma, crear un PR de la rama `feat/us-<ID>-<desc>` hacia `master`.
 
 > **El merge lo realiza siempre un usuario — nunca se automatiza ni se hace desde el agente.**
 
@@ -223,7 +225,7 @@ Archive OpenSpec → commit chore(openspec)
 Cerrar Tasks (CompletedWork real) → Cerrar US (CompletedWork + fechas reales)
        │
        ▼
-Crear PR (Pull Request hacia master)
+Preguntar al usuario si desea crear el PR → Crear PR (Pull Request hacia master)
        │
        ▼
 ⚠️  El merge lo realiza un usuario — NO se automatiza
