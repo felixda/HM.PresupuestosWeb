@@ -13,6 +13,8 @@ Toda convención, patrón de código, regla de arquitectura y proceso de trabajo
   - `frontend-patterns/` — componentes Blazor, ciclo de vida, CSS isolation, DevExpress
   - `infrastructure/repositories.md` — patrones de queries Oracle en repositorios
   - `git-strategy/` — feature branching, conventional commits
+  - `azure-devops/` — convenciones de work items, pipelines y gestión de ramas en Azure DevOps
+  - `database/` — convenciones de base de datos Oracle, migraciones y nomenclatura de objetos
 
 Antes de implementar cualquier artefacto, leer la guideline correspondiente a la capa afectada.
 
