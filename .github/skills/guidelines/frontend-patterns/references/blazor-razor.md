@@ -40,12 +40,7 @@ Pages/
 }
 else if (TienePermiso == false)
 {
-    <div class="alert alert-danger text-center m-5" role="alert">
-        <h4 class="alert-heading">❌ Acceso Denegado</h4>
-        <p>No tiene permisos para acceder a <strong>@TituloPagina</strong>.</p>
-        <hr>
-        <p class="mb-0">Contacte al administrador si cree que debería tener acceso.</p>
-    </div>
+    <AccesoDenegado Titulo="@TituloPagina" />
 }
 else
 {
@@ -171,7 +166,7 @@ El bloque `@if` al inicio del markup es obligatorio en páginas que heredan de `
 
 ```
 1. !UsuarioCargado || ValidandoPermisos || TienePermiso == null  → silencio (vacío)
-2. TienePermiso == false                                          → mensaje de acceso denegado
+2. TienePermiso == false                                          → `<AccesoDenegado Titulo="@TituloPagina" />`
 3. else                                                           → contenido real de la página
 ```
 
