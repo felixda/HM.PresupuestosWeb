@@ -154,7 +154,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// <param name="newValue">new bool value</param>
         /// <param name="versionCodigo">Codigo Version</param>
         /// <param name="indicadorCodigo">Codigo Indicador</param> 
-        private async void CheckboxIndicadorCheckedChanged(bool? newValue, int? versionCodigo, int? indicadorCodigo)
+        private async void OnIndicadorCheckedChanged(bool? newValue, int? versionCodigo, int? indicadorCodigo)
         {
             if (newValue is null || indicadorCodigo is null) return;
 
@@ -277,7 +277,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Grid customize row event
         ///</summary>
-        private void GridVersiones_CustomizeDataRowEditor(GridCustomizeDataRowEditorEventArgs e)
+        private void OnGridVersionesDataRowEditorCustomized(GridCustomizeDataRowEditorEventArgs e)
         {
             if (e.EditSettings is ITextEditSettings settings)
             {
@@ -289,7 +289,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Grid customize element event
         ///</summary>
-        private async void GridVersiones_CustomizeElement(GridCustomizeElementEventArgs ea)
+        private async void OnGridVersionesElementCustomized(GridCustomizeElementEventArgs ea)
         {
             if (ea.ElementType == GridElementType.DataCell)
             {
@@ -335,7 +335,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Grid customize edit model saving event
         ///</summary>
-        private async void GridVersiones_EditModelSaving(GridEditModelSavingEventArgs e)
+        private async void OnGridVersionesEditModelSaving(GridEditModelSavingEventArgs e)
         {
             var editVersion = (Version)e.EditModel;
             var indexVersion = ListVersion.FindIndex(x => x.Codigo == editVersion.Codigo);
@@ -550,7 +550,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         ///<summary>
         /// Grid customize customize element event
         ///</summary>
-        private void GridLeyendas_CustomizeElement(GridCustomizeElementEventArgs e)
+        private void OnGridLeyendasElementCustomized(GridCustomizeElementEventArgs e)
         {
             if (e.ElementType == GridElementType.DataRow && e.VisibleIndex % 2 == 1)
             {

@@ -724,7 +724,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Grid Condiciones
 
-        private async void GridCondiciones_CustomizeElement(GridCustomizeElementEventArgs ea)
+        private async void OnGridCondicionesElementCustomized(GridCustomizeElementEventArgs ea)
         {
             if (ea.ElementType != GridElementType.DataCell) return;
 
@@ -919,7 +919,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
 
         #region Grid Excepciones
 
-        private async void GridMediosExcepciones_CustomizeElement(GridCustomizeElementEventArgs ea)
+        private async void OnGridMediosExcepcionesElementCustomized(GridCustomizeElementEventArgs ea)
         {
             if (ea.ElementType != GridElementType.DataCell) return;
             try

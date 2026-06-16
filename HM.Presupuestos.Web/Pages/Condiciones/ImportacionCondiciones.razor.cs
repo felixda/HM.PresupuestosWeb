@@ -85,7 +85,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }
         }
 
-        private async Task NetworksListBoxValuesChangedAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
+        private async Task OnNetworksValuesChangedAsync(IEnumerable<CodigoDescripcion> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;
@@ -183,7 +183,7 @@ namespace HM.Presupuestos.Web.Pages.Condiciones
             }, showOverlay: false);
         }
 
-        private void ListBoxValuesChanged<T>(IEnumerable<T> values, IDropDownBox dropDownBox)
+        private void OnListBoxValuesChanged<T>(IEnumerable<T> values, IDropDownBox dropDownBox)
         {
             dropDownBox.BeginUpdate();
             dropDownBox.Value = values;

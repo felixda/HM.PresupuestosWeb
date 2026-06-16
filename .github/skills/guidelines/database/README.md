@@ -13,7 +13,8 @@ Archivos generados automáticamente a partir del esquema Oracle del schema `PRES
 | [schema-changelog.md](schema-changelog.md) | Historial de cambios detectados entre ejecuciones |
 | [schema-version.json](schema-version.json) | Hash del esquema actual + timestamp de última comprobación |
 
-> Para ver los diagramas Mermaid en VS Code: abre el archivo `.md` y pulsa `Ctrl+Shift+V`.
+> **Visualización en VS Code:** instala la extensión [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid) (`bierner.markdown-mermaid`), abre el archivo `.md` y pulsa `Ctrl+Shift+V`.
+> El archivo `database-erd-ppt.md` (solo tablas `PPT`) es el recomendado para visualizar en VS Code; `database-erd.md` contiene todo el esquema y puede ser demasiado grande para renderizarse correctamente.
 
 ---
 

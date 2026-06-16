@@ -166,10 +166,16 @@ private async Task TratarExcepcionAsync(Condicion excepcion, ...) { ... }
 private async Task InsertErrorLogAsync(string methodName, ...) { ... }
 
 // ✅ EXCEPCIÓN VÁLIDA — event handlers de DevExpress devuelven void, no Task
-private async void CheckboxIndicadorCheckedChanged(bool? newValue, int? versionCodigo, int? indicadorCodigo)
-private async void GridVersiones_CustomizeElement(GridCustomizeElementEventArgs ea)
-private async void GridVersiones_EditModelSaving(GridEditModelSavingEventArgs e)
+// Convención: prefijo On + Componente + Descripción (PascalCase, sin guión bajo)
+private async void OnIndicadorCheckedChanged(bool? newValue, int? versionCodigo, int? indicadorCodigo)
+private async void OnGridVersionesElementCustomized(GridCustomizeElementEventArgs ea)
+private async void OnGridVersionesEditModelSaving(GridEditModelSavingEventArgs e)
 // Los event handlers de UI son la única excepción al sufijo Async
+
+// ❌ INCORRECTO — guión bajo estilo WinForms, sin prefijo On
+private async void CheckboxIndicadorCheckedChanged(bool? newValue, ...)  // sin prefijo On
+private async void GridVersiones_CustomizeElement(GridCustomizeElementEventArgs ea)  // guión bajo
+private async void GridVersiones_EditModelSaving(GridEditModelSavingEventArgs e)  // guión bajo
 
 // ❌ INCORRECTO — método async Task sin sufijo Async
 private async Task TratarExcepcion(Condicion excepcion, ...) { ... }  // falta Async

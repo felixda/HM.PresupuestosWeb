@@ -235,10 +235,10 @@ else
                             <DxGrid @ref="GridIdiomasIndicador"
                             FilterMenuButtonDisplayMode="GridFilterMenuButtonDisplayMode.Always"
                             Data="IndicadorEnEdicion.Idiomas"
-                            EditModelSaving="GridIdiomasIndicador_EditModelSaving"
+                            EditModelSaving="OnGridIdiomasIndicadorEditModelSaving"
                             EditMode="GridEditMode.EditCell"
-                            CustomizeElement="GridIdiomasIndicador_CustomizeElement"
-                            CustomizeDataRowEditor="GridIdiomasIndicador_CustomizeDataRowEditor">
+                            CustomizeElement="OnGridIdiomasIndicadorElementCustomized"
+                            CustomizeDataRowEditor="OnGridIdiomasIndicadorDataRowEditorCustomized">
                                 <ToolbarTemplate>
                                     <div class="d-flex justify-content-start">
                                         <DxButton CssClass="toolbarButtonCustom"

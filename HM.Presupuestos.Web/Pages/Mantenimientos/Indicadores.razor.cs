@@ -188,7 +188,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// Distingue entre nuevo y modificación
         /// </summary>
         /// <param name="e">Argumentos del evento</param>
-        private void GridIdiomasIndicador_EditModelSaving(GridEditModelSavingEventArgs e)
+        private void OnGridIdiomasIndicadorEditModelSaving(GridEditModelSavingEventArgs e)
         {
             var itemIdiomaEdit = (IdiomaIndicador)e.EditModel;
 
@@ -211,7 +211,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// Compara valores actuales con valores originales campo por campo
         /// </summary>
         /// <param name="ea">Argumentos del evento de personalización</param>
-        private async void GridIdiomasIndicador_CustomizeElement(GridCustomizeElementEventArgs ea)
+        private async void OnGridIdiomasIndicadorElementCustomized(GridCustomizeElementEventArgs ea)
         {
             if (ea.ElementType != GridElementType.DataCell) return;
 
@@ -268,7 +268,7 @@ namespace HM.Presupuestos.Web.Pages.Mantenimientos
         /// Habilita el ícono de validación
         /// </summary>
         /// <param name="e">Argumentos del evento</param>
-        private void GridIdiomasIndicador_CustomizeDataRowEditor(GridCustomizeDataRowEditorEventArgs e)
+        private void OnGridIdiomasIndicadorDataRowEditorCustomized(GridCustomizeDataRowEditorEventArgs e)
         {
             if (e.EditSettings is not ITextEditSettings settings) return;
             settings.ShowValidationIcon = true;

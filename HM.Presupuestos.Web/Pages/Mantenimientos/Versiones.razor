@@ -70,10 +70,10 @@ else
                             ValidationEnabled="true"
                             ShowFilterRow="true"
                             EditMode="GridEditMode.EditCell"
-                            EditModelSaving="GridVersiones_EditModelSaving"
-                            CustomizeElement="GridVersiones_CustomizeElement"
+                            EditModelSaving="OnGridVersionesEditModelSaving"
+                            CustomizeElement="OnGridVersionesElementCustomized"
                             ColumnResizeMode="GridColumnResizeMode.NextColumn"
-                            CustomizeDataRowEditor="GridVersiones_CustomizeDataRowEditor"
+                            CustomizeDataRowEditor="OnGridVersionesDataRowEditorCustomized"
                             TextWrapEnabled="false"
                             HighlightRowOnHover="true"
                             PageSizeSelectorVisible="false">
@@ -169,7 +169,7 @@ else
 
                                                                 <DxCheckBox Checked="@estadoCheck"
                                                                             ReadOnly="false" ValidationEnabled="false"
-                                                                            CheckedChanged="@((bool? newValue) => CheckboxIndicadorCheckedChanged( newValue, version.Codigo ,indicadorVersion.Codigo))" />
+                                                                            CheckedChanged="@((bool? newValue) => OnIndicadorCheckedChanged( newValue, version.Codigo ,indicadorVersion.Codigo))" />
                                                             }
                                                         </CellDisplayTemplate>
                                                     </DxGridDataColumn>
@@ -262,7 +262,7 @@ else
                 <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12">
                     <ChildContent Context="formLayoutContext">
                         <DxGrid @ref="GridLeyendas" Data="ListMasterIndicador.Where(c => c.IndMostrar)" PageSize="20"
-                                CustomizeElement="GridLeyendas_CustomizeElement">
+                                CustomizeElement="OnGridLeyendasElementCustomized">
                             <Columns>
                                 <DxGridDataColumn FieldName="@nameof(Indicador.Descripcion)" Caption="@ObtenerTexto("Pages:Versiones:NombreIndicador:label")" Width="25%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
                                 <DxGridDataColumn FieldName="@nameof(Indicador.DescripcionAbreviada)" Caption="@ObtenerTexto("common:DescripcionAbreviada:label")" Width="15%" CaptionAlignment="GridTextAlignment.Left" TextAlignment="GridTextAlignment.Left" />
