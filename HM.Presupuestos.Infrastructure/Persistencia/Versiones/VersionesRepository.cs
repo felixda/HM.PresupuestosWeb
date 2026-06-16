@@ -330,6 +330,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             string jsonString = JsonSerializer.Serialize(json);
 
             dah.GetStoredProcComando("PKG_CARGA_DATOS_VERSIONES.GET_IMPORTES");
+            dah.Comando.CommandType = CommandType.StoredProcedure;
 
             //IMPORTANTE: Los parametros deben ir en el mismo orden que en el procedimiento almacenado
             dah.AddParameter("p_jSonConf", jsonString);
@@ -394,10 +395,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             IDbDataParameter resultadoInt = dah.AddParameter("pRESULTADO", null, DbType.Int32, ParameterDirection.Output, 0);
             IDbDataParameter resultadoStr = dah.AddParameter("pRESULTADO_STR", null, DbType.String, ParameterDirection.Output, 4000);
 
-            await Task.Run(() =>
-            {
-                dah.ExecuteNonQuery();
-            });
+            await Task.Run(() => dah.ExecuteNonQuery(dah.Comando));
 
             int codigoResultado = Convert.ToInt32(resultadoInt.Value);
 

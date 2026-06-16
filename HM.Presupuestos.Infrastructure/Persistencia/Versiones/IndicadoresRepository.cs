@@ -99,7 +99,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query);
 
-                dah.AddParameter("codigoEstadoVersion", codigoIndicador);
+                dah.AddParameter("CodigoEstadoVersion", codigoIndicador);
 
                 await Task.Run(() => dah.ExecuteNonQuery());
             }
@@ -119,7 +119,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 dah.GetSqlStringComando(query);
 
-                dah.AddParameter("codigoEstadoVersion", codigoIndicador);
+                dah.AddParameter("CodigoEstadoVersion", codigoIndicador);
 
                 await Task.Run(() => dah.ExecuteNonQuery());
             }
@@ -375,16 +375,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await AñadirParametroMulticompania(dah);
 
-                await Task.Run(() =>
-                {
-                    dah.ProcesarDatos((dr) =>
-                    {
-                        while (dr.Read())
-                        {
-                            resultado = dr.GetInt32("BITAND");
-                        }
-                    });
-                });
+                resultado = await Task.Run(() => dah.ExecuteScalar<int>());
             }
             catch (Exception ex)
             {
@@ -406,16 +397,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await AñadirParametroMulticompania(dah);
 
-                await Task.Run(() =>
-                {
-                    dah.ProcesarDatos((dr) =>
-                    {
-                        while (dr.Read())
-                        {
-                            resultado = dr.GetInt32("ORDEN");
-                        }
-                    });
-                });
+                resultado = await Task.Run(() => dah.ExecuteScalar<int>());
             }
             catch (Exception ex)
             {
@@ -440,16 +422,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 dah.AddParameter("CodigoIndicador", codigoIndicador);
                 await AñadirParametroMulticompania(dah);
 
-                await Task.Run(() =>
-                {
-                    dah.ProcesarDatos((dr) =>
-                    {
-                        if (dr.Read())
-                        {
-                            resultado = dr.GetInt32("BITAND");
-                        }
-                    });
-                });
+                resultado = await Task.Run(() => dah.ExecuteScalar<int>());
             }
             catch (Exception ex)
             {

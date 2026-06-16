@@ -1,4 +1,3 @@
-using System.Text;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using HM.Core.Servidor.v6.DAL.Interfaces;
 using HM.Presupuestos.Domain.Entidades;
@@ -23,14 +22,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_TIPOLOGIA, DES_TIPOLOGIA
+                      FROM GRU_TIPOLOGIA
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DES_TIPOLOGIA";
 
-                query.Append("SELECT COD_TIPOLOGIA, DES_TIPOLOGIA ");
-                query.Append("  FROM GRU_TIPOLOGIA ");
-                query.Append("  WHERE F_BAJA IS NULL ");
-                query.Append(" ORDER BY DES_TIPOLOGIA ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -64,14 +62,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<CodigoDescripcion> resultado = [];
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_ALCANCE, DES_ALCANCE
+                      FROM ALCANCE
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DECODE(COD_ALCANCE, 1,'A',DES_ALCANCE)";
 
-                query.Append("SELECT COD_ALCANCE, DES_ALCANCE ");
-                query.Append("FROM ALCANCE ");
-                query.Append("WHERE F_BAJA IS NULL ");
-                query.Append("ORDER BY DECODE (COD_ALCANCE, 1,'A',DES_ALCANCE) ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -105,14 +102,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_DIVERSIFIED, DES_DIVERSIFIED
+                      FROM DIVERSIFIED
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DES_DIVERSIFIED";
 
-                query.Append("SELECT COD_DIVERSIFIED, DES_DIVERSIFIED ");
-                query.Append("  FROM DIVERSIFIED ");
-                query.Append("  WHERE  F_BAJA IS NULL ");
-                query.Append(" ORDER BY DES_DIVERSIFIED ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -146,14 +142,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new StringBuilder();
+                const string query = @"
+                    SELECT COD_DISCIPLINA, DES_DISCIPLINA
+                      FROM DISCIPLINA
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DES_DISCIPLINA";
 
-                query.Append("SELECT COD_DISCIPLINA, DES_DISCIPLINA ");
-                query.Append("  FROM DISCIPLINA ");
-                query.Append("  WHERE  F_BAJA IS NULL ");
-                query.Append(" ORDER BY DES_DISCIPLINA ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -187,14 +182,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_TIPO_COMPRA, DES_TIPO_COMPRA
+                      FROM TIPO_COMPRA
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DES_TIPO_COMPRA";
 
-                query.Append("SELECT COD_TIPO_COMPRA, DES_TIPO_COMPRA ");
-                query.Append("  FROM TIPO_COMPRA ");
-                query.Append("  WHERE F_BAJA IS NULL ");
-                query.Append(" ORDER BY DES_TIPO_COMPRA ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -230,14 +224,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_OBJETIVO, DES_OBJETIVO
+                      FROM OBJETIVO
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DES_OBJETIVO";
 
-                query.Append("SELECT COD_OBJETIVO, DES_OBJETIVO ");
-                query.Append("  FROM OBJETIVO ");
-                query.Append("  WHERE F_BAJA IS NULL ");
-                query.Append(" ORDER BY DES_OBJETIVO ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -271,15 +264,14 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT DISTINCT M.COD_MEDIO, M.DES_MEDIO
+                      FROM V_MEDIO_PPTO M, NETWORK_MEDIO N
+                     WHERE IND_APLICACION = 1
+                       AND M.COD_MEDIO = N.COD_MEDIO
+                     ORDER BY COD_MEDIO ASC";
 
-                query.Append("SELECT DISTINCT M.COD_MEDIO, M.DES_MEDIO ");
-                query.Append("  FROM V_MEDIO_PPTO M, NETWORK_MEDIO N ");
-                query.Append("  WHERE IND_APLICACION = 1 ");
-                query.Append("    AND M.COD_MEDIO = N.COD_MEDIO ");
-                query.Append(" ORDER BY COD_MEDIO ASC ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -311,26 +303,17 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                string query = $@"
+                    SELECT DISTINCT COD_MEDIO, DES_MEDIO
+                      FROM V_MEDIO_PPTO
+                     WHERE IND_APLICACION = 1
+                       AND COD_MEDIO IN (
+                               SELECT COD_MEDIO FROM NETWORK_MEDIO
+                               WHERE COD_NETWORK IN ({codigosNetwork})
+                           )
+                     ORDER BY COD_MEDIO ASC";
 
-                //query.Append("SELECT DISTINCT M.COD_MEDIO, M.DES_MEDIO ");
-                //query.Append("  FROM V_MEDIO_PPTO M, NETWORK_MEDIO N ");
-                //query.Append("  WHERE IND_APLICACION = 1 ");
-                //query.Append("    AND M.COD_MEDIO = N.COD_MEDIO ");
-                //query.Append($"    AND N.COD_NETWORK IN ({codigosNetwork}) ");
-                //query.Append(" ORDER BY COD_MEDIO ASC ");
-
-
-                query.Append("SELECT DISTINCT COD_MEDIO, DES_MEDIO ");
-                query.Append("  FROM V_MEDIO_PPTO ");
-                query.Append("  WHERE IND_APLICACION = 1 ");
-                query.Append("    AND COD_MEDIO IN ( ");
-                query.Append("        SELECT COD_MEDIO FROM NETWORK_MEDIO ");
-                query.Append($"        WHERE COD_NETWORK IN ({codigosNetwork}) ");
-                query.Append("    ) ");
-                query.Append(" ORDER BY COD_MEDIO ASC ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -362,14 +345,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_NETWORK, DES_NETWORK
+                      FROM NETWORK
+                     WHERE F_BAJA IS NULL
+                     ORDER BY DES_NETWORK";
 
-                query.Append("SELECT COD_NETWORK, DES_NETWORK ");
-                query.Append("  FROM NETWORK ");
-                query.Append("  WHERE F_BAJA IS NULL ");
-                query.Append(" ORDER BY DES_NETWORK ");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -401,14 +383,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_GRUPO, DES_GRUPO
+                      FROM V_ENTORNO_COMPANIA_GRUPO
+                     GROUP BY COD_GRUPO, DES_GRUPO
+                     ORDER BY DES_GRUPO";
 
-                query.Append("SELECT COD_GRUPO, DES_GRUPO ");
-                query.Append("  FROM V_ENTORNO_COMPANIA_GRUPO ");
-                query.Append("GROUP BY COD_GRUPO,DES_GRUPO ");
-                query.Append("ORDER BY DES_GRUPO");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
   
@@ -441,15 +422,14 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                StringBuilder query = new();
+                string query = $@"
+                    SELECT DISTINCT COD_GRUPO, DES_GRUPO
+                      FROM V_ENTORNO_COMPANIA_GRUPO
+                     WHERE COD_NETWORK IN ({codigosNetworks})
+                     GROUP BY COD_GRUPO, DES_GRUPO
+                     ORDER BY DES_GRUPO";
 
-                query.Append("SELECT DISTINCT COD_GRUPO, DES_GRUPO ");
-                query.Append("FROM V_ENTORNO_COMPANIA_GRUPO ");
-                query.Append($"WHERE  COD_NETWORK IN ({codigosNetworks}) ");
-                query.Append("GROUP BY COD_GRUPO,DES_GRUPO ");
-                query.Append("ORDER BY DES_GRUPO");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -480,14 +460,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<GrupoClientesConNetwork> grupos = [];
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_GRUPO, DES_GRUPO, COD_NETWORK
+                      FROM V_ENTORNO_COMPANIA_GRUPO
+                     GROUP BY COD_GRUPO, DES_GRUPO, COD_NETWORK
+                     ORDER BY DES_GRUPO";
 
-                query.Append("SELECT COD_GRUPO, DES_GRUPO, COD_NETWORK ");
-                query.Append("  FROM V_ENTORNO_COMPANIA_GRUPO ");
-                query.Append("GROUP BY COD_GRUPO,DES_GRUPO, COD_NETWORK ");
-                query.Append("ORDER BY DES_GRUPO");
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -520,25 +499,15 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                string query = @"
+                string query = $@"
                 SELECT DISTINCT COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL 
                 FROM V_SOPORTE 
-                WHERE 1=1";
+                WHERE 1=1
+                {(filtro != null && !string.IsNullOrEmpty(filtro.CodigosMedios)                  ? $"AND COD_MEDIO IN ({filtro.CodigosMedios})"                                  : "")}
+                {(filtro != null && !string.IsNullOrEmpty(filtro.CodigosAgrupacionesComerciales) ? $"AND COD_AGRUPACION_COMERCIAL IN ({filtro.CodigosAgrupacionesComerciales})" : "")}
+                ORDER BY DES_EDITORIAL_COMERCIAL";
 
-                if (filtro != null)
-                {
-                    if (!string.IsNullOrEmpty(filtro.CodigosMedios))
-                    {
-                        query += $" AND COD_MEDIO IN ({filtro.CodigosMedios})";
-                    }
-                    if (!string.IsNullOrEmpty(filtro.CodigosAgrupacionesComerciales))
-                    {
-                        query += $" AND COD_AGRUPACION_COMERCIAL IN ({filtro.CodigosAgrupacionesComerciales})";
-                    }
-                }
-                query += " ORDER BY DES_EDITORIAL_COMERCIAL";
-
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -599,20 +568,14 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             List<CodigoDescripcion> lista = [];
 
-            var query = new StringBuilder(@"
+            string query = $@"
                 SELECT DISTINCT COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL
                 FROM V_SOPORTE
                 WHERE COD_AGRUPACION_COMERCIAL IS NOT NULL
-            ");
+                {(!string.IsNullOrEmpty(codigosMedios) ? $"AND COD_MEDIO IN ({codigosMedios})" : "")}
+                ORDER BY DES_AGRUPACION_COMERCIAL";
 
-            if (!string.IsNullOrEmpty(codigosMedios))
-            {
-                query.Append($" AND COD_MEDIO IN ({codigosMedios})");
-            }
-
-            query.Append(" ORDER BY DES_AGRUPACION_COMERCIAL");
-
-            dah.GetSqlStringComando(query.ToString());
+            dah.GetSqlStringComando(query);
 
             await AñadirParametroMulticompania(dah);
 
@@ -639,22 +602,16 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             var agrupacionesSet = new Dictionary<int, CodigoDescripcion>();
             var editorialesSet = new Dictionary<int, CodigoDescripcion>();
 
-            var query = new StringBuilder(@"
+            string query = $@"
                 SELECT DISTINCT
                     COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL,
                     COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL
                 FROM V_SOPORTE
                 WHERE COD_AGRUPACION_COMERCIAL IS NOT NULL
-            ");
+                {(!string.IsNullOrEmpty(codigosMedios) ? $"AND COD_MEDIO IN ({codigosMedios})" : "")}
+                ORDER BY DES_AGRUPACION_COMERCIAL, DES_EDITORIAL_COMERCIAL";
 
-            if (!string.IsNullOrEmpty(codigosMedios))
-            {
-                query.Append($" AND COD_MEDIO IN ({codigosMedios})");
-            }
-
-            query.Append(" ORDER BY DES_AGRUPACION_COMERCIAL, DES_EDITORIAL_COMERCIAL");
-
-            dah.GetSqlStringComando(query.ToString());
+            dah.GetSqlStringComando(query);
 
             await AñadirParametroMulticompania(dah);
 
@@ -820,7 +777,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                string query = @"
+                const string query = @"
                 SELECT COD_TIPO_DISCIPLINA, DES_TIPO_DISCIPLINA
                 FROM TIPO_DISCIPLINA
                 ORDER BY DES_TIPO_DISCIPLINA";
@@ -862,7 +819,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                string query = @"
+                const string query = @"
                     SELECT COD_DISCIPLINA_GRUPO, DES_DISCIPLINA_GRUPO
                     FROM DISCIPLINA_GRUPO
                     WHERE F_BAJA IS NULL
@@ -908,7 +865,7 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             try
             {
-                string query = @"
+                const string query = @"
                     SELECT MES
                     FROM PPT_MESES_CERRADOS
                     WHERE ANIO= :Year";
@@ -948,16 +905,15 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<CodigoDescripcion> result = [];
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL
+                      FROM V_SOPORTE
+                     WHERE COD_MEDIO = :CodigoMedio
+                     GROUP BY COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL
+                     ORDER BY DES_AGRUPACION_COMERCIAL";
 
-                query.Append("SELECT COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL ");
-                query.Append("FROM V_SOPORTE ");
-                query.Append("WHERE COD_MEDIO = :codeMedio ");
-                query.Append("GROUP BY COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL ");
-                query.Append("ORDER BY DES_AGRUPACION_COMERCIAL");
-
-                dah.GetSqlStringComando(query.ToString());
-                dah.AddParameter("codeMedio", codeMedio);
+                dah.GetSqlStringComando(query);
+                dah.AddParameter("CodigoMedio", codeMedio);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -1002,16 +958,15 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<CodigoDescripcion> result = [];
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL
+                      FROM V_SOPORTE
+                     WHERE COD_MEDIO = :CodigoMedio
+                     GROUP BY COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL
+                     ORDER BY DES_EDITORIAL_COMERCIAL";
 
-                query.Append("SELECT COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL ");
-                query.Append("FROM V_SOPORTE ");
-                query.Append("WHERE COD_MEDIO = :codeMedio ");
-                query.Append("GROUP BY COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL ");
-                query.Append("ORDER BY DES_EDITORIAL_COMERCIAL");
-
-                dah.GetSqlStringComando(query.ToString());
-                dah.AddParameter("codeMedio", codeMedio);
+                dah.GetSqlStringComando(query);
+                dah.AddParameter("CodigoMedio", codeMedio);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -1055,16 +1010,15 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             List<CodigoDescripcion> result = [];
             try
             {
-                StringBuilder query = new();
+                const string query = @"
+                    SELECT COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL
+                      FROM V_SOPORTE
+                     WHERE COD_AGRUPACION_COMERCIAL = :CodigoAgrupacionEditorial
+                     GROUP BY COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL
+                     ORDER BY DES_EDITORIAL_COMERCIAL";
 
-                query.Append("SELECT COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL ");
-                query.Append("FROM V_SOPORTE ");
-                query.Append("WHERE COD_AGRUPACION_COMERCIAL = :codeAgrupacionEditorial ");
-                query.Append("GROUP BY COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL ");
-                query.Append("ORDER BY DES_EDITORIAL_COMERCIAL");
-
-                dah.GetSqlStringComando(query.ToString());
-                dah.AddParameter("codeAgrupacionEditorial", codeAgrupacionEditorial);
+                dah.GetSqlStringComando(query);
+                dah.AddParameter("CodigoAgrupacionEditorial", codeAgrupacionEditorial);
 
                 await AñadirParametroMulticompania(dah);
 
@@ -1101,13 +1055,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             CodigoDescripcion? resultado = null;
 
-            string query = @"
+            const string query = @"
                 SELECT M.COD_MEDIO, M.DES_MEDIO 
                 FROM V_MEDIO_PPTO M
                 WHERE IND_APLICACION = 1 
                     AND M.COD_MEDIO = :CodigoMedio ";
 
-            dah.GetSqlStringComando(query.ToString());
+            dah.GetSqlStringComando(query);
 
             dah.AddParameter("CodigoMedio", codigoMedio);
 
@@ -1134,13 +1088,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         {
             CodigoDescripcion? resultado = null;
 
-            string query = @"
+            const string query = @"
                 SELECT COD_AGRUPACION_COMERCIAL, DES_AGRUPACION_COMERCIAL
                 FROM V_SOPORTE
-                WHERE COD_AGRUPACION_COMERCIAL = :codigoAgrupacionComercial";
+                WHERE COD_AGRUPACION_COMERCIAL = :CodigoAgrupacionComercial";
 
             dah.GetSqlStringComando(query);
-            dah.AddParameter("codigoAgrupacionComercial", codigoAgrupacionComercial);
+            dah.AddParameter("CodigoAgrupacionComercial", codigoAgrupacionComercial);
 
             await AñadirParametroMulticompania(dah);
 
@@ -1164,13 +1118,13 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             CodigoDescripcion? resultado = null;
             try
             {
-                string query = @"
+                const string query = @"
                     SELECT COD_EDITORIAL_COMERCIAL, DES_EDITORIAL_COMERCIAL 
                     FROM V_SOPORTE 
                     WHERE COD_EDITORIAL_COMERCIAL = :CodigoEditorial ";
               
 
-                dah.GetSqlStringComando(query.ToString());
+                dah.GetSqlStringComando(query);
                 dah.AddParameter("CodigoEditorial", codigoEditorial);
 
                 await AñadirParametroMulticompania(dah);
@@ -1211,44 +1165,30 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
                 _ => throw new ArgumentOutOfRangeException(nameof(concepto))
             };
 
-            // Construcción dinámica del WHERE
-            var filtros = new List<string>
-            {
-                "COD_MEDIO = :codigoMedio"
-            };
-
-            if (concepto != ConceptosCondicionesNMD.Disciplina)
-                filtros.Add("COD_DISCIPLINA = NVL(:codigoDisciplina, COD_DISCIPLINA)");
-            if (concepto != ConceptosCondicionesNMD.Objetivo)
-                filtros.Add("COD_OBJETIVO = NVL(:codigoObjetivo, COD_OBJETIVO)");
-            if (concepto != ConceptosCondicionesNMD.TipoCompra)
-                filtros.Add("COD_TIPO_COMPRA = NVL(:codigoTipoCompra, COD_TIPO_COMPRA)");
-            if (concepto != ConceptosCondicionesNMD.TipoDisciplina)
-                filtros.Add("COD_TIPO_DISCIPLINA = NVL(:codigoTipoDisciplina, COD_TIPO_DISCIPLINA)");
-            if (concepto != ConceptosCondicionesNMD.DisciplinaGrupo)
-                filtros.Add("COD_DISCIPLINA_GRUPO = NVL(:codigoDisciplinaGrupo, COD_DISCIPLINA_GRUPO)");
-
-            string where = string.Join(" AND ", filtros);
-
             string query = $@"
                 SELECT DISTINCT {campos}
                 FROM V_NMD
-                WHERE {where}";
+                WHERE COD_MEDIO = :CodigoMedio
+                {(concepto != ConceptosCondicionesNMD.Disciplina      ? "AND COD_DISCIPLINA = NVL(:CodigoDisciplina, COD_DISCIPLINA)"             : "")}
+                {(concepto != ConceptosCondicionesNMD.Objetivo         ? "AND COD_OBJETIVO = NVL(:CodigoObjetivo, COD_OBJETIVO)"                 : "")}
+                {(concepto != ConceptosCondicionesNMD.TipoCompra       ? "AND COD_TIPO_COMPRA = NVL(:CodigoTipoCompra, COD_TIPO_COMPRA)"         : "")}
+                {(concepto != ConceptosCondicionesNMD.TipoDisciplina   ? "AND COD_TIPO_DISCIPLINA = NVL(:CodigoTipoDisciplina, COD_TIPO_DISCIPLINA)" : "")}
+                {(concepto != ConceptosCondicionesNMD.DisciplinaGrupo  ? "AND COD_DISCIPLINA_GRUPO = NVL(:CodigoDisciplinaGrupo, COD_DISCIPLINA_GRUPO)" : "")}";
 
             dah.GetSqlStringComando(query);
 
-            dah.AddParameter("codigoMedio", codigoMedio);
+            dah.AddParameter("CodigoMedio", codigoMedio);
 
             if (concepto != ConceptosCondicionesNMD.Disciplina)
-                dah.AddParameter("codigoDisciplina", valores.CodigoDisciplina);
+                dah.AddParameter("CodigoDisciplina", valores.CodigoDisciplina);
             if (concepto != ConceptosCondicionesNMD.Objetivo)
-                dah.AddParameter("codigoObjetivo", valores.CodigoObjetivo); 
+                dah.AddParameter("CodigoObjetivo", valores.CodigoObjetivo);
             if (concepto != ConceptosCondicionesNMD.TipoCompra)
-                dah.AddParameter("codigoTipoCompra", valores.CodigoTipoCompra);
+                dah.AddParameter("CodigoTipoCompra", valores.CodigoTipoCompra);
             if (concepto != ConceptosCondicionesNMD.TipoDisciplina)
-                dah.AddParameter("codigoTipoDisciplina", valores.CodigoTipoDisciplina);
+                dah.AddParameter("CodigoTipoDisciplina", valores.CodigoTipoDisciplina);
             if (concepto != ConceptosCondicionesNMD.DisciplinaGrupo)
-                dah.AddParameter("codigoDisciplinaGrupo", valores.CodigoDisciplinaGrupo);
+                dah.AddParameter("CodigoDisciplinaGrupo", valores.CodigoDisciplinaGrupo);
 
             await AñadirParametroMulticompania(dah);
 
