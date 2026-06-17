@@ -78,7 +78,7 @@ El ciclo se ejecuta en **modo sin vinculación DevOps**:
 - **No** se incluye `#AB<ID>` en los mensajes de commit.
 - **No** se añaden comentarios con links a commits en Tasks.
 - **No** se cierra ningún US ni Task al finalizar.
-- La rama git sigue el convenio estándar `feat/<descripcion>` desde `master`.
+- La rama git sigue el convenio estándar `feat/<descripcion>` desde `develop`.
 - El ciclo OpenSpec (propose → apply → archive) se ejecuta igualmente.
 
 ### Si la respuesta es **SÍ**
@@ -91,9 +91,9 @@ Solicitar el ID del US y continuar con el flujo completo descrito a continuació
 
 Cuando el punto de partida es un **User Story en Azure DevOps**, seguir este proceso de forma ordenada:
 
-### 1. Crear la rama git desde `master`
+### 1. Crear la rama git desde `develop`
 
-Antes de generar ningún artefacto, crear una rama feature a partir de `master` (no de `develop`).
+Antes de generar ningún artefacto, crear una rama feature a partir de `develop` (no de `master`).
 
 Convenio de nombre: `feat/us-<ID>-<descripcion-corta>`
 
@@ -106,8 +106,8 @@ feat/us-5678-filtro-condiciones-por-fecha
 - `<descripcion-corta>` en kebab-case, máximo 40 caracteres.
 
 ```bash
-git checkout master
-git pull origin master
+git checkout develop
+git pull origin develop
 git checkout -b feat/us-<ID>-<descripcion-corta>
 ```
 
@@ -187,7 +187,7 @@ Una vez archivado y pusheado, cerrar en este orden:
 
 Antes de crear el PR, **preguntar siempre al usuario** si desea crearlo en ese momento.
 
-Solo si el usuario confirma, crear un PR de la rama `feat/us-<ID>-<desc>` hacia `master`.
+Solo si el usuario confirma, crear un PR de la rama `feat/us-<ID>-<desc>` hacia `develop`.
 
 > **El merge lo realiza siempre un usuario — nunca se automatiza ni se hace desde el agente.**
 
@@ -197,7 +197,7 @@ Solo si el usuario confirma, crear un PR de la rama `feat/us-<ID>-<desc>` hacia 
 US en Azure DevOps
        │
        ▼
-git checkout -b feat/us-<ID>-<desc> (desde master)
+git checkout -b feat/us-<ID>-<desc> (desde develop)
        │
        ▼
 /opsx:propose  →  proposal.md
@@ -206,7 +206,7 @@ git checkout -b feat/us-<ID>-<desc> (desde master)
 /opsx:apply    →  design.md + specs/ + tasks.md
        │
        ▼
-Crear Tasks en Master como hijas del US
+Crear Tasks en Develop como hijas del US
 (parentId + OriginalEstimate por tarea)
        │
        ▼
@@ -225,7 +225,7 @@ Archive OpenSpec → commit chore(openspec)
 Cerrar Tasks (CompletedWork real) → Cerrar US (CompletedWork + fechas reales)
        │
        ▼
-Preguntar al usuario si desea crear el PR → Crear PR (Pull Request hacia master)
+Preguntar al usuario si desea crear el PR → Crear PR (Pull Request hacia develop)
        │
        ▼
 ⚠️  El merge lo realiza un usuario — NO se automatiza

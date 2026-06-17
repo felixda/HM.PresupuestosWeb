@@ -8,15 +8,15 @@ Triggers: "git", "commit", "branch", "feature branch", "conventional commits".
 
 Flujo de trabajo con ramas por funcionalidad, conventional commits y disciplina de commits guiada por TDD. Cada test en verde produce un commit.
 
-> ⚠️ **REGLA CRÍTICA: Nunca se hacen commits directamente sobre `master`.** Toda modificación de código, guideline, configuración o documentación debe realizarse en una rama. `master` solo recibe cambios a través de Pull Requests o merges desde ramas. Esta regla no tiene excepciones.
+> ⚠️ **REGLA CRÍTICA: Nunca se hacen commits directamente sobre `develop`.** Toda modificación de código, guideline, configuración o documentación debe realizarse en una rama. `develop` solo recibe cambios a través de Pull Requests o merges desde ramas. Esta regla no tiene excepciones.
 
 ## Modelo de Ramas
 
 ### Ramas por Funcionalidad (Feature Branching)
 
-Todo el trabajo ocurre en ramas creadas desde `master`.
+Todo el trabajo ocurre en ramas creadas desde `develop`.
 
-**Excepción — User Stories de Azure DevOps:** cuando el punto de partida es un US en Azure DevOps, la rama se crea desde `master` con el convenio `feat/us-<ID>-<descripcion>`. Ver el flujo completo en [guidelines/azure-devops/SKILL.md](../azure-devops/SKILL.md).
+**Excepción — User Stories de Azure DevOps:** cuando el punto de partida es un US en Azure DevOps, la rama se crea desde `develop` con el convenio `feat/us-<ID>-<descripcion>`. Ver el flujo completo en [guidelines/azure-devops/SKILL.md](../azure-devops/SKILL.md).
 
 ```
 develop
@@ -24,7 +24,7 @@ develop
  └── fix/login-validation-error
  └── refactor/extract-payment-module
 
-master
+develop
  └── feat/us-1234-auditoria-estadisticas   ← US de DevOps
  └── feat/us-5678-filtro-condiciones       ← US de DevOps
 ```
@@ -49,10 +49,10 @@ Reglas:
 
 ### Ciclo de Vida de una Rama
 
-1. Crear rama desde `master`
+1. Crear rama desde `develop`
 2. Desarrollar con commits TDD (ver más abajo)
 3. Push y abrir PR
-4. Merge a `master` (squash o merge commit según preferencia del equipo)
+4. Merge a `develop` (squash o merge commit según preferencia del equipo)
 5. Eliminar la rama tras el merge
 
 ## Conventional Commits
