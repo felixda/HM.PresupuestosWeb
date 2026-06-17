@@ -6,15 +6,6 @@ namespace HM.Presupuestos.Domain.Entidades
         public int Codigo {  get; set; }
         public string Descripcion { get; set; } = "";
 
-        //private string _descripcion="";
-        //public string Descripcion {
-        //    get
-        //    {
-        //        return StringHelper.CapitalizeText(_descripcion,3);
-        //    }
-        //    set { _descripcion = value; }
-        //} 
-
         /// <summary>
         /// Devuelve cadena en formato Descripcion (Codigo)
         /// </summary>

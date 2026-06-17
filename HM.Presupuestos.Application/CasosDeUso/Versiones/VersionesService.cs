@@ -55,13 +55,10 @@ namespace HM.Presupuestos.Application.CasosDeUso
         {
             _logger.LogTrace("Llamando método ObtenerVersiones");
 
-            // Obtener versiones filtradas
             var versiones = await _versionesRepository.ObtenerVersiones(anio, estadoIncluido);
             
-            // Obtener indicadores maestros
             var indicadores = await _versionesRepository.ObtenerEstadosVersiones();
             
-            // Calcular estado de indicadores para cada versión
             foreach (var versionItem in versiones)
             {
                 foreach (var itemMasterIndicador in indicadores)
@@ -78,7 +75,6 @@ namespace HM.Presupuestos.Application.CasosDeUso
                     versionItem.IndicadorList.Add(itemVersionIndicador);
                 }
                 
-                // Verificar si tiene datos relacionados
                 versionItem.TieneDatosVinculados = await _versionesRepository.TieneDatosVinculados(versionItem.Codigo);
             }
             
@@ -103,33 +99,28 @@ namespace HM.Presupuestos.Application.CasosDeUso
 
             var resultado = await _versionesRepository.ObtenerAniosConVersiones();
            
-            // Añadir años adicionales si se solicita
             if (incluirAnios)
             {
                 int anioActual = DateTime.Now.Year;
                 int anioAnterior = anioActual - 1;
                 int anioPosterior = anioActual + 1;
 
-                // Añadir año anterior si no existe
                 if (!resultado.Any(x => x.Codigo == anioAnterior))
                 {
                     resultado.Add(new CodigoDescripcion { Codigo = anioAnterior, Descripcion = anioAnterior.ToString() });
                 }
 
-                // Añadir año actual si no existe
                 if (!resultado.Any(x => x.Codigo == anioActual))
                 {
                     resultado.Add(new CodigoDescripcion { Codigo = anioActual, Descripcion = anioActual.ToString() });
                 }
 
-                // Añadir año posterior si no existe
                 if (!resultado.Any(x => x.Codigo == anioPosterior))
                 {
                     resultado.Add(new CodigoDescripcion { Codigo = anioPosterior, Descripcion = anioPosterior.ToString() });
                 }
             }
 
-            // Ordenar descendentemente
             return [.. resultado.OrderByDescending(x => x.Codigo)];
         }
 
@@ -171,20 +162,14 @@ namespace HM.Presupuestos.Application.CasosDeUso
             using var transaction = _versionesRepository.ObtenerTransaccion();
             try
             {
-                // Insertar versiones nuevas
                 foreach (var itemNewVersion in versionesNuevas)
                 {
                     await _versionesRepository.InsertarVersion(codigoPais, itemNewVersion);
-                    // Serializar para registro interno
-                    string json = JsonSerializer.Serialize(itemNewVersion, new JsonSerializerOptions { WriteIndented = true });
                 }
 
-                // Actualizar versiones modificadas
                 foreach (var itemUpdatedVersion in versionesModificadas)
                 {
                     await _versionesRepository.ActualizarVersion(itemUpdatedVersion);
-                    // Serializar para registro interno
-                    string json = JsonSerializer.Serialize(itemUpdatedVersion, new JsonSerializerOptions { WriteIndented = true });
                 }
                 
                 await transaction.CommitAsync();

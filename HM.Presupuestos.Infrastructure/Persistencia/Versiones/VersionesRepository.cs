@@ -67,13 +67,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             return resultado;
         }
 
-        /// <summary>
-        /// Devuelve una lista de versiones resumen filtrada
-        /// </summary>
-        /// <param name="anio">Filtro opcional para el año (null = todos los años)</param>
-        /// <param name="estadoIncluido">Filtro para buscar por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos</param>
-        /// <param name="estadoExcluido">Filtro para buscar excluyendo por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos</param>
-        /// <returns>Lista de versiones</returns>
         public async Task<List<VersionResumen>> ObtenerVersionesResumen(int? anio = null, int? estadoIncluido = null, int? estadoExcluido = null)
         {
             List<VersionResumen> resultado = [];
@@ -135,12 +128,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
 
 
-        /// <summary>
-        /// Devuelve una lista de versiones filtrada
-        /// </summary>
-        /// <param name="anio">Filtro para el año</param>
-        /// <param name="estadoIncluido">Filtro para buscar por el BitAnd (Indicador de estado). Para mas de un indicador hay que sumarlos en binario</param>
-        /// <returns>Lista de versiones</returns>
         public async Task<List<Version>> ObtenerVersiones( int anio, int? estadoIncluido = null)
         {
             List<Version> resultado = [];
@@ -257,7 +244,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
                 await Task.Run(() => dah.ExecuteNonQuery());
 
-                // Obtener el valor del parámetro de salida
                 version.Codigo = Convert.ToInt32(dah.Comando.Parameters["CodigoVersion"].Value);
                 result = version.Codigo;
             }
@@ -318,11 +304,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             }
         }
 
-        /// <summary>
-        /// Obtener importes de los medios
-        /// </summary>
-        /// <param name="json">Filtro con todos los datos necesarios para buscar estos importes (origen, medios y otros)</param>
-        /// <returns></returns>
         public async Task<List<MedioIncremento>> ObtenerImportesMedios(FiltroComprobarNetoVentaOrigenJSON json)
         {
             List<MedioIncremento> resultado = [];
@@ -410,11 +391,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
         }
 
 
-        /// <summary>
-        /// Comprueba si existen datos vinculados a la versión
-        /// </summary>
-        /// <param name="codigoVersion">Version code</param>
-        /// <returns>True si la versión tiene datos vinculados</returns>
         public async Task<bool> TieneDatosVinculados(int codigoVersion)
         {
             bool result = false;

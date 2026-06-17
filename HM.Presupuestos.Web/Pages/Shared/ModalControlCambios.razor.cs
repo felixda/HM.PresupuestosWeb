@@ -41,7 +41,6 @@ namespace HM.Presupuestos.Web.Pages.Shared
             Mostrar = false;
             StateHasChanged();
             _tcs?.SetResult(true);
-            //   StateHasChanged();
         }
 
         private void Cancelar()
@@ -49,7 +48,6 @@ namespace HM.Presupuestos.Web.Pages.Shared
             Mostrar = false;
             StateHasChanged();
             _tcs?.SetResult(false);
-            //   StateHasChanged();
         }
 
         #endregion

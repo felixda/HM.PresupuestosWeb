@@ -142,7 +142,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("CodigoUsuarioAlta", CodigoUsuario);
             dah.AddParameter("CodigoUsuarioModificacion", CodigoUsuario);
 
-            // Parámetro de salida
             dah.AddParameter("CodigoVigencia", item.Codigo, DbType.Int32, ParameterDirection.Output, 10);
 
             await Task.Run(() => dah.ExecuteNonQuery());
@@ -346,7 +345,6 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
             dah.AddParameter("Porcentaje", condicion.Porcentaje);
             dah.AddParameter("CodigoUsuario", CodigoUsuario);
 
-            // Parámetro de salida
             dah.AddParameter("CodigoCondicionMedio", condicion.CodigoCondicion, DbType.Int32, ParameterDirection.Output, 10);
 
             await Task.Run(() => dah.ExecuteNonQuery());

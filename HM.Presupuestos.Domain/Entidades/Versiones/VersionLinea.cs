@@ -34,7 +34,6 @@ namespace HM.Presupuestos.Domain.Entidades
         public int? VersionCodeSource { get; set; }
         public string? VersionSource { get; set; }
         public int? IngesYear { get; set; }
-       // public bool Closing { get; set; } = false;
         public bool Interco { get; set; } = false;
 
         public bool CopiarAjustes { get; set; } = false;
