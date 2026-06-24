@@ -61,17 +61,16 @@
     <None Remove="Layout\MainLayout_drawer.razor.css" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.104.2" />
-    <PackageReference Include="DevExpress.Blazor.es" Version="24.2.5" />
-    <PackageReference Include="HM.Core.Servidor.v6.Pack" Version="0.1.25086.1-unstable" />
+    <PackageReference Include="DevExpress.Blazor.es" Version="25.2.7" />
+    <PackageReference Include="HM.Core.Servidor.v6.Pack" Version="6.5.26091.4-unstable" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.8" />
-    <PackageReference Include="DevExpress.Blazor" Version="24.2.5" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.8" />
+    <PackageReference Include="DevExpress.Blazor" Version="25.2.7" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="11.0.0-preview.5.26302.115" />
     <PackageReference Include="Microsoft.Identity.Web" Version="3.8.4" />
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.8.4" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.9.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
     <PackageReference Include="NLog" Version="5.3.4" />
     <PackageReference Include="NLog.Extensions.Logging" Version="5.3.13" />
     <PackageReference Include="Isopoh.Cryptography.Argon2" Version="2.0.0" />
@@ -136,13 +135,10 @@
 
   <Target Name="EjecutarTestsUnitarios" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <Message Text="▶ Ejecutando tests unitarios antes de compilar..." Importance="high" />
-    <Exec Command="dotnet test &quot;$(SolutionDir)HM.Presupuestos.UnitTest\bin\$(Configuration)\net10.0\HM.Presupuestos.UnitTest.dll&quot; --verbosity quiet"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true">
+    <Exec Command="dotnet test &quot;$(SolutionDir)HM.Presupuestos.UnitTest\bin\$(Configuration)\net10.0\HM.Presupuestos.UnitTest.dll&quot; --verbosity quiet" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true">
       <Output TaskParameter="ExitCode" PropertyName="TestExitCode" />
     </Exec>
-    <Error Text="❌ Tests unitarios fallaron. Corrige los tests antes de continuar."
-           Condition="'$(TestExitCode)' == '1'" />
+    <Error Text="❌ Tests unitarios fallaron. Corrige los tests antes de continuar." Condition="'$(TestExitCode)' == '1'" />
   </Target>
 
 </Project>

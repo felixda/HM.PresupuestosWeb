@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="HM.Core" Version="6.4.24157.1-unstable" />
-    <PackageReference Include="HM.Core.Comun.v6.Pack" Version="0.1.25086.1-unstable" />
+    <PackageReference Include="HM.Core.Comun.v6.Pack" Version="6.5.26091.4-unstable" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.8" />
   </ItemGroup>
 
