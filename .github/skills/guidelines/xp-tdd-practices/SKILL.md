@@ -105,10 +105,12 @@ Ver ejemplo completo con código C#: [`references/tdd-cycle.md`](references/tdd-
 Desarrollar siempre de dentro hacia afuera:
 
 ```
-Entidades de Dominio → Servicios de Application (con Moq) → Repositorio Oracle → Web (Blazor)
+Entidades de Dominio → Servicios de Application (con InMemory preferente / Moq) → Repositorio Oracle → Web (Blazor)
 ```
 
-Los repositorios se mockean con **Moq** en los tests de servicios. No se usan implementaciones InMemory.
+En tests de servicios de Application, preferir implementaciones **InMemory** del puerto cuando la lógica a validar vive en el caso de uso.
+Usar **Moq** para colaboraciones secundarias o verificaciones de delegación puntual.
+Si la lógica vive en SQL/Oracle del adapter (joins, filtros compuestos, ordenaciones dependientes de SQL), usar test de integración.
 
 Ver detalle completo: [`references/inside-out.md`](references/inside-out.md).
 
@@ -144,7 +146,7 @@ Ver formato de consulta al Tech Lead y límites del ciclo TDD en este proyecto: 
 - Nunca implementar funcionalidad "por si acaso" (YAGNI)
 - Nunca optimizar prematuramente
 - Siempre empezar desde el Dominio, luego Application, luego Infrastructure
-- Siempre usar Moq para repositorios en tests de servicios de Application
+- Siempre preferir InMemory para repositorios en tests de comportamiento de Application cuando sea viable
 - Siempre sugerir el código más simple posible
 - Siempre identificar y señalar code smells
 - Siempre consultar `guidelines/design-principles` durante el refactoring
