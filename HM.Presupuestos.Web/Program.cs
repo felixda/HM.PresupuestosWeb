@@ -14,6 +14,7 @@ using HM.Presupuestos.Infrastructure.Servicios;
 using HM.Presupuestos.Infrastructure.Persistencia;
 using HM.Presupuestos.Web;
 using HM.Presupuestos.Web.Adaptadores.Sesion;
+using HM.Presupuestos.Web.Adaptadores.Api;
 using HM.Presupuestos.Web.ThemeSwitcher;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components;
@@ -157,6 +158,7 @@ builder.Services.AddScoped<CircuitHandler, CircuitSesionTracker>();
 builder.Services.AddScoped<IControlAccesoNavegacion, ControlAccesoNavegacion>();
 builder.Services.AddScoped<IRutasNavegacion, RutasNavegacion>();
 builder.Services.AddScoped<IValidadorMenusUsuario, ValidadorMenusUsuario>();
+builder.Services.AddScoped<IMaestrosApiService, MaestrosApiService>();
 
 
 // ===== SERVICIOS DATOS =====

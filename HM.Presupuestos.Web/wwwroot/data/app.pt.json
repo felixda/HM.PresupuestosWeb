@@ -197,6 +197,13 @@
                                  "icono":  "fa-solid fa-magnifying-glass-chart",
                                  "visible":  true,
                                  "code":  26
+                             },
+                 "Menu_28":  {
+                                 "label":  "Mestres API",
+                                 "url":  "/administracion/maestros-api",
+                                 "icono":  "fa-solid fa-table-cells",
+                                 "visible":  true,
+                                 "code":  28
                              }
              },
     "Pages":  {

@@ -301,6 +301,17 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             });
             // FIN TODO-TEMPORAL
 
+            // TODO-TEMPORAL: Añadir menú 28 (Maestros API) como hijo de Administración (20) hasta que se configure en HM.CORE.
+            //                ELIMINAR este bloque cuando el menú esté dado de alta en el core.
+            usuario.Menus.Add(new Menu
+            {
+                Id = (int)CodigosMenu.MaestrosApi,
+                IdPadre = (int)CodigosMenu.Administracion,
+                NombreMenu = "Maestros API",
+                IndOrdenacion = 101
+            });
+            // FIN TODO-TEMPORAL
+
             // ✅ VALIDAR Y FILTRAR MENÚS CON URLs INVÁLIDAS
             await FiltrarMenusInvalidosAsync(usuario);
 

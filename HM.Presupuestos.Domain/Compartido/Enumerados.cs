@@ -37,6 +37,7 @@ namespace HM.Presupuestos.Domain.Compartido
         AnioDiario = 25,
         Auditorias = 26,
         UsuariosConectados = 27,
+        MaestrosApi = 28,
     }
 
     /// <summary>
