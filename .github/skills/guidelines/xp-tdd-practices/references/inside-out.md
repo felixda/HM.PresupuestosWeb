@@ -8,7 +8,7 @@ Inside-Out (también llamado TDD Clásico o escuela Chicago/Detroit) construye e
 Domain (entidades, reglas)
     ↓  se testea primero — sin dependencias
 Application (servicios, casos de uso)
-    ↓  se testea con Moq en los repositorios
+    ↓  se testea con repositorios InMemory (preferente) o Moq
 Infrastructure (repositorios Oracle)
     ↓  se testea con Oracle real (integración)
 Web (Blazor)
@@ -50,31 +50,24 @@ public class Version
 }
 ```
 
-### 2. Servicios de Application (mock de repositorios)
+### 2. Servicios de Application (repositorios InMemory preferente)
 
-Con la entidad definida, se escribe el test del servicio. El repositorio aún no existe — se mockea con Moq:
+Con la entidad definida, se escribe el test del servicio. Si la lógica vive en el caso de uso,
+usar un repositorio InMemory para verificar comportamiento observable:
 
 ```csharp
 [TestFixture]
 public class VersionesServiceTests
 {
-    private Mock<IVersionesRepository> _repositoryMock;
-    private Mock<ITransaccion>         _transaccionMock;
+    private InMemoryVersionesRepository _repository;
     private VersionesService           _sut;
 
     [SetUp]
     public void SetUp()
     {
-        _repositoryMock = new Mock<IVersionesRepository>();
-        _transaccionMock = new Mock<ITransaccion>();
+        _repository = new InMemoryVersionesRepository();
 
-        _repositoryMock
-            .Setup(r => r.ObtenerTransaccion())
-            .Returns(_transaccionMock.Object);
-        _transaccionMock.Setup(t => t.CommitAsync()).Returns(Task.CompletedTask);
-        _transaccionMock.Setup(t => t.RollbackAsync()).Returns(Task.CompletedTask);
-
-        _sut = new VersionesService(_repositoryMock.Object, ...);
+        _sut = new VersionesService(_repository, ...);
     }
 
     [Test]
@@ -82,20 +75,19 @@ public class VersionesServiceTests
     {
         // Arrange
         var version = new Version { Anio = 2025, Descripcion = "Presupuesto 2025" };
-        _repositoryMock.Setup(r => r.InsertarVersion(version)).ReturnsAsync(42);
 
         // Act
         await _sut.InsertarVersion(version);
 
         // Assert
-        _repositoryMock.Verify(r => r.InsertarVersion(version), Times.Once);
-        _transaccionMock.Verify(t => t.CommitAsync(), Times.Once);
-        Assert.That(version.Codigo, Is.EqualTo(42));
+        Assert.That(version.Codigo, Is.Not.Null);
+        Assert.That(_repository.UltimaTransaccion.CommitInvocado, Is.True);
     }
 }
 ```
 
-En este punto **la interfaz `IVersionesRepository` existe pero `VersionesRepository` todavía no**. El servicio compila y los tests pasan gracias al mock.
+En este punto **la interfaz `IVersionesRepository` existe pero `VersionesRepository` Oracle todavía no**.
+El servicio compila y los tests pasan gracias al fake InMemory (o Moq si aplica).
 
 ### 3. Interfaz del Repositorio (puerto de dominio)
 
@@ -200,9 +192,10 @@ public async Task InsertarVersion(Version version)
 
 | Elemento | Estrategia |
 |---|---|
-| `IXxxRepository` | **Moq** — la implementación Oracle viene después |
+| `IXxxRepository` (lógica en caso de uso) | **InMemory** — validar comportamiento sin BD |
+| `IXxxRepository` (delegación puntual) | **Moq** — verificación focalizada |
 | `IXxxService` (otros servicios) | **Moq** — cada servicio se testa de forma aislada |
-| `ITransaccion` | **Moq** — siempre configurar `CommitAsync` y `RollbackAsync` |
+| `ITransaccion` | **InMemory** o **Moq** — verificar `CommitAsync`/`RollbackAsync` |
 | `ILogger<T>` | **Moq** — sin configurar (comportamiento por defecto) |
 | Entidades de dominio | **Nunca mockear** — usar instancias reales |
 | DTOs y ViewModels | **Nunca mockear** — usar instancias reales |
@@ -245,14 +238,15 @@ Paso 8: Implementar la página Blazor
 |---|---|---|
 | Inicio | Entidad de dominio | Test E2E o de integración |
 | Mocks | Solo para fronteras externas (repositorios) | Para todas las colaboraciones |
-| InMemory | No se usa — Moq en su lugar | Recomendado para repositorios |
+| InMemory | Preferente en Application cuando aplica | Recomendado para repositorios |
 | Diseño emerge de | Tests unitarios de dominio | Tests de aceptación |
 | Riesgo | Puede no integrar correctamente hasta el final | Más trazabilidad desde requisito a código |
 
 En este proyecto se usa **Inside-Out** porque:
 - El dominio tiene reglas de negocio claras que conviene estabilizar primero
 - Oracle no tiene equivalente en memoria — los tests de integración son costosos de configurar
-- Moq permite avanzar en la lógica sin bloquear al equipo en la infraestructura
+- InMemory permite validar comportamiento de casos de uso sin bloquear al equipo en infraestructura
+- La lógica SQL del adapter se valida con integración Oracle real
 
 ---
 

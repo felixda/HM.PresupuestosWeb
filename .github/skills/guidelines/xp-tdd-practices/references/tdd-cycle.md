@@ -200,26 +200,28 @@ public static decimal CalcularPorcentajeTotal(List<TramoSobreprima> tramos)
 
 ---
 
-## Ciclo con Servicio de Application (con Moq)
+## Ciclo con Servicio de Application (InMemory preferente)
 
-Cuando el caso de uso involucra un repositorio, el ciclo es el mismo pero con Moq en el Arrange:
+Cuando el caso de uso involucra un repositorio, el ciclo es el mismo y en Arrange
+se usa InMemory para lógica de negocio del caso de uso (Moq para casos puntuales):
 
 ```csharp
 // RED — el servicio aún no llama al repositorio
 [Test]
-public async Task ObtenerSobreprimas_ConFiltro_LlamaAlRepositorioConElFiltro()
+public async Task ObtenerSobreprimas_ConFiltro_DevuelveElementosFiltrados()
 {
     // Arrange
     var filtro = new SobreprimaFiltro { CodigoVersion = 10 };
-    _repositoryMock
-        .Setup(r => r.ObtenerSobreprimas(filtro))
-        .ReturnsAsync([]);
+    _repositoryInMemory.Sembrar(
+        new SobreprimaBuilder().WithCodigoVersion(10).Build(),
+        new SobreprimaBuilder().WithCodigoVersion(20).Build());
 
     // Act
-    await _sut.ObtenerSobreprimas(filtro);
+    var resultado = await _sut.ObtenerSobreprimas(filtro);
 
-    // Assert — el repositorio debe haberse llamado con el filtro correcto
-    _repositoryMock.Verify(r => r.ObtenerSobreprimas(filtro), Times.Once);
+    // Assert
+    Assert.That(resultado, Has.Count.EqualTo(1));
+    Assert.That(resultado.All(x => x.CodigoVersion == 10), Is.True);
 }
 
 // GREEN — implementar el servicio para que delegue en el repositorio
