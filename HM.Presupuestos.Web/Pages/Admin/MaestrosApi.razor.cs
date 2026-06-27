@@ -51,6 +51,11 @@ public partial class MaestrosApi
             return;
         }
 
+        if (MaestroSeleccionado == e.DataItem.Codigo)
+        {
+            return;
+        }
+
         MaestroSeleccionado = e.DataItem.Codigo;
         await CargarMaestroAsync();
     }

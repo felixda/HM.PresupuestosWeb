@@ -1,10 +1,8 @@
 using HM.Presupuestos.Api.Contracts.V1.Maestros;
 using HM.Presupuestos.Application.CasosDeUso.Compartido;
-using HM.Core.Comun.v6.Entidades.Seguridad;
 using HM.Core.Comun.v6.Seguridad.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
 using System.Net.Http.Headers;
 
 namespace HM.Presupuestos.Api.Controllers.V1;
@@ -19,9 +17,13 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
 
     [HttpGet("tipologias")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IReadOnlyList<CodigoDescripcionResponse>>> ObtenerTipologias()
     {
-        InicializarUsuarioTecnicoSiNoExiste();
+        if (!IntentarInicializarUsuarioDesdeToken())
+        {
+            return Unauthorized();
+        }
 
         var resultado = await _maestrosService.ObtenerTipologias();
 
@@ -34,9 +36,13 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
 
     [HttpGet("networks")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IReadOnlyList<CodigoDescripcionResponse>>> ObtenerNetworks()
     {
-        InicializarUsuarioTecnicoSiNoExiste();
+        if (!IntentarInicializarUsuarioDesdeToken())
+        {
+            return Unauthorized();
+        }
 
         var resultado = await _maestrosService.ObtenerNetworks();
 
@@ -49,9 +55,13 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
 
     [HttpGet("medios")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IReadOnlyList<CodigoDescripcionResponse>>> ObtenerMedios()
     {
-        InicializarUsuarioTecnicoSiNoExiste();
+        if (!IntentarInicializarUsuarioDesdeToken())
+        {
+            return Unauthorized();
+        }
 
         var resultado = await _maestrosService.ObtenerMedios();
 
@@ -64,9 +74,13 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
 
     [HttpGet("grupos-clientes")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<IReadOnlyList<CodigoDescripcionResponse>>> ObtenerGruposClientes()
     {
-        InicializarUsuarioTecnicoSiNoExiste();
+        if (!IntentarInicializarUsuarioDesdeToken())
+        {
+            return Unauthorized();
+        }
 
         var resultado = await _maestrosService.ObtenerGruposClientes();
 
@@ -77,69 +91,40 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
         return Ok(response);
     }
 
-    private void InicializarUsuarioTecnicoSiNoExiste()
+    private bool IntentarInicializarUsuarioDesdeToken()
     {
         if (_jwt.Usuario is not null)
         {
-            return;
+            return true;
         }
 
-        if (Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
+        if (!Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
         {
-            var bearerHeader = authorizationHeader.ToString();
+            return false;
+        }
 
-            if (AuthenticationHeaderValue.TryParse(bearerHeader, out var authValue)
-                && "Bearer".Equals(authValue.Scheme, StringComparison.OrdinalIgnoreCase)
-                && !string.IsNullOrWhiteSpace(authValue.Parameter))
+        var bearerHeader = authorizationHeader.ToString();
+        if (!AuthenticationHeaderValue.TryParse(bearerHeader, out var authValue)
+            || !"Bearer".Equals(authValue.Scheme, StringComparison.OrdinalIgnoreCase)
+            || string.IsNullOrWhiteSpace(authValue.Parameter))
+        {
+            return false;
+        }
+
+        try
+        {
+            var usuarioToken = _jwt.ObtenerDatosUsuarioJwt(authValue.Parameter);
+            if (usuarioToken is null)
             {
-                try
-                {
-                    var usuarioToken = _jwt.ObtenerDatosUsuarioJwt(authValue.Parameter);
-                    if (usuarioToken is not null)
-                    {
-                        _jwt.Usuario = usuarioToken;
-                        return;
-                    }
-                }
-                catch
-                {
-                    // Si el token no se puede parsear, aplicamos fallback técnico.
-                }
+                return false;
             }
+
+            _jwt.Usuario = usuarioToken;
+            return true;
         }
-
-        var usuario = new UsuarioEntidad
+        catch
         {
-            CodigoUsuario = 1,
-            CodigoAplicacion = 3,
-            CodigoPais = 1,
-            Login = "api-local"
-        };
-
-        var companiasProperty = typeof(UsuarioEntidad).GetProperty("Companias");
-        if (companiasProperty is not null)
-        {
-            var value = companiasProperty.GetValue(usuario);
-            if (value is null)
-            {
-                object? emptyCompanias = null;
-
-                try
-                {
-                    emptyCompanias = Activator.CreateInstance(companiasProperty.PropertyType);
-                }
-                catch
-                {
-                    emptyCompanias = new ArrayList();
-                }
-
-                if (emptyCompanias is not null)
-                {
-                    companiasProperty.SetValue(usuario, emptyCompanias);
-                }
-            }
+            return false;
         }
-
-        _jwt.Usuario = usuario;
     }
 }
