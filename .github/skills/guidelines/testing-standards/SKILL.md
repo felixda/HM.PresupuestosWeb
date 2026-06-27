@@ -9,7 +9,7 @@ Estándares para escribir tests claros y mantenibles en todas las capas.
 
 ## Principios FIRST
 
-- **Fast**: Los tests unitarios no tocan BD ni red; Moq garantiza respuesta inmediata
+- **Fast**: Los tests unitarios no tocan BD ni red; usar InMemory o Moq garantiza respuesta inmediata
 - **Isolated**: Cada test tiene su propio `[SetUp]`; no comparten estado entre tests
 - **Repeatable**: Datos construidos inline sin dependencia de entorno externo
 - **Self-validating**: `Assert.That` con constraints claros; sin inspección manual
@@ -17,7 +17,7 @@ Estándares para escribir tests claros y mantenibles en todas las capas.
 
 ## Pirámide de Tests
 
-- **Muchos tests unitarios**: Servicios de Application con Moq, lógica de dominio
+- **Muchos tests unitarios**: Servicios de Application con repositorios InMemory (preferente) o Moq, lógica de dominio
 - **Algunos tests de integración**: Repositorios reales contra Oracle
 - **Pocos E2E**: Flujos críticos de usuario con Playwright
 
@@ -47,19 +47,27 @@ ShouldThrowWhenDuplicated
 
 ## Política de Mocks
 
-Los repositorios se mockean con **Moq**. No se usan implementaciones InMemory.
+En tests unitarios de Application, preferir repositorios **InMemory** cuando la lógica a validar vive en el caso de uso.
+Usar **Moq** cuando InMemory no aporte claridad o para colaboraciones secundarias.
 
-- `Mock<IXxxRepository>` para repositorios
+- `InMemoryXxxRepository` para repositorios en tests de comportamiento de casos de uso
+- `Mock<IXxxRepository>` para casos de delegación puntual o cuando el fake InMemory no compense
 - `Mock<IXxxService>` para servicios de Application
-- `Mock<ITransaccion>` para transacciones (siempre configurar `CommitAsync` y `RollbackAsync`)
+- `InMemoryTransaccion` o `Mock<ITransaccion>` para transacciones
 - `Mock<ILogger<T>>` para loggers
+
+### Regla de decisión InMemory vs Integración
+
+- Si la lógica vive en el caso de uso (Application), test unitario con InMemory.
+- Si la lógica vive en el adapter SQL/Oracle (joins, filtros complejos, ordenaciones dependientes de SQL), test de integración con Oracle real.
+- No duplicar lógica SQL del adapter en repositorios InMemory.
 
 ## Estrategia de Tests por Capa
 
 | Capa | Tipo | Herramienta | Proyecto |
 |---|---|---|---|
 | Entidades de dominio | Unitario | NUnit | `UnitTest` |
-| Servicios de Application | Unitario | NUnit + Moq | `UnitTest` |
+| Servicios de Application | Unitario | NUnit + InMemory/Moq | `UnitTest` |
 | Repositorios (Oracle) | Integración | Oracle real | _(pendiente)_ |
 | Flujos de usuario | E2E | Playwright + NUnit | `E2ETest` |
 
@@ -84,6 +92,6 @@ Para ejemplos completos, setup de tests, patrones de mocks y tests E2E, ver [`re
 - Siempre usar estructura AAA con líneas en blanco entre secciones
 - Siempre nombrar los tests como reglas de negocio, no aserciones técnicas
 - Siempre usar `[SetUp]` para inicializar mocks y construir el SUT
-- Siempre mockear `ITransaccion` con `CommitAsync` y `RollbackAsync` configurados
+- Siempre aislar dependencias externas (BD/red) usando InMemory o Moq
 - Nunca usar `Assert.AreEqual` ni `Assert.IsTrue`; siempre `Assert.That(..., constraint)`
 - Nunca compartir estado entre tests (no campos inicializados fuera de `[SetUp]`)
