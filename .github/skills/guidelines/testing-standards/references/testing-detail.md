@@ -12,7 +12,7 @@
   /            \   - Adaptadores de repositorio con Oracle real
  /              \
 /----------------\ Unitarios (muchos)
-                   - Servicios de Application con Moq
+                   - Servicios de Application con InMemory (preferente) o Moq
                    - Lógica de dominio
 ```
 
@@ -114,39 +114,30 @@ public async Task ObtenerIndicadoresConIdiomas_SinFiltro_DevuelveListaCompleta()
 
 ## Setup de la Clase de Test
 
-Usar `[SetUp]` para inicializar los mocks y construir el SUT. El repositorio siempre expone `ObtenerTransaccion()` que devuelve el mock de transacción:
+Usar `[SetUp]` para inicializar dependencias y construir el SUT.
+En tests de comportamiento de casos de uso, preferir repositorio InMemory con transacción InMemory:
 
 ```csharp
 [TestFixture]
 public class IndicadoresServiceTests
 {
     private Mock<ILogger<IndicadoresService>>  _loggerMock;
-    private Mock<IIndicadoresRepository>       _repositoryMock;
+    private InMemoryIndicadoresRepository      _repository;
     private Mock<IVersionesService>            _versionesServiceMock;
     private Mock<ILogAccionesService>          _logAccionesMock;
-    private Mock<ITransaccion>                 _transaccionMock;
     private IndicadoresService                 _sut;
 
     [SetUp]
     public void SetUp()
     {
         _loggerMock           = new Mock<ILogger<IndicadoresService>>();
-        _repositoryMock       = new Mock<IIndicadoresRepository>();
+        _repository           = new InMemoryIndicadoresRepository();
         _versionesServiceMock = new Mock<IVersionesService>();
         _logAccionesMock      = new Mock<ILogAccionesService>();
-        _transaccionMock      = new Mock<ITransaccion>();
-
-        // El repositorio siempre devuelve la transacción mock
-        _repositoryMock
-            .Setup(r => r.ObtenerTransaccion())
-            .Returns(_transaccionMock.Object);
-
-        _transaccionMock.Setup(t => t.CommitAsync()).Returns(Task.CompletedTask);
-        _transaccionMock.Setup(t => t.RollbackAsync()).Returns(Task.CompletedTask);
 
         _sut = new IndicadoresService(
             _loggerMock.Object,
-            _repositoryMock.Object,
+            _repository,
             _versionesServiceMock.Object,
             _logAccionesMock.Object);
     }
@@ -157,27 +148,24 @@ public class IndicadoresServiceTests
 
 ## Política de Mocks
 
-Los repositorios se mockean con **Moq**. No se usan implementaciones InMemory.
+Para tests unitarios de Application:
+
+- Preferir repositorios **InMemory** cuando se valida comportamiento del caso de uso.
+- Usar **Moq** para colaboraciones secundarias y casos de delegación puntual.
+- Mantener tests de integración con Oracle real para validar lógica SQL del adapter.
 
 ```csharp
-// Devolver lista de entidades
-_repositoryMock
-    .Setup(r => r.ObtenerVersiones(2025, null))
-    .ReturnsAsync(new List<Version> { ... });
+// InMemory para comportamiento de negocio
+_repository.SembrarIndicadores(
+    new IndicadorBuilder().WithCodigo(1).WithDescripcion("Activo").Build());
 
-// Lista vacía
-_repositoryMock
-    .Setup(r => r.ObtenerVersiones(2025, null))
+var resultado = await _sut.ObtenerIndicadoresConIdiomas("Activo");
+Assert.That(resultado, Has.Count.EqualTo(1));
+
+// Moq para colaboraciones secundarias
+_versionesServiceMock
+    .Setup(v => v.ObtenerVersionesResumen(null, null, null))
     .ReturnsAsync([]);
-
-// Valor escalar
-_repositoryMock.Setup(r => r.ObtenerUltimoBitAnd()).ReturnsAsync(16);
-
-// Flag de validación
-_repositoryMock.Setup(r => r.ExisteIndicador(indicador)).ReturnsAsync(false);
-
-// Operación sin retorno
-_repositoryMock.Setup(r => r.ActualizarIndicador(indicador)).Returns(Task.CompletedTask);
 ```
 
 **Otros servicios** (logger, servicios de aplicación) también se mockean con Moq.
@@ -251,34 +239,27 @@ public void Grabar_DescripcionDuplicada_LanzaValidacionException()
 
 ## Tests Transaccionales
 
-Cuando el servicio usa `ITransaccion`, verificar que se hace `CommitAsync` en éxito y que `RollbackAsync` se llama en caso de error:
+Cuando el servicio usa `ITransaccion`, verificar que se hace `CommitAsync` en éxito y que `RollbackAsync` se llama en caso de error (vía fake InMemory o Moq):
 
 ```csharp
 [Test]
 public async Task Grabar_IndicadorNuevoSinDuplicados_InsertaYHaceCommit()
 {
     // Arrange
-    var indicador = new Indicador
-    {
-        Descripcion = "Nuevo",
-        BitAnd = 4,
-        Orden = 30,
-        Estado = EstadoEntidad.Nuevo
-    };
-
-    _repositoryMock.Setup(r => r.ExisteIndicador(indicador)).ReturnsAsync(false);
-    _repositoryMock.Setup(r => r.ExisteOrden(indicador)).ReturnsAsync(false);
-    _repositoryMock.Setup(r => r.ExisteBitAnd(indicador)).ReturnsAsync(false);
-    _repositoryMock.Setup(r => r.InsertarIndicador(indicador)).ReturnsAsync(99);
+    var indicador = new IndicadorBuilder()
+        .WithDescripcion("Nuevo")
+        .WithBitAnd(4)
+        .WithOrden(30)
+        .WithEstado(EstadoEntidad.Nuevo)
+        .Build();
 
     // Act
     await _sut.Grabar(indicador, [], [], []);
 
     // Assert
-    _repositoryMock.Verify(r => r.InsertarIndicador(indicador), Times.Once);
-    _transaccionMock.Verify(t => t.CommitAsync(),   Times.Once);
-    _transaccionMock.Verify(t => t.RollbackAsync(), Times.Never);
-    Assert.That(indicador.Codigo, Is.EqualTo(99));
+    Assert.That(indicador.Codigo, Is.Not.Null);
+    Assert.That(_repository.UltimaTransaccion.CommitInvocado, Is.True);
+    Assert.That(_repository.UltimaTransaccion.RollbackInvocado, Is.False);
 }
 ```
 
@@ -332,7 +313,7 @@ Ver [../../e2e-standards.md](../../e2e-standards.md) para el detalle completo. R
 
 ## Principios FIRST
 
-- **Fast**: los tests unitarios no tocan BD ni red; Moq garantiza respuesta inmediata
+- **Fast**: los tests unitarios no tocan BD ni red; InMemory o Moq garantizan respuesta inmediata
 - **Isolated**: cada test tiene su propio `[SetUp]`; no comparten estado
 - **Repeatable**: datos construidos inline sin dependencia de entorno
 - **Self-validating**: `Assert.That` con constraints claros; no inspección manual
@@ -346,3 +327,4 @@ Ver [../../e2e-standards.md](../../e2e-standards.md) para el detalle completo. R
 - Rendering de componentes Blazor → E2E con Playwright
 - Llamadas a HM.Core API → mockear `IDataAccessHelperSecure`
 - Configuración del DI container (`Program.cs`) → no necesita test
+- Queries SQL complejas simuladas en InMemory → validar en integración Oracle real
