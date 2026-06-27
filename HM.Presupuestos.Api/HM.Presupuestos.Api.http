@@ -1,0 +1,6 @@
+@HM.Presupuestos.Api_HostAddress = http://localhost:5078
+
+GET {{HM.Presupuestos.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

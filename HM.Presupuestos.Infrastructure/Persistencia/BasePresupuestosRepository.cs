@@ -74,10 +74,11 @@ namespace HM.Presupuestos.Infrastructure.Persistencia
 
             var usuario = Jwt.Usuario; 
 
+            // En endpoints API técnicos (por ejemplo, catálogos/maestros) puede no existir
+            // un usuario de sesión en IJwt. En ese caso no se añade el filtro multicompañía.
             if (usuario == null || usuario.CodigoUsuario <= 0)
             {
-                throw new InvalidOperationException(
-                    "No se puede añadir el parámetro multicompañía: no hay un usuario autenticado válido.");
+                return;
             }
 
             dahHelper.AddParameterMulticompania(usuario.Companias);

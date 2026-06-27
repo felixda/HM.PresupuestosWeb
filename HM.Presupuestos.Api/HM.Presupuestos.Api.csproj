@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5a66a105-ee6b-4c9c-aba3-63e96a587ea5</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HM.Core.Servidor.v6.Pack" Version="0.1.25086.1-unstable" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HM.Presupuestos.Application\HM.Presupuestos.Application.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.Domain\HM.Presupuestos.Domain.csproj" />
+    <ProjectReference Include="..\HM.Presupuestos.Infrastructure\HM.Presupuestos.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,68 @@
+@page "/administracion/maestros-api"
+
+@using HM.Presupuestos.Web.Adaptadores.Api.Modelos
+
+@inherits ContextProtegido
+
+@attribute [Authorize]
+
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.MaestrosApi"
+                Titulo="@TituloPagina"
+                TextoToolTipAyuda="@TextoToolTipAyuda" />
+
+    <div class="layoutContainer">
+        <DxFormLayout>
+            <DxFormLayoutGroup CssClass="filterContainer"
+                               Caption="Maestros REST"
+                               ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                               AnimationType="LayoutAnimationType.Slide">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4"
+                                      Caption="Maestro"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <Template>
+                            <DxComboBox Data="@OpcionesMaestro"
+                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Codigo)"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ListRenderMode="ListRenderMode.Entire"
+                                        SelectedDataItemChanged="(SelectedDataItemChangedEventArgs<CodigoDescripcion> args) => OnComboMaestroSelectedDataItemChangedAsync(args)"
+                                        @bind-Value="@MaestroSeleccionado" />
+                        </Template>
+                    </DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+        <DxGrid Data="@Datos"
+                PageSize="20"
+                ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                TextWrapEnabled="false"
+                HighlightRowOnHover="true">
+            <Columns>
+                <DxGridDataColumn FieldName="@nameof(MaestroApiItem.Codigo)"
+                                  Caption="Código"
+                                  Width="20%"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+                <DxGridDataColumn FieldName="@nameof(MaestroApiItem.Descripcion)"
+                                  Caption="Descripción"
+                                  Width="80%"
+                                  CaptionAlignment="GridTextAlignment.Left"
+                                  TextAlignment="GridTextAlignment.Left" />
+            </Columns>
+        </DxGrid>
+    </div>
+}
