@@ -202,6 +202,13 @@
       "icono": "fa-solid fa-table-cells",
       "visible": true,
       "code": 28
+    },
+    "Menu_29": {
+      "label": "Logs",
+      "url": "/admin/logs",
+      "icono": "fa-solid fa-file-lines",
+      "visible": true,
+      "code": 29
     }
   },
   "Pages": {
@@ -643,6 +650,38 @@
       },
       "SinUsuariosConectados": {
         "label": "No hay usuarios conectados en este momento"
+      }
+    },
+    "Logs": {
+      "ToolTip": {
+        "label": "Consulta de logs técnicos del sistema"
+      },
+      "Nivel": {
+        "label": "Nivel"
+      },
+      "Categoria": {
+        "label": "Categoría"
+      },
+      "Mensaje": {
+        "label": "Mensaje"
+      },
+      "Logger": {
+        "label": "Logger"
+      },
+      "Fecha": {
+        "label": "Fecha"
+      },
+      "SinResultados": {
+        "label": "No hay logs para los filtros indicados"
+      },
+      "SinUsuario": {
+        "label": "Sin usuario"
+      },
+      "TituloPopupDetalle": {
+        "label": "Detalle del log"
+      },
+      "DetalleTecnico": {
+        "label": "Detalle técnico"
       }
     },
     "HistorialNavegacion": {

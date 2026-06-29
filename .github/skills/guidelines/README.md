@@ -26,6 +26,8 @@ Guías de referencia del proyecto organizadas por área. Cada guía indica qué 
 - [Application — DTOs](architecture-hexagonal/references/application/dtos.md) — dónde viven los DTOs (en Domain, junto a la entidad), cuándo usar DTO vs entidad pura y cómo mapear en el servicio
 - [Infrastructure — Repositorios](architecture-hexagonal/references/infrastructure/repositories.md) — implementaciones concretas de los puertos: herencia de `BasePresupuestosRepository`, acceso a `IDataAccessHelperSecure` y reglas de acceso al esquema Oracle
 - [Infrastructure — Cliente API Core](architecture-hexagonal/references/infrastructure/clienteApiCore.md) — único punto de acceso a la API REST de HM.CORE: patrón Puerto/Adaptador, registro como Typed HttpClient, autenticación JWT y manejo de errores HTTP
+- [Infrastructure — Swagger local](architecture-hexagonal/references/infrastructure/swagger-local.md) — ejecución de Swagger con token JWT de desarrollo usando `RunSwaggerWithToken.ps1`, autorización y diagnóstico de 401
+- [Infrastructure — Logs técnicos Admin](architecture-hexagonal/references/infrastructure/logs-tecnicos-admin.md) — pipeline NLog JSONL, visor `/admin/logs`, filtros (incluido mensaje) y troubleshooting
 
 ### Principios de diseño
 - [Nomenclatura](design-principles/references/naming.md) — convenciones PascalCase/camelCase por tipo de símbolo, sufijos permitidos (`Service`, `Repository`, `Dto`, `ViewModel`, `Filtro`), regla de un concepto = un nombre en todo el codebase

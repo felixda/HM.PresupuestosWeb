@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using NLog.Extensions.Logging;
 using System.Globalization;
 using System.Net;
 using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
@@ -45,6 +46,9 @@ var options = new WebApplicationOptions
 var builder = WebApplication.CreateBuilder(options);
 
 builder.Configuration.AddConfiguration(configuration);
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+builder.Logging.AddNLog();
 
 //Kestrel es el servidor web predeterminado en ASP.NET Core.
 builder.WebHost.ConfigureKestrel(options =>
@@ -170,6 +174,7 @@ builder.Services.AddScoped<IIndicadoresService, IndicadoresService>();
 builder.Services.AddScoped<ICondicionesService, CondicionesService>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
 builder.Services.AddScoped<ILogAccionesService, LogAccionesService>();
+builder.Services.AddScoped<ILogsTecnicosService, LogsTecnicosService>();
 builder.Services.AddScoped<IMenuFavoritosService, MenuFavoritosService>();
 builder.Services.AddScoped<IRegistroErroresCore, RegistroErroresCore>();
 
@@ -183,6 +188,7 @@ builder.Services.AddScoped<ICondicionesRepository, CondicionesRepository>();
 builder.Services.AddScoped<IIndicadoresRepository, IndicadoresRepository>();
 builder.Services.AddScoped<IConfiguracionRepository, ConfiguracionRepository>();
 builder.Services.AddScoped<ILogAccionesRepository, LogAccionesRepository>();
+builder.Services.AddScoped<ILogsTecnicosRepository, LogsTecnicosRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 
 

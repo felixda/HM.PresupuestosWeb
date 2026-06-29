@@ -204,6 +204,13 @@
                                  "icono":  "fa-solid fa-table-cells",
                                  "visible":  true,
                                  "code":  28
+                             },
+                 "Menu_29":  {
+                                 "label":  "Logs",
+                                 "url":  "/admin/logs",
+                                 "icono":  "fa-solid fa-file-lines",
+                                 "visible":  true,
+                                 "code":  29
                              }
              },
     "Pages":  {
@@ -585,6 +592,38 @@
                                      "Pagina":  {
                                                     "label":  "Page"
                                                 }
+                                 },
+                  "Logs":  {
+                                 "ToolTip":  {
+                                                 "label":  "System technical logs"
+                                             },
+                                 "Nivel":  {
+                                                "label":  "Level"
+                                            },
+                                 "Categoria":  {
+                                                    "label":  "Category"
+                                                },
+                                 "Mensaje":  {
+                                                  "label":  "Message"
+                                              },
+                                 "Logger":  {
+                                                  "label":  "Logger"
+                                              },
+                                 "Fecha":  {
+                                                "label":  "Date"
+                                            },
+                                 "SinResultados":  {
+                                                       "label":  "There are no logs for the selected filters"
+                                                   },
+                                 "SinUsuario":  {
+                                                     "label":  "No user"
+                                                 },
+                                 "TituloPopupDetalle":  {
+                                                             "label":  "Log detail"
+                                                         },
+                                 "DetalleTecnico":  {
+                                                          "label":  "Technical detail"
+                                                      }
                                  },
                   "AnioDiario":  {
                                      "ToolTip":  {

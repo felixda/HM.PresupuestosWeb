@@ -204,6 +204,13 @@
                                  "icono":  "fa-solid fa-table-cells",
                                  "visible":  true,
                                  "code":  28
+                             },
+                 "Menu_29":  {
+                                 "label":  "Logs",
+                                 "url":  "/admin/logs",
+                                 "icono":  "fa-solid fa-file-lines",
+                                 "visible":  true,
+                                 "code":  29
                              }
              },
     "Pages":  {
@@ -585,6 +592,38 @@
                                      "Pagina":  {
                                                     "label":  "Página"
                                                 }
+                                 },
+                  "Logs":  {
+                                 "ToolTip":  {
+                                                 "label":  "Consulta de logs técnicos do sistema"
+                                             },
+                                 "Nivel":  {
+                                                "label":  "Nível"
+                                            },
+                                 "Categoria":  {
+                                                    "label":  "Categoria"
+                                                },
+                                 "Mensaje":  {
+                                                  "label":  "Mensagem"
+                                              },
+                                 "Logger":  {
+                                                  "label":  "Logger"
+                                              },
+                                 "Fecha":  {
+                                                "label":  "Data"
+                                            },
+                                 "SinResultados":  {
+                                                       "label":  "Não há logs para os filtros selecionados"
+                                                   },
+                                 "SinUsuario":  {
+                                                     "label":  "Sem utilizador"
+                                                 },
+                                 "TituloPopupDetalle":  {
+                                                             "label":  "Detalhe do log"
+                                                         },
+                                 "DetalleTecnico":  {
+                                                          "label":  "Detalhe técnico"
+                                                      }
                                  },
                   "AnioDiario":  {
                                      "ToolTip":  {

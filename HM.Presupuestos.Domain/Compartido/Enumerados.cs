@@ -38,6 +38,7 @@ namespace HM.Presupuestos.Domain.Compartido
         Auditorias = 26,
         UsuariosConectados = 27,
         MaestrosApi = 28,
+        Logs = 29,
     }
 
     /// <summary>
