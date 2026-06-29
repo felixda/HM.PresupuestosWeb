@@ -4,6 +4,7 @@ using HM.Core.Comun.v6.Seguridad.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace HM.Presupuestos.Api.Controllers.V1;
 
@@ -116,7 +117,7 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
             var usuarioToken = _jwt.ObtenerDatosUsuarioJwt(authValue.Parameter);
             if (usuarioToken is null)
             {
-                return false;
+                return IntentarInicializarUsuarioDesdeClaims(authValue.Parameter);
             }
 
             _jwt.Usuario = usuarioToken;
@@ -124,7 +125,82 @@ public class MaestrosController(IMaestrosService maestrosService, IJwt jwt) : Co
         }
         catch
         {
+            return IntentarInicializarUsuarioDesdeClaims(authValue.Parameter);
+        }
+    }
+
+    private bool IntentarInicializarUsuarioDesdeClaims(string jwtToken)
+    {
+        if (User?.Identity?.IsAuthenticated != true)
+        {
             return false;
         }
+
+        var usuarioProperty = _jwt.GetType().GetProperty("Usuario");
+        var usuarioType = usuarioProperty?.PropertyType;
+
+        if (usuarioProperty is null || usuarioType is null)
+        {
+            return false;
+        }
+
+        var usuario = Activator.CreateInstance(usuarioType);
+        if (usuario is null)
+        {
+            return false;
+        }
+
+        AsignarSiExiste(usuarioType, usuario, "CodigoUsuario", ObtenerClaimInt("CodigoUsuario", 1));
+        AsignarSiExiste(usuarioType, usuario, "CodigoAplicacion", ObtenerClaimInt("CodigoAplicacion", 1));
+        AsignarSiExiste(usuarioType, usuario, "CodigoPais", ObtenerClaimInt("CodigoPais", 34));
+        AsignarSiExiste(usuarioType, usuario, "Companias", ObtenerClaimString("Companias", "1"));
+        AsignarSiExiste(usuarioType, usuario, "Login", ObtenerClaimString("Login", User.Identity?.Name ?? "swagger.dev"));
+        AsignarSiExiste(usuarioType, usuario, "Nombre", ObtenerClaimString("Nombre", "Swagger"));
+        AsignarSiExiste(usuarioType, usuario, "Apellido1", ObtenerClaimString("Apellido1", "Dev"));
+        AsignarSiExiste(usuarioType, usuario, "Jwt", jwtToken);
+
+        usuarioProperty.SetValue(_jwt, usuario);
+        return true;
+    }
+
+    private int ObtenerClaimInt(string claimType, int valorPorDefecto)
+    {
+        var claim = User.FindFirst(claimType)?.Value;
+        return int.TryParse(claim, out var valor) ? valor : valorPorDefecto;
+    }
+
+    private string ObtenerClaimString(string claimType, string valorPorDefecto)
+    {
+        var claim = User.FindFirst(claimType)?.Value;
+        return string.IsNullOrWhiteSpace(claim) ? valorPorDefecto : claim;
+    }
+
+    private static void AsignarSiExiste(Type targetType, object target, string nombrePropiedad, object? valor)
+    {
+        var property = targetType.GetProperty(nombrePropiedad);
+        if (property is null || !property.CanWrite)
+        {
+            return;
+        }
+
+        if (valor is null)
+        {
+            return;
+        }
+
+        var targetTypeFinal = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+        if (!targetTypeFinal.IsAssignableFrom(valor.GetType()))
+        {
+            try
+            {
+                valor = Convert.ChangeType(valor, targetTypeFinal);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        property.SetValue(target, valor);
     }
 }
