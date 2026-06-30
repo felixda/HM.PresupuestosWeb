@@ -34,6 +34,51 @@ window.whenBlazorReady = function(callback) {
     }
 };
 
+// Wrappers seguros para iniciar/finalizar el control de inactividad
+window.startInactividadWhenReady = function(helper, inactividadMs, advertenciaMs) {
+    window.whenBlazorReady(function() {
+        if (window.inactividad && typeof window.inactividad.iniciar === 'function') {
+            try {
+                window.inactividad.iniciar(helper, inactividadMs, advertenciaMs);
+            } catch (err) {
+                console.error('[inactividad] Error al llamar a iniciar:', err);
+            }
+        } else {
+            console.error('[inactividad] iniciar no disponible');
+        }
+    });
+};
+
+window.finalizarInactividadWhenReady = function(helper) {
+    window.whenBlazorReady(function() {
+        if (window.inactividad && typeof window.inactividad.finalizar === 'function') {
+            try {
+                window.inactividad.finalizar(helper);
+            } catch (err) {
+                console.error('[inactividad] Error al llamar a finalizar:', err);
+            }
+        } else {
+            console.warn('[inactividad] finalizar no disponible');
+        }
+    });
+};
+
+// Generic invoker that calls a global function if it exists. Returns true if called, false otherwise.
+window.invokeIfExists = function(functionName) {
+    try {
+        var func = window[functionName];
+        if (typeof func === 'function') {
+            // Build args excluding functionName
+            var args = Array.prototype.slice.call(arguments, 1);
+            func.apply(null, args);
+            return true;
+        }
+        return false;
+    } catch (err) {
+        console.error('[invokeIfExists] Error invoking ' + functionName + ':', err);
+        return false;
+    }
+};
 // GetResourceValue — obtiene textos localizados via API REST (sin interop estático)
 window.GetResourceValue = function (expression) {
     var idioma = (Cookie.Read('app_idioma') || 'es').trim();

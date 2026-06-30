@@ -1,5 +1,4 @@
-
-namespace HM.Presupuestos.Web.Adaptadores.Inactividad
+namespace HM.Presupuestos.Web.Adaptadores.Navegacion
 {
     /// <summary>
     /// Interfaz para controlar al navegar a otra página si hay cambios en los datos de las paginas, 
