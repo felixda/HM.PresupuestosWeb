@@ -3,6 +3,8 @@ using HM.Presupuestos.Domain.Extensiones;
 using HM.Presupuestos.Infrastructure.Servicios;
 using NLog;
 using NLog.Targets;
+using NLog.Config;
+using NLog.Layouts;
 using System.Runtime.CompilerServices;
 
 namespace HM.Presupuestos.Web.Adaptadores.Auditoria
@@ -119,28 +121,9 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             [CallerFilePath] string callerFilePath = "", 
             [CallerMemberName] string callerMemberName = "")
         {
-            var category = ExtraerNombreClaseDesdeFilePath(callerFilePath);
+            var category = callerMemberName;
             await RegistrarExcepcion(category, exception, comments, logLevel, insertDBLog, insertFileLog);
         }
-
-        /// <summary>
-        /// Extrae el nombre de la clase desde el CallerFilePath
-        /// </summary>
-        /// <param name="filePath">Ruta completa del archivo (ej: C:\Proyectos\...\MainLayout.razor.cs)</param>
-        /// <returns>Nombre de la clase (ej: MainLayout)</returns>
-        private static string ExtraerNombreClaseDesdeFilePath(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-                return "Unknown";
-
-            var fileName = Path.GetFileNameWithoutExtension(filePath);
-
-            if (fileName.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
-                fileName = fileName[..^6];
-
-            return fileName;
-        }
-
 
         public async Task RegistrarExcepcion(
             string category, 
@@ -182,17 +165,17 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
             if (!insertDBLog && !insertFileLog)
                 return;
 
-            var usuario =  _sesionUsuario.UsuarioApp!.UsuarioActivo;
+            var usuario = _sesionUsuario.UsuarioApp?.UsuarioActivo;
             var stackTraceText = stackTrace ?? string.Empty;
 
-            if (insertDBLog)
+            if (insertDBLog && usuario != null)
             {
                 await RegistrarEnBaseDatos(category, message, stackTraceText, comments, usuario);
             }
 
             if (insertFileLog)
             {
-                RegistrarEnArchivo(logLevel, usuario.Login, category, message, stackTraceText, comments);
+                RegistrarEnArchivo(logLevel, usuario?.Login, category, message, stackTraceText, comments);
             }
         }
 
@@ -231,33 +214,18 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         /// <summary>
         /// Inserta log en archivo según nivel
         /// </summary>
-        private void RegistrarEnArchivo(NivelRegistro logLevel, string userName, string category, string message, string stackTraceText, string comments)
+        private void RegistrarEnArchivo(NivelRegistro logLevel, string? userName, string category, string message, string stackTraceText, string comments)
         {
-            var extension = logLevel == NivelRegistro.Error ? "err" : "log";
-            var logger = ObtenerLogger(extension);
-            var entrada = $"[{userName}] > {category}\nMessage:\n{message}\n\nStackTrace:\n{stackTraceText}\n\nComments:\n{comments}\n\n";
+            var logger = ObtenerLogger();
+            var logEvent = new LogEventInfo(ConvertirNivel(logLevel), logger.Name, message);
 
-            switch (logLevel)
-            {
-                case NivelRegistro.Info:
-                    logger.Info(entrada);
-                    break;
-                case NivelRegistro.Message:
-                    logger.Info(message);
-                    break;
-                case NivelRegistro.Warning:
-                    logger.Warn(entrada);
-                    break;
-                case NivelRegistro.Debug:
-                    logger.Debug(entrada);
-                    break;
-                case NivelRegistro.Error:
-                    logger.Error(entrada);
-                    break;
-                case NivelRegistro.Trace:
-                    logger.Trace(entrada);
-                    break;
-            }
+            logEvent.Properties["category"] = string.IsNullOrWhiteSpace(category) ? "Unknown" : category;
+            logEvent.Properties["login"] = string.IsNullOrWhiteSpace(userName) ? string.Empty : userName;
+            logEvent.Properties["exception"] = message;
+            logEvent.Properties["stackTrace"] = stackTraceText;
+            logEvent.Properties["comments"] = comments;
+
+            logger.Log(logEvent);
         }
 
 
@@ -266,16 +234,52 @@ namespace HM.Presupuestos.Web.Adaptadores.Auditoria
         /// </summary>
         /// <param name="extension">Extensión del archivo de log (log o err)</param>
         /// <returns>Instancia de Logger configurada</returns>
-        private static Logger ObtenerLogger(string extension = "log")
+        private static Logger ObtenerLogger()
         {
             LogManager.Setup().LoadConfigurationFromFile("nlog.config");
-            var obLogger = LogManager.GetCurrentClassLogger();
-            var logDirectory = LogManager.Configuration.Variables["logDirectory"];
-            var appName = LogManager.Configuration.Variables["appName"];
-            var target = (FileTarget)LogManager.Configuration.FindTargetByName("fileLog");
-            target.FileName = logDirectory+"\\" + appName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + "." + extension;
+            AsegurarTargetJson();
+            return LogManager.GetCurrentClassLogger();
+        }
+
+        private static NLog.LogLevel ConvertirNivel(NivelRegistro logLevel)
+        {
+            return logLevel switch
+            {
+                NivelRegistro.Trace => NLog.LogLevel.Trace,
+                NivelRegistro.Debug => NLog.LogLevel.Debug,
+                NivelRegistro.Info => NLog.LogLevel.Info,
+                NivelRegistro.Warning => NLog.LogLevel.Warn,
+                NivelRegistro.Error => NLog.LogLevel.Error,
+                NivelRegistro.Message => NLog.LogLevel.Info,
+                _ => NLog.LogLevel.Info
+            };
+        }
+
+        private static void AsegurarTargetJson()
+        {
+            if (LogManager.Configuration?.FindTargetByName<FileTarget>("FileLog") is not { } fileTarget)
+                return;
+
+            fileTarget.FileName = "${logDirectory}\\${appName}_${shortdate}.jsonl";
+            fileTarget.Layout = new JsonLayout
+            {
+                Attributes =
+                {
+                    new JsonAttribute("timestamp", "${date:format=o}"),
+                    new JsonAttribute("level", "${level}"),
+                    new JsonAttribute("category", "${event-properties:item=category}"),
+                    new JsonAttribute("login", "${event-properties:item=login}"),
+                    new JsonAttribute("logger", "${logger}"),
+                    new JsonAttribute("message", "${message}"),
+                    new JsonAttribute("exception", "${event-properties:item=exception}"),
+                    new JsonAttribute("stackTrace", "${event-properties:item=stackTrace}"),
+                    new JsonAttribute("comments", "${event-properties:item=comments}")
+                },
+                IncludeAllProperties = false,
+                SuppressSpaces = true
+            };
+
             LogManager.ReconfigExistingLoggers(true);
-            return obLogger;
         }
 
         #endregion

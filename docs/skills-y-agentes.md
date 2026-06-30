@@ -33,6 +33,8 @@ Este documento resume, en forma de esquema, las skills y los agentes disponibles
 ## Guidelines
 
 - **architecture-hexagonal**: explica la estructura por capas, reglas de dependencia y organización modular de la solución.
+- **architecture-hexagonal/references/infrastructure/swagger-local.md**: uso de Swagger local con token JWT de desarrollo (`RunSwaggerWithToken.ps1`) y diagnóstico de errores 401.
+- **architecture-hexagonal/references/infrastructure/logs-tecnicos-admin.md**: guía del visor Admin/Logs, formato JSONL de NLog, filtros (incluyendo mensaje) y troubleshooting.
 - **azure-devops**: recoge convenciones para work items, pipelines y gestión de ramas en Azure DevOps.
 - **database**: define normas para Oracle, migraciones y nomenclatura de objetos de base de datos.
 - **design-principles**: concentra las reglas de nomenclatura, diseño de clases y criterios generales de calidad del código.

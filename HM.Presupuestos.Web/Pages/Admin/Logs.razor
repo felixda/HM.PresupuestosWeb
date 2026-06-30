@@ -1,0 +1,191 @@
+@page "/admin/logs"
+
+@using HM.Presupuestos.Domain.Entidades.LogAcciones
+
+@inherits ContextProtegido
+
+@attribute [Authorize]
+
+@if (!UsuarioCargado || ValidandoPermisos || TienePermiso == null)
+{
+    @* Estado: Cargando usuario o validando permisos *@
+}
+else if (TienePermiso == false)
+{
+    <AccesoDenegado Titulo="@TituloPagina" />
+}
+else
+{
+    <PageTitle>@TituloPagina</PageTitle>
+    <PageHeader CodigoMenu="@CodigosMenu.Logs"
+                Titulo="@TituloPagina"
+                TextoToolTipAyuda="@ObtenerTexto(TextosApp.Pages.Logs.ToolTip)" />
+
+    <div class="layoutContainer">
+        <DxFormLayout>
+            <DxFormLayoutGroup CssClass="filterContainer"
+                               Caption="@ObtenerTexto(TextosApp.Common.Filtros)"
+                               ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start"
+                               AnimationType="LayoutAnimationType.Slide">
+                <Items>
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Fecha)"
+                                      CaptionPosition="CaptionPosition.Vertical"
+                                      BeginRow="true">
+                        <Template>
+                            <DxDateEdit @bind-Date="@FechaDesde"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="3" ColSpanXl="3" ColSpanXxl="3"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.FechaFin)"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <Template>
+                            <DxDateEdit @bind-Date="@FechaHasta"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Nivel)"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <Template>
+                            <DxComboBox Data="@NivelesDisponibles"
+                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ListRenderMode="ListRenderMode.Entire"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        NullText="@ObtenerTexto(TextosApp.Common.Todos)"
+                                        @bind-Value="@NivelSeleccionado" />
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="6" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario)"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <Template>
+                            <DxComboBox Data="@UsuariosDisponibles"
+                                        TextFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        ValueFieldName="@nameof(CodigoDescripcion.Descripcion)"
+                                        SearchMode="@ListSearchMode.AutoSearch"
+                                        SearchFilterCondition="@ListSearchFilterCondition.Contains"
+                                        ListRenderMode="ListRenderMode.Entire"
+                                        ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"
+                                        NullText="@ObtenerTexto(TextosApp.Common.Todos)"
+                                        @bind-Value="@UsuarioSeleccionado" />
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="2" ColSpanXl="2" ColSpanXxl="2"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Categoria)"
+                                      CaptionPosition="CaptionPosition.Vertical">
+                        <Template>
+                            <DxTextBox @bind-Text="@CategoriaSeleccionada" />
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="4" ColSpanXl="4" ColSpanXxl="4"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Mensaje)"
+                                      CaptionPosition="CaptionPosition.Vertical"
+                                      BeginRow="true">
+                        <Template>
+                            <DxTextBox @bind-Text="@MensajeSeleccionado" />
+                        </Template>
+                    </DxFormLayoutItem>
+
+                    <DxFormLayoutItem ColSpanSm="12" ColSpanMd="12" ColSpanLg="12" ColSpanXl="12" ColSpanXxl="12"
+                                      BeginRow="true">
+                        <div class="d-flex justify-content-between">
+                            <DxButton CssClass="btnCustom"
+                                      RenderStyle="ButtonRenderStyle.None"
+                                      IconCssClass="fa-solid fa-magnifying-glass"
+                                      Text="@ObtenerTexto(TextosApp.Common.Buscar)"
+                                      Click="BuscarLogsAsync" />
+                            <DxButton CssClass="btnCustom"
+                                      RenderStyle="ButtonRenderStyle.None"
+                                      IconCssClass="fa-solid fa-eraser"
+                                      Text="@ObtenerTexto(TextosApp.Common.Limpiar)"
+                                      Click="LimpiarFiltroAsync" />
+                        </div>
+                    </DxFormLayoutItem>
+                </Items>
+            </DxFormLayoutGroup>
+        </DxFormLayout>
+
+        @if (_busquedaEjecutada && _logs.Count == 0)
+        {
+            <div class="logs-empty">
+                <span>@ObtenerTexto(TextosApp.Pages.Logs.SinResultados)</span>
+            </div>
+        }
+        else
+        {
+            <DxGrid Data="@_logs"
+                    PageSize="20"
+                    ColumnResizeMode="GridColumnResizeMode.NextColumn"
+                    TextWrapEnabled="false"
+                    HighlightRowOnHover="true">
+                <Columns>
+                    <DxGridDataColumn FieldName="@nameof(LogTecnico.Fecha)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Fecha)"
+                                      DisplayFormat="dd/MM/yyyy HH:mm:ss"
+                                      Width="18%" />
+                    <DxGridDataColumn FieldName="@nameof(LogTecnico.Nivel)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Nivel)"
+                                      Width="10%" />
+                    <DxGridDataColumn Caption="@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario)"
+                                      Width="16%">
+                        <CellDisplayTemplate Context="ctx">
+                            @ObtenerUsuarioVisible((LogTecnico)ctx.DataItem)
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
+                    <DxGridDataColumn FieldName="@nameof(LogTecnico.Categoria)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Categoria)"
+                                      Width="18%" />
+                    <DxGridDataColumn FieldName="@nameof(LogTecnico.Mensaje)"
+                                      Caption="@ObtenerTexto(TextosApp.Pages.Logs.Mensaje)"
+                                      Width="32%" />
+                    <DxGridDataColumn Caption="@ObtenerTexto(TextosApp.Common.Detalle)"
+                                      Width="6%"
+                                      CaptionAlignment="GridTextAlignment.Center"
+                                      TextAlignment="GridTextAlignment.Center">
+                        <CellDisplayTemplate>
+                            @{
+                                var log = (LogTecnico)context.DataItem;
+                            }
+                            <button class="btn-parametros" title="@ObtenerTexto(TextosApp.Pages.Logs.TituloPopupDetalle)"
+                                    @onclick="() => AbrirPopupDetalle(log)">
+                                <i class="fa-solid fa-file-code"></i>
+                            </button>
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
+                </Columns>
+            </DxGrid>
+        }
+
+        <DxPopup Visible="@_popupDetalleVisible"
+                 VisibleChanged="@((bool v) => _popupDetalleVisible = v)"
+                 HeaderText="@ObtenerTexto(TextosApp.Pages.Logs.TituloPopupDetalle)"
+                 Width="900px"
+                 CloseOnOutsideClick="true">
+            <BodyContentTemplate>
+                @if (_logSeleccionado != null)
+                {
+                    <div class="log-detail">
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Logs.Fecha):</b> @_logSeleccionado.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Logs.Nivel):</b> @_logSeleccionado.Nivel</div>
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Auditorias.Usuario):</b> @ObtenerUsuarioVisible(_logSeleccionado)</div>
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Logs.Categoria):</b> @_logSeleccionado.Categoria</div>
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Logs.Mensaje):</b> @_logSeleccionado.Mensaje</div>
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Logs.Logger):</b> @_logSeleccionado.Logger</div>
+                        <div><b>@ObtenerTexto(TextosApp.Pages.Logs.DetalleTecnico):</b></div>
+                        <pre class="parametros-pre">@ConstruirDetalleTecnico()</pre>
+                    </div>
+                }
+            </BodyContentTemplate>
+        </DxPopup>
+    </div>
+}

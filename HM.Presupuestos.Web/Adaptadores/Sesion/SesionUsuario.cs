@@ -312,6 +312,17 @@ namespace HM.Presupuestos.Web.Adaptadores.Sesion
             });
             // FIN TODO-TEMPORAL
 
+            // TODO-TEMPORAL: Añadir menú 29 (Logs) como hijo de Administración (20) hasta que se configure en HM.CORE.
+            //                ELIMINAR este bloque cuando el menú esté dado de alta en el core.
+            usuario.Menus.Add(new Menu
+            {
+                Id = (int)CodigosMenu.Logs,
+                IdPadre = (int)CodigosMenu.Administracion,
+                NombreMenu = "Logs",
+                IndOrdenacion = 102
+            });
+            // FIN TODO-TEMPORAL
+
             // ✅ VALIDAR Y FILTRAR MENÚS CON URLs INVÁLIDAS
             await FiltrarMenusInvalidosAsync(usuario);
 

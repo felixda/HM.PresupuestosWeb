@@ -12,6 +12,8 @@ Toda convención, patrón de código, regla de arquitectura y proceso de trabajo
   - `xp-tdd-practices/` — ciclo TDD, TPP, inside-out
   - `frontend-patterns/` — componentes Blazor, ciclo de vida, CSS isolation, DevExpress
   - `architecture-hexagonal/references/infrastructure/repositories.md` — patrones de implementación de repositorios Oracle
+  - `architecture-hexagonal/references/infrastructure/swagger-local.md` — uso de Swagger local con JWT de desarrollo (`RunSwaggerWithToken.ps1`) y diagnóstico de 401
+  - `architecture-hexagonal/references/infrastructure/logs-tecnicos-admin.md` — lineamientos del visor Admin/Logs, formato JSONL de NLog y filtros de búsqueda
   - `git-strategy/` — feature branching, conventional commits
   - `azure-devops/` — convenciones de work items, pipelines y gestión de ramas en Azure DevOps
   - `database/` — convenciones de base de datos Oracle, migraciones y nomenclatura de objetos

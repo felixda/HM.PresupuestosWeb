@@ -749,6 +749,21 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
             #endregion
 
+            #region Menu_29 - Logs
+
+            /// <summary>Logs</summary>
+            public const string Menu_29_Label = "Menu:Menu_29:label";
+            /// <summary>/admin/logs</summary>
+            public const string Menu_29_Url = "Menu:Menu_29:url";
+            /// <summary>fa-solid fa-file-lines</summary>
+            public const string Menu_29_Icono = "Menu:Menu_29:icono";
+            /// <summary>true</summary>
+            public const string Menu_29_Visible = "Menu:Menu_29:visible";
+            /// <summary>29</summary>
+            public const string Menu_29_Code = "Menu:Menu_29:code";
+
+            #endregion
+
             #endregion
 
             #region Métodos Helper Dinámicos
@@ -887,6 +902,24 @@ namespace HM.Presupuestos.Web.Componentes.Base
 
                 /// <summary>Las fechas son obligatorias</summary>
                 public const string FechasObligatorias = "Pages:Auditorias:FechasObligatorias:label";
+            }
+
+            #endregion
+
+            #region Logs
+
+            public static class Logs
+            {
+                public const string ToolTip = "Pages:Logs:ToolTip:label";
+                public const string Nivel = "Pages:Logs:Nivel:label";
+                public const string Categoria = "Pages:Logs:Categoria:label";
+                public const string Mensaje = "Pages:Logs:Mensaje:label";
+                public const string Logger = "Pages:Logs:Logger:label";
+                public const string Fecha = "Pages:Logs:Fecha:label";
+                public const string SinResultados = "Pages:Logs:SinResultados:label";
+                public const string SinUsuario = "Pages:Logs:SinUsuario:label";
+                public const string TituloPopupDetalle = "Pages:Logs:TituloPopupDetalle:label";
+                public const string DetalleTecnico = "Pages:Logs:DetalleTecnico:label";
             }
 
             #endregion
