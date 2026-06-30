@@ -57,7 +57,7 @@ namespace HM.Presupuestos.Web.Layout
 
         private async Task ActivarEventosJavascriptInactividad()
         {
-            var inactividadTimeMinutos = Configuracion.GetValue<int>("AppSettings:Session:InactividadMinutos", 10);
+            var inactividadTimeMinutos = Configuracion.GetValue<int>("AppSettings:Session:InactividadUsuarioMinutos", 10);
             var tiempoMostrarAvisoSegundos = Configuracion.GetValue<int>("AppSettings:Session:TiempoVisualizacionAvisoInactividadSegundos", 30);
 
             var tiempoInactividad = inactividadTimeMinutos * 60 * 1000;

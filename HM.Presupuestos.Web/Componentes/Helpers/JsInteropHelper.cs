@@ -28,7 +28,21 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
         /// <returns></returns>
         public async Task Iniciar(int tiempoInactividadMs, int tiempoAdvertenciaMs)
         {
-            await js.InvokeVoidAsync("inactividad.iniciar", objRef, tiempoInactividadMs, tiempoAdvertenciaMs);
+            // Prefer to call a safe wrapper via invokeIfExists to avoid throwing if the wrapper isn't registered yet.
+            try
+            {
+                var invoked = await js.InvokeAsync<bool>("invokeIfExists", "startInactividadWhenReady", objRef, tiempoInactividadMs, tiempoAdvertenciaMs);
+                if (!invoked)
+                {
+                    // fallback to original
+                    await js.InvokeVoidAsync("inactividad.iniciar", objRef, tiempoInactividadMs, tiempoAdvertenciaMs);
+                }
+            }
+            catch (JSException ex)
+            {
+                Console.WriteLine($"[JsInteropHelper] invokeIfExists/startInactividadWhenReady failed: {ex.Message}. Falling back to inactivity.iniciar.");
+                await js.InvokeVoidAsync("inactividad.iniciar", objRef, tiempoInactividadMs, tiempoAdvertenciaMs);
+            }
         }
 
         /// <summary>
@@ -37,7 +51,19 @@ namespace HM.Presupuestos.Web.Componentes.Helpers
         /// <returns></returns>
         public async Task Finalizar()
         {
-            await js.InvokeVoidAsync("inactividad.finalizar", objRef);
+            try
+            {
+                var invoked = await js.InvokeAsync<bool>("invokeIfExists", "finalizarInactividadWhenReady", objRef);
+                if (!invoked)
+                {
+                    await js.InvokeVoidAsync("inactividad.finalizar", objRef);
+                }
+            }
+            catch (JSException ex)
+            {
+                Console.WriteLine($"[JsInteropHelper] invokeIfExists/finalizarInactividadWhenReady failed: {ex.Message}. Falling back to inactivity.finalizar.");
+                await js.InvokeVoidAsync("inactividad.finalizar", objRef);
+            }
         }
 
         /// <summary>
