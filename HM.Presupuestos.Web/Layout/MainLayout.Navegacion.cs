@@ -6,7 +6,7 @@ namespace HM.Presupuestos.Web.Layout
 
         private async void OnLocationChangedAsync(object? sender, LocationChangedEventArgs e)
         {
-            Console.WriteLine($"[MainLayout] ðŸ”„ OnLocationChangedAsync: {e.Location}");
+            Console.WriteLine($"[MainLayout]  OnLocationChangedAsync: {e.Location}");
 
             try
             {
@@ -25,7 +25,7 @@ namespace HM.Presupuestos.Web.Layout
                 }
                 else
                 {
-                    Console.WriteLine($"[MainLayout] â­ï¸ PÃ¡gina Index/Home detectada, no se registra log de acceso");
+                    Console.WriteLine($"[MainLayout]  Página Index/Home detectada, no se registra log de acceso");
                 }
 
                 await ActualizarSubscripcionesInactividad();
@@ -50,7 +50,7 @@ namespace HM.Presupuestos.Web.Layout
 
         /// <summary>
         /// Verifica si la URL corresponde a la principal (Index/Home)
-        /// para evitar registrar logs de acceso a la pÃ¡gina de inicio
+        /// para evitar registrar logs de acceso a la página de inicio
         /// </summary>
         private static bool EsPaginaIndex(string urlNormalizada)
         {
@@ -65,8 +65,8 @@ namespace HM.Presupuestos.Web.Layout
         }
 
         /// <summary>
-        /// Controla la navegaciÃ³n interna dentro de la aplicaciÃ³n,
-        /// mostrando un modal de confirmaciÃ³n si hay cambios pendientes
+        /// Controla la navegación interna dentro de la aplicación,
+        /// mostrando un modal de confirmación si hay cambios pendientes
         /// </summary>
         private async Task OnBeforeInternalNavigation(LocationChangingContext context)
         {
@@ -99,7 +99,7 @@ namespace HM.Presupuestos.Web.Layout
             {
                 if (urlNormalizada == _ultimaUrlRegistrada)
                 {
-                    Console.WriteLine($"[MainLayout] â­ï¸ URL duplicada, no se registra: {urlNormalizada}");
+                    Console.WriteLine($"[MainLayout]  URL duplicada, no se registra: {urlNormalizada}");
                     return;
                 }
 
@@ -109,11 +109,11 @@ namespace HM.Presupuestos.Web.Layout
 
                 _ultimaUrlRegistrada = urlNormalizada;
 
-                Console.WriteLine($"[MainLayout] âœ… Log registrado: {tituloParaLog} ({urlNormalizada})");
+                Console.WriteLine($"[MainLayout]  Log registrado: {tituloParaLog} ({urlNormalizada})");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MainLayout] âš ï¸ Error al registrar log: {ex.Message}");
+                Console.WriteLine($"[MainLayout]  Error al registrar log: {ex.Message}");
                 await RegistroAplicacion.RegistrarExcepcion(nameof(MainLayout), ex);
             }
         }

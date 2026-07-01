@@ -55,7 +55,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[RecursosApp] âŒ Error en ObtenerUrlMenu({codigoMenu}): {ex.Message}");
+                Console.WriteLine($"[RecursosApp]  Error en ObtenerUrlMenu({codigoMenu}): {ex.Message}");
                 return null;
             }
         }
@@ -96,7 +96,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[RecursosApp] âŒ Error en ObtenerCodigoMenuPorUrl: {ex.Message}");
+                Console.WriteLine($"[RecursosApp]  Error en ObtenerCodigoMenuPorUrl: {ex.Message}");
             }
 
             return result;
@@ -157,7 +157,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[RecursosApp] Error en ObtenerPaginasNavegables: {ex.Message}");
+                Console.WriteLine($"[RecursosApp]  Error en ObtenerPaginasNavegables: {ex.Message}");
             }
             return resultado;
         }
@@ -191,7 +191,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Navegacion
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[RecursosApp] Error en ObtenerAccionesLog: {ex.Message}");
+                Console.WriteLine($"[RecursosApp]  Error en ObtenerAccionesLog: {ex.Message}");
             }
             return resultado;
         }

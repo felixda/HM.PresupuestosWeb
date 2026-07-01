@@ -3,12 +3,12 @@ using HM.Presupuestos.Domain.Entidades;
 using HM.Presupuestos.Domain.Entidades.LogAcciones;
 using HM.Presupuestos.Domain.Puertos;
 
-namespace HM.Presupuestos.UnitTest.LogAcciones;
+namespace HM.Presupuestos.UnitTest.Fakes;
 
 internal sealed class InMemoryLogAccionesRepository : ILogAccionesRepository
 {
-    private readonly List<LogAccion> _logsInsertados = [];
-    private readonly List<AuditoriaSeed> _auditorias = [];
+    private readonly List<LogAccion> _logsInsertados = new();
+    private readonly List<AuditoriaSeed> _auditorias = new();
 
     public IReadOnlyList<LogAccion> LogsInsertados => _logsInsertados;
 

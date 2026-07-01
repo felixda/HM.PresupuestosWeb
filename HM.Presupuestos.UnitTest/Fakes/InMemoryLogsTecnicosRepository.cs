@@ -3,12 +3,12 @@ using HM.Presupuestos.Domain.Entidades.LogAcciones;
 using HM.Presupuestos.Domain.Puertos;
 using HM.Presupuestos.Application.CasosDeUso.LogAcciones;
 
-namespace HM.Presupuestos.UnitTest.LogAcciones;
+namespace HM.Presupuestos.UnitTest.Fakes;
 
 internal sealed class InMemoryLogsTecnicosRepository : ILogsTecnicosRepository
 {
-    private readonly List<LogTecnico> _logs = [];
-    private readonly List<CodigoDescripcion> _niveles = [];
+    private readonly List<LogTecnico> _logs = new();
+    private readonly List<CodigoDescripcion> _niveles = new();
 
     public void SembrarLogs(params LogTecnico[] logs)
     {

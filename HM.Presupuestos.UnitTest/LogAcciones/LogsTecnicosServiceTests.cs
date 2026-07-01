@@ -8,13 +8,13 @@ namespace HM.Presupuestos.UnitTest.LogAcciones;
 [TestFixture]
 public class LogsTecnicosServiceTests
 {
-    private InMemoryLogsTecnicosRepository _repository = null!;
+    private HM.Presupuestos.UnitTest.Fakes.InMemoryLogsTecnicosRepository _repository = null!;
     private LogsTecnicosService _sut = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _repository = new InMemoryLogsTecnicosRepository();
+        _repository = new HM.Presupuestos.UnitTest.Fakes.InMemoryLogsTecnicosRepository();
         _sut = new LogsTecnicosService(_repository);
     }
 
@@ -42,14 +42,13 @@ public class LogsTecnicosServiceTests
                 .WithCategoria("OtroMetodo")
                 .Build());
 
-        var filtro = new FiltroLogsTecnicos
-        {
-            FechaDesde = new DateTime(2026, 6, 25),
-            FechaHasta = new DateTime(2026, 6, 25, 23, 59, 59),
-            Nivel = "Error",
-            Usuario = "felix",
-            Categoria = "RegistrarEvento"
-        };
+        var filtro = new Builders.FiltroLogsTecnicosBuilder()
+            .WithFechaDesde(new DateTime(2026, 6, 25))
+            .WithFechaHasta(new DateTime(2026, 6, 25, 23, 59, 59))
+            .WithNivel("Error")
+            .WithUsuario("felix")
+            .WithCategoria("RegistrarEvento")
+            .Build();
 
         // Act
         var resultado = await _sut.ObtenerLogs(filtro);
@@ -92,8 +91,8 @@ public class LogsTecnicosServiceTests
     {
         // Arrange
         _repository.SembrarNiveles(
-            new CodigoDescripcion { Codigo = 1, Descripcion = "Trace" },
-            new CodigoDescripcion { Codigo = 2, Descripcion = "Error" });
+            new Builders.CodigoDescripcionBuilder().WithCodigo(1).WithDescripcion("Trace").Build(),
+            new Builders.CodigoDescripcionBuilder().WithCodigo(2).WithDescripcion("Error").Build());
 
         // Act
         var resultado = await _sut.ObtenerNivelesDisponibles();

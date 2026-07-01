@@ -35,7 +35,7 @@ namespace HM.Presupuestos.Web.Layout
             List<Menu> menusPadres = [.. user.Menus.Where(c => !c.TienePadre())];
             List<Menu> menusHijos = [.. user.Menus.Where(c => c.TienePadre())];
 
-            Console.WriteLine($"[NavMenu] ðŸ“‹ Creando menÃº - Padres: {menusPadres.Count}, Hijos: {menusHijos.Count}");
+            Console.WriteLine($"[NavMenu]  Creando menú - Padres: {menusPadres.Count}, Hijos: {menusHijos.Count}");
 
             foreach (var menu in menusPadres)
             {
@@ -79,7 +79,7 @@ namespace HM.Presupuestos.Web.Layout
 
             foreach (var menu in Menu)
             {
-                Console.WriteLine($"[NavMenu] Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenÃºs");
+                Console.WriteLine($"[NavMenu] Menú final: {menu.CodigoMenu} tiene {menu.Submenus.Count} submenús");
             }
         }
 

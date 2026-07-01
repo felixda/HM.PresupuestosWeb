@@ -95,8 +95,8 @@ namespace HM.Presupuestos.Web.Layout
                         return;
                     }
 
-                    TituloAvisoInactividad = TextosApp.Pages.ModalInactividad.Titulo;
-                    TextoCuentaAtras = TextosApp.Pages.ModalInactividad.CuentaAtras;
+                    TituloAvisoInactividad = LocalizadorRecursos.ObtenerTexto(TextosApp.Pages.ModalInactividad.Titulo);
+                    TextoCuentaAtras = LocalizadorRecursos.ObtenerTexto(TextosApp.Pages.ModalInactividad.CuentaAtras);
 
                     await ActualizarSubscripcionesInactividad();
                 }

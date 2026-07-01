@@ -1,7 +1,7 @@
 using HM.Presupuestos.Domain.Compartido;
 using HM.Presupuestos.Domain.Entidades;
 
-namespace HM.Presupuestos.UnitTest.Mantenimientos;
+namespace HM.Presupuestos.UnitTest.Versiones;
 
 internal sealed class IndicadorBuilder
 {

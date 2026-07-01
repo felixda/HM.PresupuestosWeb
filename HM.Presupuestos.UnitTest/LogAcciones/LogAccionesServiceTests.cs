@@ -12,7 +12,7 @@ public class LogAccionesServiceTests
 {
     private Mock<ILogger> _loggerMock = null!;
     private Mock<IJwt> _jwtMock = null!;
-    private InMemoryLogAccionesRepository _repository = null!;
+    private HM.Presupuestos.UnitTest.Fakes.InMemoryLogAccionesRepository _repository = null!;
     private Mock<IRegistroErroresCore> _registroErroresMock = null!;
     private LogAccionesService _sut = null!;
 
@@ -21,7 +21,7 @@ public class LogAccionesServiceTests
     {
         _loggerMock = new Mock<ILogger>();
         _jwtMock = new Mock<IJwt>();
-        _repository = new InMemoryLogAccionesRepository();
+        _repository = new HM.Presupuestos.UnitTest.Fakes.InMemoryLogAccionesRepository();
         _registroErroresMock = new Mock<IRegistroErroresCore>();
 
         _sut = new LogAccionesService(

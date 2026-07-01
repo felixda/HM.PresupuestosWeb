@@ -16,7 +16,7 @@ public class MaestrosCacheServiceTests
     {
         _innerMock = new Mock<IMaestrosService>();
 
-        var opciones = Options.Create(new MaestrosCacheOptions { TtlMinutos = 30 });
+        var opciones = Options.Create(new Builders.MaestrosCacheOptionsBuilder().WithTtlMinutos(30).Build());
         _sut = new MaestrosCacheService(_innerMock.Object, opciones);
     }
 

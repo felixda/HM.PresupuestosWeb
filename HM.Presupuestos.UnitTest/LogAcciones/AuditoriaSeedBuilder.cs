@@ -47,9 +47,9 @@ internal sealed class AuditoriaSeedBuilder
         return this;
     }
 
-    public AuditoriaSeed Build()
+    public HM.Presupuestos.UnitTest.Fakes.AuditoriaSeed Build()
     {
-        return new AuditoriaSeed(
+        return new HM.Presupuestos.UnitTest.Fakes.AuditoriaSeed(
             _tipo,
             _fechaInicio,
             _usuario,

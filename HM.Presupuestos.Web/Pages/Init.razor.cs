@@ -42,7 +42,7 @@ namespace HM.Presupuestos.Web.Pages
                 }
                 else
                 {
-                    Console.WriteLine($"[Init] Cookie de idioma leÃ­da: {languageCode}");
+                    Console.WriteLine($"[Init] Cookie de idioma leída: {languageCode}");
                 }
             }
             catch (Exception ex)
@@ -80,7 +80,7 @@ namespace HM.Presupuestos.Web.Pages
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[Init] ? Exception: {ex.Message}");
+                    Console.WriteLine($"[Init] Error : {ex.Message}");
                     NavigationManager.NavigateTo("/Unauthorized", true);
                     await LogService.RegistrarExcepcion(ex);
                 }

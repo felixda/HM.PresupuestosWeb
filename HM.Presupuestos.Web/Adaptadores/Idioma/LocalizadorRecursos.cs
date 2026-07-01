@@ -44,7 +44,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
             _gestorIdiomas.IdiomaCambiado += () =>
             {
-                Console.WriteLine("[LocalizadorRecursos] ?? IdiomaEntidad cambiado, limpiando caché de valores...");
+                Console.WriteLine("[LocalizadorRecursos] IdiomaEntidad cambiado, limpiando caché de valores...");
                 _cacheValoresResueltos.Clear();
                 return Task.CompletedTask;
             };

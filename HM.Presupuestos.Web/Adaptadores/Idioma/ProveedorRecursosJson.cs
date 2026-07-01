@@ -85,7 +85,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
                 if (languageConfigKey.Key == null)
                 {
-                    Console.WriteLine($"[ProveedorRecursosJson] âš ï¸ Idioma no encontrado en configuraciÃ³n: {codigoIdioma}");
+                    Console.WriteLine($"[ProveedorRecursosJson]  Idioma no encontrado en configuración: {codigoIdioma}");
                     return;
                 }
 
@@ -95,7 +95,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
                 if (string.IsNullOrEmpty(pathJsonFile))
                 {
-                    Console.WriteLine($"[ProveedorRecursosJson] âš ï¸ No se encontrÃ³ ruta del archivo de recursos para: {codigoIdioma}");
+                    Console.WriteLine($"[ProveedorRecursosJson]  No se encontró ruta del archivo de recursos para: {codigoIdioma}");
                     return;
                 }
 
@@ -103,7 +103,7 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
 
                 if (!File.Exists(fullPath))
                 {
-                    Console.WriteLine($"[ProveedorRecursosJson] âš ï¸ Archivo de recursos no existe: {fullPath}");
+                    Console.WriteLine($"[ProveedorRecursosJson]  Archivo de recursos no existe: {fullPath}");
                     return;
                 }
 
@@ -111,11 +111,11 @@ namespace HM.Presupuestos.Web.Adaptadores.Idioma
                 var jsonDoc = JsonDocument.Parse(content);
                 _recursosPorIdioma.TryAdd(codigoIdioma, jsonDoc);
 
-                Console.WriteLine($"[ProveedorRecursosJson] âœ… Idioma cargado en memoria: {codigoIdioma}");
+                Console.WriteLine($"[ProveedorRecursosJson]  Idioma cargado en memoria: {codigoIdioma}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ProveedorRecursosJson] âŒ Error cargando idioma {codigoIdioma}: {ex.Message}");
+                Console.WriteLine($"[ProveedorRecursosJson]  Error cargando idioma {codigoIdioma}: {ex.Message}");
             }
         }
     }
