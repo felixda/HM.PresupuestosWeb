@@ -9,6 +9,8 @@ Toda convención, patrón de código, regla de arquitectura y proceso de trabajo
   - `architecture-hexagonal/` — capas, estructura de módulos, puertos y adaptadores
   - `design-principles/` — nomenclatura, funciones, clases, manejo de errores
   - `testing-standards/` — nomenclatura de tests, estructura AAA, principios FIRST
+    - `testing-standards/` — nomenclatura de tests, estructura AAA, principios FIRST
+    - `testing-standards/fakes-and-builders.md` — patrón: fakes in-memory y builders para tests
   - `xp-tdd-practices/` — ciclo TDD, TPP, inside-out
   - `frontend-patterns/` — componentes Blazor, ciclo de vida, CSS isolation, DevExpress
   - `architecture-hexagonal/references/infrastructure/repositories.md` — patrones de implementación de repositorios Oracle
